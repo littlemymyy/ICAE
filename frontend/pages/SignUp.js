@@ -187,10 +187,7 @@ export default function SignUp() {
                 />
               </Grid>
               <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox color="primary" />}
-                  label="จำฉัน"
-                />
+                
                 <FormControlLabel
                   control={<Checkbox color="primary" />}
                   label="ฉันเห็นด้วยกับกฎข้อบังคับของเว็บไซต์ ICAE"
