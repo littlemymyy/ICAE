@@ -11,13 +11,18 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
+import { useRouter } from 'next/router';
 
-const pages = ['หน้าหลัก', 'ตรวจสอบสูตรสารเคมี', 'ประวัติการตรวจสอบสูตรสารเคมี','คลังความรู้'];
+const pages = ['หน้าหลัก', 'ตรวจสอบสูตรสารเคมี', 'ตรวจสอบชื่อผลิตภัณฑ์' , 'ประวัติการตรวจสอบสูตรสารเคมี','คลังความรู้'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function Navbar() {
+    const router = useRouter();
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
+    const [uname, setUname] = React.useState('');
+    const [icon, setIcon] = React.useState('');
+
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -26,13 +31,74 @@ function Navbar() {
         setAnchorElUser(event.currentTarget);
     };
 
-    const handleCloseNavMenu = () => {
+    const handleCloseNavMenu = (ev) => {
         setAnchorElNav(null);
+        const selectName = ev.nativeEvent.target.outerText.toLowerCase();
+        // console.log(selectName)
+        if(uname !== '') {
+            if(selectName === pages[0]){
+                router.push("/")
+            }
+            else if(selectName === pages[1]){
+                router.push("/Preview");
+            }
+            else if(selectName === pages[2]){
+                router.push("/Checkword")
+            }
+            else if(selectName === pages[3]){
+                router.push("/PreviewGroup")
+            }
+            else if(selectName === pages[4]){
+                router.push("/ChemicalList")
+            }
+            // else if(selectName === pages[4]){
+            //     router.push("/Test01")
+            //     console.log('Test01');
+            // }
+        }
+    };
+    const handleOpenSignIn = () => {
+        router.push('/SignIn');
+    }
+
+    const handleCloseUserMenu = (ev) => {
+        setAnchorElUser(null);
+        const selectName = ev.nativeEvent.target.outerText;
+        console.log(selectName);
+        // 0 : Profile, 1 : Account, 2 : Dashboard, 3 : Logout
+        if(selectName === settings[0]){
+
+        }
+        else if(selectName === settings[1]){
+
+        }
+        else if(selectName === settings[2]){
+                
+        }
+        else if(selectName === settings[3]) {
+            console.log('OK');
+            sessionStorage.removeItem("uemail");
+            sessionStorage.removeItem("uname");
+            sessionStorage.removeItem("uicon");
+            sessionStorage.removeItem("upass");
+            setUname("");
+            setIcon("");
+            router.push("/");
+        }
+      
     };
 
-    const handleCloseUserMenu = () => {
-        setAnchorElUser(null);
-    };
+    React.useEffect(() => {
+        if(!sessionStorage.getItem('uname')) {
+            setUname('');
+            setIcon('');
+        }
+        else {
+            setUname(sessionStorage.getItem('uname'));
+            setIcon(sessionStorage.getItem("uicon"));
+            // alert(sessionStorage.getItem('uname'));
+        }
+    }, [])
 
     return(
         <AppBar className='nav'>
@@ -78,7 +144,7 @@ function Navbar() {
                     }}
                     >
                     {pages.map((page) => (
-                        <MenuItem key={page} onClick={handleCloseNavMenu}>
+                        <MenuItem key={page} value = {page} onClick={handleCloseNavMenu}>
                         <Typography textAlign="center">{page}</Typography>
                         </MenuItem>
                     ))}
@@ -115,11 +181,13 @@ function Navbar() {
                     </Button>
                     ))}
                 </Box>
-
+                {/* Start User Icon */}
+                {
+                    uname !== '' ?
                 <Box sx={{ flexGrow: 0 }}>
                     <Tooltip title="Open settings">
                     <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                        <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                        <Avatar alt="Remy Sharp" src= {icon} />
                     </IconButton>
                     </Tooltip>
                     <Menu
@@ -145,6 +213,32 @@ function Navbar() {
                     ))}
                     </Menu>
                 </Box>
+                : 
+                <Box sx={{ flexGrow: 0 }}>
+                    <Tooltip title="Open settings">
+                    <IconButton onClick={handleOpenSignIn} sx={{ p: 0 }}>
+                        SignIn
+                    </IconButton>
+                    </Tooltip>
+                    <Menu
+                    sx={{ mt: '45px' }}
+                    id="menu-appbar"
+                    anchorEl={anchorElUser}
+                    anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                    }}
+                    keepMounted
+                    transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                    }}
+                    open={Boolean(anchorElUser)}
+                    onClose={handleCloseUserMenu}
+                    >
+                    </Menu>
+                </Box>
+                }
                 </Toolbar>
             </Container>
             </Box>

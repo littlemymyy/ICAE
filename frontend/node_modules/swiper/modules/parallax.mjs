@@ -11,6 +11,7 @@ function Parallax(_ref) {
       enabled: false
     }
   });
+  const elementsSelector = '[data-swiper-parallax], [data-swiper-parallax-x], [data-swiper-parallax-y], [data-swiper-parallax-opacity], [data-swiper-parallax-scale]';
   const setTransform = (el, progress) => {
     const {
       rtl
@@ -62,9 +63,14 @@ function Parallax(_ref) {
       el,
       slides,
       progress,
-      snapGrid
+      snapGrid,
+      isElement
     } = swiper;
-    elementChildren(el, '[data-swiper-parallax], [data-swiper-parallax-x], [data-swiper-parallax-y], [data-swiper-parallax-opacity], [data-swiper-parallax-scale]').forEach(subEl => {
+    const elements = elementChildren(el, elementsSelector);
+    if (swiper.isElement) {
+      elements.push(...elementChildren(swiper.hostEl, elementsSelector));
+    }
+    elements.forEach(subEl => {
       setTransform(subEl, progress);
     });
     slides.forEach((slideEl, slideIndex) => {
@@ -73,7 +79,7 @@ function Parallax(_ref) {
         slideProgress += Math.ceil(slideIndex / 2) - progress * (snapGrid.length - 1);
       }
       slideProgress = Math.min(Math.max(slideProgress, -1), 1);
-      slideEl.querySelectorAll('[data-swiper-parallax], [data-swiper-parallax-x], [data-swiper-parallax-y], [data-swiper-parallax-opacity], [data-swiper-parallax-scale], [data-swiper-parallax-rotate]').forEach(subEl => {
+      slideEl.querySelectorAll(`${elementsSelector}, [data-swiper-parallax-rotate]`).forEach(subEl => {
         setTransform(subEl, slideProgress);
       });
     });
@@ -83,9 +89,14 @@ function Parallax(_ref) {
       duration = swiper.params.speed;
     }
     const {
-      el
+      el,
+      hostEl
     } = swiper;
-    el.querySelectorAll('[data-swiper-parallax], [data-swiper-parallax-x], [data-swiper-parallax-y], [data-swiper-parallax-opacity], [data-swiper-parallax-scale]').forEach(parallaxEl => {
+    const elements = [...el.querySelectorAll(elementsSelector)];
+    if (swiper.isElement) {
+      elements.push(...hostEl.querySelectorAll(elementsSelector));
+    }
+    elements.forEach(parallaxEl => {
       let parallaxDuration = parseInt(parallaxEl.getAttribute('data-swiper-parallax-duration'), 10) || duration;
       if (duration === 0) parallaxDuration = 0;
       parallaxEl.style.transitionDuration = `${parallaxDuration}ms`;

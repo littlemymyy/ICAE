@@ -191,6 +191,7 @@ function Autoplay(_ref) {
   const onPointerEnter = e => {
     if (e.pointerType !== 'mouse') return;
     pausedByInteraction = true;
+    if (swiper.animating || swiper.autoplay.paused) return;
     pause(true);
   };
   const onPointerLeave = e => {
