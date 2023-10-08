@@ -22,10 +22,7 @@ function Navigation(_ref) {
     nextEl: null,
     prevEl: null
   };
-  const makeElementsArray = el => {
-    if (!Array.isArray(el)) el = [el].filter(e => !!e);
-    return el;
-  };
+  const makeElementsArray = el => (Array.isArray(el) ? el : [el]).filter(e => !!e);
   function getEl(el) {
     let res;
     if (el && typeof el === 'string' && swiper.isElement) {
