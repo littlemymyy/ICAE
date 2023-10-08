@@ -70,6 +70,8 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Navbar from "@/components/layout/Navbar";
+import Axios from "axios";
+import { useForm, SubmitHandler } from "react-hook-form"
    
 
 function Copyright(props) {
@@ -96,19 +98,66 @@ const defaultTheme = createTheme();
 
 export default function SignUp() {
   
-  
+  const [email , setEmail] = React.useState('')
+  const [error , setError] = React.useState(null)
+
+  function isValidEmail(email) {
+    return /\S+@\S+\.\S+/.test(email);
+  }
+
+ 
+  const handleChange = (event) =>{
+    if (!isValidEmail(event.target.value)) {
+      setError('Email is invalid');
+      console.log("email")
+    } else {
+      setError(null);
+      console.log("ok")
+    }
+
+    setEmail(event.target.value);
+  }
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
+    const data1 = {
+      firstname : data.get('firstName'),
+      lastname : data.get('lastName'),
       email: data.get('email'),
       password: data.get('password'),
-    });
+      repassword : data.get('confirmpassword')
+    }
+    if (!isValidEmail(data1.email)) {
+      alert("กรุณาใส่อีเมลให้ถูกต้อง")
+    }
+    else if(data1.password !== data1.repassword){
+      alert("กรุณาใส่รหัสผ่านให้เหมือนกัน")
+    }
+    else {
+      console.log(data1)
+      Axios({
+        url: "http://localhost:3001/api/setsignUp",
+        method: "post",
+        headers: { 
+          'Content-Type': 'application/json'
+        },
+        data: data1
+        })
+        .then(function (response) {
+          console.log(response.data)
+        })
+
+    // else if(email.include("@gmail.com")){
+    //   alert("ok")
+    // }
+    // else {
+    //   alert("try Again")
+    }
   };
 
+
+
   return (
-    
-    
 
     <ThemeProvider theme={defaultTheme}>
       <Navbar />
@@ -162,6 +211,7 @@ export default function SignUp() {
                   label="อีเมล์"
                   name="email"
                   autoComplete="email"
+                  onChange={handleChange}
                 />
               </Grid>
 
@@ -193,7 +243,7 @@ export default function SignUp() {
                   fullWidth
                   name="confirmpassword"
                   label="ยืนยันรหัสผ่าน"
-                  type="confirmpassword"
+                  type="password"
                   id="confirmpassword"
                   autoComplete="new-password"
                 />
@@ -207,7 +257,8 @@ export default function SignUp() {
               </Grid>
               
             </Grid>
-            <Button
+            
+              <Button 
               type="submit"
               fullWidth
               variant="contained"
@@ -215,6 +266,9 @@ export default function SignUp() {
             >
               สมัครสมาชิก 
             </Button>
+
+            
+            
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link href="#" variant="body2">

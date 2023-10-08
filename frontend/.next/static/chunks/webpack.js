@@ -131,7 +131,11 @@
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	!function() {
+<<<<<<< HEAD
 /******/ 		__webpack_require__.h = function() { return "7a2deb4371bd08f1"; }
+=======
+/******/ 		__webpack_require__.h = function() { return "c84b6d0102f4d149"; }
+>>>>>>> praphakorn_A01
 /******/ 	}();
 /******/ 	
 /******/ 	/* webpack/runtime/global */
