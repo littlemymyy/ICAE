@@ -12,6 +12,11 @@
   ],
   "rootMainFiles": [],
   "pages": {
+    "/Knowledge/home": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/Knowledge/home.js"
+    ],
     "/SignUp": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
