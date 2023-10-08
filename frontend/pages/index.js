@@ -17,6 +17,7 @@ import "swiper/css/pagination";
 import { Pagination } from "swiper/modules";
 
 export default function Home() {
+  const [icon, setIcon] = useState('/news1.jpeg')
   return (
     <>
       <Navbar />
@@ -41,7 +42,7 @@ export default function Home() {
               className="mySwiper"
             >
               <SwiperSlide>
-                <img className="slide_pic" src="/news1.jpeg" />
+                <img className="slide_pic" src={icon} />
               </SwiperSlide>
               <SwiperSlide>
                 <img className="slide_pic" src="/news2.jpeg" />
@@ -119,7 +120,7 @@ export default function Home() {
               margin: { xs: "10px 0px 0px 0px", md: "" },
             }}
           >
-            <img src="/ability.png" style={{ maxWidth: 110 + "px" }} />
+            <img src="/ability.png" style={{ maxWidth: 200 + "px" }} />
           </Box>
         </Box>
 
@@ -149,15 +150,15 @@ export default function Home() {
             <Grid item xs={4} sx={{
 							fontSize:{xs:'', md:'20px'}
 						}} >
-              <img src="/adven.png" style={{ maxWidth: 30 + "px" }} />
+              <img src="/adven.png" style={{ maxWidth: 100 + "px" }} />
               <p>ข้อมูลที่ครอบคลุมและถูกต้อง</p>
             </Grid>
             <Grid item xs={4} >
-              <img src="/adven2.png" style={{ maxWidth: 30 + "px" }} />
+              <img src="/adven2.png" style={{ maxWidth: 100 + "px" }} />
               <p>ตรวจสอบก่อนยื่นจริง</p>
             </Grid>
             <Grid item xs={4}>
-              <img src="/adven3.png" style={{ maxWidth: 30 + "px" }} />
+              <img src="/adven3.png" style={{ maxWidth: 100 + "px" }} />
               <p>สมาร์ทครบวงจรในที่เดียวและสะดวกสบาย</p>
             </Grid>
           </Grid>

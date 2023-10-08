@@ -1,5 +1,5 @@
-import { S as Swiper } from './swiper-core.mjs';
 import { e as extend, p as paramsList, i as isObject, n as needsNavigation, a as needsPagination, b as needsScrollbar } from './update-swiper.mjs';
+import { d as defaults } from './swiper-core.mjs';
 
 function getParams(obj, splitEvents) {
   if (obj === void 0) {
@@ -13,8 +13,7 @@ function getParams(obj, splitEvents) {
   };
   const events = {};
   const passedParams = {};
-  extend(params, Swiper.defaults);
-  extend(params, Swiper.extendedDefaults);
+  extend(params, defaults);
   params._emitClasses = true;
   params.init = false;
   const rest = {};
