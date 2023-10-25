@@ -8,7 +8,9 @@
 .swiper-fade .swiper-slide .swiper-slide {
   pointer-events: none;
 }
-.swiper-fade .swiper-slide-active,
+.swiper-fade .swiper-slide-active {
+  pointer-events: auto;
+}
 .swiper-fade .swiper-slide-active .swiper-slide-active {
   pointer-events: auto;
 }

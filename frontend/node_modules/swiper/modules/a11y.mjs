@@ -34,10 +34,7 @@ function A11y(_ref) {
     notification.innerHTML = '';
     notification.innerHTML = message;
   }
-  const makeElementsArray = el => {
-    if (!Array.isArray(el)) el = [el].filter(e => !!e);
-    return el;
-  };
+  const makeElementsArray = el => (Array.isArray(el) ? el : [el]).filter(e => !!e);
   function getRandomNumber(size) {
     if (size === void 0) {
       size = 16;
