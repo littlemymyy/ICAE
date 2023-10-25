@@ -35,7 +35,11 @@ self["webpackHotUpdate_N_E"]("webpack",{},
 /******/ 
 /******/ /* webpack/runtime/getFullHash */
 /******/ !function() {
+<<<<<<< HEAD
+/******/ 	__webpack_require__.h = function() { return "2e45b38bc30ea0cf"; }
+=======
 /******/ 	__webpack_require__.h = function() { return "544319e2dc1a450f"; }
+>>>>>>> praphakorn_A01
 /******/ }();
 /******/ 
 /******/ /* webpack/runtime/global */

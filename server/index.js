@@ -3,7 +3,7 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const fs = require('fs')
 const csv = require('csv-parser')
-const mysql = require('mysql')
+const mysql = require('mysql2')
 const {convertArrayToCSV} = require('convert-array-to-csv')
 const xml2js = require('xml2js')
 const parser = new xml2js.Parser({attrkey : "ATTR"})
@@ -224,6 +224,25 @@ app.post('/api/setsignUp' , jsonParser, (req , res ) => {
             console.log('Don\'t do it');
         }
     })
+    
+})
+
+app.get('/api/annex', jsonParser, (req, res) => {
+    db.execute(
+        'SELECT * FROM chemical1 WHERE st = ?',
+        [req.body.st],
+
+        (err, result) => {
+            if(err) {
+                res.json({status:'error',message:err});
+            }
+            if(result.length > 0) {
+                res.json({status:'ok',message:result})
+            }
+            else {
+                res.json({status:'error',message:'No data found'});
+            }
+        })
     
 })
 
