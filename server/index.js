@@ -231,7 +231,6 @@ app.get('/api/annex', jsonParser, (req, res) => {
     db.execute(
         'SELECT * FROM chemical1 WHERE st = ?',
         [req.body.st],
-
         (err, result) => {
             if(err) {
                 res.json({status:'error',message:err});
@@ -243,7 +242,6 @@ app.get('/api/annex', jsonParser, (req, res) => {
                 res.json({status:'error',message:'No data found'});
             }
         })
-    
 })
 
 app.listen(3001, () => {
