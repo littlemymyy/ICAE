@@ -1,9 +1,19 @@
 import Footer from "@/components/Footer"
+import React from "react"
 import Navbar from "@/components/layout/Navbar"
 import { Box, Card, CardContent } from "@mui/material"
 import { CardActions } from "@mui/material"
 import { Typography } from "@mui/material"
 import { Button } from "@mui/material"
+import { Table } from "@mui/material"
+import { TableBody } from "@mui/material"
+import { TableCell } from "@mui/material"
+import { TableContainer } from "@mui/material"
+import { TableHead } from "@mui/material"
+import { TableRow } from "@mui/material"
+import Paper from '@mui/material/Paper';
+import { Margin } from "@mui/icons-material"
+
 
 export default function Home(){
     return(
@@ -41,6 +51,23 @@ export default function Home(){
             </Box>
         </Box>
 
+    <Box sx={{ marginLeft:"200px" , marginRight:"200px", paddingTop:"50px"}}>
+        <TableContainer component={Paper} >
+            <Table sx={{ minWidth: 100  }} aria-label="simple table">
+                <TableHead>
+                <TableRow>
+        
+                    <TableCell align="right">CAS NO</TableCell>
+                    <TableCell align="right">ชื่อสารเคมี</TableCell>
+                    <TableCell align="right">ประเภท</TableCell>
+                    <TableCell align="right">ความสามารถ</TableCell>
+                </TableRow>
+                </TableHead>
+
+       
+            </Table>
+        </TableContainer>
+    </Box>
         
 
         <Footer />

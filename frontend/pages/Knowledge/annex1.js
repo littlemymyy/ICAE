@@ -41,6 +41,24 @@ export default function Home(){
             </Box>
         </Box>
 
+
+    <Box sx={{ marginLeft:"200px" , marginRight:"200px", paddingTop:"50px"}}>
+        <TableContainer component={Paper} >
+            <Table sx={{ minWidth: 100  }} aria-label="simple table">
+                <TableHead>
+                <TableRow>
+        
+                    <TableCell align="right">CAS NO</TableCell>
+                    <TableCell align="right">ชื่อสารเคมี</TableCell>
+                    <TableCell align="right">ประเภท</TableCell>
+                    <TableCell align="right">ความสามารถ</TableCell>
+                </TableRow>
+                </TableHead>
+
+       
+            </Table>
+        </TableContainer>
+    </Box>
         
 
         <Footer />
