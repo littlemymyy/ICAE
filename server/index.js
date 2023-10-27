@@ -12,11 +12,13 @@ const DomParser = require('dom-parser')
 const jsonParser = bodyParser.json()
 
 
-const app = express();
 
+const app = express();
+app.use(bodyParser.json({limit: '35mb'}));
 app.use(cors());
 app.use(express.json());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({extended: true , limit : "35mb" , parameterLimit : 50000 }));
+
 
 const db = mysql.createConnection({
     host: 'localhost',
@@ -188,15 +190,27 @@ app.post('/api/setdata' , (req , res) => {
     const st = req.body.st
     console.log(data)
     console.log(st)
-    const sql = 'DELETE FROM chemical1 WHERE name =  ' + data.name
-    db.query(sql,(err, result)=>{
-        if(err)
-            console.log(result)
-    })
-        const sql1 = 'INSERT INTO chemical1(name, cas , ec , parts , maxt , mint , st) VALUES(?,?,?,?,?,?,?);'
-        db.query(sql1,[data.name, data.cas, data.ec, data.parts, data.maxt, data.mint , st ] , (err, result)=>{
-            console.log(result)
+    console.log(data.length)
+    let count = 0 
+
+    for(let i =0; i< data.length; i++){
+        const sql = 'DELETE FROM chemical WHERE cname =  "' + data[i].name + '"'
+        db.query(sql,(err, result)=>{
+            if(err)
+                console.log(result)
         })
+        const sql1 = 'INSERT INTO chemical(cas, cname , cmname , per , st , img , des ,bodypart , color) VALUES(?,?,?,?,?,?,?,?,?);'
+        db.query(sql1,[data[i].cas , data[i].name , data[i].cmname , data[i].per , st , "-" , "-" , data[i].parts , data[i].color ] , (err, result)=>{
+            // console.log(result)
+            count++
+        })
+        count++
+        console.log(count)
+
+    }
+    console.log(count)
+   
+      
     
     res.send('OK');
 
