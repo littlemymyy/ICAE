@@ -230,7 +230,7 @@ app.post('/api/setsignUp' , jsonParser, (req , res ) => {
 app.get('/api/annex', jsonParser, (req, res) => {
     db.execute(
         'SELECT * FROM chemical1 WHERE st = ?',
-        [req.body.st],
+        [req.query.st],
         (err, result) => {
             if(err) {
                 res.json({status:'error',message:err});
