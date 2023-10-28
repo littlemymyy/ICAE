@@ -17,10 +17,10 @@
       "static/chunks/main.js",
       "static/chunks/pages/Knowledge/annex3.js"
     ],
-    "/Knowledge/home": [
+    "/SignIn": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/Knowledge/home.js"
+      "static/chunks/pages/SignIn.js"
     ],
     "/_app": [
       "static/chunks/webpack.js",
