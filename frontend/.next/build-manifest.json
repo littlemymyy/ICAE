@@ -12,15 +12,35 @@
   ],
   "rootMainFiles": [],
   "pages": {
+    "/Knowledge/annex1": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/Knowledge/annex1.js"
+    ],
+    "/Knowledge/annex2": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/Knowledge/annex2.js"
+    ],
     "/Knowledge/annex3": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
       "static/chunks/pages/Knowledge/annex3.js"
     ],
-    "/SignIn": [
+    "/Knowledge/annex4": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/SignIn.js"
+      "static/chunks/pages/Knowledge/annex4.js"
+    ],
+    "/Knowledge/annex5": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/Knowledge/annex5.js"
+    ],
+    "/Knowledge/annex6": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/Knowledge/annex6.js"
     ],
     "/_app": [
       "static/chunks/webpack.js",

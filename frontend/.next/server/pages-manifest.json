@@ -3,5 +3,9 @@
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
   "/Knowledge/annex3": "pages/Knowledge/annex3.js",
-  "/SignIn": "pages/SignIn.js"
+  "/Knowledge/annex4": "pages/Knowledge/annex4.js",
+  "/Knowledge/annex2": "pages/Knowledge/annex2.js",
+  "/Knowledge/annex1": "pages/Knowledge/annex1.js",
+  "/Knowledge/annex5": "pages/Knowledge/annex5.js",
+  "/Knowledge/annex6": "pages/Knowledge/annex6.js"
 }
