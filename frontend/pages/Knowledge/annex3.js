@@ -37,7 +37,7 @@ export default function Home(){
     }, []);
 
     const evenRowStyle = {
-        backgroundColor: '#F2F2F2',
+        backgroundColor: '#e1f5fe',
     }; 
 
    
@@ -84,8 +84,8 @@ export default function Home(){
                 <TableRow>
                     <TableCell sx={{width:100}}align="left">CAS NO</TableCell>
                     <TableCell align="left">ชื่อสารเคมี</TableCell>
-                    <TableCell align="left">ประเภท</TableCell>
-                    <TableCell align="left">ความสามารถ</TableCell>
+                    <TableCell align="left">ปริมาณที่สามารถใช้ได้ (%)</TableCell>
+                    
                 </TableRow>
                 </TableBody>
 
@@ -94,8 +94,8 @@ export default function Home(){
                     <TableRow key={index} style={index % 2 === 0 ? evenRowStyle : null} >
                         <TableCell align="left">{item.cas}</TableCell>
                         <TableCell align="left">{item.name}</TableCell>
-                        <TableCell align="left">{item.parts}</TableCell>
-                        <TableCell align="left">{item.st}</TableCell>
+                        <TableCell align="left">{item.maxt}</TableCell>
+                        
                     </TableRow>
                 ))}
                 </TableBody>
