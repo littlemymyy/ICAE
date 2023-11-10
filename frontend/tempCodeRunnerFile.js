@@ -1,1 +1,0 @@
-reactStrictMode: true,
