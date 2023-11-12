@@ -27,7 +27,12 @@ export default function Home(){
             }
         ).then((response) => {
             let data = JSON.stringify(response.data.message)
-            setData(response.data.message);
+            if (response.data.status === "ok"){
+                setData(response.data.message);
+            }
+            else {
+                setData([{cas: "", name: "", maxt: "ไม่พบข้อมูล"}]);
+            }
 
             console.log(data)
         }).catch((error) => {

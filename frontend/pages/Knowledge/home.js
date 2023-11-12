@@ -4,8 +4,17 @@ import { Box, Card, CardContent } from "@mui/material"
 import { CardActions } from "@mui/material"
 import { Typography } from "@mui/material"
 import { Button } from "@mui/material"
+import { useRouter } from "next/router";
+import Link from "next/link";
 
 export default function Home(){
+    const router = useRouter();
+
+    const handleClick = (e, path) => {
+        e.preventDefault();
+        router.push(path);
+      };
+
     return(
         <>
         <Navbar />
@@ -41,11 +50,11 @@ export default function Home(){
 
         <Box marginTop={"20px"} marginBottom={"30px"}>
             <form style={{textAlign:"center"}}>
-                <input style={{width:"400px", height:"42px", borderRadius:"5px", border:"1px solid #C4C4C4", padding:"10px"}}
+                <input id="searchname" style={{width:"400px", height:"42px", borderRadius:"5px", border:"1px solid #C4C4C4", padding:"10px"}}
                     type="text" placeholder="ค้นหาโดยชื่อสารเคมี, CAS NO  etc" name="search"
                 />
-                <button style={{width:"55px", height:"42px", borderRadius:"5px", border:"1px solid #C4C4C4", padding:"10px",backgroundColor:"#7e57c2",marginLeft:"5px"}}
-                 type="submit">
+                <button onClick={(e) => handleClick(e, `annex_search?search=${document.getElementById("searchname").value}`)} style={{width:"55px", height:"42px", borderRadius:"5px", border:"1px solid #C4C4C4", padding:"10px",backgroundColor:"#7e57c2",marginLeft:"5px"}}
+                 type="button">
                     <text style={{color:"white"}}>ค้นหา</text>
                  </button>
             </form>
@@ -54,50 +63,50 @@ export default function Home(){
 
         <Box display={"flex"} justifyContent={"space-around"}>
 
-            <button style={{ Width:"250px", borderRadius:"5px", border:"1px solid #C4C4C4", backgroundColor:"#FDCF6F"}}>
+            <Button onClick={(e) => handleClick(e, "/Knowledge/annex1")} style={{ Width:"250px", borderRadius:"5px", border:"1px solid #C4C4C4", backgroundColor:"#FDCF6F"}}>
                 <CardContent>
                     <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                         สารต้องห้ามในผลิตภัณฑ์เครื่องสำอาง
                     </Typography>
 
                 </CardContent>
-            </button>
-            <button style={{ Width:"100%" , borderRadius:"5px", border:"1px solid #C4C4C4",backgroundColor:"grey" }}>
+            </Button>
+            <Button onClick={(e) => handleClick(e, "/Knowledge/annex2")} style={{ Width:"100%" , borderRadius:"5px", border:"1px solid #C4C4C4",backgroundColor:"grey" }}>
                 <CardContent>
                     <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                         สารที่กำหนดเงื่อนไขและปริมาณการใช้
                     </Typography>
 
                 </CardContent>
-            </button>
+            </Button>
 
         </Box>
-
+        
         <Box display={"flex"} justifyContent={"space-around"} marginTop={"30px"}>
-            <button style={{ Width:"400px", borderRadius:"5px", border:"1px solid #C4C4C4", backgroundColor:"#BA6D9B" }}>
+            <Button onClick={(e) => handleClick(e, "/Knowledge/annex3")} style={{ Width:"400px", borderRadius:"5px", border:"1px solid #C4C4C4", backgroundColor:"#BA6D9B" }}>
                 <CardContent>
                     <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                         สารย้อมสี
                     </Typography>
 
                 </CardContent>
-            </button>
-            <button style={{ Width:"100%" , borderRadius:"5px", border:"1px solid #C4C4C4",backgroundColor:"#517EF0"}}>
+            </Button>
+            <Button onClick={(e) => handleClick(e, "/Knowledge/annex4")} style={{ Width:"100%" , borderRadius:"5px", border:"1px solid #C4C4C4",backgroundColor:"#517EF0"}}>
                 <CardContent>
                     <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                         สารกันเสีย
                     </Typography>
 
                 </CardContent>
-            </button>
-            <button style={{ Width:"100%" , borderRadius:"5px", border:"1px solid #C4C4C4", backgroundColor:"#F64444" }}>
+            </Button>
+            <Button onClick={(e) => handleClick(e, "/Knowledge/annex5")} style={{ Width:"100%" , borderRadius:"5px", border:"1px solid #C4C4C4", backgroundColor:"#F64444" }}>
                 <CardContent>
                     <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                         สารกรองแสง UV
                     </Typography>
 
                 </CardContent>
-            </button>
+            </Button>
 
         </Box>
 
