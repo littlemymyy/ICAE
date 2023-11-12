@@ -244,9 +244,28 @@ app.post('/api/setsignUp' , jsonParser, (req , res ) => {
 
 })
 
+app.get('/api/annex/search', jsonParser, (req, res) => {
+    const name = "%"+req.query.name+"%"
+    console.log(name)
+    db.execute(
+        'SELECT * FROM `chemical` WHERE name LIKE ?',
+        [name],
+        (err, result) => {
+            if(err) {
+                res.json({status:'error',message:err});
+            }
+            if(result.length > 0) {
+                res.json({status:'ok',message:result})
+            }
+            else {
+                res.json({status:'error',message:'No data found'});
+            }
+        })
+})
+
 app.get('/api/annex', jsonParser, (req, res) => {
     db.execute(
-        'SELECT * FROM chemical1 WHERE st = ?',
+        'SELECT * FROM chemical WHERE st = ?',
         [req.query.st],
         (err, result) => {
             if(err) {
@@ -372,15 +391,6 @@ app.post('/api/getGroupNamebyname' , (req,res) => {
 
 })
 
-app.post('/api/annex', (req, res) => {
-    const st = req.body.st
-    console.log(st)
-    db.query(
-        'SELECT * FROM chemical WHERE st = ' + st,
-        (err, result) => {
-            res.send(result)
-        })
-})
 
 app.get('/api/getalldata' , (req , res ) => {
     const sql =  'SELECT * FROM chemical'
