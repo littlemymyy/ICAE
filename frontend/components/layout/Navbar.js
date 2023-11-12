@@ -13,7 +13,7 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { useRouter } from 'next/router';
 
-const pages = ['หน้าหลัก', 'ตรวจสอบสูตรสารเคมี', 'ตรวจสอบชื่อผลิตภัณฑ์' , 'ประวัติการตรวจสอบสูตรสารเคมี','คลังความรู้'];
+const pages = ['หน้าหลัก', 'ตรวจสอบสูตรสารเคมี', 'PIF' , 'ประวัติการตรวจสอบสูตรสารเคมี','คลังความรู้'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function Navbar() {
