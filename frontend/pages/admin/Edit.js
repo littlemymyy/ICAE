@@ -2,13 +2,70 @@ import Footer from "@/components/Footer";
 import Navbar from "@/components/layout/Navbar";
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import { Box, Typography } from "@mui/material";
-import { Fragment } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from "@mui/material";
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import BuildIcon from '@mui/icons-material/Build';
+import Axios from "axios";
 
 export default function Edit_Admin() {
+    const [data , setData] = useState([])
+    const [num1 , setNum1] = useState([])
+    const cmname = useRef('')
+    const [st , setSt] = useState("")
+    const [per , setPer] = useState("")
+    const [cmname1 , setCmname1] = useState("")
+    const [des , setDes] = useState("")
+    
+
+    useEffect(() => {
+        const queryString = window.location.search
+        const searchParams = new URLSearchParams(queryString)
+        const no= searchParams.get("no")
+        console.log(no)
+        setNum1(no)
+
+        let load = {
+            no : no
+        }
+        Axios({
+            url : "http://localhost:3001/api/getalldataAddminEdit" ,
+            method : 'post',
+            data : load,
+        }).then((response)=>{
+            console.log(response.data[0])
+            setData(response.data[0])
+            cmname.current = response.data[0].cmname
+        })
+        
+    },[])
+
+ 
+
+    const save = () => {
+       let load = {
+        no : num1,
+        cas : data.cas ,
+        cmname : cmname1 ,
+        per : per ,
+        st : st ,
+        des : des 
+       }
+
+       Axios({
+         url : "http://localhost:3001/api/getalldataAddminUpdateByType",
+         method : 'post' , 
+         data : load ,
+         
+       }).then((response) => {
+
+            alert("สำเร็จ")
+            window.location.reload(false)
+       })
+
+    }
+   
     return(
        <>
          <Navbar />
@@ -60,33 +117,64 @@ export default function Edit_Admin() {
                             row
                             aria-labelledby="demo-row-radio-buttons-group-label"
                             name="row-radio-buttons-group"
-                        >
-                            <FormControlLabel value="Annex II" control={<Radio />} label="Annex II" />
-                            <FormControlLabel value="Annex III" control={<Radio />} label="Annex III" />
-                            <FormControlLabel value="Annex IV" control={<Radio />} label="Annex IV" />
-                            <FormControlLabel value="Annex V" control={<Radio />} label="Annex V" />
+                        >   
+                            {
+                                data.st === 2 ?
+                                <FormControlLabel checked value="Annex II" control={<Radio />} label="Annex II" />
+                                : 
+                                <FormControlLabel value="Annex II" control={<Radio />} label="Annex II" onClick={()=>setSt(2)}/>
+                            }
+
+                            {
+                                data.st === 3 ?
+                                <FormControlLabel checked value="Annex III" control={<Radio />} label="Annex III" />
+                                :
+                                <FormControlLabel value="Annex III" control={<Radio />} label="Annex III" onClick={()=>setSt(3)}/>
+                            }
+
+                            {
+                                data.st === 4 ?
+                                <FormControlLabel checked value="Annex IV" control={<Radio />} label="Annex IV" />
+                                :
+                                <FormControlLabel value="Annex IV" control={<Radio />} label="Annex IV" onClick={()=>setSt(4)}/>
+                            }
+
+                            {
+                                data.st === 5 ? 
+                                <FormControlLabel checked value="Annex V" control={<Radio />} label="Annex V" />
+                                :
+                                <FormControlLabel value="Annex V" control={<Radio />} label="Annex V" onClick={()=>setSt(5)} />
+                            }
+
+                            {
+                                data.st === 6 ? 
+                                <FormControlLabel checked value="Annex VI" control={<Radio />} label="Annex VI" />
+                                :
+                                <FormControlLabel value="Annex VI" control={<Radio />} label="Annex VI" onClick={()=>setSt(6)} />
+                            }
+                            
+                            
                            
                             
                         </RadioGroup>
                     </FormControl>
                     <Typography variant="h7">ชื่อสารเคมี</Typography>
-                    <TextField label="ชื่อสารเคมี" variant="outlined" />
+                    <TextField  variant="outlined" ref={cmname} onChange={(e)=> setCmname1(e.target.value)} />
                     <Typography variant="h7">รหัส CAS NO</Typography>
-                    <TextField label="รหัส CAS NO" variant="outlined" />
+                    <TextField  variant="outlined" value = {data.cas} />
                     <Typography variant="h7">คำอธิบาย</Typography>
                     <TextField
                         id="outlined-multiline-static"
-                        label="คำอธิบาย"
+                        value={data.des}
+                        onChange={(e) => setDes(e.target.value) }
                         multiline
                         rows={4}
                     />
 
-                    <Box display={'flex'}  gap={"20px"} marginBottom={'20px'}>
-                        <TextField label="ผลข้างเคียง" variant="outlined" />
-                        <TextField label="กำหนดปริมาณ" variant="outlined" />
+                        <Typography variant="h7">ปริมาณสาร</Typography>
+                        <TextField  defaultValue={data.per} variant="outlined" onChange={(e) => setPer(e.target.value)} />
 
-                    </Box>
-
+                    
                 </Box>
             
                
@@ -104,26 +192,11 @@ export default function Edit_Admin() {
 
                 
                 >
-                    <Box 
-                        border={'2px dashed grey'}
-                        textAlign={'center'}
-                        min-height={'100vh'}
-                        gap={'30px'}
-                        justifyContent={'center'}
-                        height={'450px'}
-                        width={'700px'}
-
-                    >
-                        <CloudDownloadIcon></CloudDownloadIcon>
-                        <header>ลากและวางไฟล์ที่นี่</header>
-                        <span>หรือ</span>
-                        <button>เลือกไฟล์</button>
-                        
-                    </Box>  
+         
                     
 
                     <Box sx={{textAlign:'center', marginTop:'20px'}}>
-                        <button color="yellow">บันทึก</button>
+                        <button onClick={() => save()} color="yellow">บันทึก</button>
                     </Box>
                         
                     
