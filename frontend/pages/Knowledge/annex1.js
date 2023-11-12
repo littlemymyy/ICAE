@@ -1,11 +1,44 @@
 import Footer from "@/components/Footer"
+
 import Navbar from "@/components/layout/Navbar"
-import { Box, Card, CardContent } from "@mui/material"
-import { CardActions } from "@mui/material"
-import { Typography } from "@mui/material"
-import { Button } from "@mui/material"
+import { Box, Card, CardContent, TableBody } from "@mui/material"
+import { Table } from "@mui/material"
+import { TableCell } from "@mui/material"
+import { TableContainer } from "@mui/material"
+import { TableHead } from "@mui/material"
+import { TableRow } from "@mui/material"
+import Paper from '@mui/material/Paper';
+import Axios from "axios"
+import React, { useEffect , useState } from 'react';
+
+
 
 export default function Home(){
+    const [data, setData] = useState([]);
+
+
+    useEffect(() => {
+        Axios.request(
+            {
+                method: 'get',
+                url: 'http://localhost:3001/api/annex?st=1',
+                headers: { },
+                data : ''
+            }
+        ).then((response) => {
+            let data = JSON.stringify(response.data.message)
+            setData(response.data.message);
+
+            console.log(data)
+        }).catch((error) => {
+            console.log(error);
+        }
+        )
+    }, []);
+
+    const evenRowStyle = {
+        backgroundColor: '#e1f5fe',
+    }; 
     return(
         <>
         <Navbar />
@@ -41,6 +74,33 @@ export default function Home(){
             </Box>
         </Box>
 
+
+        <Box sx={{ marginLeft:"200px" , marginRight:"200px", paddingTop:"50px"}}>
+        <TableContainer component={Paper} >
+            <Table sx={{ minWidth: 100  }} aria-label="simple table">
+                <TableBody>
+                <TableRow>
+                    <TableCell sx={{width:100}}align="left">CAS NO</TableCell>
+                    <TableCell align="left">ชื่อสารเคมี</TableCell>
+                    <TableCell align="left">ปริมาณที่สามารถใช้ได้ (%)</TableCell>
+                    
+                </TableRow>
+                </TableBody>
+
+                <TableBody>
+                {data.map((item, index) => (
+                    <TableRow key={index} style={index % 2 === 0 ? evenRowStyle : null} >
+                        <TableCell align="left">{item.cas}</TableCell>
+                        <TableCell align="left">{item.name}</TableCell>
+                        <TableCell align="left">{item.maxt}</TableCell>
+                        
+                    </TableRow>
+                ))}
+                </TableBody>
+       
+            </Table>
+        </TableContainer>
+    </Box>
         
 
         <Footer />
