@@ -22,7 +22,8 @@ const Preview = () => {
         w &&
         w.cas &&
         w.name &&
-        (w.name.toLowerCase().includes(e) || w.cas.includes(e))
+        w.cmname &&
+        (w.name.toLowerCase().includes(e) || w.cas.includes(e) || w.cmname.toLowerCase().includes(e))
       );
     });
     setShow(results1);

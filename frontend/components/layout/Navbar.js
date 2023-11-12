@@ -13,7 +13,7 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { useRouter } from 'next/router';
 
-const pages = ['หน้าหลัก', 'ตรวจสอบสูตรสารเคมี', 'ตรวจสอบชื่อผลิตภัณฑ์' , 'ประวัติการตรวจสอบสูตรสารเคมี','คลังความรู้'];
+const pages = ['หน้าหลัก', 'ตรวจสอบสูตรสารเคมี', 'การจัดการ PIF' , 'ประวัติการตรวจสอบสูตรสารเคมี','คลังความรู้'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function Navbar() {
@@ -40,16 +40,16 @@ function Navbar() {
                 router.push("/")
             }
             else if(selectName === pages[1]){
-                router.push("/Preview");
+                router.push("/Groupname");
             }
             else if(selectName === pages[2]){
                 router.push("/Checkword")
             }
             else if(selectName === pages[3]){
-                router.push("/PreviewGroup")
+                router.push("/c2")
             }
             else if(selectName === pages[4]){
-                router.push("/ChemicalList")
+                router.push("/Knowledge/home")
             }
             // else if(selectName === pages[4]){
             //     router.push("/Test01")
@@ -73,7 +73,7 @@ function Navbar() {
 
         }
         else if(selectName === settings[2]){
-                
+
         }
         else if(selectName === settings[3]) {
             console.log('OK');
@@ -85,7 +85,7 @@ function Navbar() {
             setIcon("");
             router.push("/");
         }
-      
+
     };
 
     React.useEffect(() => {
@@ -106,15 +106,15 @@ function Navbar() {
 
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
-                    <img className='logo' width={'80px'} src="/icae_logo.png" 
+                    <img className='logo' width={'80px'} src="/icae_logo.png"
                     sx={{
-                        display: { xs: 'none', md: 'flex' }, 
+                        display: { xs: 'none', md: 'flex' },
                         mr: 1 ,
-                        
+
                     }}/>
 
                 <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none'} }}>
-                
+
                     <IconButton
                     size="large"
                     aria-label="account of current user"
@@ -213,7 +213,7 @@ function Navbar() {
                     ))}
                     </Menu>
                 </Box>
-                : 
+                :
                 <Box sx={{ flexGrow: 0 }}>
                     <Tooltip title="Open settings">
                     <IconButton onClick={handleOpenSignIn} sx={{ p: 0 }}>
@@ -243,8 +243,8 @@ function Navbar() {
             </Container>
             </Box>
             </AppBar>
-       
-       
+
+
     )
 }
 

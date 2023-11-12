@@ -65,7 +65,18 @@ export default function SignIn() {
           sessionStorage.setItem("uname" , response.data[0].em_fullname);
           sessionStorage.setItem("uicon" , response.data[0].em_icon);
           sessionStorage.setItem("upass" , response.data[0].em_pass);
-          router.push("/");
+          sessionStorage.setItem("status" , response.data[0].status);
+
+          if(response.data[0].status === "A"){
+            router.push("/admin/Home");
+          }
+          else if(response.data[0].status === "S") {
+
+          }
+          else {
+            router.push("/");
+          }
+          
         }
         else {
           alert("Try Again");
