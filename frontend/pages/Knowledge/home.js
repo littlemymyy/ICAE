@@ -63,7 +63,7 @@ export default function Home(){
 
         <Box display={"flex"} justifyContent={"space-around"}>
 
-            <Button onClick={(e) => handleClick(e, "/Knowledge/annex1")} style={{ Width:"250px", borderRadius:"5px", border:"1px solid #C4C4C4", backgroundColor:"#FDCF6F"}}>
+            <Button onClick={(e) => handleClick(e, "/Knowledge/annex2")} style={{ Width:"250px", borderRadius:"5px", border:"1px solid #C4C4C4", backgroundColor:"#FDCF6F"}}>
                 <CardContent>
                     <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                         สารต้องห้ามในผลิตภัณฑ์เครื่องสำอาง
@@ -71,7 +71,7 @@ export default function Home(){
 
                 </CardContent>
             </Button>
-            <Button onClick={(e) => handleClick(e, "/Knowledge/annex2")} style={{ Width:"100%" , borderRadius:"5px", border:"1px solid #C4C4C4",backgroundColor:"grey" }}>
+            <Button onClick={(e) => handleClick(e, "/Knowledge/annex3")} style={{ Width:"100%" , borderRadius:"5px", border:"1px solid #C4C4C4",backgroundColor:"grey" }}>
                 <CardContent>
                     <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                         สารที่กำหนดเงื่อนไขและปริมาณการใช้
@@ -83,7 +83,7 @@ export default function Home(){
         </Box>
         
         <Box display={"flex"} justifyContent={"space-around"} marginTop={"30px"}>
-            <Button onClick={(e) => handleClick(e, "/Knowledge/annex3")} style={{ Width:"400px", borderRadius:"5px", border:"1px solid #C4C4C4", backgroundColor:"#BA6D9B" }}>
+            <Button onClick={(e) => handleClick(e, "/Knowledge/annex4")} style={{ Width:"400px", borderRadius:"5px", border:"1px solid #C4C4C4", backgroundColor:"#BA6D9B" }}>
                 <CardContent>
                     <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                         สารย้อมสี
@@ -91,7 +91,7 @@ export default function Home(){
 
                 </CardContent>
             </Button>
-            <Button onClick={(e) => handleClick(e, "/Knowledge/annex4")} style={{ Width:"100%" , borderRadius:"5px", border:"1px solid #C4C4C4",backgroundColor:"#517EF0"}}>
+            <Button onClick={(e) => handleClick(e, "/Knowledge/annex5")} style={{ Width:"100%" , borderRadius:"5px", border:"1px solid #C4C4C4",backgroundColor:"#517EF0"}}>
                 <CardContent>
                     <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                         สารกันเสีย
@@ -99,7 +99,7 @@ export default function Home(){
 
                 </CardContent>
             </Button>
-            <Button onClick={(e) => handleClick(e, "/Knowledge/annex5")} style={{ Width:"100%" , borderRadius:"5px", border:"1px solid #C4C4C4", backgroundColor:"#F64444" }}>
+            <Button onClick={(e) => handleClick(e, "/Knowledge/annex6")} style={{ Width:"100%" , borderRadius:"5px", border:"1px solid #C4C4C4", backgroundColor:"#F64444" }}>
                 <CardContent>
                     <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                         สารกรองแสง UV
