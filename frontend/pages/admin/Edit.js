@@ -158,6 +158,7 @@ export default function Edit_Admin() {
                             
                         </RadioGroup>
                     </FormControl>
+                    
                     <Typography variant="h7">ชื่อสารเคมี</Typography>
                     <TextField  variant="outlined" ref={cmname} onChange={(e)=> setCmname1(e.target.value)} />
                     <Typography variant="h7">รหัส CAS NO</Typography>
@@ -173,43 +174,14 @@ export default function Edit_Admin() {
 
                         <Typography variant="h7">ปริมาณสาร</Typography>
                         <TextField  defaultValue={data.per} variant="outlined" onChange={(e) => setPer(e.target.value)} />
-
+                        <Box sx={{textAlign:'center', marginTop:'20px'}}>
+                        <button onClick={() => save()} color="yellow">บันทึก</button>
+                    </Box>
                     
                 </Box>
             
                
-                <Box 
-                    gap={'10px'}
-                    height={'500px'}
-                    width={'700px'}
-                    display={'block'}
-                    borderRadius={'5px'}
-                    alignItems={'center'}
-                    justifyContent={'center'}
-                    
-
-
-
                 
-                >
-         
-                    
-
-                    <Box sx={{textAlign:'center', marginTop:'20px'}}>
-                        <button onClick={() => save()} color="yellow">บันทึก</button>
-                    </Box>
-                        
-                    
-
-                    
-                   
-                    
-                                    
-                    
-                    
-
-                </Box>
-            
             </Box>
 
 
