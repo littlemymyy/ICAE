@@ -66,6 +66,7 @@ export default function Home(){
 
                 justifyContent: { xs: "", md: "center" },
                 display: { xs: "block", md: "flex" },
+                marginRight: { xs: "20px", md: "20px" },
 
             }}
 
