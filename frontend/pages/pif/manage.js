@@ -1,7 +1,6 @@
-
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/Footer";
-import { Box, Typography } from "@mui/material";
+import { Box, Card, CardContent, TextField, Typography } from "@mui/material";
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import Tab from '@mui/material/Tab';
@@ -23,9 +22,6 @@ export default function manage() {
     e.preventDefault();
     router.push(path);
     };
-
-    
-
 
     return(
     <>

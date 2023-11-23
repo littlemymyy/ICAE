@@ -1,9 +1,11 @@
 import Navbar from '@/components/layout/Navbar'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { isValidElement, useEffect, useRef, useState } from 'react'
 import Axios from "axios";
 import { AiOutlineDelete  } from "react-icons/ai";
-import { FaRegEdit } from 'react-icons/fa';
+import { FaRegEdit , FaExchangeAlt } from 'react-icons/fa';
 import { useRouter } from 'next/router';
+import Footer from "@/components/Footer"
+import Popup from 'reactjs-popup';
 
 const Showch = () => {
     const [data , setData] = useState([])
@@ -14,7 +16,8 @@ const Showch = () => {
     const pager = useRef(1)
     const router = useRouter();  
     const [arr , setArr] = useState([])
-
+    const [numdata , setNumdata] = useState([])
+   
     useEffect(() => {
         Axios({
             url : `http://localhost:3001/api/getalldata` ,
@@ -78,8 +81,54 @@ const Showch = () => {
       })
     }
 
+
     const getType = (no) => {
-      alert(no)
+      let cno = no
+      let datano = -1
+      for(let i = 0 ; i < data.length ; i++){
+        if(data[i].no === no){
+            datano = i
+            break
+        }
+      }
+      if(arr[datano] === 0 ){
+        arr[datano] = 1
+        setArr([...arr])
+      }
+      else {
+        arr[datano] = 0
+        setArr([...arr])
+      }
+      
+      // alert(cno + " "+ datano)
+    }
+
+    const changeClick = () => {
+      let str =""
+      for(let i = 0 ; i < arr.length ; i++ ){
+        if(arr[i] === 1) {
+          if(str.length === 0){
+            str += data[i].no
+          }
+          else {
+            str += ","
+            str += data[i].no
+          }
+        }
+      }
+    console.log(numdata)
+    router.push({
+      pathname : "/admin/Changegroup" ,
+      query : {
+        numdata : str 
+      }
+
+    })
+
+    }
+
+    const popupUpdate = () => {
+
     }
 
   return (
@@ -89,6 +138,7 @@ const Showch = () => {
         <br/>
         <button onClick={() => plusPage()}>Next</button>
         <button onClick={() => mutPage()}>Black</button>
+        <button onClick={()=>changeClick()}><FaExchangeAlt />&nbsp;เปลี่ยนกลุ่ม</button>
         <br/>
         <div className='C2_labal' >แก้ไขข้อมูลสารเคมี</div>
         <div className="logo1">
@@ -123,7 +173,7 @@ const Showch = () => {
                 <tr >
                  <th className='showch_th1'> <div className='radioSelect'> 
               
-                <input type="checkbox" className="form-check-input"  value="option1" /> 
+                
                
               </div>
               </th>
@@ -143,9 +193,9 @@ const Showch = () => {
                         {
                           
                           arr[(page.current - 1) * 50 + idx] === 0 ?
-                              <input type="checkbox" className="form-check-input"  value="option1"   onChange={() => getType((page.current - 1) * 50 + idx)}/>
+                              <input type="checkbox" className="form-check-input"  value="option1"   onChange={() => getType(value.no)}/>
                               :
-                              <input type="checkbox" className="form-check-input"  value="option1"   onChange={() => getType((page.current - 1) * 50 + idx)} checked/>
+                              <input type="checkbox" className="form-check-input"  value="option1"   onChange={() => getType(value.no)}checked/>
 
                         }
                           {/* <input type="checkbox" className="form-check-input"  value="option1"   /> */}
@@ -165,10 +215,11 @@ const Showch = () => {
                         </td>
                         <td>{value.des}</td>
                         <td> 
-                          <FaRegEdit onClick={() => clickEdit(value.no)} />
+                          <FaRegEdit className='icon_showch' onClick={() => clickEdit(value.no)} />
                           &nbsp;&nbsp;&nbsp;
-                          <AiOutlineDelete onClick={() => clickDelete(idx)} /></td>
-                        
+                          <AiOutlineDelete className='icon_showch' onClick={() => clickDelete(idx)} />
+                          </td>
+                         
                       </tr>
                     ))
                     
@@ -182,7 +233,7 @@ const Showch = () => {
 
      
 
-        
+          <Footer />  
     </div>
   )
 }
