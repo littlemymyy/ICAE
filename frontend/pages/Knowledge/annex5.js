@@ -27,8 +27,12 @@ export default function Home(){
             }
         ).then((response) => {
             let data = JSON.stringify(response.data.message)
-            setData(response.data.message);
-
+            if (response.data.status === "ok"){
+                setData(response.data.message);
+            }
+            else {
+                setData([{cas: "", name: "", maxt: "ไม่พบข้อมูล"}]);
+            }
             console.log(data)
         }).catch((error) => {
             console.log(error);
@@ -87,7 +91,8 @@ export default function Home(){
                 </TableBody>
 
                 <TableBody>
-                {data.map((item, index) => (
+                {
+                data.map((item, index) => (
                     <TableRow key={index} style={index % 2 === 0 ? evenRowStyle : null} >
                         <TableCell align="left">{item.cas}</TableCell>
                         <TableCell align="left">{item.name}</TableCell>
@@ -95,6 +100,7 @@ export default function Home(){
 
                     </TableRow>
                 ))}
+                
                 </TableBody>
 
             </Table>

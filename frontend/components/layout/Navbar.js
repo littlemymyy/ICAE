@@ -43,7 +43,7 @@ function Navbar() {
                 router.push("/Groupname");
             }
             else if(selectName === pages[2]){
-                router.push("/Checkword")
+                router.push("/pif/manage")
             }
             else if(selectName === pages[3]){
                 router.push("/c2")
