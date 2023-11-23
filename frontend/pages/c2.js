@@ -2,6 +2,7 @@ import Navbar from '@/components/layout/Navbar'
 import Axios from "axios";
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router';
+import { AiOutlineDelete } from "react-icons/ai";
 
 export const c2 = () => {
     const [gname , setGname] = useState([])
@@ -45,6 +46,7 @@ export const c2 = () => {
     }
   return (
     <div>
+      <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet"></link>
         <Navbar></Navbar>
         <div className='C2_labal'>
             ประวัติการตรวจสอบสูตรเครื่องสำอาง
@@ -60,40 +62,37 @@ export const c2 = () => {
         />
         <br />
         <div>
-        {
-          show.length ?
-            <table>
-                <thead>
-                    <tr>
-                        <th>ชื่อไฟล์</th>
-                        <th>วันที่</th>
-                    </tr>
-                </thead>
+     
+      </div>
 
-                <tbody>
-                    {
-                show.map((value) => (
-                    <tr onClick={()=>sendgroupname(value.groupname)}>
-                        <td>{value.groupname}</td>
+      </div>
+
+      <table className="C2E_styled-table">
+              <thead >
+                <tr >
+                  <th className='C1A_th1'>ลำดับ</th>
+                  <th className='C1A_th2'>วันที่</th>
+                  <th className='C1A_th3'>ชื่อไฟล์</th>
+                  <th style={{ textAlign: 'center' }}>ตัวเลือก</th>
+                </tr>
+              </thead>
+              <tbody>
+                {
+                  show.length ?
+                    show.map((value, idx) => (
+                      <tr onClick={()=>sendgroupname(value.groupname)}>
+                        <td>{idx + 1}</td>
                         <td>{value.udate}</td>
-                    </tr>
-                    
-                
-                 ))
-                 }
-                </tbody>
+                        <td>{value.groupname}</td>
+                        
+                       
+                        <td><AiOutlineDelete onClick={() => clickDelete(idx)} /></td>
+                      </tr>
+                    ))
+                    : null
+                }
+              </tbody>
             </table>
-           
-            : null
-        }
-
-      </div>
-
-      </div>
-
-       
-        
-
 
     </div>
   )

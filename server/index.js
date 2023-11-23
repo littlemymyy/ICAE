@@ -3,13 +3,19 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const fs = require('fs')
 const csv = require('csv-parser')
-const mysql = require('mysql2')
+// const mysql = require('mysql')
 const {convertArrayToCSV} = require('convert-array-to-csv')
 const xml2js = require('xml2js')
 const parser = new xml2js.Parser({attrkey : "ATTR"})
 const DOMParser = require('dom-parser')
 const DomParser = require('dom-parser')
 const jsonParser = bodyParser.json()
+const mysql = require('mysql2')
+const crypto = require('crypto')
+const fetch = require('node-fetch');
+const cheerio = require('cheerio');
+const multer = require('multer');
+
 
 
 
@@ -18,6 +24,8 @@ app.use(bodyParser.json({limit: '35mb'}));
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended: true , limit : "35mb" , parameterLimit : 50000 }));
+//app.use(fileupload());
+//app.use(express.static("files"));
 
 
 const db = mysql.createConnection({
@@ -43,8 +51,8 @@ app.post('/api/add/', (req, res) => {
     console.log(uname)
     console.log(gName)
     console.log(data);
-    const date = new Date();
-    let day= String(date.getDate()).padStart(2,"0");
+    const date = new Date(); 
+    let day= String(date.getDate()).padStart(2,"0"); 
     let month = String(date.getMonth()+1).padStart(2,"0");
     let year = date.getFullYear()
     let fdate = day+ "-" + month + "-" + year;
@@ -57,9 +65,9 @@ app.post('/api/add/', (req, res) => {
                 console.log(result.affectedRows);
             })
         }
-
+       
     }
-    res.send('1');
+    res.send('1');    
 })
 
 
@@ -81,7 +89,7 @@ app.post('/api/update/', (req, res) => {
                 console.log(result)
             })
         }
-
+       
     }
     res.send('OK');
 })
@@ -123,7 +131,7 @@ app.get('/api/getWarningWord',(req,res)=>{
 
 app.get('/api/getGroupWithName/:gname', (req, res) => {
     const gname = req.params.gname;
-    const sql = `SELECT * FROM groupchemical WHERE gname = '${gname}' `
+    const sql = `SELECT * FROM groupchemical WHERE gname = '${gname}' ` 
     db.query(sql,(err, result) =>{
         res.send(result)
     })
@@ -145,9 +153,9 @@ app.get('/api/getGroup',(req,res)=>{
 
 app.post('/api/getUser/', (req, res) => {
     const email = req.body.email;
-    const password = req.body.password;
+    const password = crypto.createHash("sha1").update(req.body.password).digest("hex")
     console.log(email + " " + password)
-    const sql = `SELECT * FROM employee WHERE em_email = '${email}' AND em_pass = '${password}' `
+    const sql = `SELECT em_fullname,em_icon , status , organization_id FROM employee WHERE em_email = '${email}' AND em_pass = '${password}' ` 
     db.query(sql,(err, result) =>{
         console.log(result)
         res.send(result)
@@ -157,12 +165,12 @@ app.post('/api/getUser/', (req, res) => {
 app.post('/api/AddminAdd' , (req, res) => {
     const data = req.body
     console.log(data)
-
+    
         const sql = 'INSERT INTO chemical(cas, cname, per, st , info, eff, img) VALUES (?,?,?,?,?,?,?);'
             db.query(sql,[data.cas, data.cname , data.per , data.st , data.info , data.eff , data.img ] , (err, result)=>{
                 console.log(result.affectedRows);
-            })
-
+            })  
+    
     res.send('OK');
 
 })
@@ -181,7 +189,7 @@ app.get('/api/getXML/:fileName',(req,res) => {
             console.log(data[0].name[0])
             console.log(data.length)
             res.send(data)
-        }
+        }   
         else {
             console.log(error)
         }
@@ -194,7 +202,7 @@ app.post('/api/setdata' , (req , res) => {
     console.log(data)
     console.log(st)
     console.log(data.length)
-    let count = 0
+    let count = 0 
 
     for(let i =0; i< data.length; i++){
         const sql = 'DELETE FROM chemical WHERE cas =  "' + data[i].cas + '"'
@@ -212,9 +220,9 @@ app.post('/api/setdata' , (req , res) => {
 
     }
     console.log(count)
-
-
-
+   
+      
+    
     res.send('OK');
 
 
@@ -225,64 +233,24 @@ app.post('/api/setsignUp' , jsonParser, (req , res ) => {
     const firstName = req.body.firstname
     const lastName = req.body.lastname
     const email = req.body.email
-    const password = req.body.password
+    const password = crypto.createHash("sha1").update(req.body.password).digest("hex")
+    
+    
     const repassword = req.body.repassword
     const fullname = firstName +" "+lastName
 
     console.log(fullname + " " + email + " " + password +" " + repassword)
-
-    const sql = `SELECT * FROM employee WHERE em_email = '${email}'  `
-    db.query(sql,(err, result) => {
-        if(result.length === 0) {
-            res.json({status:'error',message:err});
-            console.log('Insert data')
-        }
-        else {
-            console.log('Don\'t do it');
-        }
+    
+    const sql = `INSERT INTO  employee(em_email , em_fullname , em_icon , em_pass , status) VALUES(?,?,?,?,?);  ` 
+    db.query(sql,[email , fullname ,"test01.png" , password , "U" ] , (err, result) => {
+        res.send('OK')
     })
-
-})
-
-app.get('/api/annex/search', jsonParser, (req, res) => {
-    const name = "%"+req.query.name+"%"
-    console.log(name)
-    db.execute(
-        'SELECT * FROM `chemical` WHERE name LIKE ?',
-        [name],
-        (err, result) => {
-            if(err) {
-                res.json({status:'error',message:err});
-            }
-            if(result.length > 0) {
-                res.json({status:'ok',message:result})
-            }
-            else {
-                res.json({status:'error',message:'No data found'});
-            }
-        })
-})
-
-app.get('/api/annex', jsonParser, (req, res) => {
-    db.execute(
-        'SELECT * FROM chemical WHERE st = ?',
-        [req.query.st],
-        (err, result) => {
-            if(err) {
-                res.json({status:'error',message:err});
-            }
-            if(result.length > 0) {
-                res.json({status:'ok',message:result})
-            }
-            else {
-                res.json({status:'error',message:'No data found'});
-            }
-        })
+    
 })
 
 app.post('/api/searchBybodypart', (req,res) => {
-    //SELECT * FROM chemical WHERE
-    //bodypart LIKE '%skin%'
+    //SELECT * FROM chemical WHERE 
+    //bodypart LIKE '%skin%' 
     //OR bodypart LIKE '%face%' OR bodypart LIKE '%body%' OR bodypart LIKE '%powder%' OR bodypart LIKE '%hand%';
     const dd = req.body
     console.log("........")
@@ -301,7 +269,7 @@ app.post('/api/searchBybodypart', (req,res) => {
         }
     }
     console.log(queryWord)
-    //
+    //  
     const sql = queryWord
     db.query(sql, (err , result) => {
         console.log(result);
@@ -311,8 +279,8 @@ app.post('/api/searchBybodypart', (req,res) => {
 })
 
 app.post('/api/searchBybodypartEdit', (req,res) => {
-    //SELECT * FROM chemical WHERE
-    //bodypart LIKE '%skin%'
+    //SELECT * FROM chemical WHERE 
+    //bodypart LIKE '%skin%' 
     //OR bodypart LIKE '%face%' OR bodypart LIKE '%body%' OR bodypart LIKE '%powder%' OR bodypart LIKE '%hand%';
     const dd = req.body.fillterg
     console.log("........")
@@ -331,7 +299,7 @@ app.post('/api/searchBybodypartEdit', (req,res) => {
         }
     }
     console.log(queryWord)
-    //
+    //  
     const sql = queryWord
     db.query(sql, (err , result) => {
         console.log(result);
@@ -344,13 +312,19 @@ app.post('/api/savefile' , (req , res) => {
     // console.log(req.body)
     const uname = req.body.uname
     const gname = req.body.gname
-    const dd  =req.body.dd
+    const dd  = req.body.dd
     const fillterg = req.body.fillterg
-    const date = new Date();
-    let day= String(date.getDate()).padStart(2,"0");
+    const date = new Date(); 
+    let day= String(date.getDate()).padStart(2,"0"); 
     let month = String(date.getMonth()+1).padStart(2,"0");
     let year = date.getFullYear()
     let udate = day+ "-" + month + "-" + year;
+
+
+    
+    
+
+    console.log(dd)
 
     const sql =  'DELETE FROM chemicalgroup WHERE groupname =  "' + gname + '"'
     db.query(sql,(err, result)=>{
@@ -366,7 +340,7 @@ app.post('/api/savefile' , (req , res) => {
         db.query(sql1,[dd[i].cas , dd[i].cname , dd[i].cmname , dd[i].per , dd[i].st , "-" , "-" , dd[i].bodypart , dd[i].color , gname , dd[i].per1 , uname , udate , fillterg  ] , (err, result)=>{
            console.log(result)
         })
-
+        
     }
     res.send("Ok")
 
@@ -391,6 +365,32 @@ app.post('/api/getGroupNamebyname' , (req,res) => {
 
 })
 
+app.post('/api/annex', (req, res) => {
+    const st = req.body.st
+    console.log(st)
+    db.query(
+        'SELECT * FROM chemical WHERE st = ' + st,
+        (err, result) => {
+            res.send(result)
+        })
+})
+
+// app.get('/api/annex', jsonParser, (req, res) => {
+//     db.execute(
+//         'SELECT * FROM chemical1 WHERE st = ?',
+//         [req.query.st],
+//         (err, result) => {
+//             if(err) {
+//                 res.json({status:'error',message:err});
+//             }
+//             if(result.length > 0) {
+//                 res.json({status:'ok',message:result})
+//             }
+//             else {
+//                 res.json({status:'error',message:'No data found'});
+//             }
+//         })
+// })
 
 app.get('/api/getalldata' , (req , res ) => {
     const sql =  'SELECT * FROM chemical'
@@ -423,13 +423,266 @@ app.post('/api/getalldataAddminUpdateByType' , (req , res ) => {
     const des = req.body.des
     console.log( [cas , cmname , per , st , des , no ] );
     //            UPDATE chemical SET cas=?,cmname=?,per=?,st=?,des=? WHERE no = ?
-    const sql =  'UPDATE chemical set cas = ? , cmname = ? , per = ? , st = ? , des = ? WHERE no = ? '
-
+    const sql =  'UPDATE chemical set cas = ? , cmname = ? , per = ? , st = ? , des = ? WHERE no = ? ' 
+    
     db.query(sql , [cas , cmname , per , st , des , no ] , (err , result) => {
         console.log(result);
         res.send(result)
      })
 
+})
+
+app.post('/api/getdatachangegroup' , (req , res) => {
+    const no = req.body
+
+    let num = ""
+    let queryWord = "SELECT * FROM chemical WHERE "
+
+
+    for(let i = 0 ; i<no.length ; i++){
+       num = " no = " + no[i] + " "
+        queryWord += num
+        if(i < no.length - 1) {
+            queryWord += " OR "
+        }
+        else {
+            queryWord += ";";
+        }
+    }
+    console.log(queryWord)
+    const sql = queryWord
+    db.query(sql , (err , result) => {
+        console.log(result);
+        res.send(result)
+    })
+
+})
+
+app.post('/api/saveStfromchangegroup' , (req , res) => {
+    const st = req.body.st
+    const num = req.body.num
+
+    console.log( num)
+    for(let i = 0 ; i < num.length ; i++ ){
+        const sql = "UPDATE chemical SET st = ? WHERE no = ?";
+        db.query(sql , [st , num[i]], function (err, result) {
+          if (err) throw err;
+          console.log(result.affectedRows + " record(s) updated");
+        });
+    
+    }
+   
+})
+
+app.get('/api/showdataUV' , (req , res) => {
+    const sql = "SELECT COUNT(*) as num FROM `chemical` WHERE st = 6"
+    db.query(sql , (err , result) => {
+        console.log(result);
+        res.send(result)
+    })
+    
+})
+
+app.get('/api/showdataAn2' , (req , res) => {
+    const sql = "SELECT COUNT(*) as num FROM `chemical` WHERE st = 2"
+    db.query(sql , (err , result) => {
+        console.log(result);
+        res.send(result)
+    })
+})
+
+app.get('/api/showdataST0' , (req , res) => {
+    const sql = "SELECT COUNT(*) as num FROM `chemical` WHERE st = 0"
+    db.query(sql , (err , result) => {
+        console.log(result);
+        res.send(result)
+    })
+})
+
+app.get('/api/showdataAn4' , (req , res) => {
+    const sql = "SELECT COUNT(*) as num FROM `chemical` WHERE st = 4"
+    db.query(sql , (err , result) => {
+        console.log(result);
+        res.send(result)
+    })
+})
+
+app.get('/api/showdataAn5' , (req , res) => {
+    const sql = "SELECT COUNT(*) as num FROM `chemical` WHERE st = 5"
+    db.query(sql , (err , result) => {
+        console.log(result);
+        res.send(result)
+    })
+})
+
+app.get('/api/showdataAn0' , (req , res) => {
+    const sql = "SELECT COUNT(*) as num FROM `chemical` WHERE st != 2"
+    db.query(sql , (err , result) => {
+        console.log(result);
+        res.send(result)
+    })
+})
+
+app.get('/api/annex/search', jsonParser, (req, res) => {
+    const name = "%"+req.query.name+"%"
+    console.log(name)
+    db.execute(
+        'SELECT * FROM chemical WHERE cmname LIKE ? OR cas LIKE ?',
+        [name,name],
+        (err, result) => {
+            console.log(result)
+            if(err) {
+                res.json({status:'error',message:err});
+            }
+            if(result.length > 0) {
+                res.json({status:'ok',message:result})
+            }
+            else {
+                res.json({status:'error',message:'No data found'});
+            }
+        })
+})
+
+app.get('/api/fetchData', async (req, res) => {
+
+    const fda = req.query.data;
+    console.log("is Fda")
+    console.log(fda)
+
+
+
+      let status = ""
+      let locationStatus = ""
+      let registrationNumber = ""
+      let typeRegis = ""
+      let formatRegis = ""
+      let comName = ""
+      let cosName = ""
+      let deteS = ""
+      let expDate = ""
+      let typeGoods =""
+      let bodypart = ""
+      let objGoods = ""
+      let conGoods = ""
+      let entrepreneur = ""
+      let Fentrepreneur = ""
+
+
+    try {
+      const response = await fetch('http://pertento.fda.moph.go.th/FDA_SEARCH_CENTER/PRODUCT/export_cmt_detail.aspx?regnos='+fda);
+      const data = await response.text();
+   const $ = cheerio.load(data);
+      
+     
+    //          // const tempElement = document.createElement('div');
+    //         //   tempElement.innerHTML = data;
+
+                status = $('#ContentPlaceHolder1_lb_status').text() || 'N/A';
+               locationStatus = $('#ContentPlaceHolder1_lb_status_lct').text() || 'N/A';
+               registrationNumber = $('#ContentPlaceHolder1_lb_no_regnos').text() || 'N/A';
+               typeRegis = $('#ContentPlaceHolder1_lb_type').text() || 'N/A';
+               formatRegis = $('#ContentPlaceHolder1_lb_format_regnos').text() || 'N/A';
+               comName = $('#ContentPlaceHolder1_lb_trade_Tpop').text() || 'N/A';
+               cosName = $('#ContentPlaceHolder1_lb_cosnm_Tpop').text() || 'N/A';
+               dateS = $('#ContentPlaceHolder1_lb_appdate').text() || 'N/A';
+               expDate = $('#ContentPlaceHolder1_lb_expdate').text() || 'N/A';
+               typeGoods = $('#ContentPlaceHolder1_lb_mode').text() || 'N/A';
+               bodypart = $('#ContentPlaceHolder1_lb_applicability_name').text() || 'N/A';
+               objGoods = $('#ContentPlaceHolder1_lb_application_name').text() || 'N/A';
+               conGoods = $('#ContentPlaceHolder1_lb_condition').text() || 'N/A';
+               entrepreneur = $('#ContentPlaceHolder1_lb_usernm_pop').text() || 'N/A';
+               Fentrepreneur = $('#ContentPlaceHolder1_lb_fac_pop').text() || 'N/A';
+
+               let arr = [status,locationStatus, registrationNumber,typeRegis,formatRegis,comName, cosName,dateS,expDate,typeGoods, bodypart,objGoods,conGoods, entrepreneur,Fentrepreneur]
+
+      
+    //   console.log(locationStatus)
+    //   console.log(expDate)
+    //   console.log(Fentrepreneur)
+    console.log(arr)
+      res.send(arr);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
+
+app.post('/api/setsignUpA' , jsonParser, (req , res ) => {
+    console.log(req.body)
+    const fullname = req.body.em_fullname
+    const email = req.body.em_email
+    const st = req.body.status
+    const oid = req.body.ongranization_id
+    const password = crypto.createHash("sha1").update(req.body.em_pass).digest("hex")
+    
+    
+
+    console.log(fullname + " " + email + " " + password +" " +" "+st +" "+ oid)
+    
+    const sql = `INSERT INTO  employee(em_email , em_fullname , em_icon , em_pass , status , organization_id) VALUES(?,?,?,?,?,?);  ` 
+    db.query(sql,[email , fullname ,"/test01.png" , password , st , oid ] , (err, result) => {
+        res.send('OK')
+    })
+    //res.send("ok")
+    
+})
+
+app.post('/api/getorId/', (req, res) => {
+    const orid = req.body.data
+    console.log(orid)
+    const sql = `SELECT * FROM employee WHERE organization_id	= ${orid}  ` 
+    db.query(sql,(err, result) =>{
+        console.log(result)
+        res.send(result)
+    })
+})
+
+app.get('/api/getuserAs/', (req, res) => {
+    
+    const sql = `SELECT * FROM employee WHERE status = "A" OR status = "S"  ` 
+    db.query(sql,(err, result) =>{
+        console.log(result)
+        res.send(result)
+    })
+})
+
+app.post('/api/deluserAS' , (req , res) => {
+    const no = req.body.data
+    console.log(no)
+
+    const sql = 'DELETE FROM `employee` WHERE no = ' + no
+    db.query(sql,(err, result) =>{
+        console.log(result)
+        res.send(result)
+    })
+})
+
+app.post('/api/searchAll', (req,res) => {
+    //SELECT * FROM chemical WHERE 
+    //bodypart LIKE '%skin%' 
+    //OR bodypart LIKE '%face%' OR bodypart LIKE '%body%' OR bodypart LIKE '%powder%' OR bodypart LIKE '%hand%';
+    console.log("........")
+    let bodypart = ""
+    let sql = "SELECT * FROM chemical  "
+    db.query(sql, (err , result) => {
+        console.log(result);
+        res.send(result)
+    })
+
+})
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'uploads/');
+    }, filename: function (req, file, cb) {
+        cb(null, file.originalname);
+      },
+    });
+    const upload = multer({ storage: storage });
+
+app.post('/api/upload-pdf' , (req , res) => {
+    const file = req.body
+    console.log(file)
 })
 
 app.listen(3001, () => {
