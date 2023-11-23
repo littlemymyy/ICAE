@@ -27,6 +27,7 @@ export default function Home(){
                 
                 justifyContent: { xs: "", md: "center" },
                 display: { xs: "block", md: "flex" },
+                
 
             }}
             

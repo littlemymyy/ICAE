@@ -27,7 +27,12 @@ export default function Home(){
             }
         ).then((response) => {
             let data = JSON.stringify(response.data.message)
-            setData(response.data.message);
+            if (response.data.status === "ok"){
+                setData(response.data.message);
+            }
+            else {
+                setData([{cas: "", name: "", maxt: "ไม่พบข้อมูล", color: ""}]);
+            }
 
             console.log(data)
         }).catch((error) => {
@@ -39,6 +44,9 @@ export default function Home(){
     const evenRowStyle = {
         backgroundColor: '#e1f5fe',
     };
+
+
+
     return(
         <>
         <Navbar />
@@ -58,6 +66,7 @@ export default function Home(){
 
                 justifyContent: { xs: "", md: "center" },
                 display: { xs: "block", md: "flex" },
+                marginRight: { xs: "20px", md: "20px" },
 
             }}
 
@@ -74,7 +83,7 @@ export default function Home(){
             </Box>
         </Box>
 
-        <Box sx={{ marginLeft:"200px" , marginRight:"200px", paddingTop:"50px"}}>
+    <Box sx={{ marginLeft:"200px" , marginRight:"200px", paddingTop:"50px"}}>
         <TableContainer component={Paper} >
             <Table sx={{ minWidth: 100  }} aria-label="simple table">
                 <TableBody>
@@ -82,7 +91,7 @@ export default function Home(){
                     <TableCell sx={{width:100}}align="left">CAS NO</TableCell>
                     <TableCell align="left">ชื่อสารเคมี</TableCell>
                     <TableCell align="left">ปริมาณที่สามารถใช้ได้ (%)</TableCell>
-
+                    <TableCell align="left">สี</TableCell>
                 </TableRow>
                 </TableBody>
 
@@ -92,6 +101,7 @@ export default function Home(){
                         <TableCell align="left">{item.cas}</TableCell>
                         <TableCell align="left">{item.name}</TableCell>
                         <TableCell align="left">{item.maxt}</TableCell>
+                        <TableCell align="left">{item.color}</TableCell>
 
                     </TableRow>
                 ))}
@@ -100,6 +110,7 @@ export default function Home(){
             </Table>
         </TableContainer>
     </Box>
+
 
         <Footer />
         </>
