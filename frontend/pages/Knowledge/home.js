@@ -1,11 +1,11 @@
 import Footer from "@/components/Footer"
 import Navbar from "@/components/layout/Navbar"
 import { Box, Card, CardContent } from "@mui/material"
-import { CardActions } from "@mui/material"
+
 import { Typography } from "@mui/material"
 import { Button } from "@mui/material"
 import { useRouter } from "next/router";
-import Link from "next/link";
+
 
 export default function Home(){
     const router = useRouter();
