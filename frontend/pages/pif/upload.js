@@ -9,8 +9,17 @@ import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import Autocomplete from '@mui/material/Autocomplete';
+import { PDFDocument, StandardFonts, rgb } from 'pdf-lib'
+import fontkit from '@pdf-lib/fontkit'
+import { fetch } from 'pdf-lib';
 
 import { Box, TextField, Typography, Button } from "@mui/material";
+import Axios from "axios";
+import { Upload } from "@mui/icons-material";
+
+
+
 
 const Accordion = styled((props) => (
     <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -42,7 +51,9 @@ const Accordion = styled((props) => (
       marginLeft: theme.spacing(1),
     },
   }));
-  
+
+
+
   const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
     padding: theme.spacing(2),
     borderTop: '1px solid rgba(0, 0, 0, .125)',
@@ -50,6 +61,247 @@ const Accordion = styled((props) => (
 
 export default function manage() {
     const [expanded, setExpanded] = React.useState('panel1');
+    const [fda , setFda] = useState("")
+    const [status , setStatus] = useState("")
+    const [locationStatus , setLocationStatus] = useState("")
+    const [registrationNumber , setRegistrationNumber] = useState("")
+    const [ typeRegis , setTypeRegis] = useState("")
+    const [formatRegis , setFormatRegis] = useState("")
+    const [comName , setComName] = useState("")
+    const [cosName  , setCosName ] = useState("")
+    const [ dateS  , setDateS ] = useState("")
+    const [ expDate , setExpDate] = useState("")
+    const [typeGoods , setTypeGoods] = useState("")
+    const [bodypart, setBodypart] = useState("")
+    const [objGoods, setObjGoods] = useState("")
+    const [conGoods, setConGoods] = useState("")
+    const [entrepreneur, setEntrepreneur] = useState("")
+    const [show , setShow] = useState([])
+    const [fentrepreneur, setFentrepreneur] = useState("")
+    const [des , setDes] = useState("")
+
+    const [pdfUrl, setPdfUrl] = useState('');
+
+    const [inputcomName,setInputcomName] = useState("")
+    const [inputregistrationNumber , setInputregistrationNumber] = useState("")
+    const [inputformatRegis , setInputformatRegis] = useState("")
+    const [inputcosName  , setInputcosName ] = useState("")
+    const [ inputdateS  , setInputdateS ] = useState("")
+    const [ inputexpDate , setInputexpDate] = useState("")
+    const [inputtypeGoods , setInputtypeGoods] = useState("")
+    const [inputbodypart, setInputbodypart] = useState("")
+    const [inputobjGoods, setInputobjGoods] = useState("")
+    const [inputconGoods, setInputconGoods] = useState("")
+    const [inputentrepreneur, setinputentrepreneur] = useState("")
+    const [inputfentrepreneur, setinputfentrepreneur] = useState("")
+    const [inputpy,setInputpy] = useState("")
+
+    const [dateA, setdateA] = useState(new Date());
+
+ 
+
+  
+
+    const [file1 , setFile1] = useState("")
+    const [file2 , setFile2] = useState("")
+    const [file3 , setFile3] = useState("")
+    const [file4 , setFile4] = useState("")
+    const [file5 , setFile5] = useState("")
+    const [file6 , setFile6] = useState("")
+    const [file7 , setFile7] = useState("")
+    const [file8 , setFile8] = useState("")
+    const [file9 , setFile9] = useState("")
+
+    
+
+     //for get file on iCEA 
+    useEffect(() => {
+      Axios.get(`http://localhost:3001/api/getGroupName`).then((response) => {
+          
+          setShow(response.data)
+          console.log(response.data);
+        });
+    
+  },[])
+
+  const options = show.map((option) => {
+    const firstLetter = option.groupname[0].toUpperCase();
+    return {
+      firstLetter: /[0-9]/.test(firstLetter) ? '0-9' : firstLetter,
+      ...option,
+    };
+  });
+    
+       
+// data from Thai FDA By Fda number
+      const fetchData = async () => {
+          try {
+          const res = await  Axios({
+              url: "http://localhost:3001/api/fetchData",
+              method: "get",
+              params: {
+                data : fda ,
+              }
+              })
+          console.log(res.data) 
+          console.log(res.data[0])
+              setStatus( res.data[0])
+              setLocationStatus( res.data[1])
+              setTypeRegis( res.data[3])
+              setFormatRegis( res.data[4])
+              setComName( res.data[5])
+              setCosName( res.data[6])
+              setDateS( res.data[7])
+              setExpDate( res.data[8])
+              setTypeGoods( res.data[9])
+              setBodypart( res.data[10])
+              setObjGoods(res.data[11])
+              setEntrepreneur(res.data[13])
+              setConGoods(res.data[12])
+              setFentrepreneur(res.data[14])
+
+          } catch(error) {
+            
+          }
+      }
+ 
+
+       
+    const UploadA = () => {
+      alert(file1)
+    }
+    const handleFileChange = async (e) => {
+      const file = e.target.files[0];
+
+      console.log("A FIle")
+      console.log(file)
+  
+      try {
+        const formData = new FormData();
+        formData.append('pdfFile', file);
+         
+  
+        // Send the file to the server
+        const response = await fetch('http://localhost:3001/api/upload-pdf', {
+          method: 'POST',
+          data : formData,
+        });
+  
+        // Assuming the server returns some data
+        const data = await response.json();
+  
+        // Do something with the response from the server (e.g., update state or show a success message)
+        
+        console.log('Server Response:', data);
+      } catch (error) {
+        console.error('Error uploading file:', error);
+      }
+    };
+
+
+
+
+    //create PDF 
+    const generatePdf = async () => {
+      try {
+        // Fetch the font file from Google Fonts
+        const googleFontsUrl = 'https://fonts.googleapis.com/css2?family=Kanit:wght@100&display=swap';
+    
+        const cssResponse = await fetch(googleFontsUrl);
+        const cssText = await cssResponse.text();
+    
+        // Extract the font URL from the CSS text
+        const fontUrlMatch = cssText.match(/url\('(.+\.woff2)'\)/);
+        if (!fontUrlMatch) {
+          throw new Error('Font URL not found in CSS');
+        }
+    
+        const fontUrl = fontUrlMatch[1];
+    
+        // Fetch the font file
+        const fontResponse = await fetch(fontUrl);
+        const fontArrayBuffer = await fontResponse.arrayBuffer();
+    
+        // Continue with embedding the font and generating the PDF
+        // ...
+      } catch (error) {
+        console.error('Error fetching font:', error);
+        return; // Handle the error as needed
+      }
+    
+      const page = pdfDoc.addPage();
+    
+      const customFont = await pdfDoc.embedFont(fontBytes);
+    
+      const { width, height } = page.getSize();
+    
+      const frameWidth = 500;
+      const frameHeight = 150;
+      const frameX = 50;
+      const frameY = height - 200;
+    
+      page.drawRectangle({
+        x: frameX,
+        y: frameY,
+        width: frameWidth,
+        height: frameHeight,
+        borderColor: rgb(0, 0, 0),
+        fillColor: rgb(1, 1, 1, 0),
+      });
+    
+      // Define labels and values
+      const data = [
+        { label: 'ชื่อการค้าเครื่องสำอาง : ', value: inputcomName },
+        { label: 'ชื่อเครื่องสำอาง :', value: inputcosName },
+        { label: 'ประเภทของเครื่องสำอาง :', value: inputtypeGoods },
+        { label: 'จุดประสงค์การใช้', value: inputconGoods },
+        { label: 'ลักษณะทางกายภาพ', value: inputpy },
+        { label: 'ชื่อผู้ผลิตต่างประทศ', value: inputfentrepreneur },
+        { label: 'ชื่อผู้นำเข้า / ผู้ผลิต ', value: inputentrepreneur },
+        { label: 'เลขที่ใบรับจดแจ้ง ', value: fda },
+        { label: 'รายละเอียดเพิ่มเติม ', value: des },
+      ];
+    
+      // Draw each label and value inside the frame
+      data.forEach((item, index) => {
+        const labelY = frameY + frameHeight - 30 - index * 60; // Adjust the spacing as needed
+        const valueY = frameY + frameHeight - 30 - index * 60;
+        page.drawText(`${item.label}:`, {
+          x: frameX + 50,
+          y: labelY + 20,
+          font: customFont,
+          color: rgb(0, 0, 0),
+        });
+        page.drawText(item.value, {
+          x: frameX + 200,
+          y: valueY + 20,
+          font: customFont,
+          color: rgb(0, 0, 0),
+        });
+      });
+       
+      const pdfBytes = await pdfDoc.save();
+
+      const pdfBlob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+      setPdfUrl(pdfUrl);
+
+  
+      
+      console.log(pdfBytes);
+    };
+
+    const PdfViewer = ({ pdfBytes }) => {
+      return (
+        <div>
+          <Worker workerUrl={`https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`}>
+            <Viewer fileUrl={`data:application/pdf;base64,${pdfBytes.toString('base64')}`} />
+          </Worker>
+        </div>
+      );
+    };
+
+    
 
     const handleChange = (panel) => (event, newExpanded) => {
         setExpanded(newExpanded ? panel : false);
@@ -57,6 +309,7 @@ export default function manage() {
 
     return(
     <>
+    <p>{inputcomName}</p>
     <Navbar/>
     <Box className="home_Knowledge"
         sx={{
@@ -99,7 +352,7 @@ export default function manage() {
             </Box>
     </Box>
 
-    <Box classname="pif1">
+    <Box className="pif1">
         <Typography variant="h6"
         sx={{
             marginTop:{xs:"20px",md:"20px"},
@@ -140,10 +393,8 @@ export default function manage() {
             </Box>
             
           <Box>
-          <Typography variant="h6" >วันที่จดแจ้งเครื่องสำอาง</Typography>
-            <LocalizationProvider  dateAdapter={AdapterDayjs}>
-            <DatePicker label="วันที่จดแจ้งเครื่องสำอาง"/>
-            </LocalizationProvider>
+          <Typography variant="h6">วันหมดอายุ</Typography>
+                <TextField label= "วันหมดอายุ" value={expDate}/>
 
 
           </Box>
@@ -179,6 +430,178 @@ export default function manage() {
           <Typography>
             1.ข้อมูลทั่วไป
           </Typography>
+          {/* <Box
+      component="form"
+      sx={{
+        '& > :not(style)': { m: 1, width: '40ch'  },
+      }}
+  
+    >
+      <TextField id="outlined-basic" label="เลขจดทะเบียน อย" variant="outlined" onChange={(e) => {setFda(e.target.value)}} />
+      <button onClick={() => {fetchData()}}>ok</button>
+    
+    </Box> */}
+    {/* <input onChange={(e) => {setFda(e.target.value)}}/>
+    <button onClick={() => {fetchData()}}>ดึงข้อมูล</button> */}
+
+    <Box
+      component="form"
+      sx={{
+        '& > :not(style)': { m: 1, width: '40ch' },
+        display: 'flex',  // Set display to flex
+        flexDirection: 'row',  // Align items in a row,
+       
+      }}
+    >
+      <TextField id="outlined-basic" label="เลขที่จดแจ้ง" variant="outlined" onChange={(e) => {setFda(e.target.value)}} />
+    
+    </Box>
+    <button onClick={() => {fetchData()}}>ดึงข้อมูล</button>
+
+    <Box
+      component="form"
+      sx={{
+        '& > :not(style)': { m: 1, width: '40ch' },
+        display: 'flex',  // Set display to flex
+        flexDirection: 'row',  // Align items in a row,
+       
+      }}
+    >
+      <TextField id="outlined-basic" label="ชื่อทางการค้า" variant="outlined"  value={comName} onChange={(e) => (setInputcomName(e.target.value))} />
+    
+    </Box>
+
+    <Box
+      component="form"
+      sx={{
+        '& > :not(style)': { m: 1, width: '40ch' },
+        display: 'flex',  // Set display to flex
+        flexDirection: 'row',  // Align items in a row,
+       
+      }}
+    >
+      <TextField id="outlined-basic" label="ชื่อเครื่องสำอาง" variant="outlined" value = {cosName} onChange = {(e) => (setInputcosName(e.target.value))} />
+    
+    </Box>
+    
+
+    <Box
+      component="form"
+      sx={{
+        '& > :not(style)': { m: 1, width: '40ch' },
+        display: 'flex',  // Set display to flex
+        flexDirection: 'row',  // Align items in a row,
+       
+      }}
+      
+      
+    >
+      <TextField id="outlined-basic" label="ประเภทของเครื่องสำอาง" variant="outlined" value={typeGoods} onChange={(e) => (setInputtypeGoods(e.target.value))}/>
+    
+    </Box>
+    <Box
+      component="form"
+      sx={{
+        '& > :not(style)': { m: 1, width: '40ch' },
+        display: 'flex',  // Set display to flex
+        flexDirection: 'row',  // Align items in a row,
+       
+      }}
+      
+      
+    >
+      <TextField id="outlined-basic" label="วันที่แจ้งจดแจ่ง" variant="outlined" value={dateS} onChange={(e) => (setInputdateS(e.target.value))}/>
+    
+    </Box>
+
+    <Box
+      component="form"
+      sx={{
+        '& > :not(style)': { m: 1, width: '40ch' },
+        display: 'flex',  // Set display to flex
+        flexDirection: 'row',  // Align items in a row,
+       
+      }}
+      
+      
+    >
+      <TextField id="outlined-basic" label="วันที่ใบอนุญาติหมดอายุ" variant="outlined" value={expDate} onChange={(e) => (setInputexpDate(e.target.value))}/>
+    
+    </Box>
+    <Box
+      component="form"
+      sx={{
+        '& > :not(style)': { m: 1, width: '40ch' },
+        display: 'flex',  // Set display to flex
+        flexDirection: 'row',  // Align items in a row,
+       
+      }}
+      
+      
+    >
+      <TextField id="outlined-basic" label="จุดประสงค์การใช้" variant="outlined" value={objGoods} onChange={(e) => (setInputobjGoods(e.target.value))}/>
+    
+    </Box>
+   
+
+    <Box
+      component="form"
+      sx={{
+        '& > :not(style)': { m: 1, width: '40ch' },
+        display: 'flex',  // Set display to flex
+        flexDirection: 'row',  // Align items in a row,
+       
+      }}
+     
+    >
+      <TextField id="outlined-basic" label="ลักษณะทางกายภาพ" variant="outlined" onChange={(e) => (setInputpy(e.target.value))} />
+    
+    </Box>
+                
+                    <TextField
+                        id="outlined-multiline-static"
+                        label = "ชื่อผู้ผลิต"
+                        variant="outlined"
+                        multiline
+                        onChange={(e) => (setinputentrepreneur(e.target.value))}
+                        rows={4}
+                        width = {'40ch'}
+                        m = "1" 
+                        value={entrepreneur}
+                    />
+                    <TextField
+                        id="outlined-multiline-static"
+                        label = "ชื่อผู้ผลิตต่างประเทศ"
+                        variant="outlined"
+                        onChange={(e) => (setinputfentrepreneur(e.target.value))}
+                        multiline
+                        rows={4}
+                        width = {'40ch'}
+                        m = "1" 
+                        value={fentrepreneur}
+                    />
+                    <TextField
+                        id="outlined-multiline-static"
+                        label = "รายละเอียดเพิ่มเติม"
+                        variant="outlined"
+                        onChange={(e) => setDes(e.target.value) }
+                        multiline
+                        rows={4}
+                        width = {'40ch'}
+                        m = "1" 
+                    />
+                   <button onClick={generatePdf}>Generate PDF</button>
+
+          {pdfUrl && (
+          <div>
+            <h2>Generated PDF</h2>
+          <iframe title="Generated PDF" src={pdfUrl} width="100%" height="600px" />
+        </div>
+            )}
+
+
+
+   
 
           <Typography
           sx={{
@@ -207,6 +630,7 @@ export default function manage() {
             />เลือกไฟล์
             </Button>
             <span id="upload1" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
+            <button onClick={()=>UploadA()}>upload</button>
             </Box>
 
             <Typography
@@ -215,7 +639,7 @@ export default function manage() {
             marginbottom:{xs:"10px",md:"10px"}
           }}
           
-          >หนังสือยืนยันการเป็นเจ้าของเครื่องสำอาง</Typography>
+          >หนังสือยืนยันการเป็นเจ้าของเครื่องสำอาง /  Letter of Authorization </Typography>
           <Box 
           style={{
             borderRadius: '5px',
@@ -230,7 +654,8 @@ export default function manage() {
                 id="filename"
                 type="file"
                 onChange={(e) => {
-                    document.getElementById("upload2").innerHTML = e.target.files[0].name;
+                    setFile1(e.target.files[0].name)
+                    //document.getElementById("upload2").innerHTML = e.target.files[0].name;
                 }}
                 hidden
             />เลือกไฟล์
@@ -242,15 +667,18 @@ export default function manage() {
             <Typography>
             2. สูตรส่วนประกอบของเครื่องสำอาง
             </Typography>
-            <Typography sx={{
-                marginTop:{xs:"10px",md:"10px"},
-            }}>คลิกเพื่อดึงข้อมูลจากสูตรส่วนประกอบเครื่องสำอางที่เคยบันทึกลงระบบ</Typography>
-            <Button variant="contained" sx={{
-                marginTop:{xs:"10px",md:"10px"},
-            
-            }}>
-                ดึงข้อมูล
-            </Button>
+                <br/>
+            <Autocomplete
+      id="grouped-demo"
+      options={options.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
+      groupBy={(option) => option.firstLetter}
+      getOptionLabel={(option) => option.groupname}
+      sx={{ width: 300 }}
+      renderInput={(params) => <TextField {...params} label="เลือกข้อมูลจากฐานข้อมูล ICAE" />}
+    />
+  
+
+
             <Typography sx={{
                 marginTop:{xs:"10px",md:"10px"},
             }}>หรือ อัพโหลดไฟล์สูตรส่วนประกอบเครื่องสำอาง</Typography>
@@ -388,9 +816,7 @@ export default function manage() {
             <input
                 id="filename"
                 type="file"
-                onChange={(e) => {
-                    document.getElementById("upload7").innerHTML = e.target.files[0].name;
-                }}
+                onChange={handleFileChange}
                 hidden
             />เลือกไฟล์
             </Button>
@@ -620,14 +1046,13 @@ export default function manage() {
               textAlign="center"
               variant="contained"
               sx={{ mt: 3, mb: 2}}
+              data-bs-toggle="modal" data-bs-target="#myModal" 
             >
               ยืนยัน 
         </Button>
     </Box>
     
-   
-
-
+    
     <Footer/>
     </>
     )
