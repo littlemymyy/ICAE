@@ -21,7 +21,7 @@ export default function Home(){
         Axios.request(
             {
                 method: 'get',
-                url: 'http://localhost:3001/api/annex?st=1',
+                url: 'http://localhost:3001/api/annex?st=2',
                 headers: { },
                 data : ''
             }
@@ -84,9 +84,9 @@ export default function Home(){
             <Table sx={{ minWidth: 100  }} aria-label="simple table">
                 <TableBody>
                 <TableRow>
-                    <TableCell sx={{width:100}}align="left">CAS NO</TableCell>
+                    <TableCell sx={{width:200}}align="left">CAS NO</TableCell>
                     <TableCell align="left">ชื่อสารเคมี</TableCell>
-                    <TableCell align="left">ปริมาณที่สามารถใช้ได้ (%)</TableCell>
+                    
 
                 </TableRow>
                 </TableBody>
@@ -96,7 +96,7 @@ export default function Home(){
                     <TableRow key={index} style={index % 2 === 0 ? evenRowStyle : null} >
                         <TableCell align="left">{item.cas}</TableCell>
                         <TableCell align="left">{item.name}</TableCell>
-                        <TableCell align="left">{item.maxt}</TableCell>
+                        
 
                     </TableRow>
                 ))}
