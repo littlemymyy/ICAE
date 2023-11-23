@@ -34,7 +34,7 @@ const c3 = () => {
             method: "post",
             data : load,
           }).then ((response) => { 
-            // console.log(response.data)
+            console.log(response.data)
             setList(response.data)
             // console.log(response.data[0].fillterg.split(",").map(String))
 
