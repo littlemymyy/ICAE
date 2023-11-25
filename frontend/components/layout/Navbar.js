@@ -40,7 +40,7 @@ function Navbar() {
                 router.push("/")
             }
             else if(selectName === pages[1]){
-                router.push("/Groupname");
+                router.push("/C1A");
             }
             else if(selectName === pages[2]){
                 router.push("/pif/manage")

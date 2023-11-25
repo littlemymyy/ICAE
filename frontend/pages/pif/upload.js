@@ -438,135 +438,81 @@ export default function manage() {
           <Typography>
             1.ข้อมูลทั่วไป
           </Typography>
-          {/* <Box
-      component="form"
-      sx={{
-        '& > :not(style)': { m: 1, width: '40ch'  },
-      }}
+        
 
-    >
-      <TextField id="outlined-basic" label="เลขจดทะเบียน อย" variant="outlined" onChange={(e) => {setFda(e.target.value)}} />
-      <button onClick={() => {fetchData()}}>ok</button>
-
-    </Box> */}
-    {/* <input onChange={(e) => {setFda(e.target.value)}}/>
-    <button onClick={() => {fetchData()}}>ดึงข้อมูล</button> */}
-
-    <Box
-      component="form"
-      sx={{
-        '& > :not(style)': { m: 1, width: '40ch' },
-        display: 'flex',  // Set display to flex
-        flexDirection: 'row',  // Align items in a row,
-
-      }}
-    >
-      <TextField id="outlined-basic" label="เลขที่จดแจ้ง" variant="outlined" onChange={(e) => {setFda(e.target.value)}} />
+   
+    <Box 
+    sx={{
+      display: 'flex',  // Set display to flex
+      flexDirection: 'column',  // Align items in a row,
+      
+       // Center items in Y axis,
+    }}>
+    <TextField  variant="outlined" label="เลขที่จดแจ้ง" style={{width:"50%",marginTop:"10px"}} onChange={(e) => {setFda(e.target.value)}}/>
+    
+    <Box>
+        <Button 
+              onClick={() => {fetchData()}}
+              textAlign="center"
+              variant="contained"
+              sx={{ 
+                marginTop: "10px",
+              }}
+              
+            >
+              ดึงข้อมูล
+        </Button>
+    </Box>
 
     </Box>
-    <button onClick={() => {fetchData()}}>ดึงข้อมูล</button>
+    
 
-    <Box
-      component="form"
-      sx={{
-        '& > :not(style)': { m: 1, width: '40ch' },
-        display: 'flex',  // Set display to flex
-        flexDirection: 'row',  // Align items in a row,
-
-      }}
-    >
-      <TextField id="outlined-basic" label="ชื่อทางการค้า" variant="outlined"  value={comName} onChange={(e) => (setInputcomName(e.target.value))} />
+    <Box>
+      <TextField id="outlined-basic" label="ชื่อทางการค้า" style={{width:"50%",marginTop:"10px"}}  value={comName} onChange={(e) => (setInputcomName(e.target.value))} />
 
     </Box>
 
     <Box
-      component="form"
-      sx={{
-        '& > :not(style)': { m: 1, width: '40ch' },
-        display: 'flex',  // Set display to flex
-        flexDirection: 'row',  // Align items in a row,
-
-      }}
     >
-      <TextField id="outlined-basic" label="ชื่อเครื่องสำอาง" variant="outlined" value = {cosName} onChange = {(e) => (setInputcosName(e.target.value))} />
+      <TextField id="outlined-basic" label="ชื่อเครื่องสำอาง" style={{width:"50%",marginTop:"10px"}} value = {cosName} onChange = {(e) => (setInputcosName(e.target.value))} />
 
     </Box>
 
 
-    <Box
-      component="form"
-      sx={{
-        '& > :not(style)': { m: 1, width: '40ch' },
-        display: 'flex',  // Set display to flex
-        flexDirection: 'row',  // Align items in a row,
-
-      }}
-
-
-    >
-      <TextField id="outlined-basic" label="ประเภทของเครื่องสำอาง" variant="outlined" value={typeGoods} onChange={(e) => (setInputtypeGoods(e.target.value))}/>
+    <Box >
+      <TextField id="outlined-basic" label="ประเภทของเครื่องสำอาง" style={{width:"50%",marginTop:"10px"}} value={typeGoods} onChange={(e) => (setInputtypeGoods(e.target.value))}/>
 
     </Box>
-    <Box
-      component="form"
-      sx={{
-        '& > :not(style)': { m: 1, width: '40ch' },
-        display: 'flex',  // Set display to flex
-        flexDirection: 'row',  // Align items in a row,
-
-      }}
-
-
-    >
-      <TextField id="outlined-basic" label="วันที่แจ้งจดแจ่ง" variant="outlined" value={dateS} onChange={(e) => (setInputdateS(e.target.value))}/>
+    <Box >
+      <TextField id="outlined-basic" label="วันที่แจ้งจดแจ้ง" style={{width:"50%",marginTop:"10px"}} value={dateS} onChange={(e) => (setInputdateS(e.target.value))}/>
 
     </Box>
 
-    <Box
-      component="form"
-      sx={{
-        '& > :not(style)': { m: 1, width: '40ch' },
-        display: 'flex',  // Set display to flex
-        flexDirection: 'row',  // Align items in a row,
-
-      }}
-
-
-    >
-      <TextField id="outlined-basic" label="วันที่ใบอนุญาติหมดอายุ" variant="outlined" value={expDate} onChange={(e) => (setInputexpDate(e.target.value))}/>
+    <Box>
+      <TextField id="outlined-basic" label="วันที่ใบอนุญาตหมดอายุ" style={{width:"50%",marginTop:"10px"}} value={expDate} onChange={(e) => (setInputexpDate(e.target.value))}/>
 
     </Box>
-    <Box
-      component="form"
-      sx={{
-        '& > :not(style)': { m: 1, width: '40ch' },
-        display: 'flex',  // Set display to flex
-        flexDirection: 'row',  // Align items in a row,
-
-      }}
-
-
-    >
-      <TextField id="outlined-basic" label="จุดประสงค์การใช้" variant="outlined" value={objGoods} onChange={(e) => (setInputobjGoods(e.target.value))}/>
+    <Box >
+      <TextField id="outlined-basic" label="จุดประสงค์การใช้" style={{width:"50%",marginTop:"10px"}} value={objGoods} onChange={(e) => (setInputobjGoods(e.target.value))}/>
 
     </Box>
 
 
-    <Box
-      component="form"
-      sx={{
-        '& > :not(style)': { m: 1, width: '40ch' },
-        display: 'flex',  // Set display to flex
-        flexDirection: 'row',  // Align items in a row,
-
-      }}
-
-    >
-      <TextField id="outlined-basic" label="ลักษณะทางกายภาพ" variant="outlined" onChange={(e) => (setInputpy(e.target.value))} />
+    <Box>
+      <TextField id="outlined-basic" label="ลักษณะทางกายภาพ" style={{width:"50%",marginTop:"10px"}} onChange={(e) => (setInputpy(e.target.value))} />
 
     </Box>
 
-                    <TextField
+
+      <Box sx={{
+        gap: { xs: "20px", md: "20px" },
+        display: { xs: "block", md: "flex" },
+        marginTop:{xs:"10px",md:"10px"},
+        
+      }}>
+                    <TextField 
+
+                        marginTop="10px"
                         id="outlined-multiline-static"
                         label = "ชื่อผู้ผลิต"
                         variant="outlined"
@@ -596,9 +542,21 @@ export default function manage() {
                         multiline
                         rows={4}
                         width = {'40ch'}
-                        m = "1"
+                        m = "10"
                     />
-                   <button onClick={generatePdf}>Generate PDF</button>
+                </Box>
+
+                <Box 
+                sx={{
+                  marginTop:{xs:"10px",md:"10px"},
+                  textAlign: { xs: "center", md: "center" },
+                  
+                }}>
+
+                <button onClick={generatePdf}>Generate PDF</button>
+
+                </Box>
+                   
 
           {pdfUrl && (
           <div>
@@ -607,9 +565,23 @@ export default function manage() {
         </div>
             )}
 
+      
 
 
 
+      <Box sx={{
+        textAlign: { xs: "center", md: "center" },
+    }}>
+        <Button
+              type="submit"
+              textAlign="center"
+              variant="contained"
+              sx={{ mt: 3, mb: 2}}
+              
+            >
+              อัพโหลด
+        </Button>
+    </Box>
 
           <Typography
           sx={{
@@ -638,7 +610,7 @@ export default function manage() {
             />เลือกไฟล์
             </Button>
             <span id="upload1" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
-            <button onClick={()=>UploadA()}>upload</button>
+            
             </Box>
 
             <Typography
@@ -1055,8 +1027,8 @@ export default function manage() {
               type="submit"
               textAlign="center"
               variant="contained"
+              color="success"
               sx={{ mt: 3, mb: 2}}
-              data-bs-toggle="modal" data-bs-target="#myModal"
             >
               ยืนยัน
         </Button>
