@@ -402,7 +402,10 @@ export default function manage() {
 
           <Box>
           <Typography variant="h6">วันหมดอายุ</Typography>
-                <TextField label= "วันหมดอายุ" value={expDate}/>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker />
+          </LocalizationProvider>
+                
 
 
           </Box>
@@ -542,7 +545,7 @@ export default function manage() {
                         multiline
                         rows={4}
                         width = {'40ch'}
-                        m = "10"
+                        m = "1"
                     />
                 </Box>
 
