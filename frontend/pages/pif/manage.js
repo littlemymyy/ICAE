@@ -26,7 +26,7 @@ export default function manage() {
     return(
     <>
     <Navbar/>
-    <Box className="home_Knowledge"
+    <Box className="pif_manage"
         sx={{
             backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
             justifyContent: { xs: "center", md: "center" },

@@ -32,7 +32,7 @@ const Accordion = styled((props) => (
       display: 'none',
     },
   }));
-  
+
   const AccordionSummary = styled((props) => (
     <MuiAccordionSummary
       expandIcon={<ArrowForwardIosSharpIcon sx={{ fontSize: '0.9rem' }} />}
@@ -98,9 +98,9 @@ export default function manage() {
 
     const [dateA, setdateA] = useState(new Date());
 
- 
 
-  
+
+
 
     const [file1 , setFile1] = useState("")
     const [file2 , setFile2] = useState("")
@@ -112,27 +112,35 @@ export default function manage() {
     const [file8 , setFile8] = useState("")
     const [file9 , setFile9] = useState("")
 
-    
 
-     //for get file on iCEA 
+
+     //for get file on iCEA
     useEffect(() => {
       Axios.get(`http://localhost:3001/api/getGroupName`).then((response) => {
-          
+
           setShow(response.data)
           console.log(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
         });
-    
+
   },[])
 
-  const options = show.map((option) => {
-    const firstLetter = option.groupname[0].toUpperCase();
-    return {
-      firstLetter: /[0-9]/.test(firstLetter) ? '0-9' : firstLetter,
-      ...option,
-    };
-  });
-    
-       
+  try {
+    var options = show.map((option) => {
+      const firstLetter = option.groupname[0].toUpperCase();
+      return {
+        firstLetter: /[0-9]/.test(firstLetter) ? '0-9' : firstLetter,
+        ...option,
+      };
+    });
+  } catch {
+    var options = []
+  }
+
+
+
 // data from Thai FDA By Fda number
       const fetchData = async () => {
           try {
@@ -143,7 +151,7 @@ export default function manage() {
                 data : fda ,
               }
               })
-          console.log(res.data) 
+          console.log(res.data)
           console.log(res.data[0])
               setStatus( res.data[0])
               setLocationStatus( res.data[1])
@@ -161,12 +169,12 @@ export default function manage() {
               setFentrepreneur(res.data[14])
 
           } catch(error) {
-            
+              console.log(error)
           }
       }
- 
 
-       
+
+
     const UploadA = () => {
       alert(file1)
     }
@@ -175,23 +183,23 @@ export default function manage() {
 
       console.log("A FIle")
       console.log(file)
-  
+
       try {
         const formData = new FormData();
         formData.append('pdfFile', file);
-         
-  
+
+
         // Send the file to the server
         const response = await fetch('http://localhost:3001/api/upload-pdf', {
           method: 'POST',
           data : formData,
         });
-  
+
         // Assuming the server returns some data
         const data = await response.json();
-  
+
         // Do something with the response from the server (e.g., update state or show a success message)
-        
+
         console.log('Server Response:', data);
       } catch (error) {
         console.error('Error uploading file:', error);
@@ -201,45 +209,45 @@ export default function manage() {
 
 
 
-    //create PDF 
+    //create PDF
     const generatePdf = async () => {
       try {
         // Fetch the font file from Google Fonts
         const googleFontsUrl = 'https://fonts.googleapis.com/css2?family=Kanit:wght@100&display=swap';
-    
+
         const cssResponse = await fetch(googleFontsUrl);
         const cssText = await cssResponse.text();
-    
+
         // Extract the font URL from the CSS text
         const fontUrlMatch = cssText.match(/url\('(.+\.woff2)'\)/);
         if (!fontUrlMatch) {
           throw new Error('Font URL not found in CSS');
         }
-    
+
         const fontUrl = fontUrlMatch[1];
-    
+
         // Fetch the font file
         const fontResponse = await fetch(fontUrl);
         const fontArrayBuffer = await fontResponse.arrayBuffer();
-    
+
         // Continue with embedding the font and generating the PDF
         // ...
       } catch (error) {
         console.error('Error fetching font:', error);
         return; // Handle the error as needed
       }
-    
+
       const page = pdfDoc.addPage();
-    
+
       const customFont = await pdfDoc.embedFont(fontBytes);
-    
+
       const { width, height } = page.getSize();
-    
+
       const frameWidth = 500;
       const frameHeight = 150;
       const frameX = 50;
       const frameY = height - 200;
-    
+
       page.drawRectangle({
         x: frameX,
         y: frameY,
@@ -248,7 +256,7 @@ export default function manage() {
         borderColor: rgb(0, 0, 0),
         fillColor: rgb(1, 1, 1, 0),
       });
-    
+
       // Define labels and values
       const data = [
         { label: 'ชื่อการค้าเครื่องสำอาง : ', value: inputcomName },
@@ -261,7 +269,7 @@ export default function manage() {
         { label: 'เลขที่ใบรับจดแจ้ง ', value: fda },
         { label: 'รายละเอียดเพิ่มเติม ', value: des },
       ];
-    
+
       // Draw each label and value inside the frame
       data.forEach((item, index) => {
         const labelY = frameY + frameHeight - 30 - index * 60; // Adjust the spacing as needed
@@ -279,15 +287,15 @@ export default function manage() {
           color: rgb(0, 0, 0),
         });
       });
-       
+
       const pdfBytes = await pdfDoc.save();
 
       const pdfBlob = new Blob([pdfBytes], { type: 'application/pdf' });
       const pdfUrl = URL.createObjectURL(pdfBlob);
       setPdfUrl(pdfUrl);
 
-  
-      
+
+
       console.log(pdfBytes);
     };
 
@@ -301,7 +309,7 @@ export default function manage() {
       );
     };
 
-    
+
 
     const handleChange = (panel) => (event, newExpanded) => {
         setExpanded(newExpanded ? panel : false);
@@ -323,7 +331,7 @@ export default function manage() {
         >
             <Box className="upload_left"
             sx={{
-                
+
                 justifyContent: { xs: "", md: "center" },
                 display: { xs: "block", md: "flex" },
                 paddingTop: {xs:"50px", md:"50px"}
@@ -336,11 +344,11 @@ export default function manage() {
             </Box>
             <Box className="upload_right"
             sx={{
-                
+
                 textAlign:{xs:'center',md:"center"},
                 justifyContent:{xs:"center",md:"center"}
             }}
-            
+
             >
                 <Typography variant="h3"
                 sx={{
@@ -348,7 +356,7 @@ export default function manage() {
                     marginLeft:{xs:"50px",md:"50px"}
                 }}
                 >ระบบจัดการ PIF</Typography>
-                
+
             </Box>
     </Box>
 
@@ -358,32 +366,32 @@ export default function manage() {
             marginTop:{xs:"20px",md:"20px"},
             marginLeft:{xs:"80px",md:"80px"}
         }}
-        
+
         >
-            จัดทำข้อมูลเกี่ยวกับเครื่องสำอาง (PRODUCTS INFORMATION FILE : PIF) 
+            จัดทำข้อมูลเกี่ยวกับเครื่องสำอาง (PRODUCTS INFORMATION FILE : PIF)
         </Typography>
 
         <Box
         sx={{
-           
+
             justifyContent: { xs: "", md: "center" },
             display: { xs: "block", md: "flex" },
             textAlign: { xs: "center", md: "center" },
             paddingTop: { xs: "30px", md: "30px" },
-           
+
           }}>
-            
+
         </Box>
 
-        <Box 
+        <Box
         sx={{
-            
+
             display: { xs: "block", md: "flex" },
             justifyContent: { xs: "", md: "center" },
             textAlign: { xs: "center", md: "center" },
             paddingTop: { xs: "30px", md: "30px" },
             paddingBottom: { xs: "10px", md: "10px" },
-            
+
             gap: { xs: "50px", md: "50px" },
           }}
           >
@@ -391,27 +399,27 @@ export default function manage() {
                 <Typography variant="h6">ชื่อไฟล์ PIF</Typography>
                 <TextField label="ชื่อไฟล์ PIF" />
             </Box>
-            
+
           <Box>
           <Typography variant="h6">วันหมดอายุ</Typography>
                 <TextField label= "วันหมดอายุ" value={expDate}/>
 
 
           </Box>
-            
-              
+
+
 
         </Box>
 
         <Box  sx={{
-            
-            
+
+
             justifyContent: { xs: "", md: "center" },
-            textAlign: { xs: "center", md: "center" }, 
+            textAlign: { xs: "center", md: "center" },
             display: { xs: "block", md: "flex" },
-            
+
           }}>
-       
+
         </Box>
 
         <Box sx={{ width: '100%',marginLeft:{xs:"80px",md:"80px"} ,marginRight:{xs:"80px",md:"80px"} ,marginTop:{xs:"30px",md:"30px"}}}>
@@ -423,142 +431,88 @@ export default function manage() {
         <AccordionSummary>
           <Typography>อัพโหลดเอกสารหรือกรอกข้อมูล PIF ส่วนที่ 1</Typography>
         </AccordionSummary>
-        <AccordionDetails 
-        
-        
+        <AccordionDetails
+
+
         >
           <Typography>
             1.ข้อมูลทั่วไป
           </Typography>
-          {/* <Box
-      component="form"
-      sx={{
-        '& > :not(style)': { m: 1, width: '40ch'  },
-      }}
-  
-    >
-      <TextField id="outlined-basic" label="เลขจดทะเบียน อย" variant="outlined" onChange={(e) => {setFda(e.target.value)}} />
-      <button onClick={() => {fetchData()}}>ok</button>
-    
-    </Box> */}
-    {/* <input onChange={(e) => {setFda(e.target.value)}}/>
-    <button onClick={() => {fetchData()}}>ดึงข้อมูล</button> */}
+        
 
-    <Box
-      component="form"
-      sx={{
-        '& > :not(style)': { m: 1, width: '40ch' },
-        display: 'flex',  // Set display to flex
-        flexDirection: 'row',  // Align items in a row,
-       
-      }}
-    >
-      <TextField id="outlined-basic" label="เลขที่จดแจ้ง" variant="outlined" onChange={(e) => {setFda(e.target.value)}} />
-    
-    </Box>
-    <button onClick={() => {fetchData()}}>ดึงข้อมูล</button>
-
-    <Box
-      component="form"
-      sx={{
-        '& > :not(style)': { m: 1, width: '40ch' },
-        display: 'flex',  // Set display to flex
-        flexDirection: 'row',  // Align items in a row,
-       
-      }}
-    >
-      <TextField id="outlined-basic" label="ชื่อทางการค้า" variant="outlined"  value={comName} onChange={(e) => (setInputcomName(e.target.value))} />
-    
-    </Box>
-
-    <Box
-      component="form"
-      sx={{
-        '& > :not(style)': { m: 1, width: '40ch' },
-        display: 'flex',  // Set display to flex
-        flexDirection: 'row',  // Align items in a row,
-       
-      }}
-    >
-      <TextField id="outlined-basic" label="ชื่อเครื่องสำอาง" variant="outlined" value = {cosName} onChange = {(e) => (setInputcosName(e.target.value))} />
-    
-    </Box>
-    
-
-    <Box
-      component="form"
-      sx={{
-        '& > :not(style)': { m: 1, width: '40ch' },
-        display: 'flex',  // Set display to flex
-        flexDirection: 'row',  // Align items in a row,
-       
-      }}
-      
-      
-    >
-      <TextField id="outlined-basic" label="ประเภทของเครื่องสำอาง" variant="outlined" value={typeGoods} onChange={(e) => (setInputtypeGoods(e.target.value))}/>
-    
-    </Box>
-    <Box
-      component="form"
-      sx={{
-        '& > :not(style)': { m: 1, width: '40ch' },
-        display: 'flex',  // Set display to flex
-        flexDirection: 'row',  // Align items in a row,
-       
-      }}
-      
-      
-    >
-      <TextField id="outlined-basic" label="วันที่แจ้งจดแจ่ง" variant="outlined" value={dateS} onChange={(e) => (setInputdateS(e.target.value))}/>
-    
-    </Box>
-
-    <Box
-      component="form"
-      sx={{
-        '& > :not(style)': { m: 1, width: '40ch' },
-        display: 'flex',  // Set display to flex
-        flexDirection: 'row',  // Align items in a row,
-       
-      }}
-      
-      
-    >
-      <TextField id="outlined-basic" label="วันที่ใบอนุญาติหมดอายุ" variant="outlined" value={expDate} onChange={(e) => (setInputexpDate(e.target.value))}/>
-    
-    </Box>
-    <Box
-      component="form"
-      sx={{
-        '& > :not(style)': { m: 1, width: '40ch' },
-        display: 'flex',  // Set display to flex
-        flexDirection: 'row',  // Align items in a row,
-       
-      }}
-      
-      
-    >
-      <TextField id="outlined-basic" label="จุดประสงค์การใช้" variant="outlined" value={objGoods} onChange={(e) => (setInputobjGoods(e.target.value))}/>
-    
-    </Box>
    
+    <Box 
+    sx={{
+      display: 'flex',  // Set display to flex
+      flexDirection: 'column',  // Align items in a row,
+      
+       // Center items in Y axis,
+    }}>
+    <TextField  variant="outlined" label="เลขที่จดแจ้ง" style={{width:"50%",marginTop:"10px"}} onChange={(e) => {setFda(e.target.value)}}/>
+    
+    <Box>
+        <Button 
+              onClick={() => {fetchData()}}
+              textAlign="center"
+              variant="contained"
+              sx={{ 
+                marginTop: "10px",
+              }}
+              
+            >
+              ดึงข้อมูล
+        </Button>
+    </Box>
+
+    </Box>
+    
+
+    <Box>
+      <TextField id="outlined-basic" label="ชื่อทางการค้า" style={{width:"50%",marginTop:"10px"}}  value={comName} onChange={(e) => (setInputcomName(e.target.value))} />
+
+    </Box>
 
     <Box
-      component="form"
-      sx={{
-        '& > :not(style)': { m: 1, width: '40ch' },
-        display: 'flex',  // Set display to flex
-        flexDirection: 'row',  // Align items in a row,
-       
-      }}
-     
     >
-      <TextField id="outlined-basic" label="ลักษณะทางกายภาพ" variant="outlined" onChange={(e) => (setInputpy(e.target.value))} />
-    
+      <TextField id="outlined-basic" label="ชื่อเครื่องสำอาง" style={{width:"50%",marginTop:"10px"}} value = {cosName} onChange = {(e) => (setInputcosName(e.target.value))} />
+
     </Box>
-                
-                    <TextField
+
+
+    <Box >
+      <TextField id="outlined-basic" label="ประเภทของเครื่องสำอาง" style={{width:"50%",marginTop:"10px"}} value={typeGoods} onChange={(e) => (setInputtypeGoods(e.target.value))}/>
+
+    </Box>
+    <Box >
+      <TextField id="outlined-basic" label="วันที่แจ้งจดแจ้ง" style={{width:"50%",marginTop:"10px"}} value={dateS} onChange={(e) => (setInputdateS(e.target.value))}/>
+
+    </Box>
+
+    <Box>
+      <TextField id="outlined-basic" label="วันที่ใบอนุญาตหมดอายุ" style={{width:"50%",marginTop:"10px"}} value={expDate} onChange={(e) => (setInputexpDate(e.target.value))}/>
+
+    </Box>
+    <Box >
+      <TextField id="outlined-basic" label="จุดประสงค์การใช้" style={{width:"50%",marginTop:"10px"}} value={objGoods} onChange={(e) => (setInputobjGoods(e.target.value))}/>
+
+    </Box>
+
+
+    <Box>
+      <TextField id="outlined-basic" label="ลักษณะทางกายภาพ" style={{width:"50%",marginTop:"10px"}} onChange={(e) => (setInputpy(e.target.value))} />
+
+    </Box>
+
+
+      <Box sx={{
+        gap: { xs: "20px", md: "20px" },
+        display: { xs: "block", md: "flex" },
+        marginTop:{xs:"10px",md:"10px"},
+        
+      }}>
+                    <TextField 
+
+                        marginTop="10px"
                         id="outlined-multiline-static"
                         label = "ชื่อผู้ผลิต"
                         variant="outlined"
@@ -566,7 +520,7 @@ export default function manage() {
                         onChange={(e) => (setinputentrepreneur(e.target.value))}
                         rows={4}
                         width = {'40ch'}
-                        m = "1" 
+                        m = "1"
                         value={entrepreneur}
                     />
                     <TextField
@@ -577,7 +531,7 @@ export default function manage() {
                         multiline
                         rows={4}
                         width = {'40ch'}
-                        m = "1" 
+                        m = "1"
                         value={fentrepreneur}
                     />
                     <TextField
@@ -588,9 +542,21 @@ export default function manage() {
                         multiline
                         rows={4}
                         width = {'40ch'}
-                        m = "1" 
+                        m = "10"
                     />
-                   <button onClick={generatePdf}>Generate PDF</button>
+                </Box>
+
+                <Box 
+                sx={{
+                  marginTop:{xs:"10px",md:"10px"},
+                  textAlign: { xs: "center", md: "center" },
+                  
+                }}>
+
+                <button onClick={generatePdf}>Generate PDF</button>
+
+                </Box>
+                   
 
           {pdfUrl && (
           <div>
@@ -599,18 +565,33 @@ export default function manage() {
         </div>
             )}
 
+      
 
 
-   
+
+      <Box sx={{
+        textAlign: { xs: "center", md: "center" },
+    }}>
+        <Button
+              type="submit"
+              textAlign="center"
+              variant="contained"
+              sx={{ mt: 3, mb: 2}}
+              
+            >
+              อัพโหลด
+        </Button>
+    </Box>
+
 
           <Typography
           sx={{
             marginTop:{xs:"10px",md:"10px"},
             maeginbottom:{xs:"10px",md:"10px"}
           }}
-          
+
           >สำเนาใบรับจดแจ้งเครื่องสำอาง</Typography>
-         <Box 
+         <Box
           style={{
             borderRadius: '5px',
             boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.25)',
@@ -630,7 +611,7 @@ export default function manage() {
             />เลือกไฟล์
             </Button>
             <span id="upload1" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
-            <button onClick={()=>UploadA()}>upload</button>
+            
             </Box>
 
             <Typography
@@ -638,9 +619,9 @@ export default function manage() {
             marginTop:{xs:"10px",md:"10px"},
             marginbottom:{xs:"10px",md:"10px"}
           }}
-          
+
           >หนังสือยืนยันการเป็นเจ้าของเครื่องสำอาง /  Letter of Authorization </Typography>
-          <Box 
+          <Box
           style={{
             borderRadius: '5px',
             boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.25)',
@@ -670,19 +651,21 @@ export default function manage() {
                 <br/>
             <Autocomplete
       id="grouped-demo"
-      options={options.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
+      options={
+        options ? options.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter)) : []
+      }
       groupBy={(option) => option.firstLetter}
       getOptionLabel={(option) => option.groupname}
       sx={{ width: 300 }}
       renderInput={(params) => <TextField {...params} label="เลือกข้อมูลจากฐานข้อมูล ICAE" />}
     />
-  
+
 
 
             <Typography sx={{
                 marginTop:{xs:"10px",md:"10px"},
             }}>หรือ อัพโหลดไฟล์สูตรส่วนประกอบเครื่องสำอาง</Typography>
-            <Box 
+            <Box
           style={{
             borderRadius: '5px',
             boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.25)',
@@ -691,7 +674,7 @@ export default function manage() {
           <Button
             variant="contained"
             component="label"
-            
+
             >
             <input
                 id="filename"
@@ -704,10 +687,10 @@ export default function manage() {
             </Button>
             <span id="upload3" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
             </Box>
-            
+
             <hr></hr>
             <Typography>3. ฉลากเครื่องสำอาง</Typography>
-            <Box 
+            <Box
           style={{
             borderRadius: '5px',
             boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.25)',
@@ -734,7 +717,7 @@ export default function manage() {
             4. ข้อมูลเกี่ยวกับการผลิต
             </Typography>
 
-            <Typography 
+            <Typography
             sx={{
                 marginTop:{xs:"10px",md:"10px"},
 
@@ -745,9 +728,9 @@ export default function manage() {
             marginTop:{xs:"10px",md:"10px"},
             maeginbottom:{xs:"10px",md:"10px"}
           }}
-          
+
           >ข้อมูลการผลิต</Typography>
-         <Box 
+         <Box
           style={{
             borderRadius: '5px',
             boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.25)',
@@ -774,9 +757,9 @@ export default function manage() {
             marginTop:{xs:"10px",md:"10px"},
             maeginbottom:{xs:"10px",md:"10px"}
           }}
-          
+
           >GMP / ISO</Typography>
-         <Box 
+         <Box
           style={{
             borderRadius: '5px',
             boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.25)',
@@ -803,7 +786,7 @@ export default function manage() {
             5.รายงานสรุปอาการอันไม่พึงประสงค์จากการใช้เครื่องสำอาง
           </Typography>
 
-         <Box 
+         <Box
           style={{
             borderRadius: '5px',
             boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.25)',
@@ -828,7 +811,7 @@ export default function manage() {
             6. การประเมินความสอดคล้องของการกล่าวอ้างสรรพคุณเครื่องสำอาง
           </Typography>
 
-         <Box 
+         <Box
           style={{
             borderRadius: '5px',
             boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.25)',
@@ -852,7 +835,7 @@ export default function manage() {
 
 
 
-            
+
 
         </AccordionDetails>
       </Accordion>
@@ -863,14 +846,14 @@ export default function manage() {
         </AccordionSummary>
         <AccordionDetails>
 
-  
 
-        
+
+
             <Typography>
             1. ข้อกำหนดของวัตถุดิบ
           </Typography>
 
-         <Box 
+         <Box
           style={{
             borderRadius: '5px',
             boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.25)',
@@ -891,16 +874,16 @@ export default function manage() {
             </Button>
             <span id="upload9" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
             </Box>
-            
+
 
             <Typography sx={{
                 marginTop:{xs:"10px",md:"10px"},
             }}
             >
-            certificate of analysis (COA) 
+            certificate of analysis (COA)
           </Typography>
 
-         <Box 
+         <Box
           style={{
             borderRadius: '5px',
             boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.25)',
@@ -927,7 +910,7 @@ export default function manage() {
             2. ข้อมูลแสดงความปลอดภัยของวัตถุดิบทุกรายการ (Safety Data Sheet : SDS)
           </Typography>
 
-         <Box 
+         <Box
           style={{
             borderRadius: '5px',
             boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.25)',
@@ -948,7 +931,7 @@ export default function manage() {
             </Button>
             <span id="upload11" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
             </Box>
-         
+
 
         </AccordionDetails>
       </Accordion>
@@ -959,7 +942,7 @@ export default function manage() {
         <AccordionDetails>
 
         <Typography>1. สูตรแม่บท (Master formula)</Typography>
-            <Box 
+            <Box
           style={{
             borderRadius: '5px',
             boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.25)',
@@ -983,7 +966,7 @@ export default function manage() {
             <hr></hr>
 
             <Typography>2. ข้อกำหนดของเครื่องสำอางสำเร็จรูป (Specification of cosmetic finished product)</Typography>
-            <Box 
+            <Box
           style={{
             borderRadius: '5px',
             boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.25)',
@@ -1007,7 +990,7 @@ export default function manage() {
             <hr></hr>
 
             <Typography>3. วิธีการทดสอบเครื่องสำอางสำเร็จรูป (Testing method for cosmetic finished product) </Typography>
-            <Box 
+            <Box
           style={{
             borderRadius: '5px',
             boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.25)',
@@ -1028,13 +1011,13 @@ export default function manage() {
             </Button>
             <span id="upload14" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
             </Box>
-            
+
         </AccordionDetails>
       </Accordion>
 
         </Box>
 
-        
+
 
     </Box>
 
@@ -1045,14 +1028,15 @@ export default function manage() {
               type="submit"
               textAlign="center"
               variant="contained"
+              color="success"
               sx={{ mt: 3, mb: 2}}
-              data-bs-toggle="modal" data-bs-target="#myModal" 
+              
             >
-              ยืนยัน 
+              ยืนยัน
         </Button>
     </Box>
-    
-    
+
+
     <Footer/>
     </>
     )
