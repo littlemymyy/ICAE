@@ -586,7 +586,6 @@ export default function manage() {
         </Button>
     </Box>
 
-
           <Typography
           sx={{
             marginTop:{xs:"10px",md:"10px"},
@@ -1033,7 +1032,6 @@ export default function manage() {
               variant="contained"
               color="success"
               sx={{ mt: 3, mb: 2}}
-              
             >
               ยืนยัน
         </Button>
