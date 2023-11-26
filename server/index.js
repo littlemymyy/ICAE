@@ -15,6 +15,12 @@ const crypto = require('crypto')
 const fetch = require('node-fetch');
 const cheerio = require('cheerio');
 const multer = require('multer');
+const nodemailer = require("nodemailer");
+const { error } = require('console')
+const {EMAIL , PASSWORD} = require('./env.js')
+const Mailgen = require('mailgen')
+const cron = require('node-cron');
+const axios = require('axios');
 
 
 
@@ -152,14 +158,50 @@ app.get('/api/getGroup',(req,res)=>{
 /////////////////////////////////////////////////////////////////
 
 app.post('/api/getUser/', (req, res) => {
+    let checklogin = false
     const email = req.body.email;
     const password = crypto.createHash("sha1").update(req.body.password).digest("hex")
     console.log(email + " " + password)
     const sql = `SELECT em_fullname,em_icon , status , organization_id FROM employee WHERE em_email = '${email}' AND em_pass = '${password}' ` 
     db.query(sql,(err, result) =>{
+        checklogin = true
         console.log(result)
         res.send(result)
+        
     })
+    
+    if(checklogin === true) {
+        let config = {
+            host: 'smtp.gmail.com',
+            port: 587 ,
+            secure: false ,
+            auth: {
+                user: EMAIL,
+                pass: PASSWORD
+            }
+        };
+    
+        let transporter = nodemailer.createTransport(config);
+    
+        let message = {
+            from: EMAIL,
+            to: email,
+            subject: "ICae LoGin",
+            text: "Have some one login if not you ple edit password that link",
+            html: "Have some one login if not you ple edit password that link",
+        };
+    
+        transporter.sendMail(message)
+            .then(() => {
+                // Sending response after email is sent
+                return res.status(201).json({ msg: "Email has been sent, and signup was successful" });
+            })
+            .catch(error => {
+                console.error(error);
+                return res.status(500).json({ error: "Error sending email" });
+            });
+    
+    }
 })
 
 app.post('/api/AddminAdd' , (req, res) => {
@@ -228,11 +270,12 @@ app.post('/api/setdata' , (req , res) => {
 
 })
 
-app.post('/api/setsignUp' , jsonParser, (req , res ) => {
-    console.log(req.body)
+app.post('/api/setsignUp' , jsonParser, async (req , res ) => {
     const firstName = req.body.firstname
     const lastName = req.body.lastname
     const email = req.body.email
+    console.log(req.body)
+    
     const password = crypto.createHash("sha1").update(req.body.password).digest("hex")
     
     
@@ -242,9 +285,44 @@ app.post('/api/setsignUp' , jsonParser, (req , res ) => {
     console.log(fullname + " " + email + " " + password +" " + repassword)
     
     const sql = `INSERT INTO  employee(em_email , em_fullname , em_icon , em_pass , status) VALUES(?,?,?,?,?);  ` 
-    db.query(sql,[email , fullname ,"test01.png" , password , "U" ] , (err, result) => {
-        res.send('OK')
-    })
+    db.query(sql,[email , fullname ,"/pandaU.png" , password , "U" ] , (err, result) => {
+       // res.status(201).json("Signup Successfully")
+       if(err) {
+        console.error(err)
+        return res.status(500).json({error: "have someing worng"})
+       }
+    }) 
+    let config = {
+        host: 'smtp.gmail.com',
+        port: 587 ,
+        secure: false ,
+        auth: {
+            user: EMAIL,
+            pass: PASSWORD
+        }
+    };
+
+    let transporter = nodemailer.createTransport(config);
+
+    let message = {
+        from: EMAIL,
+        to: email,
+        subject: "WellCome To ICae",
+        text: "Successfully Register with us",
+        html: "Successfully Register with us",
+    };
+
+    transporter.sendMail(message)
+        .then(() => {
+            // Sending response after email is sent
+            return res.status(201).json({ msg: "Email has been sent, and signup was successful" });
+        })
+        .catch(error => {
+            console.error(error);
+            return res.status(500).json({ error: "Error sending email" });
+        });
+
+    
     
 })
 
@@ -309,7 +387,7 @@ app.post('/api/searchBybodypartEdit', (req,res) => {
 })
 
 app.post('/api/savefile' , (req , res) => {
-    // console.log(req.body)
+    
     const uname = req.body.uname
     const gname = req.body.gname
     const dd  = req.body.dd
@@ -321,10 +399,22 @@ app.post('/api/savefile' , (req , res) => {
     let udate = day+ "-" + month + "-" + year;
 
 
-    
-    
-
+    console.log(uname)
+    console.log(gname)
     console.log(dd)
+    console.log(fillterg)
+    console.log(date)
+
+    let str = ""
+    for(let i = 0 ; i< fillterg.length ; i++){
+        str+=fillterg[i]+","
+       
+    }
+   
+    let newstr = str.substring(0,str.length-1)
+ 
+    console.log(newstr)
+    
 
     const sql =  'DELETE FROM chemicalgroup WHERE groupname =  "' + gname + '"'
     db.query(sql,(err, result)=>{
@@ -337,7 +427,7 @@ app.post('/api/savefile' , (req , res) => {
     // console.log([dd[i].cas , dd[i].cname , dd[i].cmname , dd[i].per , dd[i].st , "-" , "-" , dd[i].bodypart , dd[i].color , gname , dd[i].per1 , uname , udate ])
     for( let i = 0 ; i < dd.length ; i++ ){
         const sql1 = 'INSERT INTO chemicalgroup (cas , cname , cmname , per , st , img , des, bodypart , color , groupname , per1 , uname , udate , fillterg) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?); '
-        db.query(sql1,[dd[i].cas , dd[i].cname , dd[i].cmname , dd[i].per , dd[i].st , "-" , "-" , dd[i].bodypart , dd[i].color , gname , dd[i].per1 , uname , udate , fillterg  ] , (err, result)=>{
+        db.query(sql1,[dd[i].cas , dd[i].cname , dd[i].cmname , dd[i].per , dd[i].st , "-" , "-" , dd[i].bodypart , dd[i].color , gname , dd[i].per1 , uname , date , newstr  ] , (err, result)=>{
            console.log(result)
         })
         
@@ -684,6 +774,89 @@ app.post('/api/upload-pdf' , (req , res) => {
     const file = req.body
     console.log(file)
 })
+
+app.post('/api/getGroupNameSt' , (req , res) => {
+    console.log(req.body.data)
+    const gname = req.body.data
+
+})
+
+const sendEmailNotifications=() => {
+    const sql = 'SELECT expdate FROM pif_storage WHERE expdate <= CURDATE() + INTERVAL 30 DAY';
+
+    db.query(sql , (err , result) => {
+        if(err) {
+            console.error("Error ", err)
+           // res.status(500).send("SomeTingWorng")
+        }
+        else if (result.length > 0 ){
+            console.log('Result from database :', result);
+            console.log("Ok")
+            result.forEach((pif_storage) => {
+                let config = {
+                    host: 'smtp.gmail.com',
+                    port: 587 ,
+                    secure: false ,
+                    auth: {
+                        user: EMAIL,  
+                        pass: PASSWORD
+                    }
+                };
+            
+                let transporter = nodemailer.createTransport(config);
+            
+                let message = {
+                    from: EMAIL,
+                    to: "hechuan1949@gmail.com",
+                    subject: "ใบอนุญาต อย ใหล้ หมด อายุแล้ว",
+                    text: "วันหมดอายุ คือ ${expdate}",
+                    html: "EXP DATE IS COMING",
+                };
+            
+                transporter.sendMail(message)
+                    .then(() => {
+                        console.log('Sending email to hechuan1949@gmail.com');
+                        // Sending response after email is sent
+                       // return res.status(201).json({ msg: "Email has been sent, and signup was successful" });
+                    })
+                    .catch(error => {
+                        console.error(error);
+                       // return res.status(500).json({ error: "Error sending email" });
+                    });
+            
+
+            })
+        }
+        else {
+            console.log("No expDate")
+        }
+    })
+//})
+}
+//sendEmailNotifications()
+
+cron.schedule(' 45 8 * * *' , () => {
+    console.log("IS RUN CRON")
+    try {
+        
+        sendEmailNotifications()
+        
+        console.log('Email sent successfully');
+    } catch (error) {
+        console.error('Error:', error);
+    }
+    
+//     // console.log('Cron job executed at:', new Date());
+//     // axios.get('http://localhost:3001/api/sendNotification')
+//     // .then((response)=>{
+//     //     console.log("is server say :" + response.data)
+//     // }).catch((error) => {
+//     //     console.error(error)
+//     // })
+ })
+
+
+ 
 
 app.listen(3001, () => {
     console.log('Running node at port 3001');

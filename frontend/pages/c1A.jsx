@@ -183,7 +183,7 @@ const c1A = () => {
     // sessionStorage.setItem('gname' , groupName)
     // sessionStorage.setItem('fillterg' , JSON.stringify(fillterg) )
     //router.push('/c2A', undefined , { shallow: true, state: { list , fillterg} })
-    router.push('/c2A')
+   
   }
 
   const submitdataToblackEnd = () => {

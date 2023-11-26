@@ -12,7 +12,6 @@ const Groupname = () => {
     op1[index] = value
     setOp1([...op1])
     // console.log(type)
-
   }
   
   const buttonClick = () => {

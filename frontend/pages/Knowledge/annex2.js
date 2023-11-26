@@ -18,21 +18,17 @@ export default function Home(){
 
 
     useEffect(() => {
-        Axios.request(
+        let load = {
+            st : 2
+        }
+        Axios(
             {
-                method: 'get',
-                url: 'http://localhost:3001/api/annex?st=2',
-                headers: { },
-                data : ''
+                method: 'post' ,
+                url: 'http://localhost:3001/api/annex',
+                data : load
             }
         ).then((response) => {
-            let data = JSON.stringify(response.data.message)
-            if (response.data.status === "ok"){
-                setData(response.data.message);
-            }
-            else {
-                setData([{cas: "", name: "", maxt: "ไม่พบข้อมูล"}]);
-            }
+            setData(response.data);
 
             console.log(data)
         }).catch((error) => {
@@ -41,13 +37,32 @@ export default function Home(){
         )
     }, []);
 
+    // useEffect(() => {
+    //     Axios.request(
+    //         {
+    //             method: 'get',
+    //             url: 'http://localhost:3001/api/annex?st=1',
+    //             headers: { },
+    //             data : ''
+    //         }
+    //     ).then((response) => {
+    //         let data = JSON.stringify(response.data.message)
+    //         setData(response.data.message);
+
+    //         console.log(data)
+    //     }).catch((error) => {
+    //         console.log(error);
+    //     }
+    //     )
+    // }, []);
+
     const evenRowStyle = {
         backgroundColor: '#e1f5fe',
-    };
+    }; 
     return(
         <>
         <Navbar />
-        <Box
+        <Box 
         sx={{
             backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
             justifyContent: { xs: "", md: "center" },
@@ -56,23 +71,23 @@ export default function Home(){
             paddingBottom: { xs: "50px", md: "50px" },
             paddingTop: { xs: "50px", md: "50px" },
           }}
-
+        
         >
-            <Box className="home_Knowledge1_left"
+            <Box className="home_Knowledge1_left" 
             sx={{
-
+                
                 justifyContent: { xs: "", md: "center" },
                 display: { xs: "block", md: "flex" },
 
             }}
-
+            
             >
                 <img src="/annex2.png" style={{ maxWidth: 0 + "200px" }}/>
-
+                
             </Box>
             <Box className="home_Knowledge1_right">
                 <h1>สารต้องห้ามในผลิตภัณฑ์เครื่องสำอาง</h1>
-
+                
                 <div className="litetext">
                     <p>รายละเอียดสารเคมีและคำอธิบายสารเคมีสำหรับเครื่องสำอาง</p>
                 </div>
@@ -84,10 +99,10 @@ export default function Home(){
             <Table sx={{ minWidth: 100  }} aria-label="simple table">
                 <TableBody>
                 <TableRow>
-                    <TableCell sx={{width:200}}align="left">CAS NO</TableCell>
+                    <TableCell sx={{width:100}}align="left">CAS NO</TableCell>
                     <TableCell align="left">ชื่อสารเคมี</TableCell>
+                    <TableCell align="left">ปริมาณที่สามารถใช้ได้ (%)</TableCell>
                     
-
                 </TableRow>
                 </TableBody>
 
@@ -95,13 +110,19 @@ export default function Home(){
                 {data.map((item, index) => (
                     <TableRow key={index} style={index % 2 === 0 ? evenRowStyle : null} >
                         <TableCell align="left">{item.cas}</TableCell>
-                        <TableCell align="left">{item.name}</TableCell>
+                        {
+                            data.cmname !== null ? 
+                            <TableCell align="left">{item.cmname}</TableCell>
+                            :
+                            <TableCell align="left">{item.cname}</TableCell>
+                        }
                         
-
+                        <TableCell align="left">{item.per}</TableCell>
+                        
                     </TableRow>
                 ))}
                 </TableBody>
-
+       
             </Table>
         </TableContainer>
     </Box>
@@ -109,6 +130,6 @@ export default function Home(){
         <Footer />
         </>
 
-
+        
     )
 }

@@ -18,21 +18,18 @@ export default function Home(){
 
 
     useEffect(() => {
-        Axios.request(
+        let load = {
+            st : 5
+        }
+        Axios(
             {
-                method: 'get',
-                url: 'http://localhost:3001/api/annex?st=5',
-                headers: { },
-                data : ''
+                method: 'post' ,
+                url: 'http://localhost:3001/api/annex',
+                data : load
             }
         ).then((response) => {
-            let data = JSON.stringify(response.data.message)
-            if (response.data.status === "ok"){
-                setData(response.data.message);
-            }
-            else {
-                setData([{cas: "", name: "", maxt: "ไม่พบข้อมูล"}]);
-            }
+            setData(response.data);
+
             console.log(data)
         }).catch((error) => {
             console.log(error);
@@ -42,11 +39,11 @@ export default function Home(){
 
     const evenRowStyle = {
         backgroundColor: '#e1f5fe',
-    };
+    }; 
     return(
         <>
         <Navbar />
-        <Box
+        <Box 
         sx={{
             backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
             justifyContent: { xs: "", md: "center" },
@@ -55,23 +52,23 @@ export default function Home(){
             paddingBottom: { xs: "50px", md: "50px" },
             paddingTop: { xs: "50px", md: "50px" },
           }}
-
+        
         >
-            <Box className="home_Knowledge1_left"
+            <Box className="home_Knowledge1_left" 
             sx={{
-
+                
                 justifyContent: { xs: "", md: "center" },
                 display: { xs: "block", md: "flex" },
 
             }}
-
+            
             >
                 <img src="/annex5.png" style={{ maxWidth: 0 + "200px" }}/>
-
+                
             </Box>
             <Box className="home_Knowledge1_right">
                 <h1>สารกันเสีย</h1>
-
+                
                 <div className="litetext">
                     <p>รายละเอียดสารเคมีและคำอธิบายสารเคมีสำหรับเครื่องสำอาง</p>
                 </div>
@@ -86,23 +83,27 @@ export default function Home(){
                     <TableCell sx={{width:100}}align="left">CAS NO</TableCell>
                     <TableCell align="left">ชื่อสารเคมี</TableCell>
                     <TableCell align="left">ปริมาณที่สามารถใช้ได้ (%)</TableCell>
-
+                    
                 </TableRow>
                 </TableBody>
 
                 <TableBody>
-                {
-                data.map((item, index) => (
+                {data.map((item, index) => (
                     <TableRow key={index} style={index % 2 === 0 ? evenRowStyle : null} >
                         <TableCell align="left">{item.cas}</TableCell>
-                        <TableCell align="left">{item.name}</TableCell>
-                        <TableCell align="left">{item.maxt}</TableCell>
-
+                        {
+                            data.cmname !== null ? 
+                            <TableCell align="left">{item.cmname}</TableCell>
+                            :
+                            <TableCell align="left">{item.cname}</TableCell>
+                        }
+                        
+                        <TableCell align="left">{item.per}</TableCell>
+                        
                     </TableRow>
                 ))}
-                
                 </TableBody>
-
+       
             </Table>
         </TableContainer>
     </Box>
@@ -110,6 +111,6 @@ export default function Home(){
         <Footer />
         </>
 
-
+        
     )
 }

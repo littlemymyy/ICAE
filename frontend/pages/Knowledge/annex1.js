@@ -18,17 +18,16 @@ export default function Home(){
 
 
     useEffect(() => {
-        let load = {
-            st : 6
-        }
-        Axios(
+        Axios.request(
             {
-                method: 'post' ,
-                url: 'http://localhost:3001/api/annex',
-                data : load
+                method: 'get',
+                url: 'http://localhost:3001/api/annex?st=1',
+                headers: { },
+                data : ''
             }
         ).then((response) => {
-            setData(response.data);
+            let data = JSON.stringify(response.data.message)
+            setData(response.data.message);
 
             console.log(data)
         }).catch((error) => {
@@ -63,11 +62,11 @@ export default function Home(){
             }}
             
             >
-                <img src="/annex6.png" style={{ maxWidth: 0 + "200px" }}/>
+                <img src="/annex1.png" style={{ maxWidth: 0 + "200px" }}/>
                 
             </Box>
             <Box className="home_Knowledge1_right">
-                <h1>สารกรองแสง UV</h1>
+                <h1>สารที่สามารถใช้งานได้</h1>
                 
                 <div className="litetext">
                     <p>รายละเอียดสารเคมีและคำอธิบายสารเคมีสำหรับเครื่องสำอาง</p>
@@ -75,7 +74,7 @@ export default function Home(){
             </Box>
         </Box>
 
-        
+
         <Box sx={{ marginLeft:"200px" , marginRight:"200px", paddingTop:"50px"}}>
         <TableContainer component={Paper} >
             <Table sx={{ minWidth: 100  }} aria-label="simple table">
@@ -92,14 +91,8 @@ export default function Home(){
                 {data.map((item, index) => (
                     <TableRow key={index} style={index % 2 === 0 ? evenRowStyle : null} >
                         <TableCell align="left">{item.cas}</TableCell>
-                         {
-                            data.cmname !== null ? 
-                            <TableCell align="left">{item.cmname}</TableCell>
-                            :
-                            <TableCell align="left">{item.cname}</TableCell>
-                        }
-                        
-                        <TableCell align="left">{item.per}</TableCell>
+                        <TableCell align="left">{item.name}</TableCell>
+                        <TableCell align="left">{item.maxt}</TableCell>
                         
                     </TableRow>
                 ))}
@@ -108,6 +101,7 @@ export default function Home(){
             </Table>
         </TableContainer>
     </Box>
+        
 
         <Footer />
         </>

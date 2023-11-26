@@ -2,19 +2,47 @@ import Navbar from '@/components/layout/Navbar'
 import Axios from "axios";
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router';
-import { AiOutlineDelete } from "react-icons/ai";
+import { AiOutlineDelete ,RiDraftFill } from "react-icons/ai";
+import { FcOk } from "react-icons/fc";
 
 export const c2 = () => {
     const [gname , setGname] = useState([])
     const [show, setShow] = useState([])
+    const [status, setStatus] = useState([])
     const router = useRouter();
 
     useEffect(() => {
-        Axios.get(`http://localhost:3001/api/getGroupName`).then((response) => {
-            setGname(response.data);
-            setShow(response.data)
-            console.log(response.data);
-          });
+      const fetchdata = async () =>{
+        try{
+          const gn = await Axios.get(`http://localhost:3001/api/getGroupName`);
+          console.log(gn.data)
+          setGname(gn.data)
+          setShow(gn.data)
+          console.log(gn.data);
+          for(let i = 0; i < gn.data.length; i++) {
+            let load = {
+              data : gn.data[i].groupname
+            }
+            const d = await Axios({
+              url : `http://localhost:3001/api/getGroupNameSt`,
+              method : 'post',
+              data :  load  , 
+            })
+
+            //const d = Axios(gn.data[i].groupname)
+            // const d = Axios with gn.data[i].groupname
+            //console.log(gn.data[i].groupname + " " + d[0].sum)
+            // status.push(d.data[0].sum)
+            // setStatus([...status])
+            // show[i]['status'] = d.data[0].sum
+            // setShow([...show])
+          }
+
+        }catch(error){
+          console.error(error)
+        }
+      }
+        fetchdata()
       
     },[])
 
@@ -74,6 +102,7 @@ export const c2 = () => {
                   <th className='C1A_th2'>วันที่</th>
                   <th className='C1A_th3'>ชื่อไฟล์</th>
                   <th style={{ textAlign: 'center' }}>ตัวเลือก</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -87,6 +116,10 @@ export const c2 = () => {
                         
                        
                         <td><AiOutlineDelete onClick={() => clickDelete(idx)} /></td>
+                        {
+
+                        }
+                        
                       </tr>
                     ))
                     : null

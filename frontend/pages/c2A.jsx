@@ -36,8 +36,17 @@ const c2A = () => {
     const parsedArray = dataArray ? JSON.parse(dataArray) : [];
     //const parsedArray = 
     useEffect(()=>{
+      let aa = 0
       console.log("is comming")
       console.log(parsedArray)
+      setSum(0)
+      for(let i = 0; i < parsedArray.length; i++) {
+        if(parsedArray[i].st != 2 && parsedArray[i].per1 <= parsedArray[i].per) {
+          aa += parseFloat(parsedArray[i].per1)
+        }
+      }
+      setSum(aa);
+      console.log('Sum = ' + aa)
       if (gname) {
         setGroupName(gname);
       }
@@ -57,6 +66,7 @@ const c2A = () => {
           
            
             })
+            // console.log(parsedArray)
             parsedArray.find(e => {
               if (e.st === 2) {
                 console.log(".......")
@@ -69,8 +79,7 @@ const c2A = () => {
               else if(e.st !== 2 && e.per1 <= e.per){
                 console.log(e)
                 if(checklist(list , e) === 1 ){
-                  let total = sum + parseFloat(e.per1)
-                  setSum(total)
+                  setSum(sum + parseFloat(e.per1))
                   list.push(e)
                   setList([...list])
                 }
@@ -85,7 +94,7 @@ const c2A = () => {
             },);
 
     }, [])
-
+    // check dupicate 
     const checklist = (list1 , dd) => {
       for( let i = 0 ; i<list1.length ; i++ ){
         if(list1[i].cas === dd.cas){
@@ -97,6 +106,7 @@ const c2A = () => {
 
   
     const percentChange = (idx, e) => {
+      let sumb = 0
       console.log(list[idx])
       console.log(e)
       let l2 = list[idx]
@@ -109,15 +119,15 @@ const c2A = () => {
       console.log(l2)
       if (e > list[idx].per) {
         elist.push(l2)
-        setElist([...Elist])
+        setElist([...elist])
         list.splice(idx, 1)
         setList([...list])
       }
-      let total = 0
+      //let total = 0
       for(let i = 0; i < list.length; i++){
-        total += parseFloat(list[i].per1)
+        sumb += parseFloat(list[i].per1)
       }
-      setSum(total)
+      setSum(sumb)
   
     }
   
@@ -181,11 +191,12 @@ const c2A = () => {
     const clickDelete = (e) => {
       list.splice(e, 1)
       setList([...list])
-      let sum2 = 0;
+      console.log(list)
+      let sumc = 0;
       for (let i = 0; i < list.length; i++) {
-        sum2 += parseInt(list[i].per);
+        sumc += parseInt(list[i].per1);
       }
-      setSum(sum2);
+      setSum(sumc);
     } 
 
     const clickDelete2 = (e) => {
@@ -193,7 +204,7 @@ const c2A = () => {
       setElist([...elist])
       let sum2 = 0;
       for (let i = 0; i < list.length; i++) {
-        sum2 += parseInt(list[i].per);
+        sum2 += parseInt(list[i].per1);
       }
       setSum(sum2);
     }
@@ -203,22 +214,28 @@ const c2A = () => {
       setUnlist([...unlist])
       let sum2 = 0;
       for (let i = 0; i < list.length; i++) {
-        sum2 += parseInt(list[i].per);
+        sum2 += parseInt(list[i].per1);
       }
       setSum(sum2);
     }
 
     const saveFile = () => {
-      let arr = []
-      arr.push(list)
-      arr.push(elist)
-      arr.push(unlist)
-      console.log(arr)
+      
+      if(unlist.length > 0 ) {
+        list.push(...unlist)
+      }
+      if(elist.length > 0){
+        list.push(...elist)
+      }
+      
+     
+      console.log("is list")
+      console.log(list)
       let load = {
         uname : sessionStorage.getItem("uname") ,
         gname : groupName ,
         fillterg : filltergB ,
-        dd : arr,
+        dd : list,
         
       }
       Axios({

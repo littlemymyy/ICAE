@@ -34,6 +34,8 @@ const c1 = () => {
     // console.log(mydata)
     setGroupName(gname)
     const dd = mydata
+    console.log("is dd")
+    console.log(dd)
     Axios({
       url: "http://localhost:3001/api/searchBybodypart",
       method: "post",
@@ -44,17 +46,24 @@ const c1 = () => {
         for(let i = 0 ; i < res.length ; i++ ){
           res[i]["per1"] = 0
         }
+        
+        for(let i = 0 ; i<res.length ; i++){
+          if(res[i].cmname.includes("/")){
+            res[i].cmname = "-";
+          }
+        }
         setData(res)
         console.log(res)
       })
   }, [])
 
   const resultsearch = (e) => {
-    setSearch_input(e)
-    if (e.length == 0) {
+    if (e.length === 0) {
       setShow([])
+      setSearch_input('')
     }
     else {
+      setSearch_input(e)
       const results1 = data.filter((w) => {
         return (
           e &&
@@ -85,6 +94,8 @@ const c1 = () => {
       setShow([])
       setSearch_input("")
     }
+    setShow([])
+    setSearch_input("")
     console.log(result)
   }
 
@@ -185,15 +196,15 @@ const c1 = () => {
           onChange={(e) => resultsearch(e.target.value)}
         />
         <br />
-      </div>
+      </div> 
       <div className='show'>
         {
-          show.length ?
-            show.map((value) => (
+          search_input.length ?
+            show.map((value , idx) => (
               value.cmname === "-" ?
-                <p onClick={() => add(value.cas)} key={value.cas}>  {value.cname}</p>
+                <p onClick={() => add(value.cas)} key={value.idx}>  {value.cname}</p>
                 :
-                <p onClick={() => add(value.cas)} key={value.cas}> {value.cmname}</p>
+                <p onClick={() => add(value.cas)} key={value.idx}> {value.cmname}</p>
             ))
             : null
         }
@@ -229,7 +240,7 @@ const c1 = () => {
                             <td>{value.cmname}</td>
                         }
                         <td>
-                          <input defaultValue={value.per1} onChange={(e) => percentChange(idx, e.target.value)} />
+                          <input type='number' defaultValue={value.per1} onChange={(e) => percentChange(idx, e.target.value)} />
                         </td>
                         <td>{value.des}</td>
                         <td><AiOutlineDelete onClick={() => clickDelete(idx)} /></td>
@@ -278,7 +289,7 @@ const c1 = () => {
                         <td>{value.cmname}</td>
                     }
                     <td>
-                      <input value={value.per1} onChange={(e) => percentChange2(idx, e.target.value)} />
+                      <input type='number' min={0} max={100} value={value.per1} onChange={(e) => percentChange2(idx, e.target.value)} />
                     </td>
                     <td>{value.des}</td>
                     <td></td>

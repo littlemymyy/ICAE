@@ -61,17 +61,18 @@ export default function SignIn() {
           // em_fullname : "test01"
           // em_icon : "/test01.png"
           // em_pass : "12345"
-          sessionStorage.setItem("uemail" , response.data[0].em_email);
+         
           sessionStorage.setItem("uname" , response.data[0].em_fullname);
           sessionStorage.setItem("uicon" , response.data[0].em_icon);
-          sessionStorage.setItem("upass" , response.data[0].em_pass);
           sessionStorage.setItem("status" , response.data[0].status);
+          sessionStorage.setItem('orid', response.data[0].organization_id)
+          
 
           if(response.data[0].status === "A"){
             router.push("/admin/Home");
           }
           else if(response.data[0].status === "S") {
-
+            router.push("/")
           }
           else {
             router.push("/");
@@ -163,9 +164,24 @@ export default function SignIn() {
                 </Link>
               </Grid>
               <Grid item>
+                {/* { 
+                
+                sessionStorage.getItem("status") === null ?
                 <Link href="/SignUp" variant="body2">
+                {"คุณยังไม่เป็นสมาชิกใช่ไหม? สมัครสมาชิก"}
+               </Link> :
+                  
+                  sessionStorage.getItem("status") === "A" ?
+                  <Link href="/SignUpA" variant="body2">
                   {"คุณยังไม่เป็นสมาชิกใช่ไหม? สมัครสมาชิก"}
                 </Link>
+                :  sessionStorage.getItem("status") === "S" ?
+                <Link href="/SignUpA" variant="body2">
+                {"คุณยังไม่เป็นสมาชิกใช่ไหม? สมัครสมาชิก"}
+                </Link>
+                : null
+                } */}
+                
               </Grid>
             </Grid>
           </Box>
