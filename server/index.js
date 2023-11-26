@@ -18,7 +18,6 @@ const vfsFonts = require('pdfmake/build/vfs_fonts');
 const path = require('path');
 
 
-
 const app = express();
 app.use(bodyParser.json({limit: '35mb'}));
 app.use(cors());
@@ -65,17 +64,41 @@ app.post('/generate-pdf', pdfUpload.single('file'), (req, res) => {
 
         const docDefinition = {
                 content: [
-                    { text: 'asdasdasd', style: 'header' },
-                    { text: content },
-                    { text: req.body.text2 },
+                    { text: 'ข้อมูลเกี่ยวกับเครื่องสำอาง (PRODUCTS INFORMATION FILE : PIF)', style: 'header' },
+                    
+                    {text:`เลขที่จดแจ้ง ${req.body.inputregisNumber}` },
+                    {text:`ชื่อทางการค้าเครื่องสำอาง ${req.body.inputcomName}` },
+                    {text:`ชื่อเครื่องสำอาง ${req.body.inputcosName}`},
+                    {text:`ประเภทของเครื่องสำอาง ${req.body.inputtypeGoods}`},
+                    {text:`วันที่จดแจ้ง ${req.body.inputdateS}`},
+                    {text:`วันที่ใบอนุญาตหมดอายุ${req.body.inputexpDate}`},
+                    {text:`จุดประสงค์การใช้ ${req.body.inputobjGoods}`},
+                    {text:`ลักษณะทางกายภาพ ${req.body.Inputpy}`},
+                    {text:`ชื่อผู้ผลิต ${req.body.inputentrepreneur}`},
+                    {text:`ชื่อผู้ผลิตต่างประเทศ ${req.body.inputFentrepreneur}`},
+                    {text:`ส่วนประกอบ ${req.body.inputbodypart}`}, 
+                    {text:`รายละเอียดเพิ่มเติม ${req.body.setDes}`}
+
+                    
                 ],
+                styles: {
+                    header: {
+                        fontSize: 18,
+                        bold: true,
+                        alignment: 'center',
+                        margin: [10, 10, 10, 10]
+                    }
+                },
                 defaultStyle: {
                     font: 'THSarabunNew'
                 }
             };
 
         const pdfDoc = pdfMake.createPdf(docDefinition);
-        const pdfPath = path.join(__dirname, 'uploads', 'output.pdf');
+        
+        const fileName = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+
+        const pdfPath = path.join(__dirname, 'uploads', `${fileName}.pdf`);
 
         pdfDoc.getBuffer((buffer) => {
             fs.writeFile(pdfPath, buffer, () => {
