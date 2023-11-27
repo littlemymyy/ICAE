@@ -37,7 +37,7 @@ export default function Home() {
               pagination={{
                 clickable: true,
               }}
-              Autoplay={true}
+              autoPlay={true}
               modules={[Pagination]}
               className="mySwiper"
             >
@@ -70,7 +70,7 @@ export default function Home() {
             }}
           >
             <p>ผู้ช่วยสูตร</p>
-					
+
             <Box
               sx={{
                 justifyContent: { xs: "center", md: "left" },
@@ -130,14 +130,14 @@ export default function Home() {
             textAlign: { xs: "center", md: "center" },
             padding: { xs: "30px 0px 30px 0px", md: "30px 0px 30px 0px" },
             backgroundColor: { xs: "rgb(219,233,245)", md: "rgb(219,233,245)" },
-						
-						
+
+
           }}
         >
           <Typography sx={{
 							fontSize:{md:'30px',xs:'20px'},
-					}} 
-					
+					}}
+
 					>ข้อได้เปรียบหลัก</Typography>
           <Grid
             container
@@ -165,7 +165,7 @@ export default function Home() {
         </Box>
       </Fragment>
       <Footer></Footer>
-      
+
     </>
   );
 }
