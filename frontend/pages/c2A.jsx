@@ -65,7 +65,10 @@ const c2A = () => {
               // Call the check function for each item in parsedArray
           
            
-            })
+            }) .catch(error => {
+              console.error(error);
+             // return res.status(500).json({ error: "Error sending email" });
+          });
             // console.log(parsedArray)
             parsedArray.find(e => {
               if (e.st === 2) {

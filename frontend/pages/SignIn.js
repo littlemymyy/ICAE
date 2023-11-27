@@ -57,12 +57,14 @@ export default function SignIn() {
       .then(function (response) {
         if(response.data && response.data.length) {
           console.log(response.data);
+          
           // em_email : "test01@gmail.com"
           // em_fullname : "test01"
           // em_icon : "/test01.png"
           // em_pass : "12345"
          
           sessionStorage.setItem("uname" , response.data[0].em_fullname);
+          sessionStorage.setItem("uemail" , response.data[0].em_email)
           sessionStorage.setItem("uicon" , response.data[0].em_icon);
           sessionStorage.setItem("status" , response.data[0].status);
           sessionStorage.setItem('orid', response.data[0].organization_id)

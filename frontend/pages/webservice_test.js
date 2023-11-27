@@ -1,9 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import Axios from "axios";
+import 'bootstrap/dist/css/bootstrap.css'
 
 const webservice_test = () => {
     const [data , setData] = useState([])
 
+    useEffect(()=>{
+      const today = new Date()
+      const thisDay = today.getDate() + '-' + today.getMonth() + '-' + today.getFullYear()
+      sessionStorage.setItem("emaildate" , thisDay);
+      console.log(sessionStorage.getItem('emaildate'))
+    },[])
     // useEffect(() => {
     //     const apiUrl = ""
     // },[])
@@ -98,8 +105,49 @@ fetch(soapEndpoint, {
   });
 
   return (
-    <h3>{data}</h3> 
-    
+    <>
+      <div className='pt-2 pb-2 text-center mb-5' style={{backgroundColor: 'lightblue', color: 'white', border: '3px solid green'}}>
+        Hello
+      </div>
+      <div>World</div>
+      <div><input value='555' /></div>
+     
+<div class='radioSelect'>
+  <div class="radio inline">
+    <input type="checkbox" class="form-check-input" value="option1" onChange={() => getType(0, 1)} />
+    <label>ผลิตภัณฑ์เกี่ยวกับผม</label>
+  </div>
+
+  <div class="radio inline">
+    <input type="checkbox" class="form-check-input" value="option1" onChange={() => getType(1, 1)} />
+    <label>ผลิตภัณฑ์เกี่ยวกับเล็บ</label>
+  </div>
+
+  <div class="radio inline">
+    <input type="checkbox" class="form-check-input" value="option1" onChange={() => getType(2, 1)} />
+    <label>ผลิตภัณฑ์เกี่ยวกับผิว</label>
+        </div>
+
+        <div class="radio inline">
+    <input type="checkbox" class="form-check-input" value="option1" onChange={() => getType(2, 1)} />
+    <label>ผลิตภัณฑ์เกี่ยวกับผิว</label>
+        </div>
+        <div class="radio inline">
+    <input type="checkbox" class="form-check-input" value="option1" onChange={() => getType(2, 1)} />
+    <label>ผลิตภัณฑ์เกี่ยวกับผิว</label>
+        </div>
+
+        <div class="radio inline">
+    <input type="checkbox" class="form-check-input" value="option1" onChange={() => getType(2, 1)} />
+    <label>ผลิตภัณฑ์เกี่ยวกับผิว</label>
+        </div>
+
+         </div>
+         
+         
+
+      
+    </>
        
   )
 }

@@ -28,6 +28,9 @@ const Home = () => {
 
 
     useEffect(() => {
+      if(sessionStorage.getItem('status') !== 'A') {
+        router.push('/')
+      }
       const feechData = async () => {
         try {
           const res1 = await 
@@ -79,7 +82,7 @@ const Home = () => {
 
         
 
-          console.log("AUNX2 "+a+" " + b +" "+ c)
+         
 
           console.log(CanAll)
           console.log(sum)

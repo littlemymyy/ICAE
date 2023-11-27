@@ -176,7 +176,10 @@ const c3 = () => {
         }).then((response) => {
           alert("เพิ่มรายเรียบร้อย")
           router.push("/Groupname")
-        })
+        }).catch(error => {
+          console.error(error);
+         // return res.status(500).json({ error: "Error sending email" });
+      });
       }
     
   return (

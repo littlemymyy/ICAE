@@ -59,7 +59,10 @@ const c1A = () => {
         // }
         setData(res)
         console.log(res)
-      })
+      }) .catch(error => {
+        console.error(error);
+       // return res.status(500).json({ error: "Error sending email" });
+    });
   }
  
 
@@ -353,7 +356,7 @@ const c1A = () => {
                 :
                 <input type="checkbox" className="form-check-input" value="option1"   onChange={() => getType(16,0)} checked/>
               }
-             <label >ผลิตภัณฑ์เกี่ยวกับช่องปาก</label>
+             <label>ผลิตภัณฑ์เกี่ยวกับช่องปาก</label>
           </div>
 
     </details>

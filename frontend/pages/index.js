@@ -15,9 +15,74 @@ import "swiper/css/pagination";
 
 // import required modules
 import { Pagination } from "swiper/modules";
+import { useEffect } from "react";
+import Axios from "axios";
+import Swal from 'sweetalert2'
 
 export default function Home() {
   const [icon, setIcon] = useState('/news1.jpeg')
+  const [data , setData] = useState([])
+  useEffect(()=>{
+    let sDate = sessionStorage.getItem("emaildate")
+    const today = new Date()
+    const thisDay = today.getDate() + '-' + today.getMonth() + '-' + today.getFullYear()
+    const Swal = require('sweetalert2')
+
+    console.log(sDate + " " + thisDay)
+    if(thisDay !== sDate) {
+      alert('OK')  // Call send email
+      sessionStorage.setItem("emaildate" , thisDay);
+    }
+    console.log("mail "+ sessionStorage.getItem("uemail"))
+    let email = sessionStorage.getItem("uemail")
+    const feechData = async () => {
+
+      let load = {
+        
+        email : email,
+      };
+
+      try {
+      const res =  await Axios({
+          method : 'post' ,
+          url :'http://localhost:3001/api/sendNotification',
+          data : load
+        })
+       // const res = await Axios.post('http://localhost:3001/api/sendNotification',load)
+        console.log(res.data)
+        setData(res.data)
+
+        let fdanum = ""
+
+        for(let i = 0 ; i < res.data.length ; i++){
+          fdanum += res.data[i].fda_license + "   " + ","
+        }
+        console.log(res.data[0])
+       
+        if(res.data){
+          Swal.fire({
+            title: 'ใบอนุญาตจดแจ้งใกล้หมดอายุ',
+            text: 'เลขที่ : ' + fdanum
+            ,
+            icon: 'warning',
+            confirmButtonText: 'ปิด'
+          })
+        }
+
+
+      }catch(error) {
+        console.log('Error fetching data : ', error)
+      }
+
+    }
+    feechData()
+
+    // console.log("is DAta")
+    // console.log(data)
+ 
+ 
+    
+  },[])
   return (
     <>
       <Navbar />

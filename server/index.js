@@ -21,7 +21,8 @@ const {EMAIL , PASSWORD} = require('./env.js')
 const Mailgen = require('mailgen')
 const cron = require('node-cron');
 const axios = require('axios');
-
+const pdfMake = require('pdfmake/build/pdfmake');
+const vfsFonts = require('pdfmake/build/vfs_fonts');
 
 
 
@@ -162,7 +163,7 @@ app.post('/api/getUser/', (req, res) => {
     const email = req.body.email;
     const password = crypto.createHash("sha1").update(req.body.password).digest("hex")
     console.log(email + " " + password)
-    const sql = `SELECT em_fullname,em_icon , status , organization_id FROM employee WHERE em_email = '${email}' AND em_pass = '${password}' ` 
+    const sql = `SELECT em_fullname,em_icon , status , organization_id , em_email FROM employee WHERE em_email = '${email}' AND em_pass = '${password}' ` 
     db.query(sql,(err, result) =>{
         checklogin = true
         console.log(result)
@@ -771,6 +772,7 @@ const storage = multer.diskStorage({
     const upload = multer({ storage: storage });
 
 app.post('/api/upload-pdf' , (req , res) => {
+
     const file = req.body
     console.log(file)
 })
@@ -781,51 +783,55 @@ app.post('/api/getGroupNameSt' , (req , res) => {
 
 })
 
+app.post('/api/sendNotification' , (req,res) => {
+    console.log("send Notification")
+   // console.log(req.body.email)
+    const email = req.body.email
+    const sql = 'SELECT em_email , fda_license,expdate FROM pif_storage WHERE expdate <= CURDATE() + INTERVAL 1 MONTH AND em_email = ?';
+
+    db.query(sql , [email], (err , result) => {
+        if (err){
+            console.log("Error " , err)
+        }
+        else {
+            console.log(result)
+            res.send(result)
+        }
+    })
+}
+) 
+    
+
+
 const sendEmailNotifications=() => {
-    const sql = 'SELECT expdate FROM pif_storage WHERE expdate <= CURDATE() + INTERVAL 30 DAY';
+    const sql = 'SELECT em_email, expdate FROM pif_storage WHERE expdate <= CURDATE() + INTERVAL 1 MONTH';
 
     db.query(sql , (err , result) => {
         if(err) {
             console.error("Error ", err)
            // res.status(500).send("SomeTingWorng")
         }
+
         else if (result.length > 0 ){
             console.log('Result from database :', result);
             console.log("Ok")
-            result.forEach((pif_storage) => {
-                let config = {
-                    host: 'smtp.gmail.com',
-                    port: 587 ,
-                    secure: false ,
-                    auth: {
-                        user: EMAIL,  
-                        pass: PASSWORD
-                    }
-                };
-            
-                let transporter = nodemailer.createTransport(config);
-            
-                let message = {
-                    from: EMAIL,
-                    to: "hechuan1949@gmail.com",
-                    subject: "ใบอนุญาต อย ใหล้ หมด อายุแล้ว",
-                    text: "วันหมดอายุ คือ ${expdate}",
-                    html: "EXP DATE IS COMING",
-                };
-            
-                transporter.sendMail(message)
-                    .then(() => {
-                        console.log('Sending email to hechuan1949@gmail.com');
-                        // Sending response after email is sent
-                       // return res.status(201).json({ msg: "Email has been sent, and signup was successful" });
-                    })
-                    .catch(error => {
-                        console.error(error);
-                       // return res.status(500).json({ error: "Error sending email" });
-                    });
-            
+  
+                //console.log(result[0].em_email)
+                //console.log(result.length)
+                for(let i = 0 ; i<result.length ; i++){
+                     let   message = {
+                        from: EMAIL,
+                        to: result[i].em_email,
+                        subject: "ใบอนุญาต อย ใกล้ หมด อายุแล้ว",
+                        text: "วันหมดอายุ คือ " + result[i].expdate,
+                        html: "EXP DATE IS COMING",
+                    };
+                    
+                 sendEmail(message)
+                   console.log(message)
+                }
 
-            })
+            
         }
         else {
             console.log("No expDate")
@@ -833,18 +839,45 @@ const sendEmailNotifications=() => {
     })
 //})
 }
-//sendEmailNotifications()
 
-cron.schedule(' 45 8 * * *' , () => {
-    console.log("IS RUN CRON")
-    try {
+const sendEmail = (message) => {
+
+    let config = {
+        host: 'smtp.gmail.com',
+        port: 587 ,
+        secure: false ,
+        auth: {
+            user: EMAIL,  
+            pass: PASSWORD
+        }
+    };
+
+    let transporter = nodemailer.createTransport(config);
+
+    transporter.sendMail(message)
+                    .then(() => {
+                       
+                        // Sending response after email is sent
+                       // return res.status(201).json({ msg: "Email has been sent, and signup was successful" });
+                    })
+                    .catch(error => {
+                        console.error(error);
+                       // return res.status(500).json({ error: "Error sending email" });
+                    });
+}
+
+sendEmailNotifications()
+
+// cron.schedule(' 20 9 * * *' , () => {
+//     console.log("IS RUN CRON")
+//     try {
         
-        sendEmailNotifications()
+//         sendEmailNotifications()
         
-        console.log('Email sent successfully');
-    } catch (error) {
-        console.error('Error:', error);
-    }
+//         console.log('Email sent successfully');
+//     } catch (error) {
+//         console.error('Error:', error);
+//     }
     
 //     // console.log('Cron job executed at:', new Date());
 //     // axios.get('http://localhost:3001/api/sendNotification')
@@ -853,8 +886,65 @@ cron.schedule(' 45 8 * * *' , () => {
 //     // }).catch((error) => {
 //     //     console.error(error)
 //     // })
- })
+// })
 
+
+
+
+ const pdfStorage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, 'uploads/');
+    },
+    filename: (req, file, cb) => {
+      cb(null, file.originalname);
+    },
+});
+
+
+const pdfUpload = multer({ storage: pdfStorage });
+
+app.post('/generate-pdf', pdfUpload.single('file'), (req, res) => {
+    const content = req.body.text;
+    console.log(content)
+
+    try {
+        pdfMake.fonts = {
+            THSarabunNew: {
+                normal: 'THSarabun.ttf',
+                bold: 'THSarabun-Bold.ttf',
+                italics: 'THSarabun-Italic.ttf',
+                bolditalics: 'THSarabun-BoldItalic.ttf'
+            }
+        }
+
+
+      pdfMake.vfs = vfsFonts.pdfMake.vfs;
+
+        const docDefinition = {
+                content: [
+                    { text: 'asdasdasd', style: 'header' },
+                    { text: content },
+                    { text: req.body.text2 },
+                ],
+                defaultStyle: {
+                    font: 'THSarabunNew'
+                }
+            };
+
+        const pdfDoc = pdfMake.createPdf(docDefinition);
+        const pdfPath = path.join(__dirname, 'uploads', 'output.pdf');
+
+        pdfDoc.getBuffer((buffer) => {
+            fs.writeFile(pdfPath, buffer, () => {
+                res.send('OK');
+            });
+        });
+        res.send('OK');
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+    }
+  });
 
  
 
