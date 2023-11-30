@@ -207,6 +207,46 @@ export default function manage() {
   }
 
 
+  const generatePDF = async (e) => {
+    const axios = require('axios');
+    let data = JSON.stringify({
+    "inputregisNumber":document.getElementById("regitnumber").value,
+    "inputcomName":document.getElementById("comName").value ,
+    "inputcosName": document.getElementById("cosName").value ,
+    "inputtypeGoods":document.getElementById("typeGoods").value  ,
+    "inputdateS":document.getElementById("dateS").value  ,
+    "inputexpDate":document.getElementById("expDate").value  ,
+    "inputobjGoods": document.getElementById("objGoods").value ,
+    "Inputpy": document.getElementById("py").value ,
+    "inputentrepreneur": document.getElementById("entrepreneur").value ,
+    "inputFentrepreneur": document.getElementById("fentrepreneur").value ,
+    "setDes": document.getElementById("des").value 
+  });
+
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: 'http://localhost:3001/generate-pdf',
+      headers: { 
+        'Content-Type': 'application/json'
+      },
+      data : data
+    };
+    
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+
+
+  }
+
+  
+
+
 
   const UploadA = () => {
     alert(file1)
@@ -342,6 +382,48 @@ export default function manage() {
 
         </Box>
 
+      <Box
+      sx={{
+
+        display: { xs: "grid", md: "grid" },
+        justifyContent: { xs: "", md: "center" },
+        textAlign: { xs: "center", md: "center" },
+        paddingTop: { xs: "30px", md: "30px" },
+        paddingBottom: { xs: "10px", md: "10px" },
+
+       
+      }}>
+      <Typography variant="h6">รูปภาพผลิตภัณฑ์</Typography>
+      <Box
+                style={{
+                  width: "100%",
+                  borderRadius: '5px',
+                  boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.25)',
+                  marginTop: "10px"
+                }}>
+                <Button
+                width="80%"
+                  variant="contained"
+                  component="label"
+                >
+                  <input
+                    id="filename"
+                    type="file"
+                    onChange={(e) => {
+                      setFile1(e.target.files[0].name)
+                      
+                    }}
+                    hidden
+                  />เลือกไฟล์
+                </Button>
+                <span id="upload15" style={{ marginLeft: "5px" , marginRight:"5px"}}>ไม่ได้เลือกไฟล์ใด</span>
+              </Box>
+
+
+      </Box>
+        
+
+
         <Box sx={{
 
 
@@ -379,7 +461,7 @@ export default function manage() {
 
                   // Center items in Y axis,
                 }}>
-                <TextField onChange={(e) => { fetchData(e) }} variant="outlined" label="เลขที่จดแจ้ง" style={{ width: "50%", marginTop: "10px" }} />
+                <TextField onChange={(e) => { fetchData(e) }} id="regitnumber" variant="outlined" label="เลขที่จดแจ้ง" style={{ width: "50%", marginTop: "10px" }} />
               </Box>
 
 
@@ -442,7 +524,7 @@ export default function manage() {
                   m="1"
                 />
                 <TextField
-                  id="outlined-multiline-static"
+                  id="des"
                   label="รายละเอียดเพิ่มเติม"
                   variant="outlined"
                   onChange={(e) => setDes(e.target.value)}
@@ -903,6 +985,10 @@ export default function manage() {
           ยืนยัน
         </Button>
       </Box>
+
+      <Button onClick={(e) => { generatePDF(e) }}>Generate PDF</Button>
+
+      
 
 
       <Footer />

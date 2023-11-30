@@ -64,20 +64,18 @@ app.post('/generate-pdf', pdfUpload.single('file'), (req, res) => {
 
         const docDefinition = {
                 content: [
-                    { text: 'ข้อมูลเกี่ยวกับเครื่องสำอาง (PRODUCTS INFORMATION FILE : PIF)', style: 'header' },
-                    
-                    {text:`เลขที่จดแจ้ง ${req.body.inputregisNumber}` },
-                    {text:`ชื่อทางการค้าเครื่องสำอาง ${req.body.inputcomName}` },
-                    {text:`ชื่อเครื่องสำอาง ${req.body.inputcosName}`},
-                    {text:`ประเภทของเครื่องสำอาง ${req.body.inputtypeGoods}`},
-                    {text:`วันที่จดแจ้ง ${req.body.inputdateS}`},
-                    {text:`วันที่ใบอนุญาตหมดอายุ${req.body.inputexpDate}`},
-                    {text:`จุดประสงค์การใช้ ${req.body.inputobjGoods}`},
-                    {text:`ลักษณะทางกายภาพ ${req.body.Inputpy}`},
-                    {text:`ชื่อผู้ผลิต ${req.body.inputentrepreneur}`},
-                    {text:`ชื่อผู้ผลิตต่างประเทศ ${req.body.inputFentrepreneur}`},
-                    {text:`ส่วนประกอบ ${req.body.inputbodypart}`}, 
-                    {text:`รายละเอียดเพิ่มเติม ${req.body.setDes}`}
+                    { text:'ข้อมูลเกี่ยวกับเครื่องสำอาง (PRODUCTS INFORMATION FILE : PIF)', style: 'header' },
+                    {text:`เลขที่จดแจ้ง: ${req.body.inputregisNumber}` },
+                    {text:`ชื่อทางการค้าเครื่องสำอาง: ${req.body.inputcomName}` },
+                    {text:`ชื่อเครื่องสำอาง: ${req.body.inputcosName}`},
+                    {text:`ประเภทของเครื่องสำอาง: ${req.body.inputtypeGoods}`},
+                    {text:`วันที่จดแจ้ง: ${req.body.inputdateS}`},
+                    {text:`วันที่ใบอนุญาตหมดอายุ:${req.body.inputexpDate}`},
+                    {text:`จุดประสงค์การใช้: ${req.body.inputobjGoods}`},
+                    {text:`ลักษณะทางกายภาพ: ${req.body.Inputpy}`},
+                    {text:`ชื่อผู้ผลิต: ${req.body.inputentrepreneur}`},
+                    {text:`ชื่อผู้ผลิตต่างประเทศ: ${req.body.inputFentrepreneur}`},
+                    {text:`รายละเอียดเพิ่มเติม: ${req.body.setDes}`}
 
                     
                 ],

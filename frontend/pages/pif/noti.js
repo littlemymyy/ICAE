@@ -25,7 +25,7 @@ const sendEmailNotifications=() => {
                 let message = {
                     from: EMAIL,
                     to: ".........@gmail.com",
-                    subject: "ใบอนุญาต อย ใกล้ หมด อายุแล้ว",
+                    subject: "ใบอนุญาต อย. ใกล้หมดอายุแล้ว",
                     text: "วันหมดอายุ คือ ${expdate}",
                     html: "EXP DATE IS COMING",
                 };
