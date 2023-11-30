@@ -13,7 +13,7 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { useRouter } from 'next/router';
 
-const pages = ['หน้าหลัก', 'ตรวจสอบสูตรสารเคมี', 'การจัดการ PIF' , 'ประวัติการตรวจสอบสูตรสารเคมี','คลังความรู้'];
+const pages = ['หน้าหลัก', 'ตรวจสอบสูตรสารเคมี', 'การจัดการPIF' , 'ประวัติการตรวจสอบสูตรสารเคมี','คลังความรู้'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function Navbar() {
@@ -21,6 +21,7 @@ function Navbar() {
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
     const [uname, setUname] = React.useState('');
+    const [status, setStatus] = React.useState('');
     const [icon, setIcon] = React.useState('');
 
 
@@ -34,19 +35,24 @@ function Navbar() {
     const handleCloseNavMenu = (ev) => {
         setAnchorElNav(null);
         const selectName = ev.nativeEvent.target.outerText.toLowerCase();
-        // console.log(selectName)
+        console.log(selectName)
+        
         if(uname !== '') {
             if(selectName === pages[0]){
                 router.push("/")
             }
             else if(selectName === pages[1]){
-                router.push("/C1A");
+                router.push("/examine/check");
             }
-            else if(selectName === pages[2]){
-                router.push("/pif/manage")
+            else if(selectName === "การจัดการpif"){
+                
+                if(sessionStorage.getItem("uemail")){
+                    router.push("/pif/productslist")
+                }
+                
             }
             else if(selectName === pages[3]){
-                router.push("/c2")
+                router.push("/examine/record")
             }
             else if(selectName === pages[4]){
                 router.push("/Knowledge/home")
@@ -58,7 +64,7 @@ function Navbar() {
         }
     };
     const handleOpenSignIn = () => {
-        router.push('/SignIn');
+        router.push('/login/SignIn');
     }
 
     const handleCloseUserMenu = (ev) => {
@@ -73,10 +79,11 @@ function Navbar() {
 
         }
         else if(selectName === settings[2]){
-
+                
         }
         else if(selectName === settings[3]) {
             console.log('OK');
+            
             sessionStorage.removeItem("uemail");
             sessionStorage.removeItem("uname");
             sessionStorage.removeItem("uicon");
@@ -85,7 +92,7 @@ function Navbar() {
             setIcon("");
             router.push("/");
         }
-
+      
     };
 
     React.useEffect(() => {
@@ -96,9 +103,13 @@ function Navbar() {
         else {
             setUname(sessionStorage.getItem('uname'));
             setIcon(sessionStorage.getItem("uicon"));
-            // alert(sessionStorage.getItem('uname'));
+            setStatus(sessionStorage.getItem('status'))
         }
     }, [])
+
+    const handleAdmin = () => {
+        router.push('/admin/Home')
+    }
 
     return(
         <AppBar className='nav'>
@@ -106,15 +117,15 @@ function Navbar() {
 
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
-                    <img className='logo' width={'80px'} src="/icae_logo.png"
+                    <img className='logo' width={'80px'} src="/icae_logo.png" 
                     sx={{
-                        display: { xs: 'none', md: 'flex' },
+                        display: { xs: 'none', md: 'flex' }, 
                         mr: 1 ,
-
+                        
                     }}/>
 
                 <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none'} }}>
-
+                
                     <IconButton
                     size="large"
                     aria-label="account of current user"
@@ -143,6 +154,13 @@ function Navbar() {
                         display: { xs: 'block', md: 'none' },
                     }}
                     >
+                        {
+                            status === 'A' ?
+                            <MenuItem key='555' onClick={handleAdmin}>
+                        <Typography textAlign="center">Admin Home</Typography>
+                        </MenuItem>
+                        : null
+                        }
                     {pages.map((page) => (
                         <MenuItem key={page} value = {page} onClick={handleCloseNavMenu}>
                         <Typography textAlign="center">{page}</Typography>
@@ -171,6 +189,13 @@ function Navbar() {
 
                 </Typography>
                 <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+                {
+                            status === 'A' ?
+                            <MenuItem key='555' onClick={handleAdmin}>
+                        <Typography textAlign="center">Admin Home</Typography>
+                        </MenuItem>
+                        : null
+                        }
                     {pages.map((page) => (
                     <Button
                         key={page}
@@ -206,6 +231,9 @@ function Navbar() {
                     open={Boolean(anchorElUser)}
                     onClose={handleCloseUserMenu}
                     >
+                        <MenuItem key={'555'} >
+                    <Typography textAlign="center">{uname}</Typography>
+                    </MenuItem>
                     {settings.map((setting) => (
                         <MenuItem key={setting} onClick={handleCloseUserMenu}>
                         <Typography textAlign="center">{setting}</Typography>
@@ -213,7 +241,7 @@ function Navbar() {
                     ))}
                     </Menu>
                 </Box>
-                :
+                : 
                 <Box sx={{ flexGrow: 0 }}>
                     <Tooltip title="Open settings">
                     <IconButton onClick={handleOpenSignIn} sx={{ p: 0 }}>
@@ -243,8 +271,8 @@ function Navbar() {
             </Container>
             </Box>
             </AppBar>
-
-
+       
+       
     )
 }
 
