@@ -16,6 +16,7 @@ const multer = require('multer');
 const pdfMake = require('pdfmake/build/pdfmake');
 const vfsFonts = require('pdfmake/build/vfs_fonts');
 const path = require('path');
+const PDFMerger = require('pdf-merger-js');
 
 
 const app = express();
@@ -77,7 +78,7 @@ app.post('/generate-pdf', pdfUpload.single('file'), (req, res) => {
                     {text:`ชื่อผู้ผลิตต่างประเทศ: ${req.body.inputFentrepreneur}`},
                     {text:`รายละเอียดเพิ่มเติม: ${req.body.setDes}`}
 
-                    
+
                 ],
                 styles: {
                     header: {
@@ -93,7 +94,7 @@ app.post('/generate-pdf', pdfUpload.single('file'), (req, res) => {
             };
 
         const pdfDoc = pdfMake.createPdf(docDefinition);
-        
+
         const fileName = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 
         const pdfPath = path.join(__dirname, 'uploads', `${fileName}.pdf`);
@@ -109,6 +110,116 @@ app.post('/generate-pdf', pdfUpload.single('file'), (req, res) => {
       res.status(500).send('Internal Server Error');
     }
   });
+
+  app.post('/mergePdf', pdfUpload.any(), (req, res) => {
+    const merger = new PDFMerger();
+    const files = req.files;
+    console.log(files);
+
+    try {
+        (async () => {
+            for(let i = 0 ; i < files.length ; i++){
+                await merger.add(files[i].path);
+            }
+            await merger.save('uploads/mergedpdf.pdf').then((pdfBuffer) => {
+                res.send(pdfBuffer);
+                });
+        })()
+    } catch (error) {
+        console.error('Error merging PDFs:', error);
+        res.status(500).send('Internal Server Error');
+    }
+  });
+
+app.post('/api/submitPif', pdfUpload.any(), (req, res) => {
+    try {
+        (async () => {
+            console.log(JSON.parse(req.body.data))
+            const data = JSON.parse(req.body.data);
+            // console.log(req.files.data)
+            pdfMake.fonts = {
+                THSarabunNew: {
+                    normal: 'THSarabun.ttf',
+                    bold: 'THSarabun-Bold.ttf',
+                    italics: 'THSarabun-Italic.ttf',
+                    bolditalics: 'THSarabun-BoldItalic.ttf'
+                }
+            }
+
+            pdfMake.vfs = vfsFonts.pdfMake.vfs;
+
+            const docDefinition = {
+                    content: [
+                        { text:'ข้อมูลเกี่ยวกับเครื่องสำอาง (PRODUCTS INFORMATION FILE : PIF)', style: 'header' },
+                        {text:`เลขที่จดแจ้ง: ${data.inputregisNumber}` },
+                        {text:`ชื่อทางการค้าเครื่องสำอาง: ${data.inputcomName}` },
+                        {text:`ชื่อเครื่องสำอาง: ${data.inputcosName}`},
+                        {text:`ประเภทของเครื่องสำอาง: ${data.inputtypeGoods}`},
+                        {text:`วันที่จดแจ้ง: ${data.inputdateS}`},
+                        {text:`วันที่ใบอนุญาตหมดอายุ:${data.inputexpDate}`},
+                        {text:`จุดประสงค์การใช้: ${data.inputobjGoods}`},
+                        {text:`ลักษณะทางกายภาพ: ${data.Inputpy}`},
+                        {text:`ชื่อผู้ผลิต: ${data.inputentrepreneur}`},
+                        {text:`ชื่อผู้ผลิตต่างประเทศ: ${data.inputFentrepreneur}`},
+                        {text:`รายละเอียดเพิ่มเติม: ${data.setDes}`}
+
+
+                    ],
+                    styles: {
+                        header: {
+                            fontSize: 18,
+                            bold: true,
+                            alignment: 'center',
+                            margin: [10, 10, 10, 10]
+                        }
+                    },
+                    defaultStyle: {
+                        font: 'THSarabunNew'
+                    }
+                };
+
+            const pdfDoc = pdfMake.createPdf(docDefinition);
+            const fileName = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+            const pdfPath = path.join(__dirname, 'uploads', `${fileName}.pdf`);
+
+            const buffer = await new Promise((resolve, reject) => {
+                pdfDoc.getBuffer((buffer) => {
+                    resolve(buffer);
+                });
+            });
+
+            await fs.writeFile(pdfPath, buffer);
+
+            const firstPath = path.join('./uploads', `${fileName}.pdf`);
+            console.log(firstPath)
+
+            //merge pdf
+            const merger = new PDFMerger();
+            const files = req.files;
+            console.log(files);
+
+            await merger.add(firstPath);
+            try{
+                for(let i = 0 ; i < files.length ; i++){
+                    await merger.add(files[i].path);
+                }
+            }catch(err){
+                console.log("no any file upload")
+                console.log(err)
+            }
+
+            let pdfFileName = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+            await merger.save(`uploads/${pdfFileName}.pdf`).then((pdfBuffer) => {
+                res.send(pdfBuffer);
+            });
+
+            console.log(pdfFileName)
+        })()
+    } catch (error) {
+        console.error('Error merging PDFs:', error);
+        res.status(500).send('Internal Server Error');
+    }
+})
 
 app.get('/api/getWithWord/:fileName', (req, res) => {
     const fileName = req.params.fileName
