@@ -74,208 +74,181 @@ export default function manage() {
   const [show, setShow] = useState([])
   const [fentrepreneur, setFentrepreneur] = useState("")
   const [des, setDes] = useState("")
-
-  const [pdfUrl, setPdfUrl] = useState('');
-
   const [inputcomName, setInputcomName] = useState("")
-  const [inputregistrationNumber, setInputregistrationNumber] = useState("")
-  const [inputformatRegis, setInputformatRegis] = useState("")
-  const [inputcosName, setInputcosName] = useState("")
-  const [inputdateS, setInputdateS] = useState("")
-  const [inputexpDate, setInputexpDate] = useState("")
-  const [inputtypeGoods, setInputtypeGoods] = useState("")
-  const [inputbodypart, setInputbodypart] = useState("")
-  const [inputobjGoods, setInputobjGoods] = useState("")
-  const [inputconGoods, setInputconGoods] = useState("")
-  const [inputentrepreneur, setinputentrepreneur] = useState("")
-  const [inputfentrepreneur, setinputfentrepreneur] = useState("")
-  const [inputpy, setInputpy] = useState("")
-
-  const [dateA, setdateA] = useState(new Date());
-
-
-
-
-
-  const [file1, setFile1] = useState("")
-  const [file2, setFile2] = useState("")
-  const [file3, setFile3] = useState("")
-  const [file4, setFile4] = useState("")
-  const [file5, setFile5] = useState("")
-  const [file6, setFile6] = useState("")
-  const [file7, setFile7] = useState("")
-  const [file8, setFile8] = useState("")
-  const [file9, setFile9] = useState("")
-
-
-
-  //for get file on iCEA
-  useEffect(() => {
-    Axios.get(`http://localhost:3001/api/getGroupName`).then((response) => {
-
-      setShow(response.data)
-      console.log(response.data);
-    })
-      .catch((error) => {
-        console.log(error);
-      });
-
-  }, [])
-
-  try {
-    var options = show.map((option) => {
-      const firstLetter = option.groupname[0].toUpperCase();
-      return {
-        firstLetter: /[0-9]/.test(firstLetter) ? '0-9' : firstLetter,
-        ...option,
-      };
-    });
-  } catch {
-    var options = []
-  }
-
-
 
   // data from Thai FDA By Fda number
   const fetchData = async (e) => {
-      console.log("e = " + e);
-      const res = await Axios({
-        url: "http://localhost:3001/api/fetchData",
-        method: "get",
-        params: {
-          data: e.target.value,
-        }
-      })
+    console.log("e = " + e);
+    const res = await Axios({
+      url: "http://localhost:3001/api/fetchData",
+      method: "get",
+      params: {
+        data: e.target.value,
+      }
+    })
       .then((res) => {
 
-      const updatedLabel = "MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root";
+        const updatedLabel = "MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root";
 
-      if (res.data[0] == "N/A") {
-        //do nothing
-      } else{
-        document.getElementById("comName-label").className = updatedLabel
-        document.getElementById("comName-label").setAttribute('data-shrink', 'true')
-        document.getElementById("comName").value = res.data[5]
+        if (res.data[0] == "N/A") {
+          //do nothing
+        } else {
+          document.getElementById("comName-label").className = updatedLabel
+          document.getElementById("comName-label").setAttribute('data-shrink', 'true')
+          document.getElementById("comName").value = res.data[5]
 
-        document.getElementById("cosName-label").className = updatedLabel
-        document.getElementById("cosName-label").setAttribute('data-shrink', 'true')
-        document.getElementById("cosName").value = res.data[6]
+          document.getElementById("cosName-label").className = updatedLabel
+          document.getElementById("cosName-label").setAttribute('data-shrink', 'true')
+          document.getElementById("cosName").value = res.data[6]
 
-        document.getElementById("typeGoods-label").className = updatedLabel
-        document.getElementById("typeGoods").value = res.data[9]
+          document.getElementById("typeGoods-label").className = updatedLabel
+          document.getElementById("typeGoods").value = res.data[9]
 
-        document.getElementById("dateS-label").className = updatedLabel
-        document.getElementById("dateS").value = res.data[7]
+          document.getElementById("dateS-label").className = updatedLabel
+          document.getElementById("dateS").value = res.data[7]
 
-        document.getElementById("expDate-label").className = updatedLabel
-        document.getElementById("expDate").value = res.data[8]
+          document.getElementById("expDate-label").className = updatedLabel
+          document.getElementById("expDate").value = res.data[8]
 
-        document.getElementById("objGoods-label").className = updatedLabel
-        document.getElementById("objGoods").value = res.data[11]
+          document.getElementById("objGoods-label").className = updatedLabel
+          document.getElementById("objGoods").value = res.data[11]
 
-        document.getElementById("py-label").className = updatedLabel
-        document.getElementById("py").value = res.data[10]
+          document.getElementById("py-label").className = updatedLabel
+          document.getElementById("py").value = res.data[10]
 
-        document.getElementById("entrepreneur-label").className = updatedLabel
-        document.getElementById("entrepreneur").value = res.data[13]
+          document.getElementById("entrepreneur-label").className = updatedLabel
+          document.getElementById("entrepreneur").value = res.data[13]
 
-        document.getElementById("fentrepreneur-label").className = updatedLabel
-        document.getElementById("fentrepreneur").value = res.data[14]
-        console.log(res.data)
-        console.log(res.data[0])
-        setStatus(res.data[0])
-        setLocationStatus(res.data[1])
-        setTypeRegis(res.data[3])
-        setFormatRegis(res.data[4])
-        setComName(res.data[5])
-        setCosName(res.data[6])
-        setDateS(res.data[7])
-        setExpDate(res.data[8])
-        setTypeGoods(res.data[9])
-        setBodypart(res.data[10])
-        setObjGoods(res.data[11])
-        setEntrepreneur(res.data[13])
-        setConGoods(res.data[12])
-        setFentrepreneur(res.data[14])
-      }
+          document.getElementById("fentrepreneur-label").className = updatedLabel
+          document.getElementById("fentrepreneur").value = res.data[14]
+          console.log(res.data)
+          console.log(res.data[0])
+          setStatus(res.data[0])
+          setLocationStatus(res.data[1])
+          setTypeRegis(res.data[3])
+          setFormatRegis(res.data[4])
+          setComName(res.data[5])
+          setCosName(res.data[6])
+          setDateS(res.data[7])
+          setExpDate(res.data[8])
+          setTypeGoods(res.data[9])
+          setBodypart(res.data[10])
+          setObjGoods(res.data[11])
+          setEntrepreneur(res.data[13])
+          setConGoods(res.data[12])
+          setFentrepreneur(res.data[14])
+        }
 
 
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
+  const [file1, setFile1] = useState(null);
+  const [file2, setFile2] = useState(null);
+  const [file3, setFile3] = useState(null);
+  const [file4, setFile4] = useState(null);
+  const [file5, setFile5] = useState(null);
+  const [file6, setFile6] = useState(null);
+  const [file7, setFile7] = useState(null);
+  const [file8, setFile8] = useState(null);
+  const [file9, setFile9] = useState(null);
+  const [file10, setFile10] = useState(null);
+  const [file11, setFile11] = useState(null);
+  const [file12, setFile12] = useState(null);
+  const [file13, setFile13] = useState(null);
+  const [file14, setFile14] = useState(null);
+
+  const handleFileChange = (inputName, event) => {
+    const file = event.target.files[0];
+    console.log(inputName);
+    document.getElementById(inputName).innerHTML = event.target.files[0].name
+
+    switch (inputName) {
+      case 'file1':
+        setFile1(file);
+        break;
+      case 'file2':
+        setFile2(file);
+        break;
+      case 'file3':
+        setFile3(file);
+        break;
+      case 'file4':
+        setFile4(file);
+        break;
+      case 'file5':
+        setFile5(file);
+        break;
+      case 'file6':
+        setFile6(file);
+        break;
+      case 'file7':
+        setFile7(file);
+        break;
+      case 'file8':
+        setFile8(file);
+        break;
+      case 'file9':
+        setFile9(file);
+        break;
+      case 'file10':
+        setFile10(file);
+        break;
+      case 'file11':
+        setFile11(file);
+        break;
+      case 'file12':
+        setFile12(file);
+        break;
+      case 'file13':
+        setFile13(file);
+        break;
+      case 'file14':
+        setFile14(file);
+        break;
+      // Add more cases for additional inputs
+      default:
+        break;
+    }
+  };
 
   const generatePDF = async (e) => {
-    const axios = require('axios');
     let data = JSON.stringify({
-    "inputregisNumber":document.getElementById("regitnumber").value,
-    "inputcomName":document.getElementById("comName").value ,
-    "inputcosName": document.getElementById("cosName").value ,
-    "inputtypeGoods":document.getElementById("typeGoods").value  ,
-    "inputdateS":document.getElementById("dateS").value  ,
-    "inputexpDate":document.getElementById("expDate").value  ,
-    "inputobjGoods": document.getElementById("objGoods").value ,
-    "Inputpy": document.getElementById("py").value ,
-    "inputentrepreneur": document.getElementById("entrepreneur").value ,
-    "inputFentrepreneur": document.getElementById("fentrepreneur").value ,
-    "setDes": document.getElementById("des").value 
-  });
-
-    let config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      url: 'http://localhost:3001/generate-pdf',
-      headers: { 
-        'Content-Type': 'application/json'
-      },
-      data : data
-    };
-    
-    axios.request(config)
-    .then((response) => {
-      console.log(JSON.stringify(response.data));
-    })
-    .catch((error) => {
-      console.log(error);
+      "inputregisNumber": document.getElementById("regitnumber").value,
+      "inputcomName": document.getElementById("comName").value,
+      "inputcosName": document.getElementById("cosName").value,
+      "inputtypeGoods": document.getElementById("typeGoods").value,
+      "inputdateS": document.getElementById("dateS").value,
+      "inputexpDate": document.getElementById("expDate").value,
+      "inputobjGoods": document.getElementById("objGoods").value,
+      "Inputpy": document.getElementById("py").value,
+      "inputentrepreneur": document.getElementById("entrepreneur").value,
+      "inputFentrepreneur": document.getElementById("fentrepreneur").value,
+      "setDes": document.getElementById("des").value,
+      "rec_create_when": new Date(),
     });
 
+    //for upload file
+    const formData = new FormData();
 
-  }
-
-  
-
-
-
-  const UploadA = () => {
-    alert(file1)
-  }
-  const handleFileChange = async (e) => {
-    const file = e.target.files[0];
-
-    console.log("A FIle")
-    console.log(file)
+    file1 && formData.append('file1', file1);
+    file2 && formData.append('file2', file2);
+    formData.append('data', data);
+    // file3 && formData.append('file3', file3);
 
     try {
-      const formData = new FormData();
-      formData.append('pdfFile', file);
-
-
-      // Send the file to the server
-      const response = await fetch('http://localhost:3001/api/upload-pdf', {
-        method: 'POST',
-        data: formData,
+      const response = await Axios.post('http://localhost:3001/api/submitPif', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: data
       });
-
-      // Assuming the server returns some data
-      const data = await response.json();
-
-      // Do something with the response from the server (e.g., update state or show a success message)
-
-      console.log('Server Response:', data);
+      console.log(response.data); // Assuming the server sends a response
     } catch (error) {
-      console.error('Error uploading file:', error);
+      console.error('Error uploading files:', error);
     }
   };
 
@@ -312,7 +285,6 @@ export default function manage() {
         </Box>
         <Box className="upload_right"
           sx={{
-
             textAlign: { xs: 'center', md: "center" },
             justifyContent: { xs: "center", md: "center" }
           }}
@@ -324,7 +296,6 @@ export default function manage() {
               marginLeft: { xs: "50px", md: "50px" }
             }}
           >ระบบจัดการ PIF</Typography>
-
         </Box>
       </Box>
 
@@ -341,25 +312,21 @@ export default function manage() {
 
         <Box
           sx={{
-
             justifyContent: { xs: "", md: "center" },
             display: { xs: "block", md: "flex" },
             textAlign: { xs: "center", md: "center" },
             paddingTop: { xs: "30px", md: "30px" },
-
           }}>
 
         </Box>
 
         <Box
           sx={{
-
             display: { xs: "block", md: "flex" },
             justifyContent: { xs: "", md: "center" },
             textAlign: { xs: "center", md: "center" },
             paddingTop: { xs: "30px", md: "30px" },
             paddingBottom: { xs: "10px", md: "10px" },
-
             gap: { xs: "50px", md: "50px" },
           }}
         >
@@ -373,55 +340,45 @@ export default function manage() {
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker />
             </LocalizationProvider>
-
-
-
           </Box>
+        </Box>
 
+        <Box
+          sx={{
+            display: { xs: "grid", md: "grid" },
+            justifyContent: { xs: "", md: "center" },
+            textAlign: { xs: "center", md: "center" },
+            paddingTop: { xs: "30px", md: "30px" },
+            paddingBottom: { xs: "10px", md: "10px" },
+          }}>
+          <Typography variant="h6">รูปภาพผลิตภัณฑ์</Typography>
+          <Box
+            style={{
+              width: "100%",
+              borderRadius: '5px',
+              boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.25)',
+              marginTop: "10px"
+            }}>
+            <Button
+              width="80%"
+              variant="contained"
+              component="label"
+            >
+              <input
+                id="filename"
+                type="file"
+                onChange={(e) => {
+                  setFile1(e.target.files[0].name)
+                }}
+                hidden
+              />เลือกไฟล์
+            </Button>
+            <span id="upload15" style={{ marginLeft: "5px", marginRight: "5px" }}>ไม่ได้เลือกไฟล์ใด</span>
+          </Box>
 
 
         </Box>
 
-      <Box
-      sx={{
-
-        display: { xs: "grid", md: "grid" },
-        justifyContent: { xs: "", md: "center" },
-        textAlign: { xs: "center", md: "center" },
-        paddingTop: { xs: "30px", md: "30px" },
-        paddingBottom: { xs: "10px", md: "10px" },
-
-       
-      }}>
-      <Typography variant="h6">รูปภาพผลิตภัณฑ์</Typography>
-      <Box
-                style={{
-                  width: "100%",
-                  borderRadius: '5px',
-                  boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.25)',
-                  marginTop: "10px"
-                }}>
-                <Button
-                width="80%"
-                  variant="contained"
-                  component="label"
-                >
-                  <input
-                    id="filename"
-                    type="file"
-                    onChange={(e) => {
-                      setFile1(e.target.files[0].name)
-                      
-                    }}
-                    hidden
-                  />เลือกไฟล์
-                </Button>
-                <span id="upload15" style={{ marginLeft: "5px" , marginRight:"5px"}}>ไม่ได้เลือกไฟล์ใด</span>
-              </Box>
-
-
-      </Box>
-        
 
 
         <Box sx={{
@@ -555,13 +512,11 @@ export default function manage() {
                   <input
                     id="filename"
                     type="file"
-                    onChange={(e) => {
-                      document.getElementById("upload1").innerHTML = e.target.files[0].name;
-                    }}
+                    onChange={(event) => handleFileChange('file1', event)}
                     hidden
                   />เลือกไฟล์
                 </Button>
-                <span id="upload1" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
+                <span id="file1" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
 
               </Box>
 
@@ -585,37 +540,22 @@ export default function manage() {
                   <input
                     id="filename"
                     type="file"
-                    onChange={(e) => {
-                      setFile1(e.target.files[0].name)
-                      //document.getElementById("upload2").innerHTML = e.target.files[0].name;
-                    }}
+                    onChange={(event) => handleFileChange('file2', event)}
                     hidden
                   />เลือกไฟล์
                 </Button>
-                <span id="upload2" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
+                <span id="file2" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
               </Box>
               <hr></hr>
 
               <Typography>
                 2. สูตรส่วนประกอบของเครื่องสำอาง
               </Typography>
-              <br />
-              <Autocomplete
-                id="grouped-demo"
-                options={
-                  options ? options.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter)) : []
-                }
-                groupBy={(option) => option.firstLetter}
-                getOptionLabel={(option) => option.groupname}
-                sx={{ width: 300 }}
-                renderInput={(params) => <TextField {...params} label="เลือกข้อมูลจากฐานข้อมูล ICAE" />}
-              />
 
 
 
-              <Typography sx={{
-                marginTop: { xs: "10px", md: "10px" },
-              }}>หรือ อัพโหลดไฟล์สูตรส่วนประกอบเครื่องสำอาง</Typography>
+
+
               <Box
                 style={{
                   borderRadius: '5px',
@@ -668,12 +608,6 @@ export default function manage() {
                 4. ข้อมูลเกี่ยวกับการผลิต
               </Typography>
 
-              <Typography
-                sx={{
-                  marginTop: { xs: "10px", md: "10px" },
-
-                }}>ครั้งที่ผลิต / LOT</Typography>
-              <TextField variant="outlined" label="ครั้งที่ผลิต / LOT" style={{ width: "30%", marginTop: "10px" }} />
               <Typography
                 sx={{
                   marginTop: { xs: "10px", md: "10px" },
@@ -988,7 +922,7 @@ export default function manage() {
 
       <Button onClick={(e) => { generatePDF(e) }}>Generate PDF</Button>
 
-      
+
 
 
       <Footer />
