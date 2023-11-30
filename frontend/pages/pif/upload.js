@@ -245,7 +245,6 @@ export default function manage() {
 
   return (
     <>
-      <p>{inputcomName}</p>
       <Navbar />
       <Box className="home_Knowledge"
         sx={{
