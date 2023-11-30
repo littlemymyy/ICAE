@@ -42,6 +42,8 @@
     "xml2js": "^0.6.2"
   },
   "devDependencies": {
+    "hummus": "^1.0.116",
+    "memory-streams": "^0.1.3",
     "pdfmake": "^0.2.8"
   }
 }
