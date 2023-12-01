@@ -17,6 +17,15 @@ import Footer from '@/components/Footer';
 import { useRouter } from 'next/router';
 import Axios from 'axios'
 import { GoogleLogin } from '@react-oauth/google';
+import { Swiper, SwiperSlide } from "swiper/react";
+import Swal from 'sweetalert2'
+
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/pagination";
+
+// import required modules
+import { Pagination } from "swiper/modules";
 
 function Copyright(props) {
 
@@ -39,11 +48,13 @@ const defaultTheme = createTheme();
 
 export default function SignIn() {
   const router = useRouter();
+  const Swal = require('sweetalert2')
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const email = data.get('email');
     const password = data.get('password');
+    
     
     let load = {
       email: email,
@@ -55,31 +66,35 @@ export default function SignIn() {
       data: load,
     })
       .then(function (response) {
-        if(response.data && response.data.length) {
+        if(response.data.length > 0 ) {
           console.log(response.data);
+          
           // em_email : "test01@gmail.com"
           // em_fullname : "test01"
           // em_icon : "/test01.png"
           // em_pass : "12345"
-          sessionStorage.setItem("uemail" , response.data[0].em_email);
+          console.log(response.data[0].em_email)
           sessionStorage.setItem("uname" , response.data[0].em_fullname);
+          sessionStorage.setItem("uemail" , response.data[0].em_email)
           sessionStorage.setItem("uicon" , response.data[0].em_icon);
-          sessionStorage.setItem("upass" , response.data[0].em_pass);
           sessionStorage.setItem("status" , response.data[0].status);
+          sessionStorage.setItem('orid', response.data[0].organization_id)
+          
 
           if(response.data[0].status === "A"){
             router.push("/admin/Home");
           }
           else if(response.data[0].status === "S") {
-
+            router.push("/")
           }
           else {
+            
             router.push("/");
           }
           
         }
-        else {
-          alert("Try Again");
+        else if(response.data.length <=0 ) {
+          Swal.fire("โปรดลองอีกครั้ง");
         }
       })
       .catch(function (error) {
@@ -163,9 +178,27 @@ export default function SignIn() {
                 </Link>
               </Grid>
               <Grid item>
+              <Link href="/SignUp/SignUp" variant="body2">
+                {"คุณยังไม่เป็นสมาชิกใช่ไหม? สมัครสมาชิก"}
+               </Link> :
+                {/* { 
+                
+                sessionStorage.getItem("status") === null ?
                 <Link href="/SignUp" variant="body2">
+                {"คุณยังไม่เป็นสมาชิกใช่ไหม? สมัครสมาชิก"}
+               </Link> :
+                  
+                  sessionStorage.getItem("status") === "A" ?
+                  <Link href="/SignUpA" variant="body2">
                   {"คุณยังไม่เป็นสมาชิกใช่ไหม? สมัครสมาชิก"}
                 </Link>
+                :  sessionStorage.getItem("status") === "S" ?
+                <Link href="/SignUpA" variant="body2">
+                {"คุณยังไม่เป็นสมาชิกใช่ไหม? สมัครสมาชิก"}
+                </Link>
+                : null
+                } */}
+                
               </Grid>
             </Grid>
           </Box>
