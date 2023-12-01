@@ -974,25 +974,25 @@ const sendEmail = (message) => {
 
  //sendEmailNotifications()
 
-// cron.schedule(' 20 9 * * *' , () => {
-//     console.log("IS RUN CRON")
-//     try {
+cron.schedule(' 20 9 * * *' , () => {
+    console.log("IS RUN CRON")
+    try {
 
-//         sendEmailNotifications()
+        sendEmailNotifications()
 
-//         console.log('Email sent successfully');
-//     } catch (error) {
-//         console.error('Error:', error);
-//     }
+        console.log('Email sent successfully');
+    } catch (error) {
+        console.error('Error:', error);
+    }
 
-//     // console.log('Cron job executed at:', new Date());
-//     // axios.get('http://localhost:3001/api/sendNotification')
-//     // .then((response)=>{
-//     //     console.log("is server say :" + response.data)
-//     // }).catch((error) => {
-//     //     console.error(error)
-//     // })
-// })
+    console.log('Cron job executed at:', new Date());
+    axios.get('http://localhost:3001/api/sendNotification')
+    .then((response)=>{
+        console.log("is server say :" + response.data)
+    }).catch((error) => {
+        console.error(error)
+    })
+})
 
 
 
