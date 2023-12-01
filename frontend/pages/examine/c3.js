@@ -1,179 +1,191 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState } from 'react'
 import Axios from "axios";
-import { useRouter } from 'next/router';
 import Navbar from '@/components/layout/Navbar';
 import { AiOutlineDelete } from "react-icons/ai";
-import { set } from 'react-hook-form';
+import { useRouter } from 'next/router';
 
-const c1 = () => {
-  const router = useRouter()
-  const [groupName, setGroupName] = useState("")
-  const [data, setData] = useState([])
-  const [search_input, setSearch_input] = useState("");
-  const [show, setShow] = useState([])
-  const [list, setList] = useState([])
-  const [list2, setList2] = useState([])
-  const [unlist, setUnlist] = useState([])
-  const [per, setPer] = useState([])
-  const [sum , setSum] = useState(0)
-  const [fillterg , setFillterg] = useState("")
+const c3 = () => {
+    const router = useRouter()
+    const [groupName, setGroupName] = useState("")
+    const [list , setList] = useState([])
+    const [unlist , setUnlist] = useState([])
+    const [list2 , setList2] = useState([])
+    const [data , setData] = useState([])
+    const [oldData , setOldData] = useState([]);
+    const [sum , setSum] = useState(0)
+    const [search_input, setSearch_input] = useState("");
+    const [show, setShow] = useState([])
+    const [dd , setDd] = useState([])
+    
 
-  useEffect(() => {
-    const queryString = window.location.search
-    const searchParams = new URLSearchParams(queryString)
-    const gname = searchParams.get("gname")
-    const mydata = searchParams.get("mydata").split(",").map(String)
-    setFillterg(searchParams.get("mydata"))
-    console.log(gname)
-    console.log(mydata)
-    console.log(searchParams.get("mydata"))
-
-    //   console.log(router.query.gname)  
-    //   const my = router.query.mydata
-    //   const mydata = my ? my.split(",").map(String) : [] 
-    // console.log(mydata)
-    setGroupName(gname)
-    const dd = mydata
-    Axios({
-      url: "http://localhost:3001/api/searchBybodypart",
-      method: "post",
-      data: dd
-    })
-      .then((response) => {
-        let res = response.data
-        for(let i = 0 ; i < res.length ; i++ ){
-          res[i]["per1"] = 0
+    useEffect(() => {
+        const queryString = window.location.search
+        const searchParams = new URLSearchParams(queryString)
+        const gname = searchParams.get("gname")
+        setGroupName(gname)
+        let splitArray = []
+        
+        // console.log(gname)
+        let load = {
+            gname : gname
         }
-        setData(res)
-        console.log(res)
-      })
-  }, [])
+        Axios  ({
+            url: "http://localhost:3001/api/getGroupNamebyname",
+            method: "post",
+            data : load,
+          }).then ((response) => { 
+            console.log(response.data)
+            setList(response.data)
+            // console.log(response.data[0].fillterg.split(",").map(String))
 
-  const resultsearch = (e) => {
-    setSearch_input(e)
-    if (e.length == 0) {
-      setShow([])
+            splitArray = response.data[0].fillterg.split(",").map(String)
+           // console.log(splitArray)
+
+         
+            setDd(splitArray)
+            getAll(splitArray)
+
+
+            // setDd(splitArray);
+            // dd.push(response.data[0].fillterg.split(",").map(String))
+            // setDd([...dd])
+            // setDd(response.data[0].fillterg.split(",").map(String))
+          })
+
+    },[])
+
+    const getAll = (fillterg) =>{
+        let dd = {
+            fillterg : fillterg
+          }
+          console.log(dd)
+          Axios({
+            url: "http://localhost:3001/api/searchBybodypartEdit",
+            method: "post",
+            data: dd ,
+          }).then((response) => {
+            setData(response.data)
+            // console.log(response.data)
+          })
     }
-    else {
-      const results1 = data.filter((w) => {
-        return (
-          e &&
-          w &&
-          w.cas &&
-          w.cname &&
-          w.cmname &&
-          (w.cname.toLowerCase().includes(e) || w.cas.includes(e) || w.cmname.toLowerCase().includes(e))
-        );
+
+    const resultsearch = (e) => {
+        setSearch_input(e)
+        if (e.length == 0) {
+          setShow([])
+        }
+        else {
+          const results1 = data.filter((w) => {
+            return (
+              e &&
+              w &&
+              w.cas &&
+              w.cname &&
+              w.cmname &&
+              (w.cname.toLowerCase().includes(e) || w.cas.includes(e) || w.cmname.toLowerCase().includes(e))
+            );
+          });
+          setShow(results1)
+          console.log(results1)
+        }
+      }
+    
+      const add = (e) => {
+        const result = data.find(({ cas }) => cas === e)
+        if (result.st === 2) {
+          unlist.push(result)
+          setUnlist([...unlist])
+          setShow([])
+          setSearch_input("")
+        }
+    
+        else {
+          list.push(result)
+          setList([...list])
+          setShow([])
+          setSearch_input("")
+        }
+        console.log(result)
+      }
+
+      const percentChange = (idx, e) => {
+        console.log(list[idx])
+        console.log(e)
+        let l2 = list[idx]
+        if( e.length === 0 ) {
+          l2["per1"] = '0'
+        }
+        else {
+          l2["per1"] = e
+        }
+        console.log(l2)
+        if (e > list[idx].per) {
+          list2.push(l2)
+          setList2([...list2])
+          list.splice(idx, 1)
+          setList([...list])
+        }
+        let total = 0
+        for(let i = 0; i < list.length; i++){
+          total += parseFloat(list[i].per1)
+        }
+        setSum(total)
+    
+      }
+    
+      const percentChange2 = (idx , e) => {
+        // console.log(list2[idx])
+        // console.log(e)
+        let l1 = list2[idx]
+        l1["per1"] = e
+        console.log(l1)
+        if(l1.per1 <= l1.per) {
+          list.push(l1)
+          setList([...list])
+          list2.splice(idx,1)
+          setList2([...list2])
+        }
+      }
+    
+
+      const clickDelete = (e) => {
+        list.splice(e, 1)
+        setList([...list])
+      }
+    
+      const clickDelete_unlist = (e) => {
+        unlist.splice(e, 1)
+        setUnlist([...list])
+      }
+      const clickDelete_list2 = (e) => {
+        list2.splice(e, 1)
+        setList2([...list])
+      }
+    
+      const saveFile = () => {
+        let load = {
+          uname : sessionStorage.getItem("uname") ,
+          gname : groupName, 
+          fillterg : dd ,
+          dd : list
+        }
+        Axios({
+          url : "http://localhost:3001/api/savefile",
+          method : "post" ,
+          data : load ,
+        }).then((response) => {
+          alert("เพิ่มรายเรียบร้อย")
+          router.push("/Groupname")
+        }).catch(error => {
+          console.error(error);
+         // return res.status(500).json({ error: "Error sending email" });
       });
-      setShow(results1)
-      console.log(results1)
-    }
-  }
-
-  const add = (e) => {
-    const result = data.find(({ cas }) => cas === e)
-    if (result.st === 2) {
-      unlist.push(result)
-      setUnlist([...unlist])
-      setShow([])
-      setSearch_input("")
-    }
-
-    else {
-      list.push(result)
-      setList([...list])
-      setShow([])
-      setSearch_input("")
-    }
-    console.log(result)
-  }
-
-
-
-  const clickDelete = (e) => {
-    list.splice(e, 1)
-    setList([...list])
-  }
-
-  const clickDelete_unlist = (e) => {
-    unlist.splice(e, 1)
-    setUnlist([...list])
-  }
-  const clickDelete_list2 = (e) => {
-    list2.splice(e, 1)
-    setList2([...list])
-  }
-
-  const percentChange = (idx, e) => {
-    console.log(list[idx])
-    console.log(e)
-    let l2 = list[idx]
-    if( e.length === 0 ) {
-      l2["per1"] = '0'
-    }
-    else {
-      l2["per1"] = e
-    }
-    console.log(l2)
-    if (e > list[idx].per) {
-      list2.push(l2)
-      setList2([...list2])
-      list.splice(idx, 1)
-      setList([...list])
-    }
-    let total = 0
-    for(let i = 0; i < list.length; i++){
-      total += parseFloat(list[i].per1)
-    }
-    setSum(total)
-
-  }
-
-  const percentChange2 = (idx , e) => {
-    // console.log(list2[idx])
-    // console.log(e)
-    let l1 = list2[idx]
-    l1["per1"] = e
-    console.log(l1)
-    if(l1.per1 <= l1.per) {
-      list.push(l1)
-      setList([...list])
-      list2.splice(idx,1)
-      setList2([...list2])
-    }
-  }
-
-  const saveFile = () => {
-    let load = {
-      uname : sessionStorage.getItem("uname") ,
-      gname : groupName ,
-      fillterg : fillterg ,
-      dd : list
-    }
-    Axios({
-      url : "http://localhost:3001/api/savefile",
-      method : "post" ,
-      data : load ,
-    }).then((response) => {
-      alert("เพิ่มรายเรียบร้อย")
-      router.push("/Groupname")
-    })
-  }
-
-  // useEffect(() => {
-  //   const params = window.location.href.split("?")[1];
-  //   const query = new URLSearchParams(params);
-  //   let gn = "";
-  //   for(let pair of query.entries()) {
-  //     setGroupName(pair[1]);
-  //     gn = pair[1];
-  //     break;
-  //   }
-  // }, []);
+      }
+    
   return (
     <div>
-      <Navbar></Navbar>
-      <div className="logo1">
+        <Navbar></Navbar>
+        <div className="logo1">
         <img src="/preview2.png" />
       </div>
       <br />
@@ -186,6 +198,7 @@ const c1 = () => {
         />
         <br />
       </div>
+
       <div className='show'>
         {
           show.length ?
@@ -199,6 +212,7 @@ const c1 = () => {
         }
 
       </div>
+
 
       {
         list.length ? (
@@ -246,9 +260,7 @@ const c1 = () => {
 
       }
 
-     
-
-      {
+{
         
         list2.length  ? (
         <div>
@@ -337,20 +349,16 @@ const c1 = () => {
         ) : null
 
       }
-
-      <div className='App'>ยอดรวมทั้งหมด {sum} </div>
-    <div className='C1_sava1'>
+      <div className='App'>ยอดรวมทั้งหมด {sum} 
+      </div>
       {
         sum === 100 ? 
         <button className='C1_save' onClick={saveFile}> บันทึก </button>
         : <button disabled> บันทึก </button>
       }
-      </div>
-    </div>
 
-  
+    </div>
   )
 }
 
-
-export default c1
+export default c3
