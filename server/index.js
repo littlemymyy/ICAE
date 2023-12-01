@@ -23,6 +23,7 @@ const cron = require('node-cron');
 const http = require('http');
 const socketIo = require('socket.io');
 const {EMAIL , PASSWORD} = require('./env.js')
+const PDFMerger = require('pdf-merger-js');
 
 const app = express();
 const server = http.createServer(app);
@@ -46,13 +47,16 @@ const pdfStorage = multer.diskStorage({
     destination: (req, file, cb) => {
       cb(null, 'uploads/');
     },
-    filename: (req, file, cb) => {
-      cb(null, file.originalname);
-    },
+    filename: function ( req, file, cb ) {
+        //req.body is empty...
+        //How could I get the new_file_name property sent from client here?
+        cb( null, Date.now() + '-' + file.originalname);
+    }
 });
 
 const pdfUpload = multer({ storage: pdfStorage });
 
+//not use
 app.post('/generate-pdf', pdfUpload.single('file'), (req, res) => {
     const content = req.body.text;
     console.log(content)
@@ -72,22 +76,20 @@ app.post('/generate-pdf', pdfUpload.single('file'), (req, res) => {
 
         const docDefinition = {
                 content: [
-                    { text: 'ข้อมูลเกี่ยวกับเครื่องสำอาง (PRODUCTS INFORMATION FILE : PIF)', style: 'header' },
-                    
-                    {text:`เลขที่จดแจ้ง ${req.body.inputregisNumber}` },
-                    {text:`ชื่อทางการค้าเครื่องสำอาง ${req.body.inputcomName}` },
-                    {text:`ชื่อเครื่องสำอาง ${req.body.inputcosName}`},
-                    {text:`ประเภทของเครื่องสำอาง ${req.body.inputtypeGoods}`},
-                    {text:`วันที่จดแจ้ง ${req.body.inputdateS}`},
-                    {text:`วันที่ใบอนุญาตหมดอายุ${req.body.inputexpDate}`},
-                    {text:`จุดประสงค์การใช้ ${req.body.inputobjGoods}`},
-                    {text:`ลักษณะทางกายภาพ ${req.body.Inputpy}`},
-                    {text:`ชื่อผู้ผลิต ${req.body.inputentrepreneur}`},
-                    {text:`ชื่อผู้ผลิตต่างประเทศ ${req.body.inputFentrepreneur}`},
-                    {text:`ส่วนประกอบ ${req.body.inputbodypart}`}, 
-                    {text:`รายละเอียดเพิ่มเติม ${req.body.setDes}`}
+                    { text:'ข้อมูลเกี่ยวกับเครื่องสำอาง (PRODUCTS INFORMATION FILE : PIF)', style: 'header' },
+                    {text:`เลขที่จดแจ้ง: ${req.body.inputregisNumber}` },
+                    {text:`ชื่อทางการค้าเครื่องสำอาง: ${req.body.inputcomName}` },
+                    {text:`ชื่อเครื่องสำอาง: ${req.body.inputcosName}`},
+                    {text:`ประเภทของเครื่องสำอาง: ${req.body.inputtypeGoods}`},
+                    {text:`วันที่จดแจ้ง: ${req.body.inputdateS}`},
+                    {text:`วันที่ใบอนุญาตหมดอายุ:${req.body.inputexpDate}`},
+                    {text:`จุดประสงค์การใช้: ${req.body.inputobjGoods}`},
+                    {text:`ลักษณะทางกายภาพ: ${req.body.Inputpy}`},
+                    {text:`ชื่อผู้ผลิต: ${req.body.inputentrepreneur}`},
+                    {text:`ชื่อผู้ผลิตต่างประเทศ: ${req.body.inputFentrepreneur}`},
+                    {text:`รายละเอียดเพิ่มเติม: ${req.body.setDes}`}
 
-                    
+
                 ],
                 styles: {
                     header: {
@@ -103,8 +105,8 @@ app.post('/generate-pdf', pdfUpload.single('file'), (req, res) => {
             };
 
         const pdfDoc = pdfMake.createPdf(docDefinition);
-        
-        const fileName = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+
+        const fileName =  Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + '-' + Date.now();
 
         const pdfPath = path.join(__dirname, 'uploads', `${fileName}.pdf`);
 
@@ -118,7 +120,126 @@ app.post('/generate-pdf', pdfUpload.single('file'), (req, res) => {
       console.error(error);
       res.status(500).send('Internal Server Error');
     }
-  });
+});
+
+//not use
+app.post('/mergePdf', pdfUpload.any(), (req, res) => {
+    const merger = new PDFMerger();
+    const files = req.files;
+    console.log(files);
+
+    try {
+        (async () => {
+            for(let i = 0 ; i < files.length ; i++){
+                await merger.add(files[i].path);
+            }
+            await merger.save('uploads/mergedpdf.pdf').then((pdfBuffer) => {
+                res.send(pdfBuffer);
+                });
+        })()
+    } catch (error) {
+        console.error('Error merging PDFs:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+app.post('/api/submitPif', pdfUpload.any(), (req, res) => {
+    try {
+        let img_path = '';
+        let pdf_path = '';
+
+        (async () => {
+            console.log(JSON.parse(req.body.data))
+            const data = JSON.parse(req.body.data);
+            // console.log(req.files.data)
+            pdfMake.fonts = {
+                THSarabunNew: {
+                    normal: 'THSarabun.ttf',
+                    bold: 'THSarabun-Bold.ttf',
+                    italics: 'THSarabun-Italic.ttf',
+                    bolditalics: 'THSarabun-BoldItalic.ttf'
+                }
+            }
+
+            pdfMake.vfs = vfsFonts.pdfMake.vfs;
+
+            const docDefinition = {
+                    content: [
+                        { text:'ข้อมูลเกี่ยวกับเครื่องสำอาง (PRODUCTS INFORMATION FILE : PIF)', style: 'header' },
+                        {text:`เลขที่จดแจ้ง: ${data.inputregisNumber}` },
+                        {text:`ชื่อทางการค้าเครื่องสำอาง: ${data.inputcomName}` },
+                        {text:`ชื่อเครื่องสำอาง: ${data.inputcosName}`},
+                        {text:`ประเภทของเครื่องสำอาง: ${data.inputtypeGoods}`},
+                        {text:`วันที่จดแจ้ง: ${data.inputdateS}`},
+                        {text:`วันที่ใบอนุญาตหมดอายุ:${data.inputexpDate}`},
+                        {text:`จุดประสงค์การใช้: ${data.inputobjGoods}`},
+                        {text:`ลักษณะทางกายภาพ: ${data.Inputpy}`},
+                        {text:`ชื่อผู้ผลิต: ${data.inputentrepreneur}`},
+                        {text:`ชื่อผู้ผลิตต่างประเทศ: ${data.inputFentrepreneur}`},
+                        {text:`รายละเอียดเพิ่มเติม: ${data.setDes}`}
+
+
+                    ],
+                    styles: {
+                        header: {
+                            fontSize: 18,
+                            bold: true,
+                            alignment: 'center',
+                            margin: [10, 10, 10, 10]
+                        }
+                    },
+                    defaultStyle: {
+                        font: 'THSarabunNew'
+                    }
+                };
+
+            const pdfDoc = pdfMake.createPdf(docDefinition);
+            const fileName = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + '-' + Date.now();
+            const pdfPath = path.join(__dirname, 'uploads', `${fileName}.pdf`);
+
+            const buffer = await new Promise((resolve, reject) => {
+                pdfDoc.getBuffer((buffer) => {
+                    resolve(buffer);
+                });
+            });
+
+            await fs.writeFile(pdfPath, buffer);
+
+            const firstPath = path.join('./uploads', `${fileName}.pdf`);
+            console.log(firstPath)
+
+            //merge pdf
+            const merger = new PDFMerger();
+            const files = req.files;
+            console.log(files);
+
+            await merger.add(firstPath);
+            try{
+                for(let i = 0 ; i < files.length ; i++){
+                    if (files[i].mimetype === 'application/pdf')
+                        await merger.add(files[i].path);
+                    if (files[i].mimetype === 'image/jpeg' || files[i].mimetype === 'image/png')
+                        img_path = files[i].path;
+                }
+            }catch(err){
+                console.log("no any file upload")
+                console.log(err)
+            }
+
+            let pdfFileName = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + '-' + Date.now();
+            await merger.save(`uploads/${pdfFileName}.pdf`).then((pdfBuffer) => {
+                console.log(pdfBuffer);
+            });
+
+            console.log(pdfFileName)
+            pdf_path = path.join('./uploads', `${pdfFileName}.pdf`);
+            res.json({status: "ok", pdf_path: pdf_path, img_path: img_path});
+        })()
+    } catch (error) {
+        console.error('Error merging PDFs:', error);
+        res.status(500).send('Internal Server Error');
+    }
+})
 
 
 
