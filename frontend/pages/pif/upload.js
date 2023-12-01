@@ -160,6 +160,7 @@ export default function manage() {
   const [file12, setFile12] = useState(null);
   const [file13, setFile13] = useState(null);
   const [file14, setFile14] = useState(null);
+  const [photo, setFilePhoto] = useState(null);
 
   const handleFileChange = (inputName, event) => {
     const file = event.target.files[0];
@@ -209,6 +210,9 @@ export default function manage() {
       case 'file14':
         setFile14(file);
         break;
+      case 'photo':
+        setFilePhoto(file);
+        break;
       // Add more cases for additional inputs
       default:
         break;
@@ -229,6 +233,8 @@ export default function manage() {
       "inputFentrepreneur": document.getElementById("fentrepreneur").value,
       "setDes": document.getElementById("des").value,
       "rec_create_when": new Date(),
+      "expdate": document.getElementById("expdate").value,
+      "filename": document.getElementById("filename").value,
     });
 
     //for upload file
@@ -236,7 +242,20 @@ export default function manage() {
 
     file1 && formData.append('file1', file1);
     file2 && formData.append('file2', file2);
+    file3 && formData.append('file3', file3);
+    file4 && formData.append('file4', file4);
+    file5 && formData.append('file5', file5);
+    file6 && formData.append('file6', file6);
+    file7 && formData.append('file7', file7);
+    file8 && formData.append('file8', file8);
+    file9 && formData.append('file9', file9);
+    file10 && formData.append('file10', file10);
+    file11 && formData.append('file11', file11);
+    file12 && formData.append('file12', file12);
+    file13 && formData.append('file13', file13);
+    file14 && formData.append('file14', file14);
     formData.append('data', data);
+    photo && formData.append('photo', photo);
     // file3 && formData.append('file3', file3);
 
     try {
@@ -332,14 +351,12 @@ export default function manage() {
         >
           <Box>
             <Typography variant="h6">ชื่อไฟล์ PIF</Typography>
-            <TextField label="ชื่อไฟล์ PIF" />
+            <TextField label="ชื่อไฟล์ PIF" id='filename' />
           </Box>
 
           <Box>
             <Typography variant="h6">วันหมดอายุ</Typography>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker />
-            </LocalizationProvider>
+            <TextField type="date" id='expdate' />
           </Box>
         </Box>
 
@@ -367,13 +384,11 @@ export default function manage() {
               <input
                 id="filename"
                 type="file"
-                onChange={(e) => {
-                  setFile1(e.target.files[0].name)
-                }}
+                onChange={(event) => handleFileChange('photo', event)}
                 hidden
               />เลือกไฟล์
             </Button>
-            <span id="upload15" style={{ marginLeft: "5px", marginRight: "5px" }}>ไม่ได้เลือกไฟล์ใด</span>
+            <span id="photo" style={{ marginLeft: "5px", marginRight: "5px" }}>ไม่ได้เลือกไฟล์ใด</span>
           </Box>
 
 
@@ -552,10 +567,6 @@ export default function manage() {
                 2. สูตรส่วนประกอบของเครื่องสำอาง
               </Typography>
 
-
-
-
-
               <Box
                 style={{
                   borderRadius: '5px',
@@ -565,18 +576,15 @@ export default function manage() {
                 <Button
                   variant="contained"
                   component="label"
-
                 >
                   <input
                     id="filename"
                     type="file"
-                    onChange={(e) => {
-                      document.getElementById("upload3").innerHTML = e.target.files[0].name;
-                    }}
+                    onChange={(event) => handleFileChange('file3', event)}
                     hidden
                   />เลือกไฟล์
                 </Button>
-                <span id="upload3" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
+                <span id="file3" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
               </Box>
 
               <hr></hr>
@@ -594,13 +602,11 @@ export default function manage() {
                   <input
                     id="filename"
                     type="file"
-                    onChange={(e) => {
-                      document.getElementById("upload4").innerHTML = e.target.files[0].name;
-                    }}
+                    onChange={(event) => handleFileChange('file4', event)}
                     hidden
                   />เลือกไฟล์
                 </Button>
-                <span id="upload4" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
+                <span id="file4" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
               </Box>
               <hr></hr>
 
@@ -628,13 +634,11 @@ export default function manage() {
                   <input
                     id="filename"
                     type="file"
-                    onChange={(e) => {
-                      document.getElementById("upload5").innerHTML = e.target.files[0].name;
-                    }}
+                    onChange={(event) => handleFileChange('file5', event)}
                     hidden
                   />เลือกไฟล์
                 </Button>
-                <span id="upload5" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
+                <span id="file5" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
               </Box>
 
               <Typography
@@ -657,13 +661,11 @@ export default function manage() {
                   <input
                     id="filename"
                     type="file"
-                    onChange={(e) => {
-                      document.getElementById("upload6").innerHTML = e.target.files[0].name;
-                    }}
+                    onChange={(event) => handleFileChange('file6', event)}
                     hidden
                   />เลือกไฟล์
                 </Button>
-                <span id="upload6" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
+                <span id="file6" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
               </Box>
               <hr></hr>
 
@@ -684,11 +686,11 @@ export default function manage() {
                   <input
                     id="filename"
                     type="file"
-                    onChange={handleFileChange}
+                    onChange={(event) => handleFileChange('file7', event)}
                     hidden
                   />เลือกไฟล์
                 </Button>
-                <span id="upload7" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
+                <span id="file7" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
               </Box>
               <hr></hr>
 
@@ -709,19 +711,12 @@ export default function manage() {
                   <input
                     id="filename"
                     type="file"
-                    onChange={(e) => {
-                      document.getElementById("upload8").innerHTML = e.target.files[0].name;
-                    }}
+                    onChange={(event) => handleFileChange('file8', event)}
                     hidden
                   />เลือกไฟล์
                 </Button>
-                <span id="upload8" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
+                <span id="file8" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
               </Box>
-
-
-
-
-
             </AccordionDetails>
           </Accordion>
 
@@ -730,9 +725,6 @@ export default function manage() {
               <Typography>อัพโหลดเอกสารหรือกรอกข้อมูล PIF ส่วนที่ 2</Typography>
             </AccordionSummary>
             <AccordionDetails>
-
-
-
 
               <Typography>
                 1. ข้อกำหนดของวัตถุดิบ
@@ -751,20 +743,15 @@ export default function manage() {
                   <input
                     id="filename"
                     type="file"
-                    onChange={(e) => {
-                      document.getElementById("upload9").innerHTML = e.target.files[0].name;
-                    }}
+                    onChange={(event) => handleFileChange('file9', event)}
                     hidden
                   />เลือกไฟล์
                 </Button>
-                <span id="upload9" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
+                <span id="file9" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
               </Box>
 
 
-              <Typography sx={{
-                marginTop: { xs: "10px", md: "10px" },
-              }}
-              >
+              <Typography sx={{ marginTop: { xs: "10px", md: "10px" } }}>
                 certificate of analysis (COA)
               </Typography>
 
@@ -781,13 +768,11 @@ export default function manage() {
                   <input
                     id="filename"
                     type="file"
-                    onChange={(e) => {
-                      document.getElementById("upload11").innerHTML = e.target.files[0].name;
-                    }}
+                    onChange={(event) => handleFileChange('file10', event)}
                     hidden
                   />เลือกไฟล์
                 </Button>
-                <span id="upload11" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
+                <span id="file10" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
               </Box>
               <hr></hr>
 
@@ -808,13 +793,11 @@ export default function manage() {
                   <input
                     id="filename"
                     type="file"
-                    onChange={(e) => {
-                      document.getElementById("upload10").innerHTML = e.target.files[0].name;
-                    }}
+                    onChange={(event) => handleFileChange('file11', event)}
                     hidden
                   />เลือกไฟล์
                 </Button>
-                <span id="upload11" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
+                <span id="file11" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
               </Box>
 
 
@@ -840,13 +823,11 @@ export default function manage() {
                   <input
                     id="filename"
                     type="file"
-                    onChange={(e) => {
-                      document.getElementById("upload12").innerHTML = e.target.files[0].name;
-                    }}
+                    onChange={(event) => handleFileChange('file12', event)}
                     hidden
                   />เลือกไฟล์
                 </Button>
-                <span id="upload12" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
+                <span id="file12" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
               </Box>
               <hr></hr>
 
@@ -864,13 +845,11 @@ export default function manage() {
                   <input
                     id="filename"
                     type="file"
-                    onChange={(e) => {
-                      document.getElementById("upload13").innerHTML = e.target.files[0].name;
-                    }}
+                    onChange={(event) => handleFileChange('file13', event)}
                     hidden
                   />เลือกไฟล์
                 </Button>
-                <span id="upload13" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
+                <span id="file13" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
               </Box>
               <hr></hr>
 
@@ -888,13 +867,11 @@ export default function manage() {
                   <input
                     id="filename"
                     type="file"
-                    onChange={(e) => {
-                      document.getElementById("upload14").innerHTML = e.target.files[0].name;
-                    }}
+                    onChange={(event) => handleFileChange('file14', event)}
                     hidden
                   />เลือกไฟล์
                 </Button>
-                <span id="upload14" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
+                <span id="file14" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
               </Box>
 
             </AccordionDetails>
@@ -914,16 +891,13 @@ export default function manage() {
           textAlign="center"
           variant="contained"
           color="success"
+          onClick={(e) => { generatePDF(e) }}
           sx={{ mt: 3, mb: 2 }}
         >
           ยืนยัน
         </Button>
       </Box>
-
-      <Button onClick={(e) => { generatePDF(e) }}>Generate PDF</Button>
-
-
-
+      {/* <Button onClick={(e) => { generatePDF(e) }}>Generate PDF</Button> */}
 
       <Footer />
     </>

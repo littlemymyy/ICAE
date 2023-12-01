@@ -39,13 +39,16 @@ const pdfStorage = multer.diskStorage({
     destination: (req, file, cb) => {
       cb(null, 'uploads/');
     },
-    filename: (req, file, cb) => {
-      cb(null, file.originalname);
-    },
+    filename: function ( req, file, cb ) {
+        //req.body is empty...
+        //How could I get the new_file_name property sent from client here?
+        cb( null, Date.now() + '-' + file.originalname);
+    }
 });
 
 const pdfUpload = multer({ storage: pdfStorage });
 
+//not use
 app.post('/generate-pdf', pdfUpload.single('file'), (req, res) => {
     const content = req.body.text;
     console.log(content)
@@ -95,7 +98,7 @@ app.post('/generate-pdf', pdfUpload.single('file'), (req, res) => {
 
         const pdfDoc = pdfMake.createPdf(docDefinition);
 
-        const fileName = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        const fileName =  Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + '-' + Date.now();
 
         const pdfPath = path.join(__dirname, 'uploads', `${fileName}.pdf`);
 
@@ -109,9 +112,10 @@ app.post('/generate-pdf', pdfUpload.single('file'), (req, res) => {
       console.error(error);
       res.status(500).send('Internal Server Error');
     }
-  });
+});
 
-  app.post('/mergePdf', pdfUpload.any(), (req, res) => {
+//not use
+app.post('/mergePdf', pdfUpload.any(), (req, res) => {
     const merger = new PDFMerger();
     const files = req.files;
     console.log(files);
@@ -129,10 +133,13 @@ app.post('/generate-pdf', pdfUpload.single('file'), (req, res) => {
         console.error('Error merging PDFs:', error);
         res.status(500).send('Internal Server Error');
     }
-  });
+});
 
 app.post('/api/submitPif', pdfUpload.any(), (req, res) => {
     try {
+        let img_path = '';
+        let pdf_path = '';
+
         (async () => {
             console.log(JSON.parse(req.body.data))
             const data = JSON.parse(req.body.data);
@@ -179,7 +186,7 @@ app.post('/api/submitPif', pdfUpload.any(), (req, res) => {
                 };
 
             const pdfDoc = pdfMake.createPdf(docDefinition);
-            const fileName = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+            const fileName = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + '-' + Date.now();
             const pdfPath = path.join(__dirname, 'uploads', `${fileName}.pdf`);
 
             const buffer = await new Promise((resolve, reject) => {
@@ -201,19 +208,24 @@ app.post('/api/submitPif', pdfUpload.any(), (req, res) => {
             await merger.add(firstPath);
             try{
                 for(let i = 0 ; i < files.length ; i++){
-                    await merger.add(files[i].path);
+                    if (files[i].mimetype === 'application/pdf')
+                        await merger.add(files[i].path);
+                    if (files[i].mimetype === 'image/jpeg' || files[i].mimetype === 'image/png')
+                        img_path = files[i].path;
                 }
             }catch(err){
                 console.log("no any file upload")
                 console.log(err)
             }
 
-            let pdfFileName = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+            let pdfFileName = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + '-' + Date.now();
             await merger.save(`uploads/${pdfFileName}.pdf`).then((pdfBuffer) => {
-                res.send(pdfBuffer);
+                console.log(pdfBuffer);
             });
 
             console.log(pdfFileName)
+            pdf_path = path.join('./uploads', `${pdfFileName}.pdf`);
+            res.json({status: "ok", pdf_path: pdf_path, img_path: img_path});
         })()
     } catch (error) {
         console.error('Error merging PDFs:', error);
