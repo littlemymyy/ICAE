@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Nov 29, 2023 at 05:04 AM
+-- Host: localhost
+-- Generation Time: Dec 01, 2023 at 07:37 AM
 -- Server version: 10.4.28-MariaDB
--- PHP Version: 8.0.28
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -11352,7 +11352,7 @@ CREATE TABLE `employee` (
   `em_icon` varchar(255) NOT NULL,
   `em_pass` text NOT NULL,
   `status` varchar(3) NOT NULL,
-  `organization_id` varchar(255) NOT NULL
+  `organization_id` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
@@ -11368,8 +11368,34 @@ INSERT INTO `employee` (`no`, `em_email`, `em_fullname`, `em_icon`, `em_pass`, `
 (6, 'test07@gmail.com', 'test07', '/test07.png', '123456', 'U1', '0115556007101'),
 (9, 'sa@gmail.com', 'sa sa', '/test01.png', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'S', '123456'),
 (10, 'yo@gmail.com', 'yoyo yo', '/test01.png', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'A', '-'),
-(23, 'hechuan1949@gmail.com', 'andy hotman', '/pandaU.png', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'U', ''),
-(25, 'cohiy26840@dpsols.com', 'sun hotman', '/pandaU.png', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'U', '');
+(23, 'hechuan1949@gmail.com', 'andy hotman', '/pandaU.png', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'U', 'ZHONGGUO '),
+(25, 'cohiy26840@dpsols.com', 'sun hotman', '/pandaU.png', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'U', ''),
+(26, 'testtest@gmail.com', 'test test2', '/pandaU.png', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 'U', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pif`
+--
+
+CREATE TABLE `pif` (
+  `id` int(11) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `file_name` varchar(100) NOT NULL,
+  `img_path` varchar(255) DEFAULT NULL,
+  `pdf_path` varchar(255) NOT NULL,
+  `expdate` date NOT NULL,
+  `rec_create_when` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `pif`
+--
+
+INSERT INTO `pif` (`id`, `email`, `file_name`, `img_path`, `pdf_path`, `expdate`, `rec_create_when`) VALUES
+(2, 'testtest@gmail.com', 'test1', 'uploads/1701412248417-3cbgTPbmigyGXt-UImVpvULeE6f9uBUbYwqoO8N97B54thEvH6bUamHRyaks0hzuPAQPnpoOlxG8DaQiCeUK8GkMfIDfA1XaOoFk2i7xgWjLnOuJX6RXgHA4gSTJKFPEQQq1-WG3eFy_I7uXKcbEYg==.jpeg', 'uploads/sls0b5pn35nb2dm6er6rv-1701412248623.pdf', '2023-12-05', '2023-12-01'),
+(3, 'testtest@gmail.com', 'installredhat.txt', 'uploads/1701412426532-IMG_2770.jpg', 'uploads/t2xgmbx9h5zblrwi93a8-1701412426621.pdf', '2023-12-08', '2023-12-01'),
+(4, 'testtest@gmail.com', 'test', '', 'uploads/2vxxhe06rseno2uslq9kc-1701412550024.pdf', '2023-12-05', '2023-12-01');
 
 -- --------------------------------------------------------
 
@@ -11401,19 +11427,20 @@ CREATE TABLE `pif_storage` (
   `reportdate` date NOT NULL,
   `em_email` text NOT NULL,
   `part` text NOT NULL,
-  `alertdate` date DEFAULT NULL
+  `alertdate` date DEFAULT NULL,
+  `reportname` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `pif_storage`
 --
 
-INSERT INTO `pif_storage` (`no`, `fda_license`, `exter_doc`, `formula`, `mask`, `manufacture_doc`, `gmp_iso`, `eff_report`, `efficient_report`, `sds`, `masterformula`, `specification`, `testing`, `user`, `up_date`, `status`, `expdate`, `sdate`, `dobnum`, `report`, `reportdate`, `em_email`, `part`, `alertdate`) VALUES
-(2, '123456789', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '2023-12-25', '2023-11-01', '-', '-', '2023-11-25', 'hechuan1949@gmail.com', '', NULL),
-(3, '1026300003493', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '2023-12-27', '2023-11-27', '-', '-', '2023-11-28', 'sa@gmail.com', '', NULL),
-(5, '1026600006445', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '2023-12-27', '2023-11-27', '-', '-', '2023-11-25', 'jexegip789@bustayes.com', '', NULL),
-(6, '1026600026568', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '2023-12-27', '2023-11-27', '-', '-', '2023-11-07', 'jexegip789@bustayes.com', '', NULL),
-(7, '1026400007462', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '2023-12-27', '2023-11-27', '-', '-', '2023-11-25', 'jexegip789@bustayes.com', '', NULL);
+INSERT INTO `pif_storage` (`no`, `fda_license`, `exter_doc`, `formula`, `mask`, `manufacture_doc`, `gmp_iso`, `eff_report`, `efficient_report`, `sds`, `masterformula`, `specification`, `testing`, `user`, `up_date`, `status`, `expdate`, `sdate`, `dobnum`, `report`, `reportdate`, `em_email`, `part`, `alertdate`, `reportname`) VALUES
+(2, '123456789', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '2023-12-25', '2023-11-01', 'ZHONGGUO', '-', '2023-11-25', 'hechuan1949@gmail.com', '', NULL, 'alp'),
+(3, '1026300003493', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '2023-12-27', '2023-11-27', '-', '-', '2023-11-28', 'sa@gmail.com', '', NULL, ''),
+(5, '1026600006445', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '2023-12-27', '2023-11-27', '-', '-', '2023-11-25', 'jexegip789@bustayes.com', '', NULL, ''),
+(6, '1026600026568', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '2023-12-27', '2023-11-27', '-', '-', '2023-11-07', 'jexegip789@bustayes.com', '', NULL, ''),
+(7, '1026400007462', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '2023-12-27', '2023-11-27', '-', '-', '2023-11-25', 'jexegip789@bustayes.com', '', NULL, '');
 
 -- --------------------------------------------------------
 
@@ -11638,6 +11665,12 @@ ALTER TABLE `employee`
   ADD PRIMARY KEY (`no`);
 
 --
+-- Indexes for table `pif`
+--
+ALTER TABLE `pif`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `pif_storage`
 --
 ALTER TABLE `pif_storage`
@@ -11675,7 +11708,13 @@ ALTER TABLE `companyinfo`
 -- AUTO_INCREMENT for table `employee`
 --
 ALTER TABLE `employee`
-  MODIFY `no` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `no` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+
+--
+-- AUTO_INCREMENT for table `pif`
+--
+ALTER TABLE `pif`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `pif_storage`
