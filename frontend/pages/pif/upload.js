@@ -6,15 +6,8 @@ import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
 import MuiAccordion from '@mui/material/Accordion';
 import MuiAccordionSummary from '@mui/material/AccordionSummary';
 import MuiAccordionDetails from '@mui/material/AccordionDetails';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import Autocomplete from '@mui/material/Autocomplete';
-import { rgb } from 'pdf-lib'
-import { fetch } from 'pdf-lib';
 import { Box, TextField, Typography, Button } from "@mui/material";
 import Axios from "axios";
-import { data } from "jquery";
 
 const Accordion = styled((props) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -56,25 +49,12 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 
 export default function manage() {
   const [expanded, setExpanded] = React.useState('panel1');
-  const [fda, setFda] = useState("")
-  const [status, setStatus] = useState("")
-  const [locationStatus, setLocationStatus] = useState("")
-  const [registrationNumber, setRegistrationNumber] = useState("")
-  const [typeRegis, setTypeRegis] = useState("")
-  const [formatRegis, setFormatRegis] = useState("")
-  const [comName, setComName] = useState("")
-  const [cosName, setCosName] = useState("")
-  const [dateS, setDateS] = useState("")
-  const [expDate, setExpDate] = useState("")
-  const [typeGoods, setTypeGoods] = useState("")
-  const [bodypart, setBodypart] = useState("")
-  const [objGoods, setObjGoods] = useState("")
-  const [conGoods, setConGoods] = useState("")
-  const [entrepreneur, setEntrepreneur] = useState("")
-  const [show, setShow] = useState([])
-  const [fentrepreneur, setFentrepreneur] = useState("")
-  const [des, setDes] = useState("")
-  const [inputcomName, setInputcomName] = useState("")
+
+
+  useEffect(() => {
+    var userData = sessionStorage.getItem("uemail");
+    console.log(userData);
+  }, [])
 
   // data from Thai FDA By Fda number
   const fetchData = async (e) => {
@@ -235,6 +215,7 @@ export default function manage() {
       "rec_create_when": new Date(),
       "expdate": document.getElementById("expdate").value,
       "filename": document.getElementById("filename").value,
+      "email": sessionStorage.getItem("uemail")
     });
 
     //for upload file
@@ -264,8 +245,19 @@ export default function manage() {
           'Content-Type': 'multipart/form-data',
         },
         data: data
-      });
-      console.log(response.data); // Assuming the server sends a response
+      })
+      .then (res => {
+        console.log(res);
+        if (res.data.status === "ok") {
+          alert("อัพโหลดเอกสารสำเร็จ")
+          //redirect to http://localhost:3000/pif/productslist
+          window.location.href = "/pif/productslist"
+        }
+        else {
+          alert("อัพโหลดเอกสารไม่สำเร็จ กรุณาลองใหม่อีกครั้ง")
+        }
+
+      })
     } catch (error) {
       console.error('Error uploading files:', error);
     }
@@ -277,7 +269,6 @@ export default function manage() {
 
   return (
     <>
-      <p>{inputcomName}</p>
       <Navbar />
       <Box className="home_Knowledge"
         sx={{
@@ -384,6 +375,7 @@ export default function manage() {
               <input
                 id="filename"
                 type="file"
+                accept="image/png, image/gif, image/jpeg"
                 onChange={(event) => handleFileChange('photo', event)}
                 hidden
               />เลือกไฟล์
@@ -438,32 +430,32 @@ export default function manage() {
 
 
               <Box>
-                <TextField id="comName" label="ชื่อทางการค้า" style={{ width: "50%", marginTop: "10px" }} onChange={(e) => (setInputcomName(e.target.value))} />
+                <TextField id="comName" label="ชื่อทางการค้า" style={{ width: "50%", marginTop: "10px" }} />
               </Box>
 
               <Box>
-                <TextField id="cosName" label="ชื่อเครื่องสำอาง" style={{ width: "50%", marginTop: "10px" }} onChange={(e) => (setInputcosName(e.target.value))} />
+                <TextField id="cosName" label="ชื่อเครื่องสำอาง" style={{ width: "50%", marginTop: "10px" }}/>
               </Box>
 
               <Box >
-                <TextField id="typeGoods" label="ประเภทของเครื่องสำอาง" style={{ width: "50%", marginTop: "10px" }} onChange={(e) => (setInputtypeGoods(e.target.value))} />
+                <TextField id="typeGoods" label="ประเภทของเครื่องสำอาง" style={{ width: "50%", marginTop: "10px" }}/>
               </Box>
 
               <Box >
-                <TextField id="dateS" label="วันที่แจ้งจดแจ้ง" style={{ width: "50%", marginTop: "10px" }} onChange={(e) => (setInputdateS(e.target.value))} />
+                <TextField id="dateS" label="วันที่แจ้งจดแจ้ง" style={{ width: "50%", marginTop: "10px" }} />
 
               </Box>
 
               <Box>
-                <TextField id="expDate" label="วันที่ใบอนุญาตหมดอายุ" style={{ width: "50%", marginTop: "10px" }} onChange={(e) => (setInputexpDate(e.target.value))} />
+                <TextField id="expDate" label="วันที่ใบอนุญาตหมดอายุ" style={{ width: "50%", marginTop: "10px" }}/>
 
               </Box>
               <Box >
-                <TextField id="objGoods" label="จุดประสงค์การใช้" style={{ width: "50%", marginTop: "10px" }} onChange={(e) => (setInputobjGoods(e.target.value))} />
+                <TextField id="objGoods" label="จุดประสงค์การใช้" style={{ width: "50%", marginTop: "10px" }}/>
               </Box>
 
               <Box>
-                <TextField id="py" label="ลักษณะทางกายภาพ" style={{ width: "50%", marginTop: "10px" }} onChange={(e) => (setInputpy(e.target.value))} />
+                <TextField id="py" label="ลักษณะทางกายภาพ" style={{ width: "50%", marginTop: "10px" }}/>
               </Box>
 
 
@@ -480,7 +472,6 @@ export default function manage() {
                   label="ชื่อผู้ผลิต"
                   variant="outlined"
                   multiline
-                  onChange={(e) => (setinputentrepreneur(e.target.value))}
                   rows={4}
                   width={'40ch'}
                   m="1"
@@ -489,7 +480,6 @@ export default function manage() {
                   id="fentrepreneur"
                   label="ชื่อผู้ผลิตต่างประเทศ"
                   variant="outlined"
-                  onChange={(e) => (setinputfentrepreneur(e.target.value))}
                   multiline
                   rows={4}
                   width={'40ch'}
@@ -499,7 +489,6 @@ export default function manage() {
                   id="des"
                   label="รายละเอียดเพิ่มเติม"
                   variant="outlined"
-                  onChange={(e) => setDes(e.target.value)}
                   multiline
                   rows={4}
                   width={'40ch'}

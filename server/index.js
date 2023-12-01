@@ -16,10 +16,18 @@ const multer = require('multer');
 const pdfMake = require('pdfmake/build/pdfmake');
 const vfsFonts = require('pdfmake/build/vfs_fonts');
 const path = require('path');
+const nodemailer = require("nodemailer");
+const axios = require('axios');
+const { error } = require('console')
+const cron = require('node-cron');
+const http = require('http');
+const socketIo = require('socket.io');
+const {EMAIL , PASSWORD} = require('./env.js')
 const PDFMerger = require('pdf-merger-js');
 
-
 const app = express();
+const server = http.createServer(app);
+const io = socketIo(server);
 app.use(bodyParser.json({limit: '35mb'}));
 app.use(cors());
 app.use(express.json());
@@ -27,7 +35,7 @@ app.use(bodyParser.urlencoded({extended: true , limit : "35mb" , parameterLimit 
 //app.use(fileupload());
 //app.use(express.static("files"));
 
-
+// create PDF FOR PIF
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
@@ -225,7 +233,20 @@ app.post('/api/submitPif', pdfUpload.any(), (req, res) => {
 
             console.log(pdfFileName)
             pdf_path = path.join('./uploads', `${pdfFileName}.pdf`);
-            res.json({status: "ok", pdf_path: pdf_path, img_path: img_path});
+
+
+            db.query('INSERT INTO pif (email, file_name, img_path, pdf_path, expdate, rec_create_when) VALUES (?,?,?,?,?,?)',
+                [data.email, data.filename, img_path, pdf_path, data.expdate, new Date()],
+                (err, result) => {
+                if(err) {
+                    console.log(err)
+                    res.json({status: "error", message: err});
+                    return;
+                }
+                else {
+                    res.json({status: "ok", pdf_path: pdf_path, img_path: img_path});
+                }
+            })
         })()
     } catch (error) {
         console.error('Error merging PDFs:', error);
@@ -233,65 +254,9 @@ app.post('/api/submitPif', pdfUpload.any(), (req, res) => {
     }
 })
 
-app.get('/api/getWithWord/:fileName', (req, res) => {
-    const fileName = req.params.fileName
-    const sql = 'SELECT * FROM chemical WHERE cas = "' + fileName + '"';
-    db.query(sql,(err, result) => {
-        // console.log(result);
-        res.send(result);
-    })
-})
-
-app.post('/api/add/', (req, res) => {
-    const uname = req.body.uname
-    const gName = req.body.gName
-    const data = req.body.dd
-    console.log(uname)
-    console.log(gName)
-    console.log(data);
-    const date = new Date();
-    let day= String(date.getDate()).padStart(2,"0");
-    let month = String(date.getMonth()+1).padStart(2,"0");
-    let year = date.getFullYear()
-    let fdate = day+ "-" + month + "-" + year;
-    console.log(fdate);
-
-    for(let i = 0 ; i < data.length; i++){
-        if(data[i].per > 0){
-            const sql = 'INSERT INTO groupchemical(gname, cas, cname, per, usercreate, datecreate, userupdate, dateupdate) VALUES (?,?,?,?,?,?,?,?);'
-            db.query(sql,[gName, data[i].cas , data[i].cname , data[i].per , uname , fdate , uname , fdate] , (err, result)=>{
-                console.log(result.affectedRows);
-            })
-        }
-
-    }
-    res.send('1');
-})
 
 
-app.post('/api/update/', (req, res) => {
-    const gName = req.body.gName
-    const data = req.body.dd
-    console.log(gName)
-    console.log(data);
-    const sql = 'DELETE FROM groupchemical WHERE gname = ?'
-    db.query(sql, gName, (err, result)=>{
-        if(err)
-            console.log(result)
-    })
-
-    for(let i = 0 ; i < data.length; i++){
-        if(data[i].per > 0) {
-            const sql = 'INSERT INTO groupchemical(gname, cas, cname, per, usercreate, datecreate, userupdate, dateupdate) VALUES (?,?,?,?,?,?,?,?);'
-            db.query(sql,[data[i].gname, data[i].cas , data[i].cname , data[i].per , data[i].usercreate , data[i].datecreate , data[i].userupdate , data[i].dateupdate ] , (err, result)=>{
-                console.log(result)
-            })
-        }
-
-    }
-    res.send('OK');
-})
-
+// Admin upload data to database
 app.post('/api/uploadCsv/', (req, res) => {
     const data = req.body.dd
     // console.log(data);
@@ -311,54 +276,63 @@ app.post('/api/uploadCsv/', (req, res) => {
     res.send('OK');
 })
 
-app.get('/api/getOriginal',(req,res)=>{
-    const sql = 'SELECT * FROM chemical1'
-    db.query(sql,(err, result) =>{
-        console.log(result);
-        res.send(result)
-    })
-})
-
-app.get('/api/getWarningWord',(req,res)=>{
-    const sql = 'SELECT * FROM warningword'
-    db.query(sql,(err, result) =>{
-        console.log(result);
-        res.send(result)
-    })
-})
-
-app.get('/api/getGroupWithName/:gname', (req, res) => {
-    const gname = req.params.gname;
-    const sql = `SELECT * FROM groupchemical WHERE gname = '${gname}' `
-    db.query(sql,(err, result) =>{
-        res.send(result)
-    })
 
 
-})
 
-app.get('/api/getGroup',(req,res)=>{
-    const sql = 'SELECT DISTINCT gname FROM groupchemical'
-    console.log(55)
-    db.query(sql,(err, result) =>{
-        console.log(result)
-        res.send(result)
-    })
-})
+
+
 
 
 /////////////////////////////////////////////////////////////////
-
+// ADMIN / USER LOGING
 app.post('/api/getUser/', (req, res) => {
     const email = req.body.email;
     const password = crypto.createHash("sha1").update(req.body.password).digest("hex")
     console.log(email + " " + password)
-    const sql = `SELECT em_fullname,em_icon , status , organization_id FROM employee WHERE em_email = '${email}' AND em_pass = '${password}' `
+    const sql = `SELECT em_fullname,em_icon , status , organization_id , em_email FROM employee WHERE em_email = '${email}' AND em_pass = '${password}' `
     db.query(sql,(err, result) =>{
         console.log(result)
         res.send(result)
+
+        if(result.length>0){
+
+
+            let config = {
+                host: 'smtp.gmail.com',
+                port: 587 ,
+                secure: false ,
+                auth: {
+                    user: EMAIL,
+                    pass: PASSWORD
+                }
+            };
+
+            let transporter = nodemailer.createTransport(config);
+
+            let message = {
+                from: EMAIL,
+                to: email,
+                subject: "ICae LoGin",
+                text: "Have some one login if not you ple edit password that link",
+                html: "Have some one login if not you ple edit password that link",
+            };
+
+            transporter.sendMail(message)
+                .then(() => {
+                    // Sending response after email is sent
+                    return res.status(201).json({ msg: "Email has been sent, and signup was successful" });
+                })
+                .catch(error => {
+                    console.error(error);
+                    return res.status(500).json({ error: "Error sending email" });
+                });
+
+        }
+
+
     })
 })
+
 
 app.post('/api/AddminAdd' , (req, res) => {
     const data = req.body
@@ -373,27 +347,9 @@ app.post('/api/AddminAdd' , (req, res) => {
 
 })
 
-app.get('/api/getXML/:fileName',(req,res) => {
-    const fileName = req.params.fileName
-    let xml_string = fs.readFileSync('../frontend/public/xml/'+fileName , 'utf8')
-    parser.parseString(xml_string , function(error,result){
-        if(error === null){
-            // console.log(result)
-            let parser = new DomParser();
-            let xmlDoc = parser.parseFromString(result , "text/xml");
-            let data = Object.values(Object.values(xmlDoc)[0])[0].results[0].result;
-            // console.log(data)
-            console.log(data[0].casnumber[0])
-            console.log(data[0].name[0])
-            console.log(data.length)
-            res.send(data)
-        }
-        else {
-            console.log(error)
-        }
-    })
-})
 
+
+// Addmin upload data to database by hand
 app.post('/api/setdata' , (req , res) => {
     const data = req.body.data
     const st = req.body.st
@@ -418,19 +374,17 @@ app.post('/api/setdata' , (req , res) => {
 
     }
     console.log(count)
-
-
-
     res.send('OK');
-
-
 })
 
-app.post('/api/setsignUp' , jsonParser, (req , res ) => {
-    console.log(req.body)
+
+// user singUp
+app.post('/api/setsignUp' , jsonParser, async (req , res ) => {
     const firstName = req.body.firstname
     const lastName = req.body.lastname
     const email = req.body.email
+    console.log(req.body)
+
     const password = crypto.createHash("sha1").update(req.body.password).digest("hex")
 
 
@@ -440,12 +394,45 @@ app.post('/api/setsignUp' , jsonParser, (req , res ) => {
     console.log(fullname + " " + email + " " + password +" " + repassword)
 
     const sql = `INSERT INTO  employee(em_email , em_fullname , em_icon , em_pass , status) VALUES(?,?,?,?,?);  `
-    db.query(sql,[email , fullname ,"test01.png" , password , "U" ] , (err, result) => {
-        res.send('OK')
+    db.query(sql,[email , fullname ,"/pandaU.png" , password , "U" ] , (err, result) => {
+       // res.status(201).json("Signup Successfully")
+       if(err) {
+        console.error(err)
+        return res.status(500).json({error: "have someing worng"})
+       }
     })
+    let config = {
+        host: 'smtp.gmail.com',
+        port: 587 ,
+        secure: false ,
+        auth: {
+            user: EMAIL,
+            pass: PASSWORD
+        }
+    };
 
+    let transporter = nodemailer.createTransport(config);
+
+    let message = {
+        from: EMAIL,
+        to: email,
+        subject: "WellCome To ICae",
+        text: "Successfully Register with us",
+        html: "Successfully Register with us",
+    };
+
+    transporter.sendMail(message)
+        .then(() => {
+            // Sending response after email is sent
+            return res.status(201).json({ msg: "Email has been sent, and signup was successful" });
+        })
+        .catch(error => {
+            console.error(error);
+            return res.status(500).json({ error: "Error sending email" });
+        });
 })
 
+//Show data by fillter data
 app.post('/api/searchBybodypart', (req,res) => {
     //SELECT * FROM chemical WHERE
     //bodypart LIKE '%skin%'
@@ -476,6 +463,7 @@ app.post('/api/searchBybodypart', (req,res) => {
     console.log(queryWord)
 })
 
+//Show data by fillter data
 app.post('/api/searchBybodypartEdit', (req,res) => {
     //SELECT * FROM chemical WHERE
     //bodypart LIKE '%skin%'
@@ -506,6 +494,8 @@ app.post('/api/searchBybodypartEdit', (req,res) => {
     console.log(queryWord)
 })
 
+
+// save file from user check
 app.post('/api/savefile' , (req , res) => {
     // console.log(req.body)
     const uname = req.body.uname
@@ -518,11 +508,16 @@ app.post('/api/savefile' , (req , res) => {
     let year = date.getFullYear()
     let udate = day+ "-" + month + "-" + year;
 
+    let str = ""
+    for(let i = 0 ; i< fillterg.length ; i++){
+        str+=fillterg[i]+","
 
+    }
 
+    let newstr = str.substring(0,str.length-1)
 
+    console.log(newstr)
 
-    console.log(dd)
 
     const sql =  'DELETE FROM chemicalgroup WHERE groupname =  "' + gname + '"'
     db.query(sql,(err, result)=>{
@@ -535,7 +530,7 @@ app.post('/api/savefile' , (req , res) => {
     // console.log([dd[i].cas , dd[i].cname , dd[i].cmname , dd[i].per , dd[i].st , "-" , "-" , dd[i].bodypart , dd[i].color , gname , dd[i].per1 , uname , udate ])
     for( let i = 0 ; i < dd.length ; i++ ){
         const sql1 = 'INSERT INTO chemicalgroup (cas , cname , cmname , per , st , img , des, bodypart , color , groupname , per1 , uname , udate , fillterg) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?); '
-        db.query(sql1,[dd[i].cas , dd[i].cname , dd[i].cmname , dd[i].per , dd[i].st , "-" , "-" , dd[i].bodypart , dd[i].color , gname , dd[i].per1 , uname , udate , fillterg  ] , (err, result)=>{
+        db.query(sql1,[dd[i].cas , dd[i].cname , dd[i].cmname , dd[i].per , dd[i].st , "-" , "-" , dd[i].bodypart , dd[i].color , gname , dd[i].per1 , uname , date , newstr  ] , (err, result)=>{
            console.log(result)
         })
 
@@ -544,6 +539,8 @@ app.post('/api/savefile' , (req , res) => {
 
 })
 
+
+// get user file name
 app.get('/api/getGroupName',(req,res)=>{
     const sql = 'SELECT DISTINCT groupname , udate FROM chemicalgroup ORDER BY udate ASC;'
     db.query(sql,(err, result) =>{
@@ -552,6 +549,7 @@ app.get('/api/getGroupName',(req,res)=>{
     })
 })
 
+// get user file name Where File name
 app.post('/api/getGroupNamebyname' , (req,res) => {
     // console.log(req.body)
     const gname = req.body.gname
@@ -564,7 +562,7 @@ app.post('/api/getGroupNamebyname' , (req,res) => {
 })
 
 
-
+// get data annex
 app.get('/api/annex', jsonParser, (req, res) => {
     db.execute(
         'SELECT * FROM chemical WHERE st = ?',
@@ -583,6 +581,8 @@ app.get('/api/annex', jsonParser, (req, res) => {
         })
 })
 
+
+// get all data (chemical)
 app.get('/api/getalldata' , (req , res ) => {
     const sql =  'SELECT * FROM chemical'
     db.query(sql , (err , result) => {
@@ -592,6 +592,7 @@ app.get('/api/getalldata' , (req , res ) => {
 
 })
 
+//get data for admin edit
 app.post('/api/getalldataAddminEdit' , (req , res ) => {
     const no = req.body.no
     const sql =  'SELECT * FROM chemical WHERE no ='+ no
@@ -602,6 +603,8 @@ app.post('/api/getalldataAddminEdit' , (req , res ) => {
 
 })
 
+
+//all data for admin update by type of data
 app.post('/api/getalldataAddminUpdateByType' , (req , res ) => {
     console.log(req.body)
 
@@ -649,6 +652,7 @@ app.post('/api/getdatachangegroup' , (req , res) => {
 
 })
 
+//Admin chang annex
 app.post('/api/saveStfromchangegroup' , (req , res) => {
     const st = req.body.st
     const num = req.body.num
@@ -665,6 +669,8 @@ app.post('/api/saveStfromchangegroup' , (req , res) => {
 
 })
 
+
+// show annex
 app.get('/api/showdataUV' , (req , res) => {
     const sql = "SELECT COUNT(*) as num FROM `chemical` WHERE st = 6"
     db.query(sql , (err , result) => {
@@ -734,6 +740,8 @@ app.get('/api/annex/search', jsonParser, (req, res) => {
         })
 })
 
+
+// Get data from FDA
 app.get('/api/fetchData', async (req, res) => {
 
     const fda = req.query.data;
@@ -818,6 +826,7 @@ app.post('/api/setsignUpA' , jsonParser, (req , res ) => {
 
 })
 
+// get user Team ID
 app.post('/api/getorId/', (req, res) => {
     const orid = req.body.data
     console.log(orid)
@@ -828,6 +837,7 @@ app.post('/api/getorId/', (req, res) => {
     })
 })
 
+// get user Admin or S
 app.get('/api/getuserAs/', (req, res) => {
 
     const sql = `SELECT * FROM employee WHERE status = "A" OR status = "S"  `
@@ -837,6 +847,7 @@ app.get('/api/getuserAs/', (req, res) => {
     })
 })
 
+// delete user by addmin or S
 app.post('/api/deluserAS' , (req , res) => {
     const no = req.body.data
     console.log(no)
@@ -847,6 +858,7 @@ app.post('/api/deluserAS' , (req , res) => {
         res.send(result)
     })
 })
+
 
 app.post('/api/searchAll', (req,res) => {
     //SELECT * FROM chemical WHERE
@@ -862,6 +874,146 @@ app.post('/api/searchAll', (req,res) => {
 
 })
 
+app.post('/api/sendNotification' , (req,res) => {
+    console.log("send Notification")
+
+   console.log(req.body)
+   const email = req.body.email
+   const sql = 'SELECT em_email , fda_license,expdate FROM pif_storage WHERE expdate <= CURDATE() + INTERVAL 1 MONTH AND em_email = ?';
+
+    db.query(sql , [email], (err , result) => {
+        if (err){
+            console.log("Error " , err)
+        }
+        else {
+            console.log(result)
+            res.send(result)
+        }
+    })
+}
+)
+
+app.post('/api/pifData' , (req, res) => {
+    console.log(req.body)
+    const id = req.body.data
+
+    const sql = 'SELECT reportname ,fda_license , reportdate FROM pif_storage WHERE dobnum = ?  '
+
+    db.query(sql , [id] , (err , result) => {
+        if(err) {
+            console.log(err)
+        }
+        else {
+            res.send(result)
+        }
+    })
+})
+
+const sendEmailNotifications=() => {
+    const sql = 'SELECT em_email, expdate FROM pif_storage WHERE expdate <= CURDATE() + INTERVAL 1 MONTH';
+
+    db.query(sql , (err , result) => {
+        if(err) {
+            console.error("Error ", err)
+           // res.status(500).send("SomeTingWorng")
+        }
+
+        else if (result.length > 0 ){
+            console.log('Result from database :', result);
+            console.log("Ok")
+
+                //console.log(result[0].em_email)
+                //console.log(result.length)
+                for(let i = 0 ; i<result.length ; i++){
+                     let   message = {
+                        from: EMAIL,
+                        to: result[i].em_email,
+                        subject: "ใบอนุญาต อย ใกล้ หมด อายุแล้ว",
+                        text: "วันหมดอายุ คือ " + result[i].expdate,
+                        html: "EXP DATE IS COMING",
+                    };
+
+                 sendEmail(message)
+                   console.log(message)
+                }
+
+
+        }
+        else {
+            console.log("No expDate")
+        }
+    })
+//})
+}
+
+const sendEmail = (message) => {
+
+    let config = {
+        host: 'smtp.gmail.com',
+        port: 587 ,
+        secure: false ,
+        auth: {
+            user: EMAIL,
+            pass: PASSWORD
+        }
+    };
+
+    let transporter = nodemailer.createTransport(config);
+
+    transporter.sendMail(message)
+                    .then(() => {
+
+                        // Sending response after email is sent
+                       // return res.status(201).json({ msg: "Email has been sent, and signup was successful" });
+                    })
+                    .catch(error => {
+                        console.error(error);
+                       // return res.status(500).json({ error: "Error sending email" });
+                    });
+}
+
+ //sendEmailNotifications()
+
+// cron.schedule(' 20 9 * * *' , () => {
+//     console.log("IS RUN CRON")
+//     try {
+
+//         sendEmailNotifications()
+
+//         console.log('Email sent successfully');
+//     } catch (error) {
+//         console.error('Error:', error);
+//     }
+
+//     // console.log('Cron job executed at:', new Date());
+//     // axios.get('http://localhost:3001/api/sendNotification')
+//     // .then((response)=>{
+//     //     console.log("is server say :" + response.data)
+//     // }).catch((error) => {
+//     //     console.error(error)
+//     // })
+// })
+
+
+
+
+app.post("/api/pifInfo" , (req , res) => {
+    const email = req.body.email
+    //console.log("pifInfo =>")
+     //console.log(req.body.email)
+     const sql = 'SELECT em_email FROM pif_storage WHERE em_email = ?'
+     db.query(sql ,[email], (err , result) => {
+         if(err){
+             console.log(err)
+         }
+         else {
+             res.send(result)
+         }
+     })
+ })
+
+
+
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
       cb(null, 'uploads/');
@@ -875,6 +1027,33 @@ app.post('/api/upload-pdf' , (req , res) => {
     const file = req.body
     console.log(file)
 })
+
+
+
+// io.on('connection', (socket) => {
+//     console.log('User connected:', socket.id);
+
+//     socket.on('mousemove', (data) => {
+//       // Broadcast the cursor position to all connected clients
+//       socket.broadcast.emit('mousemove', data);
+//     });
+
+//     socket.on('disconnect', () => {
+//       console.log('User disconnected:', socket.id);
+//     });
+//   });
+
+
+// get user Admin or S
+app.get('/api/getuserTeam/', (req, res) => {
+
+    const sql = `SELECT * FROM employee WHERE status = "U"  && organization_id ="" `
+    db.query(sql,(err, result) =>{
+        console.log(result)
+        res.send(result)
+    })
+})
+
 
 app.listen(3001, () => {
     console.log('Running node at port 3001');
