@@ -245,8 +245,19 @@ export default function manage() {
           'Content-Type': 'multipart/form-data',
         },
         data: data
-      });
-      console.log(response.data); // Assuming the server sends a response
+      })
+      .then (res => {
+        console.log(res);
+        if (res.data.status === "ok") {
+          alert("อัพโหลดเอกสารสำเร็จ")
+          //redirect to http://localhost:3000/pif/productslist
+          window.location.href = "/pif/productslist"
+        }
+        else {
+          alert("อัพโหลดเอกสารไม่สำเร็จ กรุณาลองใหม่อีกครั้ง")
+        }
+
+      })
     } catch (error) {
       console.error('Error uploading files:', error);
     }
@@ -364,6 +375,7 @@ export default function manage() {
               <input
                 id="filename"
                 type="file"
+                accept="image/png, image/gif, image/jpeg"
                 onChange={(event) => handleFileChange('photo', event)}
                 hidden
               />เลือกไฟล์
