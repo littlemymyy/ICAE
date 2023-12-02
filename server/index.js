@@ -33,7 +33,8 @@ app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended: true , limit : "35mb" , parameterLimit : 50000 }));
 //app.use(fileupload());
-//app.use(express.static("files"));
+
+app.use('/uploads', express.static('uploads'));
 
 // create PDF FOR PIF
 const db = mysql.createConnection({
@@ -254,6 +255,23 @@ app.post('/api/submitPif', pdfUpload.any(), (req, res) => {
     }
 })
 
+app.get('/api/pif', jsonParser, (req, res) => {
+    db.execute(
+        'SELECT * FROM pif WHERE email = ?',
+        [req.query.email],
+        (err, result) => {
+            if(err) {
+                res.json({status:'error',message:err});
+                return;
+            }
+            if(result.length > 0) {
+                res.json({status:'ok',message:result})
+            }
+            else {
+                res.json({status:'error',message:'No data found'});
+            }
+        })
+})
 
 
 // Admin upload data to database
