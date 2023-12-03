@@ -1,4 +1,4 @@
-import * as React from 'react';
+
 import Footer from "@/components/Footer"
 import Navbar from "@/components/layout/Navbar"
 import { Box,  Typography } from "@mui/material"
@@ -8,40 +8,54 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import Avatar from '@mui/material/Avatar';
 import AvatarGroup from '@mui/material/AvatarGroup';
+import { useState } from 'react';
 
 
 
 
 export default function productslist(){
-    const [show , setShow] = React.useState([])
+    const [show , setShow] = useState([])
     const router = useRouter()
-    const [search_input, setSearch_input] = React.useState("");
-    const [data , setData] = React.useState([])
-    const [id , setId] = React.useState("")
+    const [search_input, setSearch_input] =  useState("");
+    const [data , setData] = useState([])
+    const [id , setId] = useState("")
+    const [uName , setUname] = useState("")
 
     useEffect(() => {
-        const fetchData = async () => {
-            console.log(sessionStorage.getItem("orid"))
-            let id = sessionStorage.getItem("orid")
-            setId(id)
+      let name = sessionStorage.getItem("uname")
+      setUname(name)
+      const fetchData = async () => {
+          console.log(sessionStorage.getItem("orid"));
+          let ida = sessionStorage.getItem("orid");
+          
+          if(!ida == ""){
+            setId(ida);
+  
             let load = {
-                data : id
+                data: ida
+            };
+    
+            try {
+                const res = await Axios({
+                    url: "http://localhost:3001/api/pifData",
+                    method: "post",
+                    data: load,
+                });
+    
+                console.log(res.data);
+                setData(res.data);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+                // Handle the error, e.g., show a user-friendly message
             }
-          const res =  await Axios({
-                url : "http://localhost:3001/api/pifData",
-                method : "post" ,
-                data : load ,
-            })
-            console.log(res.data)
-            setData(res.data)
-        };
-    
-        fetchData(); // Call function here 
-    
-       
-       
-      }, []); 
-
+          }
+  
+         
+      };
+  
+      fetchData(); // Call function here
+  
+  }, []);
 
       const resultsearch = (e) => {
         console.log("Type of e:", typeof e);
@@ -87,7 +101,10 @@ export default function productslist(){
       }
 
       else if(e ===3) {
-        router.push('/team/team'); 
+        router.push('/team/manage'); 
+      }
+      else if(e === 4) {
+        router.push("/pif/createByfda")
       }
   };
 
@@ -137,7 +154,12 @@ export default function productslist(){
            
           
         }}>
-            <Typography variant='h5'>รายการ PIF ของ {id}</Typography>
+            
+            {
+              id === "" ?
+              <Typography variant='h5'>รายการ PIF ของ คุณ {uName }</Typography>
+              :  <Typography variant='h5'>รายการ PIF ของทีม {id}</Typography>
+            }
         </Box>
         <Box display="flex" alignItems="center">
         <div className="input-icons">
@@ -147,6 +169,11 @@ export default function productslist(){
           value={search_input}
           onChange={(e) => resultsearch(e.target.value)}
         />
+        <Button variant="contained" size="medium"  style={buttonStyle} onClick={() => handleButtonClick(4)}
+         >
+            สร้างสินค้า
+        </Button>
+
          <Button variant="contained" size="medium"  style={buttonStyle} onClick={() => handleButtonClick(1)}
          >
             สร้าง PIF
@@ -157,20 +184,10 @@ export default function productslist(){
         </Button>
 
         <Button variant="contained" size="medium"  sx={{ ml: 2 }} style={buttonStyle} onClick={()=> handleButtonClick(3)}>
-            สร้างทีม 
+            ทีมของคุณ 
         </Button>
 
-        <Box>
-      <AvatarGroup
-      renderSurplus={(surplus) => <span>+{surplus.toString()[0]}k</span>}
-      total={5000}
-      >
-      <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-      <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />
-      <Avatar alt="Agnes Walker" src="/static/images/avatar/4.jpg" />
-      <Avatar alt="Trevor Henderson" src="/static/images/avatar/5.jpg" />
-    </AvatarGroup>
-        </Box>
+      
        
 
 
