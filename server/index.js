@@ -23,7 +23,7 @@ const cron = require('node-cron');
 const http = require('http');
 const socketIo = require('socket.io');
 const {EMAIL , PASSWORD} = require('./env.js')
-const PDFMerger = require('pdf-merger-js');
+const session = require('express-session');
 
 const app = express();
 const server = http.createServer(app);
@@ -34,6 +34,14 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({extended: true , limit : "35mb" , parameterLimit : 50000 }));
 //app.use(fileupload());
 //app.use(express.static("files"));
+const secretKey = crypto.randomBytes(32).toString('hex');
+
+app.use(session({
+    secret: secretKey, 
+    resave: false,
+    saveUninitialized: true,
+  }));
+
 
 // create PDF FOR PIF
 const db = mysql.createConnection({
@@ -233,7 +241,20 @@ app.post('/api/submitPif', pdfUpload.any(), (req, res) => {
 
             console.log(pdfFileName)
             pdf_path = path.join('./uploads', `${pdfFileName}.pdf`);
-            res.json({status: "ok", pdf_path: pdf_path, img_path: img_path});
+
+
+            db.query('INSERT INTO pif (email, file_name, img_path, pdf_path, expdate, rec_create_when) VALUES (?,?,?,?,?,?)',
+                [data.email, data.filename, img_path, pdf_path, data.expdate, new Date()],
+                (err, result) => {
+                if(err) {
+                    console.log(err)
+                    res.json({status: "error", message: err});
+                    return;
+                }
+                else {
+                    res.json({status: "ok", pdf_path: pdf_path, img_path: img_path});
+                }
+            })
         })()
     } catch (error) {
         console.error('Error merging PDFs:', error);
@@ -241,6 +262,23 @@ app.post('/api/submitPif', pdfUpload.any(), (req, res) => {
     }
 })
 
+app.get('/api/pif', jsonParser, (req, res) => {
+    db.execute(
+        'SELECT * FROM pif WHERE email = ?',
+        [req.query.email],
+        (err, result) => {
+            if(err) {
+                res.json({status:'error',message:err});
+                return;
+            }
+            if(result.length > 0) {
+                res.json({status:'ok',message:result})
+            }
+            else {
+                res.json({status:'error',message:'No data found'});
+            }
+        })
+})
 
 
 // Admin upload data to database
@@ -270,16 +308,22 @@ app.post('/api/uploadCsv/', (req, res) => {
 
 
 
-/////////////////////////////////////////////////////////////////
-// ADMIN / USER LOGING 
+////////////////////////////////////////////////////////////////////////////////////////////
+// ADMIN / USER LOGIN 
 app.post('/api/getUser/', (req, res) => {
     const email = req.body.email;
     const password = crypto.createHash("sha1").update(req.body.password).digest("hex")
     console.log(email + " " + password)
     const sql = `SELECT em_fullname,em_icon , status , organization_id , em_email FROM employee WHERE em_email = '${email}' AND em_pass = '${password}' ` 
     db.query(sql,(err, result) =>{
-        console.log(result)
-        res.send(result)
+        if(err) {
+            console.log(err)
+        }
+        else {
+            console.log(result)
+            res.send(result)
+        }
+      
 
         if(result.length>0){
           
@@ -299,7 +343,7 @@ app.post('/api/getUser/', (req, res) => {
             let message = {
                 from: EMAIL,
                 to: email,
-                subject: "ICae LoGin",
+                subject: "ICAE LOGIN ",
                 text: "Have some one login if not you ple edit password that link",
                 html: "Have some one login if not you ple edit password that link",
             };
@@ -316,9 +360,10 @@ app.post('/api/getUser/', (req, res) => {
 
         }
 
-
     })
 })
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 
 app.post('/api/AddminAdd' , (req, res) => {
@@ -378,11 +423,13 @@ app.post('/api/setsignUp' , jsonParser, async (req , res ) => {
     const repassword = req.body.repassword
     const fullname = firstName +" "+lastName
 
-    console.log(fullname + " " + email + " " + password +" " + repassword)
+    console.log(fullname + " " + email + " " + password )
     
     const sql = `INSERT INTO  employee(em_email , em_fullname , em_icon , em_pass , status) VALUES(?,?,?,?,?);  ` 
     db.query(sql,[email , fullname ,"/pandaU.png" , password , "U" ] , (err, result) => {
-       // res.status(201).json("Signup Successfully")
+      // res.status(201).json("Signup Successfully")
+       console.log("singup :")
+       console.log(result)
        if(err) {
         console.error(err)
         return res.status(500).json({error: "have someing worng"})
@@ -613,31 +660,31 @@ app.post('/api/getalldataAddminUpdateByType' , (req , res ) => {
 
 })
 
-app.post('/api/getdatachangegroup' , (req , res) => {
-    const no = req.body
+// app.post('/api/getdatachangegroup' , (req , res) => {
+//     const no = req.body
 
-    let num = ""
-    let queryWord = "SELECT * FROM chemical WHERE "
+//     let num = ""
+//     let queryWord = "SELECT * FROM chemical WHERE "
 
 
-    for(let i = 0 ; i<no.length ; i++){
-       num = " no = " + no[i] + " "
-        queryWord += num
-        if(i < no.length - 1) {
-            queryWord += " OR "
-        }
-        else {
-            queryWord += ";";
-        }
-    }
-    console.log(queryWord)
-    const sql = queryWord
-    db.query(sql , (err , result) => {
-        console.log(result);
-        res.send(result)
-    })
+//     for(let i = 0 ; i<no.length ; i++){
+//        num = " no = " + no[i] + " "
+//         queryWord += num
+//         if(i < no.length - 1) {
+//             queryWord += " OR "
+//         }
+//         else {
+//             queryWord += ";";
+//         }
+//     }
+//     console.log(queryWord)
+//     const sql = queryWord
+//     db.query(sql , (err , result) => {
+//         console.log(result);
+//         res.send(result)
+//     })
 
-})
+// })
 
 //Admin chang annex
 app.post('/api/saveStfromchangegroup' , (req , res) => {
@@ -733,7 +780,7 @@ app.get('/api/fetchData', async (req, res) => {
 
     const fda = req.query.data;
     console.log("is Fda")
-    console.log(fda)
+ //   console.log(fda)
 
 
 
@@ -757,36 +804,86 @@ app.get('/api/fetchData', async (req, res) => {
     try {
       const response = await fetch('http://pertento.fda.moph.go.th/FDA_SEARCH_CENTER/PRODUCT/export_cmt_detail.aspx?regnos='+fda);
       const data = await response.text();
-   const $ = cheerio.load(data);
+      //console.log(data)
+      const $ = cheerio.load(data);
+    //   let txt = '<span id="ContentPlaceHolder1_lb_status">'
+    //     let st = data.indexOf(txt)
+    //     let a  = data.substring(st+1)
+    //     let st2 = a.indexOf('</span>')
+    //     status = data.substring(st+txt.length,st2+st+1);
+    //     console.log(status)
+
+    //  txt = 'ContentPlaceHolder1_lb_status_lct'
+    //     st = data.indexOf(txt)
+    //     a = data.substring(st+1)
+    //     st2 = a.indexOf('</span>')
+    //     locationStatus = data.substring(st+txt.length+2 , st2+st+1)
+    //     console.log(locationStatus)
+
+    // txt = 'ContentPlaceHolder1_lb_no_regnos'
+    //     st = data.indexOf(txt)
+    //     a = data.substring(st+1)
+    //     st2 = a.indexOf('</span>')
+    //     registrationNumber = data.substring(st+txt.length+2 , st2+st+1)
+    //     console.log(registrationNumber)
+
+    // txt = 'ContentPlaceHolder1_lb_type'
+    // st = data.indexOf(txt)
+    // a = data.substring(st+1)
+    // st2 = a.indexOf('</span>')
+    // typeRegis = data.substring(st+txt.length+2 , st2+st+1)
+    // console.log(typeRegis)
+        const  dataAll =[]
+        
+    const dd = ["ContentPlaceHolder1_lb_status",'ContentPlaceHolder1_lb_status_lct',"ContentPlaceHolder1_lb_no_regnos","ContentPlaceHolder1_lb_type" , "ContentPlaceHolder1_lb_format_regnos" ,"ContentPlaceHolder1_lb_trade_Tpop",
+        "ContentPlaceHolder1_lb_cosnm_Tpop","ContentPlaceHolder1_lb_appdate" ,"ContentPlaceHolder1_lb_expdate" , "ContentPlaceHolder1_lb_mode","ContentPlaceHolder1_lb_applicability_name" , "ContentPlaceHolder1_lb_application_name",
+    "ContentPlaceHolder1_lb_condition" ,"ContentPlaceHolder1_lb_usernm_pop" , "ContentPlaceHolder1_lb_fac_pop"]
+    for(let i =0 ; i<dd.length ;i++){
+       let  txt = dd[i]
+       let st = data.indexOf(txt)
+       if(st > -1){
+        let a = data.substring(st+1)
+        let st2 = a.indexOf('</span>')
+       let b = data.substring(st+txt.length+2 , st2+st+1)
+       dataAll.push(b)
+        
+       }
+       else {
+        dataAll.push("N/A")
+        
+       }
+      
+    }
+    console.log(dataAll)
 
 
-    //          // const tempElement = document.createElement('div');
-    //         //   tempElement.innerHTML = data;
+                    //  const tempElement = document.createElement('div');
+                     //tempElement.innerHTML = data;
 
-                status = $('#ContentPlaceHolder1_lb_status').text() || 'N/A';
-               locationStatus = $('#ContentPlaceHolder1_lb_status_lct').text() || 'N/A';
-               registrationNumber = $('#ContentPlaceHolder1_lb_no_regnos').text() || 'N/A';
-               typeRegis = $('#ContentPlaceHolder1_lb_type').text() || 'N/A';
-               formatRegis = $('#ContentPlaceHolder1_lb_format_regnos').text() || 'N/A';
-               comName = $('#ContentPlaceHolder1_lb_trade_Tpop').text() || 'N/A';
-               cosName = $('#ContentPlaceHolder1_lb_cosnm_Tpop').text() || 'N/A';
-               dateS = $('#ContentPlaceHolder1_lb_appdate').text() || 'N/A';
-               expDate = $('#ContentPlaceHolder1_lb_expdate').text() || 'N/A';
-               typeGoods = $('#ContentPlaceHolder1_lb_mode').text() || 'N/A';
-               bodypart = $('#ContentPlaceHolder1_lb_applicability_name').text() || 'N/A';
-               objGoods = $('#ContentPlaceHolder1_lb_application_name').text() || 'N/A';
-               conGoods = $('#ContentPlaceHolder1_lb_condition').text() || 'N/A';
-               entrepreneur = $('#ContentPlaceHolder1_lb_usernm_pop').text() || 'N/A';
-               Fentrepreneur = $('#ContentPlaceHolder1_lb_fac_pop').text() || 'N/A';
+//                 status = $('#ContentPlaceHolder1_lb_status').text() || 'N/A';
+//                locationStatus = $('#ContentPlaceHolder1_lb_status_lct').text() || 'N/A';
+//                registrationNumber = $('#ContentPlaceHolder1_lb_no_regnos').text() || 'N/A';
+//                typeRegis = $('#ContentPlaceHolder1_lb_type').text() || 'N/A';
+//                formatRegis = $('#ContentPlaceHolder1_lb_format_regnos').text() || 'N/A';
+//                comName = $('#ContentPlaceHolder1_lb_trade_Tpop').text() || 'N/A';
+//                cosName = $('#ContentPlaceHolder1_lb_cosnm_Tpop').text() || 'N/A';
+//                dateS = $('#ContentPlaceHolder1_lb_appdate').text() || 'N/A';
+//                expDate = $('#ContentPlaceHolder1_lb_expdate').text() || 'N/A';
+//                typeGoods = $('#ContentPlaceHolder1_lb_mode').text() || 'N/A';
+//                bodypart = $('#ContentPlaceHolder1_lb_applicability_name').text() || 'N/A';
+//                objGoods = $('#ContentPlaceHolder1_lb_application_name').text() || 'N/A';
+//                conGoods = $('#ContentPlaceHolder1_lb_condition').text() || 'N/A';
+//                entrepreneur = $('#ContentPlaceHolder1_lb_usernm_pop').text() || 'N/A';
+//                Fentrepreneur = $('#ContentPlaceHolder1_lb_fac_pop').text() || 'N/A';
 
-               let arr = [status,locationStatus, registrationNumber,typeRegis,formatRegis,comName, cosName,dateS,expDate,typeGoods, bodypart,objGoods,conGoods, entrepreneur,Fentrepreneur]
+//                let arr = [status,locationStatus, registrationNumber,typeRegis,formatRegis,comName, cosName,dateS,expDate,typeGoods, bodypart,objGoods,conGoods, entrepreneur,Fentrepreneur]
 
 
-    //   console.log(locationStatus)
-    //   console.log(expDate)
-    //   console.log(Fentrepreneur)
-    console.log(arr)
-      res.send(arr);
+//     //   console.log(locationStatus)
+//     //   console.log(expDate)
+//     //   console.log(Fentrepreneur)
+//     console.log(arr)
+      res.send(dataAll);
     } catch (error) {
       console.error('Error fetching data:', error);
       res.status(500).json({ error: 'Internal Server Error' });
@@ -862,9 +959,9 @@ app.post('/api/searchAll', (req,res) => {
 })
 
 app.post('/api/sendNotification' , (req,res) => {
-    console.log("send Notification")
+   // console.log("send Notification")
 
-   console.log(req.body)
+   //console.log(req.body)
    const email = req.body.email
    const sql = 'SELECT em_email , fda_license,expdate FROM pif_storage WHERE expdate <= CURDATE() + INTERVAL 1 MONTH AND em_email = ?';
 
@@ -879,23 +976,36 @@ app.post('/api/sendNotification' , (req,res) => {
     })
 }
 ) 
-    
+ 
+// getPif Info by Team id
 app.post('/api/pifData' , (req, res) => {
-    console.log(req.body)
-    const id = req.body.data
-    
-    const sql = 'SELECT reportname ,fda_license , reportdate FROM pif_storage WHERE dobnum = ?  '
+    console.log("PifData")
+    console.log(req.body.data)
+    const id = req.body.data.trim()
 
-    db.query(sql , [id] , (err , result) => {
-        if(err) {
-            console.log(err)
-        }
-        else {
-            res.send(result)
-        }
-    })
+    if(id){
+        const sql = 'SELECT reportname, fda_license, reportdate FROM pif_storage WHERE organization_id = ?';
+
+        db.query(sql, [id], (err, result) => {
+            if (err) {
+                console.log(err);
+                res.status(500).json({ error: 'Internal Server Error' });
+            } else {
+                console.log('Query Result:', result);
+                res.send(result)
+            }
+        });
+    }
+   else {
+    res.sendStatus(0)
+   }
+    
+ 
 })
 
+
+
+// Send Exp Date to user by Email
 const sendEmailNotifications=() => {
     const sql = 'SELECT em_email, expdate FROM pif_storage WHERE expdate <= CURDATE() + INTERVAL 1 MONTH';
 
@@ -917,7 +1027,7 @@ const sendEmailNotifications=() => {
                         to: result[i].em_email,
                         subject: "ใบอนุญาต อย ใกล้ หมด อายุแล้ว",
                         text: "วันหมดอายุ คือ " + result[i].expdate,
-                        html: "EXP DATE IS COMING",
+                        html: "เรียนท่านผู้ใช้ขณะนี้ระบบได้ตรวจพบว่าเลชจดแจ้งที่"+result[i].fda_license +" หมดอายุวันที่ " + result[i].expdate,
                     };
                     
                  sendEmail(message)
@@ -959,7 +1069,7 @@ const sendEmail = (message) => {
                     });
 }
 
- //sendEmailNotifications()
+// sendEmailNotifications()
 
 // cron.schedule(' 20 9 * * *' , () => {
 //     console.log("IS RUN CRON")
@@ -1034,10 +1144,213 @@ app.post('/api/upload-pdf' , (req , res) => {
 // get user Admin or S
 app.get('/api/getuserTeam/', (req, res) => {
 
-    const sql = `SELECT * FROM employee WHERE status = "U"  && organization_id ="" `
+    const sql = `SELECT em_fullname , no FROM employee WHERE status = "U"  && organization_id ="" `
     db.query(sql,(err, result) =>{
-        console.log(result)
+        //console.log(result)
         res.send(result)
+    })
+})
+
+app.get('/api/getuserTeamName/', (req, res) => {
+
+    const sql = `SELECT  no FROM employee WHERE organization_id != "" `
+    db.query(sql,(err, result) =>{
+        //console.log(result)
+        res.send(result)
+    })
+})
+
+//update S and team
+app.post('/api/updateteam', (req, res) => {
+    const team = req.body.data;
+    const email = req.body.email;
+
+    console.log(team);
+    console.log(email)
+    // const sql = 'UPDATE employee SET organization_id = ? , status = ?  WHERE em_email = ?';
+    // db.query(sql, [team, email , "S"], (err, result) => {
+    //     if (err) {
+    //         console.log(err);
+    //         res.status(500).send('Internal Server Error');
+    //     } else {
+    //         console.log(result)
+    //         res.send(result);
+    //     }
+    // });
+
+//     const sql = 'INSERT INTO employee organization_id = ? , status = ?  WHERE em_email = ?  ';
+// db.query(sql, [ team, "S" , email], (err, result) => {
+//     if (err) {
+//         console.log(err);
+//         res.status(500).send('Internal Server Error');
+//     } else {
+//         console.log(result)
+//         res.send(result);
+//     }
+// });
+
+
+const sql = 'UPDATE employee SET organization_id = ?, status = ? WHERE em_email = ?';
+db.query(sql, [team, "S", email], (err, result) => {
+    if (err) {
+        console.log(err);
+        res.status(500).send('Internal Server Error');
+    } else {
+        console.log(result);
+        res.send(result);
+    }
+});
+
+});
+
+app.post('/api/updateStutus', (req, res) => {
+    console.log(req.body)
+   
+    const st = req.body.st
+    const no = req.body.no
+    const team = req.body.team
+
+    for(let i = 0 ; i< no.length ; i++){
+        const sql = 'UPDATE employee SET organization_id = ? , status = ? WHERE no = ?';
+        db.query(sql, [team,st[i] , no[i]], (err, result) => {
+                if (err) {
+                    console.log(err);
+                    res.status(500).send('Internal Server Error');
+                } else {
+                    res.send(result);
+                }
+             });
+    }
+    // console.log(team);
+    // const sql = 'UPDATE employee SET organization_id = ? WHERE em_email = ?';
+    // db.query(sql, [team, email], (err, result) => {
+    //     if (err) {
+    //         console.log(err);
+    //         res.status(500).send('Internal Server Error');
+    //     } else {
+    //         res.send(result);
+    //     }
+    // });
+});
+
+
+app.post('/api/updateManageUser', (req, res) => {
+    console.log(req.body)
+   
+    const st = req.body.st
+    const no = req.body.no
+    const team = req.body.team
+
+    
+        const sql = 'UPDATE employee SET organization_id = ? , status = ? WHERE no = ?';
+        db.query(sql, [team,st , no], (err, result) => {
+                if (err) {
+                    console.log(err);
+                    res.status(500).send('Internal Server Error');
+                } else {
+                    res.send(result);
+                }
+             });
+    
+
+});
+
+
+
+
+
+
+
+app.post('/api/getuserTeamManage', (req, res) => {
+    console.log("A getTeammanage")
+    //console.log(req.body.data)
+    const id = req.body.data
+    let ida = ""
+    
+       // console.log("is "+id[i])
+        ida += id[0].organization_id
+   
+    console.log("is a New ida : "+ida)
+   
+  console.log(id)
+    const sql = `SELECT em_fullname , no ,status FROM employee WHERE  organization_id = ? `
+    db.query(sql,[ida],(err, result) =>{
+      //  console.log(id)
+        //console.log(result)
+        res.send(result)
+    })
+});
+
+
+
+app.post('/api/getuserTeamMangeByemail', (req, res) => {
+   // console.log("A Email getTeammanage")
+    const email = req.body.data
+   // console.log(email)
+    const sql = `SELECT  organization_id  FROM employee WHERE  em_email = ? `
+    db.query(sql,[email],(err, result) =>{
+       // console.log(result)
+        res.send(result)
+    })
+});
+
+
+
+
+
+//Manage User for Delete from user group and Pif
+app.post('/api/getuserDelete', (req, res) => {
+    console.log("A getTeammanageDeltete")
+    const id = req.body.id
+    const no = req.body.data
+    console.log(req.body.data)
+   console.log(id)
+   const sql = `UPDATE employee SET organization_id  = NULL , status = ?  WHERE no = ?`;
+    db.query(sql , ["U",no ] ,(err , result) => {
+        if(err){
+            console.log(err)
+        }
+        else {
+            console.log(result)
+            res.status(200).send('delete')
+        }
+       
+    })
+
+    // const sql1 = `UPDATE pif_storage SET organization_id = NULL WHERE no = ?`;
+    // db.query(sql1 , [no] , (err , result) => {
+    //     if(err){
+    //         console.log(err)
+    //     }
+    //     else {
+    //         console.log(result)
+    //         res.status(200).send('delete')
+    //     }
+    // })
+});
+
+app.post('/api/changeNameTeam' , (req , res) => {
+    console.log("changeNaem na Ja")
+  //  const teamS = req.session.orid = req.body.data;
+    const team = req.body.data
+    const id = req.body.id
+
+    const sql = `UPDATE employee SET organization_id = ? WHERE organization_id = ?`;
+    db.query(sql , [team , id ] ,  (err , result) => {
+        if(err){
+            console.log(err)
+        }
+        else {
+            res.status(200).send('update')
+        }
+
+    })
+
+    const sql1 = `UPDATE pif_storage SET organization_id = ? WHERE organization_id = ?`;
+    db.query(sql1 , [team , id ] ,  (err , result) => {
+        if(err){
+            console.log(err)
+        }
     })
 })
 
