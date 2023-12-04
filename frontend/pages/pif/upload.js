@@ -251,7 +251,7 @@ export default function manage() {
         if (res.data.status === "ok") {
           alert("อัพโหลดเอกสารสำเร็จ")
           //redirect to http://localhost:3000/pif/productslist
-          window.location.href = "/pif/productslist"
+          window.location.href = "/pif/showpif"
         }
         else {
           alert("อัพโหลดเอกสารไม่สำเร็จ กรุณาลองใหม่อีกครั้ง")
