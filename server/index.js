@@ -24,6 +24,7 @@ const http = require('http');
 const socketIo = require('socket.io');
 const {EMAIL , PASSWORD} = require('./env.js')
 const PDFMerger = require('pdf-merger-js');
+const session = require('express-session');
 
 const app = express();
 const server = http.createServer(app);
