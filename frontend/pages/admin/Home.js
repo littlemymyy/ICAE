@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { AiFillPlusCircle } from "react-icons/ai";
 import { Chart } from "chart.js"
 import Footer from "@/components/Footer"
+import { MdManageAccounts } from "react-icons/md";
 
 
 const Home = () => {
@@ -204,12 +205,12 @@ const Home = () => {
             </div>
 
        
-      <div className="input-icons">
+      {/* <div className="input-icons">
         <i className="fa fa-search icon"></i>
         <input className="in" value={input1} onChange={(e) => action1(e.target.value)} />
-      </div>
+      </div> */}
 
-      <div className="show">
+      {/* <div className="show">
         {show.length > 0
           ? show.map((w) => (
               <div
@@ -221,7 +222,7 @@ const Home = () => {
               </div>
             ))
           : null}
-      </div>
+      </div> */}
 
       <div className='Menu'>
       <div className='AddCal'>
@@ -234,7 +235,10 @@ const Home = () => {
 
      <div className='Menu_x1'>
      <div className='DelCal'>
-        <button><i class="fa fa-trash" aria-hidden="true"></i> ลบรายการสารเคมี</button>
+     <button onClick={() => router.push("/admin/UserManage")}>
+          <MdManageAccounts className='DeleteHomeAdmin' />
+          จัดการผู้ใช้งาน
+        </button>
       </div>
      </div>
       
