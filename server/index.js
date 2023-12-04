@@ -48,7 +48,7 @@ const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: '',
-    database: 'cosmetic'
+    database: 'cosmetic1'
 });
 
 const pdfStorage = multer.diskStorage({
@@ -963,7 +963,7 @@ app.post('/api/sendNotification' , (req,res) => {
 
    //console.log(req.body)
    const email = req.body.email
-   const sql = 'SELECT em_email , fda_license,expdate FROM pif_storage WHERE expdate <= CURDATE() + INTERVAL 1 MONTH AND em_email = ?';
+   const sql = 'SELECT email , fda_license,expdate FROM pif WHERE expdate <= CURDATE() + INTERVAL 1 MONTH AND em_email = ?';
 
     db.query(sql , [email], (err , result) => {
         if (err){
@@ -1004,10 +1004,65 @@ app.post('/api/pifData' , (req, res) => {
 })
 
 
+// upload and set id === organization_id  if not set organization_id  = en_email
+
+app.post('/api/pifDataEmail' , (req, res) => {
+    console.log("PifData")
+    console.log(req.body.data)
+    const id = req.body.data.trim()
+
+    if(id){
+        const sql = 'SELECT reportname, fda_license, reportdate FROM pif_storage WHERE organization_id = ?';
+
+        db.query(sql, [id], (err, result) => {
+            if (err) {
+                console.log(err);
+                res.status(500).json({ error: 'Internal Server Error' });
+            } else {
+                console.log('Query Result:', result);
+                res.send(result)
+            }
+        });
+    }
+   else {
+    res.sendStatus(0)
+   }
+    
+ 
+})
+
+
+
+
+
+
+
+
+//Add min call USER INFO
+app.get("/api/AddminManageUser" , (req , res) => {
+
+    const sql = 'SELECT em_fullname , 	organization_id	, status FROM employee  '
+    db.query(sql , (err , result)=>{
+        if(err){
+            console.log(err)
+        }
+        else {
+            res.send(result)
+        }
+    })
+})
+
+
+
+
+
+
+
+
 
 // Send Exp Date to user by Email
 const sendEmailNotifications=() => {
-    const sql = 'SELECT em_email, expdate FROM pif_storage WHERE expdate <= CURDATE() + INTERVAL 1 MONTH';
+    const sql = 'SELECT fda_license , email, expdate FROM pif WHERE expdate <= CURDATE() + INTERVAL 1 MONTH';
 
     db.query(sql , (err , result) => {
         if(err) {
@@ -1025,9 +1080,9 @@ const sendEmailNotifications=() => {
                      let   message = {
                         from: EMAIL,
                         to: result[i].em_email,
-                        subject: "ใบอนุญาต อย ใกล้ หมด อายุแล้ว",
+                        subject: "ใบอนุญาต อย ใกล้หมดอายุแล้ว",
                         text: "วันหมดอายุ คือ " + result[i].expdate,
-                        html: "เรียนท่านผู้ใช้ขณะนี้ระบบได้ตรวจพบว่าเลชจดแจ้งที่"+result[i].fda_license +" หมดอายุวันที่ " + result[i].expdate,
+                        html: "เรียนท่านผู้ใช้ขณะนี้ระบบได้ตรวจพบว่าเลขจดแจ้งที่"+result[i].fda_license +" หมดอายุวันที่ " + result[i].expdate,
                     };
                     
                  sendEmail(message)
@@ -1069,7 +1124,7 @@ const sendEmail = (message) => {
                     });
 }
 
-// sendEmailNotifications()
+//sendEmailNotifications()
 
 // cron.schedule(' 20 9 * * *' , () => {
 //     console.log("IS RUN CRON")
@@ -1256,6 +1311,28 @@ app.post('/api/updateManageUser', (req, res) => {
 });
 
 
+app.post('/api/updateManageUserAdmin', (req, res) => {
+    console.log(req.body)
+   
+    const st = req.body.st
+    const no = req.body.no
+    const team = req.body.team
+
+    
+        const sql = 'UPDATE employee SET organization_id = ? , status = ? WHERE no = ?';
+        db.query(sql, ["-",st , no], (err, result) => {
+                if (err) {
+                    console.log(err);
+                    res.status(500).send('Internal Server Error');
+                } else {
+                    res.send(result);
+                }
+             });
+    
+
+});
+
+
 
 
 
@@ -1328,6 +1405,42 @@ app.post('/api/getuserDelete', (req, res) => {
     //     }
     // })
 });
+
+
+
+app.post('/api/getuserDeleteAdmin', (req, res) => {
+    console.log("A getTeammanageDelteteAdmin")
+    const id = req.body.id
+    const no = req.body.data
+    console.log(req.body.data)
+   console.log(id)
+   const sql = `DELETE FROM employee WHERE no = ?`;
+    db.query(sql , [no ] ,(err , result) => {
+        if(err){
+            console.log(err)
+        }
+        else {
+            console.log(result)
+            res.status(200).send('delete')
+        }
+       
+    })
+
+    // const sql1 = `UPDATE pif_storage SET organization_id = NULL WHERE no = ?`;
+    // db.query(sql1 , [no] , (err , result) => {
+    //     if(err){
+    //         console.log(err)
+    //     }
+    //     else {
+    //         console.log(result)
+    //         res.status(200).send('delete')
+    //     }
+    // })
+});
+
+
+
+
 
 app.post('/api/changeNameTeam' , (req , res) => {
     console.log("changeNaem na Ja")
