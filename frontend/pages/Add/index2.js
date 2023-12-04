@@ -2,6 +2,12 @@ import React, { useRef, useState } from 'react'
 import Papa from 'papaparse'
 import Axios from 'axios'
 import Navbar from '@/components/layout/Navbar';
+import { Box, Typography ,Button} from '@mui/material';
+import { AddCircle } from '@mui/icons-material';
+import { Fragment } from 'react';
+import { FormControl, FormControlLabel, Radio, RadioGroup } from '@mui/material';
+
+
 
 
 const index2 = () => {
@@ -51,34 +57,114 @@ const index2 = () => {
     return (
         <div className='App'>
             <Navbar/>
-            <br/> <br/>
-            <h1>เพิ่มสารเคมี</h1>
-            <br/>
-            <div className='Addcsv'>
-                <input
-                    style={{ display: "none" }}
-                    ref={inputRef}
-                    type="file"
-                    onChange={handleFileChange}
-                />
+            <Fragment>
+            <Box sx={{textAlign:"-webkit-center"}}>
+                <Box borderRadius={'5px'}
+                    display={'flex'}
+                    justifyContent={'center'}
+                    alignItems={'center'}
+                    textAlign={'center'}
+                    height={'50px'}
+                    backgroundColor={'green'}
+                    width={'150px'}
+                    padding={'5px'}
+                    marginTop={'30px'}
+                    
+                
+                >
 
-                <div className='uploadbtn' onClick={handleClick}>
-                    <img  src = "/upload.jpg" alt="" />
-                </div>
-                <br/><br/>
-                {
-                data.length ? 
-                <button onClick={UploadClick}>upload</button>
-                : 
-                <button disabled>upload</button>
+                
+                
 
-                }
+                    <AddCircle sx={{ color: "white"}}></AddCircle>
+                    <Typography variant="h7" sx={{ color: "white"}}>เพิ่มสารเคมี</Typography>
 
-            </div>
+
+                </Box>
+            </Box>
+            
+            <Box sx={{
+               
+                backgroundColor: {xs:'' , md:'#F8F8F8 '},
+                borderRadius: {xs:'' , md:'25px'},
+                margin: {xs:'' , md:'40px 60px 40px 60px'},
+                padding: {xs:'60px 60px 60px 60px' , md:'40px 40px 40px 40px'},
+                
+                
+    
+
+            }}
+            
+            >
+                <Typography
+                    sx={{
+                        textAlign: {xs:'left' , md:'left'},
+                        justifyContent: {xs:'left' , md:'left'},
+                    }}
+                     variant="h7">เพิ่มสารเคมี</Typography>
+                <Box>
+                    
+                    <FormControl>
+                        
+                        <RadioGroup sx={{
+
+                        }}
+                        
+                            row
+                            aria-labelledby="demo-row-radio-buttons-group-label"
+                            name="row-radio-buttons-group"
+                        >
+                            <FormControlLabel value="Annex II" control={<Radio />} label="Annex II" />
+                            <FormControlLabel value="Annex III" control={<Radio />} label="Annex III" />
+                            <FormControlLabel value="Annex IV" control={<Radio />} label="Annex IV" />
+                            <FormControlLabel value="Annex V" control={<Radio />} label="Annex V" />
+                           
+                            
+                        </RadioGroup>
+                    </FormControl>
+                    <Box sx={{
+                        display: {xs:'block' , md:'block'},
+                    }}>
+                        <input
+                            ref={inputRef}
+                            type='file'
+                            style={{ display: 'none' }}
+                            onChange={handleFileChange}
+                        />
+                        <img src="/csvfile.png" style={{ maxWidth: 0 + "300px", textAlign:"center", margin:"20px" }}/>
+                        
+                    </Box>
+                    <Typography sx={{
+                        margin: {xs:'20px 0px 20px 0px' , md:'20px 0px 20px 0px'},
+                    }}>
+                        อัพโหลดไฟล์ csv สำหรับการเพิ่มสารเคมี
+                    </Typography>
+                    
+                    <button onClick={handleClick}>Upload</button>
+
+                </Box>
+
+            
+
+            </Box>
+            </Fragment>
+            <Box sx={{
+        textAlign: { xs: "center", md: "center" },
+      }}>
+        <Button
+          type="submit"
+          textAlign="center"
+          variant="contained"
+          color="success"
+         
+          sx={{ mt: 0, mb: 3 }}
+        >
+          ยืนยัน
+        </Button>
+      </Box>
+               
           
-           
-            <br />
-            <br />
+          
             {data.length ? (
                 <table>
                     <thead>
