@@ -9,7 +9,7 @@ import { useRouter } from "next/router";
 
 export default function Home(){
     const router = useRouter();
-
+    
     const handleClick = (e, path) => {
         e.preventDefault();
         router.push(path);

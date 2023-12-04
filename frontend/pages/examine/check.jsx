@@ -8,6 +8,7 @@ import { FaCheckCircle } from "react-icons/fa";
 import Footer from "@/components/Footer";
 import { json } from "react-router-dom";
 import { BrowserRouter as Router, useHistory } from "react-router-dom";
+import { Box } from "@mui/material";
 
 const check = () => {
   const [op1, setOp1] = useState([
@@ -200,9 +201,39 @@ const check = () => {
   return (
     <div>
       <Navbar />
-      <div className="logo1">
-        <img src="/preview2.png" />
-      </div>
+      <Box className="preview"
+        sx={{
+            backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
+            justifyContent: { xs: "", md: "center" },
+            display: { xs: "block", md: "flex" },
+            textAlign: { xs: "center", md: "center" },
+          }}
+
+        >
+            <Box 
+            sx={{
+
+                justifyContent: { xs: "", md: "center" },
+                display: { xs: "block", md: "flex" },
+
+            }}
+
+            >
+                <img src="/preview.png" style={{ maxWidth: 0 + "400px" }}/>
+
+            </Box>
+            <Box sx={{
+              marginTop: "20px",
+              marginBottom: "20px",
+            }}>
+                <h1>ตรวจสอบความถูกต้องก่อนจดแจ้ง</h1>
+                
+                <div className="litetext">
+                    <p>ลดระยะเวลาในการแก้ไขและลดค่าใช้จ่ายของคุณในการจดแจ้งอย.  </p>
+                    <p>เช็คสูตรหรือหาข้อมูลเพิ่มเติมกับเราได้เลย</p>
+                </div>
+            </Box>
+        </Box>
 
       <link
         href="https://fonts.googleapis.com/icon?family=Material+Icons"
@@ -225,7 +256,20 @@ const check = () => {
               placeholder="กรุณาใส่ชื่อ"
             />
           </div>
+      <Box sx={{
+        display: "flex",
+        justifyContent: "space-around",
+       
+      }}>
+          <Box sx={{
+            display: "grid"
+          }} >
+          
           <div className="radioSelect">
+            
+            <Box sx={{
+              display: "flex"
+            }}>
             {op1[0] === 0 ? (
               <input
                 type="checkbox"
@@ -242,7 +286,12 @@ const check = () => {
                 checked
               />
             )}
+
+            
             <label>ผลิตภัณฑ์เกี่ยวกับผม</label>
+            </Box>
+
+            <Box>
             {op1[1] === 0 ? (
               <input
                 type="checkbox"
@@ -261,7 +310,9 @@ const check = () => {
             )}
 
             <label>ผลิตภัณฑ์เกี่ยวกับเล็บ</label>
+            </Box>
 
+            <Box>
             {op1[2] === 0 ? (
               <input
                 type="checkbox"
@@ -279,6 +330,9 @@ const check = () => {
               />
             )}
             <label>ผลิตภัณฑ์เกี่ยวกับผิว</label>
+            </Box>
+
+            <Box>
 
             {op1[3] === 0 ? (
               <input
@@ -297,7 +351,9 @@ const check = () => {
               />
             )}
             <label>ผลิตภัณฑ์เกี่ยวกับยาสีฟัน</label>
+            </Box>
 
+            <Box>
             {op1[4] === 0 ? (
               <input
                 type="checkbox"
@@ -315,7 +371,9 @@ const check = () => {
               />
             )}
             <label>ผลิตภัณฑ์เกี่ยวกับหน้า</label>
+            </Box>
 
+            <Box>
             {op1[5] === 0 ? (
               <input
                 type="checkbox"
@@ -333,9 +391,10 @@ const check = () => {
               />
             )}
             <label>ผลิตภัณฑ์เกี่ยวกับตา</label>
-          </div>
+            </Box>
 
-          <div className="radioSelect">
+            <Box>
+          
             {op1[6] === 0 ? (
               <input
                 type="checkbox"
@@ -353,7 +412,9 @@ const check = () => {
               />
             )}
             <label> ผลิตภัณฑ์เกี่ยวกับยาสระผม</label>
+            </Box>
 
+            <Box>
             {op1[7] === 0 ? (
               <input
                 type="checkbox"
@@ -371,7 +432,14 @@ const check = () => {
               />
             )}
             <label>ผลิตภัณฑ์เกี่ยวกับสี</label>
+            </Box>
+          </div>
+          </Box>
 
+
+          <Box>
+          <div className="radioSelect">
+            <Box>
             {op1[8] === 0 ? (
               <input
                 type="checkbox"
@@ -389,7 +457,9 @@ const check = () => {
               />
             )}
             <label>ผลิตภัณฑ์เกี่ยวกับระงับกลิ่น</label>
+            </Box>
 
+            <Box>
             {op1[9] === 0 ? (
               <input
                 type="checkbox"
@@ -407,6 +477,9 @@ const check = () => {
               />
             )}
             <label>ผลิตภัณฑ์เกี่ยวกับขน</label>
+            </Box>
+
+            <Box>
 
             {op1[10] === 0 ? (
               <input
@@ -425,6 +498,9 @@ const check = () => {
               />
             )}
             <label>ผลิตภัณฑ์เกี่ยวกับสบู่</label>
+            </Box>
+
+            <Box>
 
             {op1[11] === 0 ? (
               <input
@@ -443,9 +519,10 @@ const check = () => {
               />
             )}
             <label>ผลิตภัณฑ์เกี่ยวกับผ้าเย็น</label>
-          </div>
+            </Box>
+          
 
-          <div className="radioSelect">
+            <Box>
             {op1[12] === 0 ? (
               <input
                 type="checkbox"
@@ -463,7 +540,9 @@ const check = () => {
               />
             )}
             <label>ผลิตภัณฑ์เกี่ยวกับจุดซ่อนเร้น</label>
+            </Box>
 
+            <Box>
             {op1[13] === 0 ? (
               <input
                 type="checkbox"
@@ -481,6 +560,9 @@ const check = () => {
               />
             )}
             <label>ผลิตภัณฑ์เกี่ยวกับล้างออก</label>
+            </Box>
+
+            <Box>
 
             {op1[14] === 0 ? (
               <input
@@ -503,6 +585,9 @@ const check = () => {
               />
             )}
             <label>ผลิตภัณฑ์เกี่ยวกับไม่ล้างออก</label>
+            </Box>
+
+            <Box>
 
             {op1[15] === 0 ? (
               <input
@@ -525,7 +610,11 @@ const check = () => {
               />
             )}
             <label>ผลิตภัณฑ์เกี่ยวกับน้ำหอม</label>
+            </Box>
 
+            <Box sx={{
+              marginBottom: "20px"
+            }}>
             {op1[16] === 0 ? (
               <input
                 type="checkbox"
@@ -543,7 +632,11 @@ const check = () => {
               />
             )}
             <label>ผลิตภัณฑ์เกี่ยวกับช่องปาก</label>
+            </Box>
           </div>
+          </Box>
+          </Box>
+
         </details>
       </div>
       <div className="input-icons">
