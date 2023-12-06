@@ -456,7 +456,7 @@ export default function manage() {
 
 
             >
-              <Typography>
+              <Typography variant="h6">
                 1.ข้อมูลทั่วไป
               </Typography>
 
@@ -539,14 +539,20 @@ export default function manage() {
                   m="1"
                 />
               </Box>
-
-              <Typography
+              <hr></hr>
+              <Typography variant="h6"
                 sx={{
                   marginTop: { xs: "10px", md: "10px" },
                   maeginbottom: { xs: "10px", md: "10px" }
                 }}
 
               >สำเนาใบรับจดแจ้งเครื่องสำอาง</Typography>
+              <Box sx={{
+                display: { xs: "", md: "inline-grid" },
+              }}>
+                <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
+                <TextField type="date" id='expdate' />
+              </Box>
                {pdfFile1 === '' ? 
               <Box sx={{
                 width: '800px',
@@ -591,14 +597,20 @@ export default function manage() {
                 <span id="file1" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
 
               </Box>
-
-              <Typography
+                <hr></hr>
+              <Typography variant="h6"
                 sx={{
                   marginTop: { xs: "10px", md: "10px" },
                   marginbottom: { xs: "10px", md: "10px" }
                 }}
 
               >หนังสือยืนยันการเป็นเจ้าของเครื่องสำอาง /  Letter of Authorization </Typography>
+              <Box sx={{
+                display: { xs: "", md: "inline-grid" },
+              }}>
+                <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
+                <TextField type="date" id='expdate' />
+              </Box>
               {pdfFile2 === '' ? 
               <Box sx={{
                 width: '800px',
@@ -644,9 +656,16 @@ export default function manage() {
               </Box>
               <hr></hr>
 
-              <Typography>
+              <Typography variant="h6">
                 2. สูตรส่วนประกอบของเครื่องสำอาง
               </Typography>
+              <Box sx={{
+                display: { xs: "", md: "inline-grid" },
+              }}>
+                <Typography variant="h8">วันหมดอายุของเอกสาร</Typography>
+                <TextField type="date" id='expdate' />
+              </Box>
+
               {pdfFile3 === '' ? 
               <Box sx={{
                 width: '800px',
@@ -693,7 +712,13 @@ export default function manage() {
               </Box>
 
               <hr></hr>
-              <Typography>3. ฉลากเครื่องสำอาง</Typography>
+              <Typography variant="h6">3. ฉลากเครื่องสำอาง</Typography>
+              <Box sx={{
+                display: { xs: "", md: "inline-grid" },
+              }}>
+                <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
+                <TextField type="date" id='expdate' />
+              </Box>
               {pdfFile4 === '' ? 
               <Box sx={{
                 width: '800px',
@@ -739,17 +764,23 @@ export default function manage() {
               </Box>
               <hr></hr>
 
-              <Typography>
+              <Typography variant="h6">
                 4. ข้อมูลเกี่ยวกับการผลิต
               </Typography>
                 
-              <Typography
+              <Typography variant="h6"
                 sx={{
                   marginTop: { xs: "10px", md: "10px" },
                   maeginbottom: { xs: "10px", md: "10px" }
                 }}
 
               >ข้อมูลการผลิต</Typography>
+              <Box sx={{
+                display: { xs: "", md: "inline-grid" },
+              }}>
+                <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
+                <TextField type="date" id='expdate' />
+              </Box>
                {pdfFile5 === '' ? 
               <Box sx={{
                 width: '800px',
@@ -793,14 +824,20 @@ export default function manage() {
                 </Button>
                 <span id="file5" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
               </Box>
-
-              <Typography
+                <hr></hr>
+              <Typography variant="h6"
                 sx={{
                   marginTop: { xs: "10px", md: "10px" },
                   maeginbottom: { xs: "10px", md: "10px" }
                 }}
 
               >GMP / ISO</Typography>
+              <Box sx={{
+                display: { xs: "", md: "inline-grid" },
+              }}>
+                <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
+                <TextField type="date" id='expdate' />
+              </Box>
                {pdfFile6 === '' ? 
               <Box sx={{
                 width: '800px',
@@ -846,9 +883,15 @@ export default function manage() {
               </Box>
               <hr></hr>
 
-              <Typography>
+              <Typography variant="h6">
                 5.รายงานสรุปอาการอันไม่พึงประสงค์จากการใช้เครื่องสำอาง
               </Typography>
+              <Box sx={{
+                display: { xs: "", md: "inline-grid" },
+              }}>
+                <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
+                <TextField type="date" id='expdate' />
+              </Box>
               {pdfFile7 === '' ? 
               <Box sx={{
                 width: '800px',
@@ -895,9 +938,15 @@ export default function manage() {
               </Box>
               <hr></hr>
 
-              <Typography>
+              <Typography variant="h6">
                 6. การประเมินความสอดคล้องของการกล่าวอ้างสรรพคุณเครื่องสำอาง
               </Typography>
+              <Box sx={{
+                display: { xs: "", md: "inline-grid" },
+              }}>
+                <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
+                <TextField type="date" id='expdate' />
+              </Box>
               {pdfFile8 === '' ? 
               <Box sx={{
                 width: '800px',
@@ -947,13 +996,19 @@ export default function manage() {
 
           <Accordion expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
             <AccordionSummary aria-controls="panel2d-content" id="panel2d-header">
-              <Typography>อัพโหลดเอกสารหรือกรอกข้อมูล PIF ส่วนที่ 2</Typography>
+              <Typography >อัพโหลดเอกสารหรือกรอกข้อมูล PIF ส่วนที่ 2</Typography>
             </AccordionSummary>
             <AccordionDetails>
 
-              <Typography>
+              <Typography variant="h6">
                 1. ข้อกำหนดของวัตถุดิบ
               </Typography>
+              <Box sx={{
+                display: { xs: "", md: "inline-grid" },
+              }}>
+                <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
+                <TextField type="date" id='expdate' />
+              </Box>
               {pdfFile9 === '' ? 
               <Box sx={{
                 width: '800px',
@@ -999,10 +1054,16 @@ export default function manage() {
                 <span id="file9" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
               </Box>
 
-
-              <Typography sx={{ marginTop: { xs: "10px", md: "10px" } }}>
+                <hr></hr>
+              <Typography variant="h6" sx={{ marginTop: { xs: "10px", md: "10px" } }}>
                 certificate of analysis (COA)
               </Typography>
+              <Box sx={{
+                display: { xs: "", md: "inline-grid" },
+              }}>
+                <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
+                <TextField type="date" id='expdate' />
+              </Box>
               {pdfFile10 === '' ? 
               <Box sx={{
                 width: '800px',
@@ -1049,9 +1110,15 @@ export default function manage() {
               </Box>
               <hr></hr>
 
-              <Typography>
+              <Typography variant="h6">
                 2. ข้อมูลแสดงความปลอดภัยของวัตถุดิบทุกรายการ (Safety Data Sheet : SDS)
               </Typography>
+              <Box sx={{
+                display: { xs: "", md: "inline-grid" },
+              }}>
+                <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
+                <TextField type="date" id='expdate' />
+              </Box>
               {pdfFile11 === '' ? 
               <Box sx={{
                 width: '800px',
@@ -1106,7 +1173,13 @@ export default function manage() {
             </AccordionSummary>
             <AccordionDetails>
 
-              <Typography>1. สูตรแม่บท (Master formula)</Typography>
+              <Typography variant="h6">1. สูตรแม่บท (Master formula)</Typography>
+              <Box sx={{
+                display: { xs: "", md: "inline-grid" },
+              }}>
+                <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
+                <TextField type="date" id='expdate' />
+              </Box>
               {pdfFile12 === '' ? 
               <Box sx={{
                 width: '800px',
@@ -1152,7 +1225,13 @@ export default function manage() {
               </Box>
               <hr></hr>
 
-              <Typography>2. ข้อกำหนดของเครื่องสำอางสำเร็จรูป (Specification of cosmetic finished product)</Typography>
+              <Typography variant="h6">2. ข้อกำหนดของเครื่องสำอางสำเร็จรูป (Specification of cosmetic finished product)</Typography>
+              <Box sx={{
+                display: { xs: "", md: "inline-grid" },
+              }}>
+                <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
+                <TextField type="date" id='expdate' />
+              </Box>
               {pdfFile13 === '' ? 
               <Box sx={{
                 width: '800px',
@@ -1198,7 +1277,13 @@ export default function manage() {
               </Box>
               <hr></hr>
 
-              <Typography>3. วิธีการทดสอบเครื่องสำอางสำเร็จรูป (Testing method for cosmetic finished product) </Typography>
+              <Typography variant="h6">3. วิธีการทดสอบเครื่องสำอางสำเร็จรูป (Testing method for cosmetic finished product) </Typography>
+              <Box sx={{
+                display: { xs: "", md: "inline-grid" },
+              }}>
+                <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
+                <TextField type="date" id='expdate' />
+              </Box>
               {pdfFile14 === '' ? 
               <Box sx={{
                 width: '800px',
@@ -1251,6 +1336,26 @@ export default function manage() {
 
 
       </Box>
+    <Box sx={{
+      display: { xs: "", md: "flex" },
+      textAlign: { xs: "center", md: "center" },
+      gap: { xs: "20px", md: "20px" },
+      justifyContent: { xs: "", md: "center" },
+    }}>
+      <Box sx={{
+        textAlign: { xs: "center", md: "center" },
+      }}>
+        <Button
+          type="submit"
+          textAlign="center"
+          variant="contained"
+          color="success"
+          
+          sx={{ mt: 3, mb: 2 }}
+        >
+          บันทึก
+        </Button>
+        </Box>
 
       <Box sx={{
         textAlign: { xs: "center", md: "center" },
@@ -1263,9 +1368,10 @@ export default function manage() {
           onClick={(e) => { generatePDF(e) }}
           sx={{ mt: 3, mb: 2 }}
         >
-          ยืนยัน
+         รวบรวมข้อมูลและบันทึกเป็นไฟล์ PDF
         </Button>
       </Box>
+    </Box>
       {/* <Button onClick={(e) => { generatePDF(e) }}>Generate PDF</Button> */}
 
       <Footer />
