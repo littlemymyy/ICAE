@@ -36,11 +36,6 @@ app.use(bodyParser.urlencoded({extended: true , limit : "35mb" , parameterLimit 
 //app.use(express.static("files"));
 const secretKey = crypto.randomBytes(32).toString('hex');
 
-app.use(session({
-    secret: secretKey,
-    resave: false,
-    saveUninitialized: true,
-  }));
 
 app.use('/uploads', express.static('uploads'));
 
@@ -56,7 +51,7 @@ const pdfStorage = multer.diskStorage({
     destination: (req, file, cb) => {
       cb(null, 'uploads/');
     },
-    filename: function ( req, file, cb ) {
+    filename:  ( req, file, cb ) => {
         //req.body is empty...
         //How could I get the new_file_name property sent from client here?
         cb( null, Date.now() + '-' + file.originalname);
@@ -352,11 +347,11 @@ app.post('/api/getUser/', (req, res) => {
             transporter.sendMail(message)
                 .then(() => {
                     // Sending response after email is sent
-                    return res.status(201).json({ msg: "Email has been sent, and signup was successful" });
+                   // return res.status(201).json({ msg: "Email has been sent, and signup was successful" });
                 })
                 .catch(error => {
                     console.error(error);
-                    return res.status(500).json({ error: "Error sending email" });
+                   /// return res.status(500).json({ error: "Error sending email" });
                 });
 
         }
@@ -426,8 +421,8 @@ app.post('/api/setsignUp' , jsonParser, async (req , res ) => {
 
     console.log(fullname + " " + email + " " + password +" " + repassword)
 
-    const sql = `INSERT INTO  employee(em_email , em_fullname , em_icon , em_pass , status) VALUES(?,?,?,?,?);  `
-    db.query(sql,[email , fullname ,"/pandaU.png" , password , "U" ] , (err, result) => {
+    const sql = `INSERT INTO  employee(em_email , em_fullname , em_icon , em_pass , status , organization_id ) VALUES(?,?,?,?,?,?);  `
+    db.query(sql,[email , fullname ,"/pandaU.png" , password , "U" , "-" ] , (err, result) => {
        // res.status(201).json("Signup Successfully")
        console.log("singup :")
        console.log(result)
@@ -783,59 +778,17 @@ app.get('/api/fetchData', async (req, res) => {
     console.log("is Fda")
  //   console.log(fda)
 
-
-
-      let status = ""
-      let locationStatus = ""
-      let registrationNumber = ""
-      let typeRegis = ""
-      let formatRegis = ""
-      let comName = ""
-      let cosName = ""
-      let deteS = ""
-      let expDate = ""
-      let typeGoods =""
-      let bodypart = ""
-      let objGoods = ""
-      let conGoods = ""
-      let entrepreneur = ""
-      let Fentrepreneur = ""
-
-
     try {
       const response = await fetch('http://pertento.fda.moph.go.th/FDA_SEARCH_CENTER/PRODUCT/export_cmt_detail.aspx?regnos='+fda);
       const data = await response.text();
+        console.log(data)
       //console.log(data)
       const $ = cheerio.load(data);
-    //   let txt = '<span id="ContentPlaceHolder1_lb_status">'
-    //     let st = data.indexOf(txt)
-    //     let a  = data.substring(st+1)
-    //     let st2 = a.indexOf('</span>')
-    //     status = data.substring(st+txt.length,st2+st+1);
-    //     console.log(status)
-
-    //  txt = 'ContentPlaceHolder1_lb_status_lct'
-    //     st = data.indexOf(txt)
-    //     a = data.substring(st+1)
-    //     st2 = a.indexOf('</span>')
-    //     locationStatus = data.substring(st+txt.length+2 , st2+st+1)
-    //     console.log(locationStatus)
-
-    // txt = 'ContentPlaceHolder1_lb_no_regnos'
-    //     st = data.indexOf(txt)
-    //     a = data.substring(st+1)
-    //     st2 = a.indexOf('</span>')
-    //     registrationNumber = data.substring(st+txt.length+2 , st2+st+1)
-    //     console.log(registrationNumber)
-
-    // txt = 'ContentPlaceHolder1_lb_type'
-    // st = data.indexOf(txt)
-    // a = data.substring(st+1)
-    // st2 = a.indexOf('</span>')
-    // typeRegis = data.substring(st+txt.length+2 , st2+st+1)
-    // console.log(typeRegis)
+   
         const  dataAll =[]
 
+
+    //dd is list of strings from data response
     const dd = ["ContentPlaceHolder1_lb_status",'ContentPlaceHolder1_lb_status_lct',"ContentPlaceHolder1_lb_no_regnos","ContentPlaceHolder1_lb_type" , "ContentPlaceHolder1_lb_format_regnos" ,"ContentPlaceHolder1_lb_trade_Tpop",
         "ContentPlaceHolder1_lb_cosnm_Tpop","ContentPlaceHolder1_lb_appdate" ,"ContentPlaceHolder1_lb_expdate" , "ContentPlaceHolder1_lb_mode","ContentPlaceHolder1_lb_applicability_name" , "ContentPlaceHolder1_lb_application_name",
     "ContentPlaceHolder1_lb_condition" ,"ContentPlaceHolder1_lb_usernm_pop" , "ContentPlaceHolder1_lb_fac_pop"]
@@ -845,51 +798,23 @@ app.get('/api/fetchData', async (req, res) => {
        if(st > -1){
         let a = data.substring(st+1)
         let st2 = a.indexOf('</span>')
-       let b = data.substring(st+txt.length+2 , st2+st+1)
+       let c = data.substring(st+txt.length+2 , st2+st+1).replace("<br />", ' ')
+       let b = c.replace("<br/>"," ")
        dataAll.push(b)
-
        }
        else {
         dataAll.push("N/A")
-
        }
-
     }
     console.log(dataAll)
-
-
-    //          // const tempElement = document.createElement('div');
-    //         //   tempElement.innerHTML = data;
-
-            //     status = $('#ContentPlaceHolder1_lb_status').text() || 'N/A';
-            //    locationStatus = $('#ContentPlaceHolder1_lb_status_lct').text() || 'N/A';
-            //    registrationNumber = $('#ContentPlaceHolder1_lb_no_regnos').text() || 'N/A';
-            //    typeRegis = $('#ContentPlaceHolder1_lb_type').text() || 'N/A';
-            //    formatRegis = $('#ContentPlaceHolder1_lb_format_regnos').text() || 'N/A';
-            //    comName = $('#ContentPlaceHolder1_lb_trade_Tpop').text() || 'N/A';
-            //    cosName = $('#ContentPlaceHolder1_lb_cosnm_Tpop').text() || 'N/A';
-            //    dateS = $('#ContentPlaceHolder1_lb_appdate').text() || 'N/A';
-            //    expDate = $('#ContentPlaceHolder1_lb_expdate').text() || 'N/A';
-            //    typeGoods = $('#ContentPlaceHolder1_lb_mode').text() || 'N/A';
-            //    bodypart = $('#ContentPlaceHolder1_lb_applicability_name').text() || 'N/A';
-            //    objGoods = $('#ContentPlaceHolder1_lb_application_name').text() || 'N/A';
-            //    conGoods = $('#ContentPlaceHolder1_lb_condition').text() || 'N/A';
-            //    entrepreneur = $('#ContentPlaceHolder1_lb_usernm_pop').text() || 'N/A';
-            //    Fentrepreneur = $('#ContentPlaceHolder1_lb_fac_pop').text() || 'N/A';
-
-            //    let arr = [status,locationStatus, registrationNumber,typeRegis,formatRegis,comName, cosName,dateS,expDate,typeGoods, bodypart,objGoods,conGoods, entrepreneur,Fentrepreneur]
-
-
-//     //   console.log(locationStatus)
-//     //   console.log(expDate)
-//     //   console.log(Fentrepreneur)
-//     console.log(arr)
 res.send(dataAll);
 } catch (error) {
   console.error('Error fetching data:', error);
   res.status(500).json({ error: 'Internal Server Error' });
 }
 });
+
+
 
 app.post('/api/setsignUpA' , jsonParser, (req , res ) => {
     console.log(req.body)
@@ -904,12 +829,13 @@ app.post('/api/setsignUpA' , jsonParser, (req , res ) => {
     console.log(fullname + " " + email + " " + password +" " +" "+st +" "+ oid)
 
     const sql = `INSERT INTO  employee(em_email , em_fullname , em_icon , em_pass , status , organization_id) VALUES(?,?,?,?,?,?);  `
-    db.query(sql,[email , fullname ,"/test01.png" , password , st , oid ] , (err, result) => {
+    db.query(sql,[email , fullname ,"/pandaA.png" , password , st , oid ] , (err, result) => {
         res.send('OK')
     })
     //res.send("ok")
 
 })
+
 
 // get user Team ID
 app.post('/api/getorId/', (req, res) => {
@@ -959,33 +885,91 @@ app.post('/api/searchAll', (req,res) => {
 
 })
 
+//send Notification Index Page
 app.post('/api/sendNotification' , (req,res) => {
     console.log("send Notification")
 
    console.log(req.body)
-   const email = req.body.email
-   const sql = 'SELECT email , fda_license,expdate FROM pif WHERE expdate <= CURDATE() + INTERVAL 1 MONTH AND em_email = ?';
+   const orid = req.body.orid
+   if(orid === "-"){
+    res.status(200).send('Notthing' );
+   }
+   else {
+    console.log("that else")
+   const sql = 'SELECT email , fda_license,expdate FROM product WHERE expdate <= CURDATE() + INTERVAL 1 MONTH AND organization_id = ?';
 
-    db.query(sql , [email], (err , result) => {
+    db.query(sql , [orid], (err , result) => {
         if (err){
+            console.log("go that now")
             console.log("Error " , err)
         }
         else {
             console.log(result)
-            res.send(result)
+            res.status(200).send( result );
+           // res.send(result)
         }
     })
+   }
+ 
 }
 )
 
-// getPif Info by Team id
-app.post('/api/pifData' , (req, res) => {
+
+
+const chcekFdaExp = async (e) => {
+    let num = []
+
+
+    try {
+        const response = await fetch('http://pertento.fda.moph.go.th/FDA_SEARCH_CENTER/PRODUCT/export_cmt_detail.aspx?regnos='+fda);
+        const data = await response.text();
+          console.log(data)
+        //console.log(data)
+        const $ = cheerio.load(data);
+     
+          const  dataAll =[]
+  
+  
+      //dd is list of strings from data response
+      const dd = ["ContentPlaceHolder1_lb_status",'ContentPlaceHolder1_lb_status_lct',"ContentPlaceHolder1_lb_no_regnos","ContentPlaceHolder1_lb_type" , "ContentPlaceHolder1_lb_format_regnos" ,"ContentPlaceHolder1_lb_trade_Tpop",
+          "ContentPlaceHolder1_lb_cosnm_Tpop","ContentPlaceHolder1_lb_appdate" ,"ContentPlaceHolder1_lb_expdate" , "ContentPlaceHolder1_lb_mode","ContentPlaceHolder1_lb_applicability_name" , "ContentPlaceHolder1_lb_application_name",
+      "ContentPlaceHolder1_lb_condition" ,"ContentPlaceHolder1_lb_usernm_pop" , "ContentPlaceHolder1_lb_fac_pop"]
+      for(let i =0 ; i<dd.length ;i++){
+         let  txt = dd[i]
+         let st = data.indexOf(txt)
+         if(st > -1){
+          let a = data.substring(st+1)
+          let st2 = a.indexOf('</span>')
+         let c = data.substring(st+txt.length+2 , st2+st+1).replace("<br />", ' ')
+         let b = c.replace("<br/>"," ")
+         dataAll.push(b)
+         }
+         else {
+          dataAll.push("N/A")
+         }
+      }
+      console.log(dataAll)
+  res.send(dataAll);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+
+
+
+}
+
+
+
+
+// getproduct Info by Team id
+app.post('/api/productData' , (req, res) => {
     console.log("PifData")
     console.log(req.body.data)
     const id = req.body.data.trim()
 
     if(id){
-        const sql = 'SELECT reportname, fda_license, reportdate FROM pif_storage WHERE organization_id = ?';
+        const sql = 'SELECT no,fda_license, cosnameC , cosname , expdate , img_path ,status FROM product WHERE organization_id = ?';
 
         db.query(sql, [id], (err, result) => {
             if (err) {
@@ -998,7 +982,7 @@ app.post('/api/pifData' , (req, res) => {
         });
     }
    else {
-    res.sendStatus(0)
+    res.send(0)
    }
 
 
@@ -1047,7 +1031,7 @@ app.get("/api/AddminManageUser" , (req , res) => {
 
 // Send Exp Date to user by Email
 const sendEmailNotifications=() => {
-    const sql = 'SELECT fda_license , email, expdate FROM pif WHERE expdate <= CURDATE() + INTERVAL 1 MONTH';
+    const sql = 'SELECT fda_license , email, expdate  FROM product WHERE expdate <= CURDATE() + INTERVAL 1 MONTH ';
 
     db.query(sql , (err , result) => {
         if(err) {
@@ -1062,7 +1046,7 @@ const sendEmailNotifications=() => {
                 //console.log(result[0].em_email)
                 //console.log(result.length)
                 for(let i = 0 ; i<result.length ; i++){
-                     let   message = {
+                     let   message = { 
                         from: EMAIL,
                         to: result[i].em_email,
                         subject: "ใบอนุญาต อย. ใกล้หมดอายุแล้ว",
@@ -1151,19 +1135,19 @@ app.post("/api/pifInfo" , (req , res) => {
 
 
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, 'uploads/');
-    }, filename: function (req, file, cb) {
-        cb(null, file.originalname);
-      },
-    });
-    const upload = multer({ storage: storage });
+// const storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//       cb(null, 'uploads/');
+//     }, filename: function (req, file, cb) {
+//         cb(null, file.originalname);
+//       },
+//     });
+//     const upload = multer({ storage: storage });
 
-app.post('/api/upload-pdf' , (req , res) => {
-    const file = req.body
-    console.log(file)
-})
+// app.post('/api/upload-pdf' , (req , res) => {
+//     const file = req.body
+//     console.log(file)
+// })
 
 
 
@@ -1443,6 +1427,126 @@ app.post('/api/changeNameTeam' , (req , res) => {
     })
 })
 
+
+
+
+const storage = multer.diskStorage({
+    destination:  (req, file, cb) => {
+      cb(null, 'uploads/'); // Destination folder for uploaded files
+    },
+    filename:  (req, file, cb) => {
+      // Use Date.now() to make sure the filename is unique
+     
+      cb(null, file.originalname+path.extname(file.originalname));
+    },
+  });
+
+  const upload = multer({storage:storage})
+
+  app.post('/upload', upload.single('image'), (req, res) => {
+    res.send('File uploaded!');
+  });
+  
+
+
+
+
+//Add product
+app.post('/api/storageProduct',(req,res)=>{
+    console.log("Product")
+    console.log(req.body)
+
+    for(let i=0 ;i<req.body.length ; i++){
+        if(req.body[i]==="N/A"){
+            req.body[i] === "-"
+        }
+    }
+    const status = req.body.status
+    const locationStatus = req.body.locationstatus
+    const type = req.body.type
+    const typeOfGoods = req.body.typeOfGoods
+    const cosnameC = req.body.cosnameC
+    const cosname = req.body.cosname
+    const expdate = req.body.expdate
+    const bodyPart = req.body.bodyPart
+    const company = req.body.company
+    const fcompany = req.body.fcompany
+    const fda_num = req.body.fda_num
+    let photo = req.body.photo
+    const id = req.body.ordid
+
+    console.log(id)
+
+    console.log(fda_num)
+
+    if(photo === null){
+        photo = "-"
+    }
+
+    
+    
+    let arr = []
+    const str = expdate
+    arr.push(str.split("/"))
+    console.log(arr)
+    let year1 = parseInt(arr[0][2])-543
+    let month1 = parseInt(arr[0][1])-1 
+    let date1 = parseInt(arr[0][0])
+
+    let exp = new Date(year1,month1,date1)
+
+    console.log(exp)
+
+    const sql = 'INSERT INTO  product (locationstatus, type, typeOfGoods, cosnameC, cosname, expdate, bodyPart, company, fcompany, fda_license, img_path , organization_id ,status ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)'
+    db.query(sql , [locationStatus,type,typeOfGoods,cosnameC,cosname,exp,bodyPart,company,fcompany,fda_num,photo,id,"0"] ,(err , result)=>{
+        if(err) {
+            console.log(err)
+        }
+        else {
+            res.send("OK")
+        }
+    })
+  
+      
+})
+app.post('/api/uploadImage' , (req , res)=>{
+
+
+})
+
+app.post('/api/userDeleteProduct' , (req,res)=>{
+    console.log("No...")
+    const id = req.body.id
+    const no =req.body.data
+    const fda = req.body.fda_num
+    const status = req.body.status
+    console.log(req.body)
+
+    const sql = 'DELETE FROM product WHERE fda_license = ?'
+    db.query(sql,[fda],(error , result)=>{
+        if(error){
+            console.log(error)
+        }
+        else{
+            res.status(200).send("DELETEED")
+        }
+    })
+
+    if(status === "1"){
+        const sql1 = 'DELETE FROM pif WHERE fda_license = ?'
+        db.query(sql1,[fda] ,(error , result) =>{
+            if(error){
+                console.log(error)
+            }
+            else{
+                res.status(200).send("DELETEED")
+            }
+        } )
+
+    }
+
+   
+})
 
 app.listen(3001, () => {
     console.log('Running node at port 3001');
