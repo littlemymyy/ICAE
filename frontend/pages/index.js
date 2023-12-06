@@ -41,12 +41,13 @@ export default function Home() {
     if(sessionStorage.getItem("uemail")){
       
       let email = sessionStorage.getItem("uemail")
+      let id = sessionStorage.getItem("orid")
       console.log(email)
       const feechData = async () => {
   
         let load = {
           
-          email : email,
+          orid :id,
         };
   
         try {
@@ -55,7 +56,9 @@ export default function Home() {
             url :'http://localhost:3001/api/sendNotification',
             data : load
           })
+          console.log("........")
           console.log(res.data)
+          if(res.data !== "Notthing"){
           setData(res.data)
   
           let fdanum = ""
@@ -69,7 +72,7 @@ export default function Home() {
           newfdanum += fdanum.substring(0 , fdanum.lengt -1)
           console.log(newfdanum)
          
-          if(res.data){
+          if(res.data !== "Notthing"){
             Swal.fire({
               title: 'ใบอนุญาตจดแจ้งใกล้หมดอายุ',
               text: 'เลขที่ : '+ fdanum
@@ -78,7 +81,7 @@ export default function Home() {
               confirmButtonText: 'ปิด'
             })
           }
-  
+        }
   
         }catch(error) {
           console.log('Error fetching data : ', error)

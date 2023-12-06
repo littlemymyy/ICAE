@@ -73,6 +73,7 @@ import Navbar from "@/components/layout/Navbar";
 import Axios from "axios";
 import { useForm, SubmitHandler } from "react-hook-form"
 import { useRouter } from 'next/router';
+import Swal from 'sweetalert2'
    
 
 function Copyright(props) {
@@ -101,6 +102,7 @@ export default function SignUp() {
   const router = useRouter();  
   const [email , setEmail] = React.useState('')
   const [error , setError] = React.useState(null)
+  const Swal = require('sweetalert2')
 
   function isValidEmail(email) {
     return /\S+@\S+\.\S+/.test(email);
@@ -113,7 +115,7 @@ export default function SignUp() {
       console.log("email")
     } else {
       setError(null);
-      console.log("ok")
+     // console.log("ok")
     }
 
     setEmail(event.target.value);
@@ -129,10 +131,22 @@ export default function SignUp() {
       repassword : data.get('confirmpassword')
     }
     if (!isValidEmail(data1.email)) {
-      alert("กรุณาใส่อีเมลให้ถูกต้อง")
+      Swal.fire({
+        title: "The Internet?",
+        text: "กรุณาใส่อีเมลให้ถูกต้อง?",
+        icon: "question"
+      });
+     
     }
     else if(data1.password !== data1.repassword){
-      alert("กรุณาใส่รหัสผ่านให้เหมือนกัน")
+      Swal.fire({
+        title: "The Internet?",
+        text: "กรุณาใส่รหัสผ่านให้เหมือนกัน",
+        icon: "question"
+      });
+     
+      
+      
     }
     else {
       console.log(data1)
@@ -145,11 +159,30 @@ export default function SignUp() {
         data: data1
         })
         .then(function (response) {
-          console.log(response.data)
-          alert("สมัครสมาชิกเรียบร้อย")
-          router.push("/SignIn")
+          //console.log(response.data)
+
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "center",
+            marginTop : "100px" ,
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            }
+          });
+          Toast.fire({
+            icon: "success",
+            title: "สมัครสมาชิคสำเร็จ"
+          });
+
+          router.push("/login/SignIn")
           
-        })
+        }).catch( (error) => { 
+          console.log(error);
+        });
 
     // else if(email.include("@gmail.com")){
     //   alert("ok")

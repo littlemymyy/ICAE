@@ -31,7 +31,7 @@ export default function Home(){
                 setData(response.data.message);
             }
             else {
-                setData([{cas: "", name: "", maxt: "ไม่พบข้อมูล", color: ""}]);
+                setData([{cas: "", name: "", per: "ไม่พบข้อมูล", color: ""}]);
             }
 
             console.log(data)
@@ -99,8 +99,12 @@ export default function Home(){
                 {data.map((item, index) => (
                     <TableRow key={index} style={index % 2 === 0 ? evenRowStyle : null} >
                         <TableCell align="left">{item.cas}</TableCell>
-                        <TableCell align="left">{item.name}</TableCell>
-                        <TableCell align="left">{item.maxt}</TableCell>
+                        {
+                            item.cmname === "-" || item.cmname ==="" ?
+                            <TableCell align="left">{item.cname}</TableCell>
+                            : <TableCell align="left">{item.cmname}</TableCell>
+                        }
+                        <TableCell align="left">{item.per}</TableCell>
                         <TableCell align="left">{item.color}</TableCell>
 
                     </TableRow>
