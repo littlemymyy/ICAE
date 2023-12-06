@@ -8,6 +8,7 @@ import MuiAccordionSummary from '@mui/material/AccordionSummary';
 import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import { Box, TextField, Typography, Button } from "@mui/material";
 import Axios from "axios";
+import { set } from "react-hook-form";
 
 const Accordion = styled((props) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -48,6 +49,9 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 }));
 
 export default function manage() {
+  
+ 
+
   const [expanded, setExpanded] = React.useState('panel1');
 
 
@@ -142,6 +146,23 @@ export default function manage() {
   const [file14, setFile14] = useState(null);
   const [photo, setFilePhoto] = useState(null);
 
+  const [pdfFile1, setPdfFile1] = useState(''); 
+  const [pdfFile2, setPdfFile2] = useState('');
+  const [pdfFile3, setPdfFile3] = useState('');
+  const [pdfFile4, setPdfFile4] = useState('');
+  const [pdfFile5, setPdfFile5] = useState('');
+  const [pdfFile6, setPdfFile6] = useState('');
+  const [pdfFile7, setPdfFile7] = useState('');
+  const [pdfFile8, setPdfFile8] = useState('');
+  const [pdfFile9, setPdfFile9] = useState('');
+  const [pdfFile10, setPdfFile10] = useState('');
+  const [pdfFile11, setPdfFile11] = useState('');
+  const [pdfFile12, setPdfFile12] = useState('');
+  const [pdfFile13, setPdfFile13] = useState('');
+  const [pdfFile14, setPdfFile14] = useState('');
+
+  
+
   const handleFileChange = (inputName, event) => {
     const file = event.target.files[0];
     console.log(inputName);
@@ -150,45 +171,59 @@ export default function manage() {
     switch (inputName) {
       case 'file1':
         setFile1(file);
+        setPdfFile1(URL.createObjectURL(file));
         break;
       case 'file2':
         setFile2(file);
+        setPdfFile2(URL.createObjectURL(file));
         break;
       case 'file3':
         setFile3(file);
+        setPdfFile3(URL.createObjectURL(file));
         break;
       case 'file4':
         setFile4(file);
+        setPdfFile4(URL.createObjectURL(file));
         break;
       case 'file5':
         setFile5(file);
+        setPdfFile5(URL.createObjectURL(file));
         break;
       case 'file6':
         setFile6(file);
+        setPdfFile6(URL.createObjectURL(file));
         break;
       case 'file7':
         setFile7(file);
+        setPdfFile7(URL.createObjectURL(file));
         break;
       case 'file8':
         setFile8(file);
+        setPdfFile8(URL.createObjectURL(file));
         break;
       case 'file9':
         setFile9(file);
+        setPdfFile9(URL.createObjectURL(file));
         break;
       case 'file10':
         setFile10(file);
+        setPdfFile10(URL.createObjectURL(file));
         break;
       case 'file11':
         setFile11(file);
+        setPdfFile11(URL.createObjectURL(file));
         break;
       case 'file12':
         setFile12(file);
+        setPdfFile12(URL.createObjectURL(file));
         break;
       case 'file13':
         setFile13(file);
+        setPdfFile13(URL.createObjectURL(file));
         break;
       case 'file14':
         setFile14(file);
+        setPdfFile14(URL.createObjectURL(file));
         break;
       case 'photo':
         setFilePhoto(file);
@@ -267,6 +302,7 @@ export default function manage() {
     setExpanded(newExpanded ? panel : false);
   };
 
+  
   return (
     <>
       <Navbar />
@@ -341,8 +377,8 @@ export default function manage() {
           }}
         >
           <Box>
-            <Typography variant="h6">ชื่อไฟล์ PIF</Typography>
-            <TextField label="ชื่อไฟล์ PIF" id='filename' />
+            <Typography variant="h6">ชื่อผลิตภัณฑ์</Typography>
+            <TextField label="ชื่อผลิตภัณฑ์" id='filename' />
           </Box>
 
           <Box>
@@ -350,7 +386,7 @@ export default function manage() {
             <TextField type="date" id='expdate' />
           </Box>
         </Box>
-
+  
         <Box
           sx={{
             display: { xs: "grid", md: "grid" },
@@ -360,6 +396,7 @@ export default function manage() {
             paddingBottom: { xs: "10px", md: "10px" },
           }}>
           <Typography variant="h6">รูปภาพผลิตภัณฑ์</Typography>
+          
           <Box
             style={{
               width: "100%",
@@ -367,7 +404,9 @@ export default function manage() {
               boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.25)',
               marginTop: "10px"
             }}>
+            
             <Button
+          
               width="80%"
               variant="contained"
               component="label"
@@ -376,11 +415,16 @@ export default function manage() {
                 id="filename"
                 type="file"
                 accept="image/png, image/gif, image/jpeg"
+                
+                
                 onChange={(event) => handleFileChange('photo', event)}
+                                
                 hidden
               />เลือกไฟล์
             </Button>
+            
             <span id="photo" style={{ marginLeft: "5px", marginRight: "5px" }}>ไม่ได้เลือกไฟล์ใด</span>
+            
           </Box>
 
 
@@ -503,6 +547,30 @@ export default function manage() {
                 }}
 
               >สำเนาใบรับจดแจ้งเครื่องสำอาง</Typography>
+               {pdfFile1 === '' ? 
+              <Box sx={{
+                width: '800px',
+                height: '500px',
+                borderRadius: '5px',
+                boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
+                marginTop: "20px",
+                backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
+
+              }}>
+                <Box sx={{
+                  justifyContent: { xs: "", md: "center" },
+                  textAlign: { xs: "center", md: "center" },
+                  
+                  
+                 }}>
+                  <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"250px" ,justifyContent:"center"}} />
+                
+                </Box>
+                
+              </Box>
+              :
+              <embed src={pdfFile1} width="800px" height="500px" />
+              }
               <Box
                 style={{
                   borderRadius: '5px',
@@ -531,6 +599,30 @@ export default function manage() {
                 }}
 
               >หนังสือยืนยันการเป็นเจ้าของเครื่องสำอาง /  Letter of Authorization </Typography>
+              {pdfFile2 === '' ? 
+              <Box sx={{
+                width: '800px',
+                height: '500px',
+                borderRadius: '5px',
+                boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
+                marginTop: "20px",
+                backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
+
+              }}>
+                <Box sx={{
+                  justifyContent: { xs: "", md: "center" },
+                  textAlign: { xs: "center", md: "center" },
+                  
+                  
+                 }}>
+                  <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"250px" ,justifyContent:"center"}} />
+                
+                </Box>
+                
+              </Box>
+              :
+              <embed src={pdfFile2} width="800px" height="500px" /> 
+              }
               <Box
                 style={{
                   borderRadius: '5px',
@@ -555,6 +647,30 @@ export default function manage() {
               <Typography>
                 2. สูตรส่วนประกอบของเครื่องสำอาง
               </Typography>
+              {pdfFile3 === '' ? 
+              <Box sx={{
+                width: '800px',
+                height: '500px',
+                borderRadius: '5px',
+                boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
+                marginTop: "20px",
+                backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
+
+              }}>
+                <Box sx={{
+                  justifyContent: { xs: "", md: "center" },
+                  textAlign: { xs: "center", md: "center" },
+                  
+                  
+                 }}>
+                  <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"250px" ,justifyContent:"center"}} />
+                
+                </Box>
+                
+              </Box>
+              :
+              <embed src={pdfFile3} width="800px" height="500px" />
+              }
 
               <Box
                 style={{
@@ -578,6 +694,30 @@ export default function manage() {
 
               <hr></hr>
               <Typography>3. ฉลากเครื่องสำอาง</Typography>
+              {pdfFile4 === '' ? 
+              <Box sx={{
+                width: '800px',
+                height: '500px',
+                borderRadius: '5px',
+                boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
+                marginTop: "20px",
+                backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
+
+              }}>
+                <Box sx={{
+                  justifyContent: { xs: "", md: "center" },
+                  textAlign: { xs: "center", md: "center" },
+                  
+                  
+                 }}>
+                  <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"250px" ,justifyContent:"center"}} />
+                
+                </Box>
+                
+              </Box>
+              :
+              <embed src={pdfFile4} width="800px" height="500px" />
+              }
               <Box
                 style={{
                   borderRadius: '5px',
@@ -602,7 +742,7 @@ export default function manage() {
               <Typography>
                 4. ข้อมูลเกี่ยวกับการผลิต
               </Typography>
-
+                
               <Typography
                 sx={{
                   marginTop: { xs: "10px", md: "10px" },
@@ -610,6 +750,30 @@ export default function manage() {
                 }}
 
               >ข้อมูลการผลิต</Typography>
+               {pdfFile5 === '' ? 
+              <Box sx={{
+                width: '800px',
+                height: '500px',
+                borderRadius: '5px',
+                boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
+                marginTop: "20px",
+                backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
+
+              }}>
+                <Box sx={{
+                  justifyContent: { xs: "", md: "center" },
+                  textAlign: { xs: "center", md: "center" },
+                  
+                  
+                 }}>
+                  <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"250px" ,justifyContent:"center"}} />
+                
+                </Box>
+                
+              </Box>
+              :
+              <embed src={pdfFile5} width="800px" height="500px" />
+              }
               <Box
                 style={{
                   borderRadius: '5px',
@@ -637,6 +801,30 @@ export default function manage() {
                 }}
 
               >GMP / ISO</Typography>
+               {pdfFile6 === '' ? 
+              <Box sx={{
+                width: '800px',
+                height: '500px',
+                borderRadius: '5px',
+                boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
+                marginTop: "20px",
+                backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
+
+              }}>
+                <Box sx={{
+                  justifyContent: { xs: "", md: "center" },
+                  textAlign: { xs: "center", md: "center" },
+                  
+                  
+                 }}>
+                  <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"250px" ,justifyContent:"center"}} />
+                
+                </Box>
+                
+              </Box>
+              :
+              <embed src={pdfFile6} width="800px" height="500px" />
+              }
               <Box
                 style={{
                   borderRadius: '5px',
@@ -661,6 +849,30 @@ export default function manage() {
               <Typography>
                 5.รายงานสรุปอาการอันไม่พึงประสงค์จากการใช้เครื่องสำอาง
               </Typography>
+              {pdfFile7 === '' ? 
+              <Box sx={{
+                width: '800px',
+                height: '500px',
+                borderRadius: '5px',
+                boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
+                marginTop: "20px",
+                backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
+
+              }}>
+                <Box sx={{
+                  justifyContent: { xs: "", md: "center" },
+                  textAlign: { xs: "center", md: "center" },
+                  
+                  
+                 }}>
+                  <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"250px" ,justifyContent:"center"}} />
+                
+                </Box>
+                
+              </Box>
+              :
+              <embed src={pdfFile7} width="800px" height="500px" />
+              }
 
               <Box
                 style={{
@@ -686,6 +898,30 @@ export default function manage() {
               <Typography>
                 6. การประเมินความสอดคล้องของการกล่าวอ้างสรรพคุณเครื่องสำอาง
               </Typography>
+              {pdfFile8 === '' ? 
+              <Box sx={{
+                width: '800px',
+                height: '500px',
+                borderRadius: '5px',
+                boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
+                marginTop: "20px",
+                backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
+
+              }}>
+                <Box sx={{
+                  justifyContent: { xs: "", md: "center" },
+                  textAlign: { xs: "center", md: "center" },
+                  
+                  
+                 }}>
+                  <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"250px" ,justifyContent:"center"}} />
+                
+                </Box>
+                
+              </Box>
+              :
+              <embed src={pdfFile8} width="800px" height="500px" />
+              }
 
               <Box
                 style={{
@@ -718,6 +954,30 @@ export default function manage() {
               <Typography>
                 1. ข้อกำหนดของวัตถุดิบ
               </Typography>
+              {pdfFile9 === '' ? 
+              <Box sx={{
+                width: '800px',
+                height: '500px',
+                borderRadius: '5px',
+                boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
+                marginTop: "20px",
+                backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
+
+              }}>
+                <Box sx={{
+                  justifyContent: { xs: "", md: "center" },
+                  textAlign: { xs: "center", md: "center" },
+                  
+                  
+                 }}>
+                  <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"250px" ,justifyContent:"center"}} />
+                
+                </Box>
+                
+              </Box>
+              :
+              <embed src={pdfFile9} width="800px" height="500px" />
+              }
 
               <Box
                 style={{
@@ -743,6 +1003,30 @@ export default function manage() {
               <Typography sx={{ marginTop: { xs: "10px", md: "10px" } }}>
                 certificate of analysis (COA)
               </Typography>
+              {pdfFile10 === '' ? 
+              <Box sx={{
+                width: '800px',
+                height: '500px',
+                borderRadius: '5px',
+                boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
+                marginTop: "20px",
+                backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
+
+              }}>
+                <Box sx={{
+                  justifyContent: { xs: "", md: "center" },
+                  textAlign: { xs: "center", md: "center" },
+                  
+                  
+                 }}>
+                  <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"250px" ,justifyContent:"center"}} />
+                
+                </Box>
+                
+              </Box>
+              :
+              <embed src= {pdfFile10} width="800px" height="500px" />
+              }
 
               <Box
                 style={{
@@ -768,6 +1052,30 @@ export default function manage() {
               <Typography>
                 2. ข้อมูลแสดงความปลอดภัยของวัตถุดิบทุกรายการ (Safety Data Sheet : SDS)
               </Typography>
+              {pdfFile11 === '' ? 
+              <Box sx={{
+                width: '800px',
+                height: '500px',
+                borderRadius: '5px',
+                boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
+                marginTop: "20px",
+                backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
+
+              }}>
+                <Box sx={{
+                  justifyContent: { xs: "", md: "center" },
+                  textAlign: { xs: "center", md: "center" },
+                  
+                  
+                 }}>
+                  <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"250px" ,justifyContent:"center"}} />
+                
+                </Box>
+                
+              </Box>
+              :
+              <embed src={pdfFile11} width="800px" height="500px" />
+              }
 
               <Box
                 style={{
@@ -799,6 +1107,30 @@ export default function manage() {
             <AccordionDetails>
 
               <Typography>1. สูตรแม่บท (Master formula)</Typography>
+              {pdfFile12 === '' ? 
+              <Box sx={{
+                width: '800px',
+                height: '500px',
+                borderRadius: '5px',
+                boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
+                marginTop: "20px",
+                backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
+
+              }}>
+                <Box sx={{
+                  justifyContent: { xs: "", md: "center" },
+                  textAlign: { xs: "center", md: "center" },
+                  
+                  
+                 }}>
+                  <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"250px" ,justifyContent:"center"}} />
+                
+                </Box>
+                
+              </Box>
+              :
+              <embed src={pdfFile12} width="800px" height="500px" />
+              }
               <Box
                 style={{
                   borderRadius: '5px',
@@ -821,6 +1153,30 @@ export default function manage() {
               <hr></hr>
 
               <Typography>2. ข้อกำหนดของเครื่องสำอางสำเร็จรูป (Specification of cosmetic finished product)</Typography>
+              {pdfFile13 === '' ? 
+              <Box sx={{
+                width: '800px',
+                height: '500px',
+                borderRadius: '5px',
+                boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
+                marginTop: "20px",
+                backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
+
+              }}>
+                <Box sx={{
+                  justifyContent: { xs: "", md: "center" },
+                  textAlign: { xs: "center", md: "center" },
+                  
+                  
+                 }}>
+                  <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"250px" ,justifyContent:"center"}} />
+                
+                </Box>
+                
+              </Box>
+              :
+              <embed src={pdfFile13} width="800px" height="500px" />
+              }
               <Box
                 style={{
                   borderRadius: '5px',
@@ -843,6 +1199,30 @@ export default function manage() {
               <hr></hr>
 
               <Typography>3. วิธีการทดสอบเครื่องสำอางสำเร็จรูป (Testing method for cosmetic finished product) </Typography>
+              {pdfFile14 === '' ? 
+              <Box sx={{
+                width: '800px',
+                height: '500px',
+                borderRadius: '5px',
+                boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
+                marginTop: "20px",
+                backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
+
+              }}>
+                <Box sx={{
+                  justifyContent: { xs: "", md: "center" },
+                  textAlign: { xs: "center", md: "center" },
+                  
+                  
+                 }}>
+                  <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"250px" ,justifyContent:"center"}} />
+                
+                </Box>
+                
+              </Box>
+              :
+              <embed src={pdfFile14} width="800px" height="500px" />
+              }
               <Box
                 style={{
                   borderRadius: '5px',

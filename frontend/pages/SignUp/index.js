@@ -128,7 +128,7 @@ export default function SignUp() {
       repassword : data.get('confirmpassword')
     }
     if (!isValidEmail(data1.email)) {
-      alert("กรุณาใส่อีเมลให้ถูกต้อง")
+      alert("กรุณาใส่อีเมล์ให้ถูกต้อง")
     }
     else if(data1.password !== data1.repassword){
       alert("กรุณาใส่รหัสผ่านให้เหมือนกัน")

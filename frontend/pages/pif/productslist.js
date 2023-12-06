@@ -171,7 +171,7 @@ export default function productslist(){
         />
         <Button variant="contained" size="medium"  style={buttonStyle} onClick={() => handleButtonClick(4)}
          >
-            สร้างสินค้า
+            สร้างผลิตภัณฑ์
         </Button>
 
          <Button variant="contained" size="medium"  style={buttonStyle} onClick={() => handleButtonClick(1)}
