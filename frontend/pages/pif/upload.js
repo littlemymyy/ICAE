@@ -9,7 +9,9 @@ import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import { Box, TextField, Typography, Button } from "@mui/material";
 import Axios from "axios";
 import { set } from "react-hook-form";
-
+import ClearIcon from '@mui/icons-material/Clear';
+import CloseIcon from '@mui/icons-material/Close';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 const Accordion = styled((props) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -173,58 +175,72 @@ export default function manage() {
       case 'file1':
         setFile1(file);
         setPdfFile1(URL.createObjectURL(file));
+        document.getElementById("del1").style.display = "block";
         break;
       case 'file2':
         setFile2(file);
         setPdfFile2(URL.createObjectURL(file));
+        document.getElementById("del2").style.display = "block";
         break;
       case 'file3':
         setFile3(file);
         setPdfFile3(URL.createObjectURL(file));
+        document.getElementById("del3").style.display = "block";
         break;
       case 'file4':
         setFile4(file);
         setPdfFile4(URL.createObjectURL(file));
+        document.getElementById("del4").style.display = "block";
         break;
       case 'file5':
         setFile5(file);
         setPdfFile5(URL.createObjectURL(file));
+        document.getElementById("del5").style.display = "block";
         break;
       case 'file6':
         setFile6(file);
         setPdfFile6(URL.createObjectURL(file));
+        document.getElementById("del6").style.display = "block";
         break;
       case 'file7':
         setFile7(file);
         setPdfFile7(URL.createObjectURL(file));
+        document.getElementById("del7").style.display = "block";
         break;
       case 'file8':
         setFile8(file);
         setPdfFile8(URL.createObjectURL(file));
+        document.getElementById("del8").style.display = "block";
         break;
       case 'file9':
         setFile9(file);
         setPdfFile9(URL.createObjectURL(file));
+        document.getElementById("del9").style.display = "block";
         break;
       case 'file10':
         setFile10(file);
         setPdfFile10(URL.createObjectURL(file));
+        document.getElementById("del10").style.display = "block";
         break;
       case 'file11':
         setFile11(file);
         setPdfFile11(URL.createObjectURL(file));
+        document.getElementById("del11").style.display = "block";
         break;
       case 'file12':
         setFile12(file);
         setPdfFile12(URL.createObjectURL(file));
+        document.getElementById("del12").style.display = "block";
         break;
       case 'file13':
         setFile13(file);
         setPdfFile13(URL.createObjectURL(file));
+        document.getElementById("del13").style.display = "block";
         break;
       case 'file14':
         setFile14(file);
         setPdfFile14(URL.createObjectURL(file));
+        document.getElementById("del14").style.display = "block";
         break;
       case 'photo':
         setFilePhoto(file);
@@ -234,6 +250,96 @@ export default function manage() {
         break;
     }
   };
+
+  const handleRemoveFile = (inputName) => {
+    //input name is stateVariable name and then clear variable is = inputName
+    switch (inputName) {
+      case 'file1':
+        setFile1(null);
+        setPdfFile1('');
+        document.getElementById("file1").innerHTML = "ไม่ได้เลือกไฟล์ใด";
+        document.getElementById("del1").style.display = "none";
+        break;
+      case 'file2':
+        setFile2(null);
+        setPdfFile2('');
+        document.getElementById("file2").innerHTML = "ไม่ได้เลือกไฟล์ใด";
+        document.getElementById("del2").style.display = "none";
+        break;
+      case 'file3':
+        setFile3(null);
+        setPdfFile3('');
+        document.getElementById("file3").innerHTML = "ไม่ได้เลือกไฟล์ใด";
+        document.getElementById("del3").style.display = "none";
+        break;
+      case 'file4':
+        setFile4(null);
+        setPdfFile4('');
+        document.getElementById("file4").innerHTML = "ไม่ได้เลือกไฟล์ใด";
+        document.getElementById("del4").style.display = "none";
+        break;
+      case 'file5':
+        setFile5(null);
+        setPdfFile5('');
+        document.getElementById("file5").innerHTML = "ไม่ได้เลือกไฟล์ใด";
+        document.getElementById("del5").style.display = "none";
+        break;
+      case 'file6':
+        setFile6(null);
+        setPdfFile6('');
+        document.getElementById("file6").innerHTML = "ไม่ได้เลือกไฟล์ใด";
+        document.getElementById("del6").style.display = "none";
+        break;
+      case 'file7':
+        setFile7(null);
+        setPdfFile7('');
+        document.getElementById("file7").innerHTML = "ไม่ได้เลือกไฟล์ใด";
+        document.getElementById("del7").style.display = "none";
+        break;
+      case 'file8':
+        setFile8(null);
+        setPdfFile8('');
+        document.getElementById("file8").innerHTML = "ไม่ได้เลือกไฟล์ใด";
+        document.getElementById("del8").style.display = "none";
+        break;
+      case 'file9':
+        setFile9(null);
+        setPdfFile9('');
+        document.getElementById("file9").innerHTML = "ไม่ได้เลือกไฟล์ใด";
+        document.getElementById("del9").style.display = "none";
+        break;
+      case 'file10':
+        setFile10(null);
+        setPdfFile10('');
+        document.getElementById("file10").innerHTML = "ไม่ได้เลือกไฟล์ใด";
+        document.getElementById("del10").style.display = "none";
+        break;
+      case 'file11':
+        setFile11(null);
+        setPdfFile10('');
+        document.getElementById("file11").innerHTML = "ไม่ได้เลือกไฟล์ใด";
+        document.getElementById("del11").style.display = "none";
+        break;
+      case 'file12':
+          setFile12(null);
+          setPdfFile12('');
+          document.getElementById("file12").innerHTML = "ไม่ได้เลือกไฟล์ใด";
+          document.getElementById("del12").style.display = "none";
+          break;
+        case 'file13':
+          setFile13(null);
+          setPdfFile13('');
+          document.getElementById("file13").innerHTML = "ไม่ได้เลือกไฟล์ใด";
+          document.getElementById("del13").style.display = "none";
+          break;
+        case 'file14':
+          setFile14(null);
+          setPdfFile14('');
+          document.getElementById("file14").innerHTML = "ไม่ได้เลือกไฟล์ใด";
+          document.getElementById("del14").style.display = "none";
+          break;
+    }
+  }
 
   const generatePDF = async (e) => {
     let data = JSON.stringify({
@@ -581,16 +687,20 @@ export default function manage() {
               }
               <Box
                 style={{
+              
                   borderRadius: '5px',
                   boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.25)',
-                  marginTop: "10px",
+                  marginTop: "10px"
                   
                 }}>
                 <Button
+                  width="100%"
                   variant="contained"
                   component="label"
+                  marginTop="10px"
                 >
                   <input
+                 
                     id="filename"
                     type="file"
                     onChange={(event) => handleFileChange('file1', event)}
@@ -600,7 +710,20 @@ export default function manage() {
                  
                 </Button>
                 
-                <span id="file1" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
+                <span  id="file1" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด
+                
+
+                </span>
+
+                <CancelIcon  id="del1" onClick={() => handleRemoveFile('file1')}
+                sx={{
+                  fontSize: "20px",
+                  float:'right',
+                  marginTop:"7px",
+                  marginRight:"15px",
+                  color:"red",
+                  display:"none"
+              }} /> 
                
               </Box>
               
@@ -662,6 +785,16 @@ export default function manage() {
                   />เลือกไฟล์
                 </Button>
                 <span id="file2" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
+                <CancelIcon id="del2" onClick={() => handleRemoveFile('file2')}
+                sx={{
+                  fontSize: "20px",
+                  float:'right',
+                  marginTop:"7px",
+                  marginRight:"15px",
+                  color:"red",
+                  display:"none"
+                }}/>
+
               </Box>
               <hr></hr>
 
@@ -719,7 +852,17 @@ export default function manage() {
                   />เลือกไฟล์
                 </Button>
                 <span id="file3" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
-                
+                <CancelIcon  id="del3" onClick={() => handleRemoveFile('file3')}
+                sx={{
+                  fontSize: "20px",
+                  float:'right',
+                  marginTop:"7px",
+                  marginRight:"15px",
+                  color:"red",
+                  display:"none"
+                }}/>
+
+
               </Box>
 
               <hr></hr>
@@ -774,6 +917,16 @@ export default function manage() {
                   />เลือกไฟล์
                 </Button>
                 <span id="file4" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
+                <CancelIcon  id="del4" onClick={() => handleRemoveFile('file4')}
+                sx={{
+                  fontSize: "20px",
+                  float:'right',
+                  marginTop:"7px",
+                  marginRight:"15px",
+                  color:"red",
+                  display:"none"
+                }}/>
+
               </Box>
               <hr></hr>
 
@@ -838,6 +991,16 @@ export default function manage() {
                   />เลือกไฟล์
                 </Button>
                 <span id="file5" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
+                <CancelIcon  id="del5" onClick={() => handleRemoveFile('file5')}
+                sx={{
+                  fontSize: "20px",
+                  float:'right',
+                  marginTop:"7px",
+                  marginRight:"15px",
+                  color:"red",
+                  display:"none"
+                }}/>
+
               </Box>
                 <hr></hr>
               <Typography variant="h6"
@@ -897,6 +1060,16 @@ export default function manage() {
                   />เลือกไฟล์
                 </Button>
                 <span id="file6" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
+                <CancelIcon  id="del6" onClick={() => handleRemoveFile('file6')}
+                sx={{
+                  fontSize: "20px",
+                  float:'right',
+                  marginTop:"7px",
+                  marginRight:"15px",
+                  color:"red",
+                  display:"none"
+                }}/>
+
               </Box>
               <hr></hr>
 
@@ -954,6 +1127,16 @@ export default function manage() {
                   />เลือกไฟล์
                 </Button>
                 <span id="file7" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
+                <CancelIcon  id="del7" onClick={() => handleRemoveFile('file7')}
+                sx={{
+                  fontSize: "20px",
+                  float:'right',
+                  marginTop:"7px",
+                  marginRight:"15px",
+                  color:"red",
+                  display:"none"
+                }}/>
+
               </Box>
               <hr></hr>
 
@@ -1011,6 +1194,16 @@ export default function manage() {
                   />เลือกไฟล์
                 </Button>
                 <span id="file8" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
+                <CancelIcon  id="del8" onClick={() => handleRemoveFile('file8')}
+                sx={{
+                  fontSize: "20px",
+                  float:'right',
+                  marginTop:"7px",
+                  marginRight:"15px",
+                  color:"red",
+                  display:"none"
+                }}/>
+
               </Box>
             </AccordionDetails>
           </Accordion>
@@ -1075,6 +1268,16 @@ export default function manage() {
                   />เลือกไฟล์
                 </Button>
                 <span id="file9" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
+                <CancelIcon id="del9" onClick={() => handleRemoveFile('file9')}
+                sx={{
+                  fontSize: "20px",
+                  float:'right',
+                  marginTop:"7px",
+                  marginRight:"15px",
+                  color:"red",
+                  display:"none"
+                }}/>
+
               </Box>
 
                 <hr></hr>
@@ -1132,6 +1335,16 @@ export default function manage() {
                   />เลือกไฟล์
                 </Button>
                 <span id="file10" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
+                <CancelIcon  id="del10" onClick={() => handleRemoveFile('file10')}
+                sx={{
+                  fontSize: "20px",
+                  float:'right',
+                  marginTop:"7px",
+                  marginRight:"15px",
+                  color:"red",
+                  display:"none"
+                }}/>
+
               </Box>
               <hr></hr>
 
@@ -1188,6 +1401,16 @@ export default function manage() {
                   />เลือกไฟล์
                 </Button>
                 <span id="file11" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
+                <CancelIcon  id="del11" onClick={() => handleRemoveFile('file11')}
+                sx={{
+                  fontSize: "20px",
+                  float:'right',
+                  marginTop:"7px",
+                  marginRight:"15px",
+                  color:"red",
+                  display:"none"
+                }}/>
+
               </Box>
 
 
@@ -1249,6 +1472,16 @@ export default function manage() {
                   />เลือกไฟล์
                 </Button>
                 <span id="file12" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
+                <CancelIcon  id="del12" onClick={() => handleRemoveFile('file12')}
+                sx={{
+                  fontSize: "20px",
+                  float:'right',
+                  marginTop:"7px",
+                  marginRight:"15px",
+                  color:"red",
+                  display:"none"
+                }}/>
+
               </Box>
               <hr></hr>
 
@@ -1302,6 +1535,16 @@ export default function manage() {
                   />เลือกไฟล์
                 </Button>
                 <span id="file13" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
+                <CancelIcon  id="del13" onClick={() => handleRemoveFile('file13')}
+                sx={{
+                  fontSize: "20px",
+                  float:'right',
+                  marginTop:"7px",
+                  marginRight:"15px",
+                  color:"red",
+                  display:"none"
+                }}/>
+
               </Box>
               <hr></hr>
 
@@ -1336,6 +1579,7 @@ export default function manage() {
               </Box>
               :
               <embed src={pdfFile14} width="300px" height="450px" />
+              
               }
               <Box
                 style={{
@@ -1354,7 +1598,20 @@ export default function manage() {
                     hidden
                   />เลือกไฟล์
                 </Button>
+                
                 <span id="file14" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
+
+              
+                 <CancelIcon  id="del14" onClick={() => handleRemoveFile('file14')}
+                sx={{
+                  fontSize: "20px",
+                  float:'right',
+                  marginTop:"7px",
+                  marginRight:"15px",
+                  color:"red",
+                  display:"none"
+                }}/>
+
               </Box>
 
             </AccordionDetails>
