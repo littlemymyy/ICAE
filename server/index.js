@@ -44,7 +44,7 @@ const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: '',
-    database: 'cosmetic'
+    database: 'cosmetic1'
 });
 
 const pdfStorage = multer.diskStorage({
@@ -54,6 +54,7 @@ const pdfStorage = multer.diskStorage({
     filename:  ( req, file, cb ) => {
         //req.body is empty...
         //How could I get the new_file_name property sent from client here?
+        console.log(file)
         cb( null, Date.now() + '-' + file.originalname);
     }
 });
@@ -62,9 +63,14 @@ const pdfUpload = multer({ storage: pdfStorage });
 
 //not use
 app.post('/generate-pdf', pdfUpload.single('file'), (req, res) => {
+    console.log("Name.....")
+    let originalFileName = req.files.originalname
+    console.log(originalFileName)
+    res.json({ filename: req.file.filename })
     const content = req.body.text;
-    console.log(content)
-
+   // console.log(content)
+   console.log("req file name")
+    console.log(req.file.filename)
     try {
         pdfMake.fonts = {
             THSarabunNew: {
@@ -130,11 +136,13 @@ app.post('/generate-pdf', pdfUpload.single('file'), (req, res) => {
 app.post('/mergePdf', pdfUpload.any(), (req, res) => {
     const merger = new PDFMerger();
     const files = req.files;
-    console.log(files);
+   // console.log(files);
 
     try {
         (async () => {
             for(let i = 0 ; i < files.length ; i++){
+                //console.log("file [i]")
+               // console.log(files[i])
                 await merger.add(files[i].path);
             }
             await merger.save('uploads/mergedpdf.pdf').then((pdfBuffer) => {
@@ -148,14 +156,128 @@ app.post('/mergePdf', pdfUpload.any(), (req, res) => {
 });
 
 app.post('/api/submitPif', pdfUpload.any(), (req, res) => {
+    console.log("submit")
+   //console.log(req.files)
+   const file = req.files
+   console.log("...................")
+   const files = req.body.data;
+   const filePaths = req.files.map(file => file.path.toString());
+   console.log(files)
+
+   console.log(filePaths);
+
+   const filea = filePaths[0] || "-";
+   const fileb = filePaths[1] || "-";
+   const filec = filePaths[2] || "-";
+   const filed = filePaths[3] || "-";
+   const filee = filePaths[4] || "-";
+   const filef = filePaths[5] || "-";
+   const fileg = filePaths[6] || "-";
+   const fileh = filePaths[7] || "-";
+   const filei = filePaths[8] || "-";
+   const filej = filePaths[9] || "-";
+   const filek = filePaths[10] || "-";
+   const filel = filePaths[11] || "-";
+  
+
+            // if(filea.length === 0) {
+            //     filea += "-"
+            // }
+            // else if(fileb.length === 0) {
+            //     fileb += "-"
+            // }
+            // else if(filec.length === 0) {
+            //     filec += "-"
+            // }
+            // else if(filed.length === 0) {
+            //     filed += "-"
+            // }
+            // else if(filee.length === 0) {
+            //     filee += "-"
+            // }
+            // else if(filea.length === 0) {
+            //     filea += "-"
+            // }
+            // else if(filef.length === 0) {
+            //     filef += "-"
+            // }
+            // else if(fileg.length === 0) {
+            //     fileg += "-"
+            // }
+            // else if(fileh.length === 0) {
+            //     fileh += "-"
+            // }
+            // else if(filei.length === 0) {
+            //     filei += "-"
+            // }
+            // else if(filej.length === 0) {
+            //     filej += "-"
+            // }
+            // else if(filek.length === 0) {
+            //     filek += "-"
+            // }
+            // else if(filel.length === 0) {
+            //     filel += "-"
+            // }
+
+            console.log(filea.length);
+            console.log(fileb);
+            console.log(filec);
+
+//    const filea = file[0].path.toString()
+//    const fileb = file[1].path.toString()
+//    const filec = req.files[2].path.toString()
+//    const filed = req.files[3].path.toString()
+//    const filee = req.files[4].path.toString()
+//    const filef = req.files[5].path.toString()
+//    const fileg = req.files[6].path.toString()
+//    const fileh = req.files[7].path.toString()
+//    const filei = req.files[8].path.toString()
+//    const filej = req.files[9].path.toString()
+//    const filek = req.files[10].path.toString()
+//    const filel = req.files[11].path.toString()
+   
+
+//  console.log(filea)
+//  console.log(fileb)
+//  console.log(filec)
+//  console.log(filed)
+//  console.log(filee)
+//  console.log(filef)
+//  console.log(fileg)
+//  console.log(fileh)
+//  console.log(filei)
+//  console.log(filej)
+//  console.log(filek)
+//  console.log(filel)
+
+
+   //console.log(files)
+    
+    
+  
+
+
+
+
     try {
         let img_path = '';
         let pdf_path = '';
 
         (async () => {
-            console.log(JSON.parse(req.body.data))
+           // console.log("file sumitPDF")
+           console.log(JSON.parse(req.body.data))
             const data = JSON.parse(req.body.data);
-            // console.log(req.files.data)
+            console.log(data)
+
+            // for(let i = 0 ; i<data.length ; i++){
+            //     if(data[i]  === null || data[i] === " "){
+            //         data[i] = "-"
+            //     }
+                
+            // }
+           // console.log(data)
+           // console.log(req.files.data)
             pdfMake.fonts = {
                 THSarabunNew: {
                     normal: 'THSarabun.ttf',
@@ -214,8 +336,9 @@ app.post('/api/submitPif', pdfUpload.any(), (req, res) => {
 
             //merge pdf
             const merger = new PDFMerger();
-            const files = req.files;
-            console.log(files);
+          const files = req.files;
+            console.log("file AA")
+          console.log(files);
 
             await merger.add(firstPath);
             try{
@@ -238,9 +361,24 @@ app.post('/api/submitPif', pdfUpload.any(), (req, res) => {
             console.log(pdfFileName)
             pdf_path = path.join('./uploads', `${pdfFileName}.pdf`);
 
+            // console.log(filea.length)
+            // console.log(fileb.length)
+            //  console.log(filec.length)
+            // console.log(filed.length)
+            // console.log(filee.length)
+            // console.log(filef.length)
+            // console.log(fileg.length)
+            // console.log(fileh.length)
+            // console.log(filei.length)
+            // console.log(filej.length)
+            // console.log(filek.length)
+            // console.log(filel.length)
 
-            db.query('INSERT INTO pif (email, file_name, img_path, pdf_path, expdate, rec_create_when) VALUES (?,?,?,?,?,?)',
-                [data.email, data.filename, img_path, pdf_path, data.expdate, new Date()],
+           
+          //  console.log(data.fdadoc_date)
+
+            db.query('INSERT INTO pif (email, file_name, img_path, pdf_path, expdate, rec_create_when, organization_id , fda_license , fdadoc , label_doc , manufacture_doc , gmp_iso ,eff_report ,efficient_report , sds ,masterformula , specification ,testing_doc ,status , fdadoc_date ,	letter_authorization_date,	formula_doc_date ,label_doc_date, manufacture_doc_date ,gmp_iso_date ,eff_report_date ,efficient_report_date ,	sds_date ,masterformula_date ,specification_date ,testing_doc_date) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+                [data.email, data.filename, img_path, pdf_path, data.expdate, new Date() ,data.id, data.fda_num ,filea ,fileb ,filec, filed ,filee ,filef ,fileg ,fileh,filei,filej,filek,filel],
                 (err, result) => {
                 if(err) {
                     console.log(err)
@@ -248,9 +386,10 @@ app.post('/api/submitPif', pdfUpload.any(), (req, res) => {
                     return;
                 }
                 else {
+                    console.log(result)
                     res.json({status: "ok", pdf_path: pdf_path, img_path: img_path});
                 }
-            })
+           })
         })()
     } catch (error) {
         console.error('Error merging PDFs:', error);
@@ -775,13 +914,13 @@ app.get('/api/annex/search', jsonParser, (req, res) => {
 app.get('/api/fetchData', async (req, res) => {
 
     const fda = req.query.data;
-    console.log("is Fda")
+    //console.log("is Fda")
  //   console.log(fda)
 
     try {
       const response = await fetch('http://pertento.fda.moph.go.th/FDA_SEARCH_CENTER/PRODUCT/export_cmt_detail.aspx?regnos='+fda);
       const data = await response.text();
-        console.log(data)
+      //  console.log(data)
       //console.log(data)
       const $ = cheerio.load(data);
    
@@ -1168,7 +1307,7 @@ app.post("/api/pifInfo" , (req , res) => {
 // get user Admin or S
 app.get('/api/getuserTeam/', (req, res) => {
 
-    const sql = `SELECT * FROM employee WHERE status = "U"  && organization_id ="" `
+    const sql = `SELECT * FROM employee WHERE status = "U"  && organization_id = "-" `
     db.query(sql,(err, result) =>{
         console.log(result)
         res.send(result)
@@ -1419,12 +1558,20 @@ app.post('/api/changeNameTeam' , (req , res) => {
 
     })
 
-    const sql1 = `UPDATE pif_storage SET organization_id = ? WHERE organization_id = ?`;
+    const sql1 = `UPDATE pif SET organization_id = ? WHERE organization_id = ?`;
     db.query(sql1 , [team , id ] ,  (err , result) => {
         if(err){
             console.log(err)
         }
     })
+
+    const sql2 = `UPDATE product SET organization_id = ? WHERE organization_id = ?`;
+    db.query(sql2 , [team , id ] ,  (err , result) => {
+        if(err){
+            console.log(err)
+        }
+    })
+
 })
 
 

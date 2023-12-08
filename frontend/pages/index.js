@@ -58,7 +58,7 @@ export default function Home() {
           })
           console.log("........")
           console.log(res.data)
-          if(res.data !== "Notthing"){
+          if(res.data){
           setData(res.data)
   
           let fdanum = ""
@@ -71,8 +71,8 @@ export default function Home() {
           let newfdanum = ""
           newfdanum += fdanum.substring(0 , fdanum.lengt -1)
           console.log(newfdanum)
-         
-          if(res.data !== "Notthing"){
+         console.log(res.data)
+          if(res.data.length && res.data !== "Notthing"){
             Swal.fire({
               title: 'ใบอนุญาตจดแจ้งใกล้หมดอายุ',
               text: 'เลขที่ : '+ fdanum

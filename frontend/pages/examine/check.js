@@ -183,7 +183,7 @@ const check = () => {
   const sendData = () => {
     console.log(JSON.stringify(list));
     router.push({
-      pathname: "/c2A",
+      pathname: "/examine/result",
 
       query: {
         gname: groupName,

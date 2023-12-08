@@ -105,12 +105,15 @@ const team = () => {
                 data : team ,
             }
             try {
-             await Axios.post("http://localhost:3001/api/updateteam", load);
+            const res =  await Axios.post("http://localhost:3001/api/updateteam", load);
                 Swal.fire({
                     title: "สำเร็จ",
                     text: "เพื่มชื่อทีมหรือชื่อบริษัทสำเร็จ",
                     icon: "success"
                   });
+                  console.log(res.data)
+                  sessionStorage.setItem("orid" , res.data)
+                  router.push("/pif/productslist")
                  
                   
             } catch (error) {
@@ -360,7 +363,7 @@ const team = () => {
          }
 
 
-        <Footer />
+        <Footer/>
     </div>
   )
 }

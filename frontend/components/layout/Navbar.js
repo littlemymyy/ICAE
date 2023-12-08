@@ -12,6 +12,8 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { useRouter } from 'next/router';
+import { IoMdNotifications } from "react-icons/io";
+
 
 const pages = ['หน้าหลัก', 'ตรวจสอบสูตรสารเคมี', 'การจัดการPIF' , 'ประวัติการตรวจสอบสูตรสารเคมี','คลังความรู้'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
@@ -206,6 +208,19 @@ function Navbar() {
                     </Button>
                     ))}
                 </Box>
+
+
+                {/* <Box sx={{ flexGrow: 0 }}>
+                    <Tooltip title="Open settings">
+                    <IconButton onClick={handleOpenUserMenu} sx={{ p: 1 }}>
+                        <Avatar alt="Remy Sharp" src= {icon} />
+                    </IconButton>
+                    </Tooltip>
+                     
+                   
+
+                 </Box> */}
+
                 {/* Start User Icon */}
                 {
                     uname !== '' ?

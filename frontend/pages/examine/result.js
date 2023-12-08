@@ -339,6 +339,7 @@ const c2A = () => {
                   <th className='C3_th2'>CAS NO</th>
                   <th className='C3_th3'>ชื่อ</th>
                   <th className='C3_th4'>ปริมาณสาร %</th>
+                  <th className='C3_th5'>หมายเหตุ</th>
                   <th style={{ textAlign: 'center' }}>ตัวเลือก</th>
                 </tr>
               </thead>
@@ -358,6 +359,7 @@ const c2A = () => {
                         <td>
                           <input type='number' defaultValue={value.per1} onChange={(e) => percentChange2(idx, e.target.value)} />
                         </td>
+                        <td>ปริมาณสารที่ใช้ได้คือ {value.per }</td>
                         <td><AiOutlineDelete onClick={() => clickDelete2(idx)} /></td>
                       </tr>
                     ))
