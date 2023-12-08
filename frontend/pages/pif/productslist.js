@@ -34,10 +34,10 @@ export default function productslist() {
 
  
     const fetchData = async () => {
-      console.log("kkk")
+    //  console.log("kkk")
      console.log(ida)
       if(ida === "-"){
-        alert("ok")
+        // alert("ok")
         router.push("/team/team")
       }
 
@@ -98,7 +98,6 @@ export default function productslist() {
           &&
           w.cosnameC
           &&
-          w.reportname &&
           (w.cosname.toLowerCase().includes(a) || w.cosname.toUpperCase().includes(a) || w.cosnameC.toUpperCase().includes(a)||w.cosname.toLowerCase().includes(a)||w.cosnameC.toLowerCase().includes(a)))
         
       });

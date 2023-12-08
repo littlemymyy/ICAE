@@ -58,7 +58,8 @@ const manage = () => {
     let id = sessionStorage.getItem("orid");
     let email = sessionStorage.getItem("uemail")
     let st = sessionStorage.getItem("status")
-    //console.log(id);
+    console.log("session : ")
+    console.log(id);
     setStatusU(st)
     if (!id == null) {
       router.push("team/team");
@@ -153,6 +154,10 @@ const manage = () => {
     
   }, []);
 
+  const checkdb = async (e) => {
+    const res = await Axios.post('')
+  }
+
   const resultsearch = (e) => {
     if (e.length === 0) {
         setShow([]);
@@ -173,17 +178,21 @@ const manage = () => {
 
 
 const checkG = (e) => {
-    for (let i = 0; i < teamdata.length; i++) {
-      if (e === teamdata[i]) {
-        return 1;
+    for (let i = 0; i < data.length; i++) {
+      console.log("CheckG")
+      console.log(e)
+      console.log(data[i].em_fullname)
+      if (e === data[i].em_fullname) {
+        console.log("1 that is if")
+        return true;
       }
     }
-    return 0;
+    return false;
   };
 
   const add = (e) => {
   
-    if (checkG(data, e)) {
+    if (checkG( e) ) {
       alert("กรุณาเลือกคนอื่น");
     } else {
         no.push(e)
@@ -319,6 +328,7 @@ const checkG = (e) => {
   }
 
   const changeName = async () => {
+    console.log("That chamgename big")
     console.log(id)
     console.log(teamName);
     let load = {
@@ -328,13 +338,15 @@ const checkG = (e) => {
 
     try {
         const res = await Axios.post("http://localhost:3001/api/changeNameTeam", load);
-
+        console.log("changeName")
+        console.log(res.data)
         if (res.data) {
             Swal.fire({
                 title: "สำเร็จ!",
                 text: "เปลี่ยนชื่อ เรียบร้อย!",
                 icon: "success",
             });
+            sessionStorage.setItem("orid",teamName)
             window.location.reload();
         }
     } catch (error) {

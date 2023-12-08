@@ -9,6 +9,9 @@ import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import { Box, TextField, Typography, Button } from "@mui/material";
 import Axios from "axios";
 import { set } from "react-hook-form";
+import ClearIcon from '@mui/icons-material/Clear';
+import CloseIcon from '@mui/icons-material/Close';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 const Accordion = styled((props) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -172,58 +175,72 @@ export default function manage() {
       case 'file1':
         setFile1(file);
         setPdfFile1(URL.createObjectURL(file));
+        document.getElementById("del1").style.display = "block";
         break;
       case 'file2':
         setFile2(file);
         setPdfFile2(URL.createObjectURL(file));
+        document.getElementById("del2").style.display = "block";
         break;
       case 'file3':
         setFile3(file);
         setPdfFile3(URL.createObjectURL(file));
+        document.getElementById("del3").style.display = "block";
         break;
       case 'file4':
         setFile4(file);
         setPdfFile4(URL.createObjectURL(file));
+        document.getElementById("del4").style.display = "block";
         break;
       case 'file5':
         setFile5(file);
         setPdfFile5(URL.createObjectURL(file));
+        document.getElementById("del5").style.display = "block";
         break;
       case 'file6':
         setFile6(file);
         setPdfFile6(URL.createObjectURL(file));
+        document.getElementById("del6").style.display = "block";
         break;
       case 'file7':
         setFile7(file);
         setPdfFile7(URL.createObjectURL(file));
+        document.getElementById("del7").style.display = "block";
         break;
       case 'file8':
         setFile8(file);
         setPdfFile8(URL.createObjectURL(file));
+        document.getElementById("del8").style.display = "block";
         break;
       case 'file9':
         setFile9(file);
         setPdfFile9(URL.createObjectURL(file));
+        document.getElementById("del9").style.display = "block";
         break;
       case 'file10':
         setFile10(file);
         setPdfFile10(URL.createObjectURL(file));
+        document.getElementById("del10").style.display = "block";
         break;
       case 'file11':
         setFile11(file);
         setPdfFile11(URL.createObjectURL(file));
+        document.getElementById("del11").style.display = "block";
         break;
       case 'file12':
         setFile12(file);
         setPdfFile12(URL.createObjectURL(file));
+        document.getElementById("del12").style.display = "block";
         break;
       case 'file13':
         setFile13(file);
         setPdfFile13(URL.createObjectURL(file));
+        document.getElementById("del13").style.display = "block";
         break;
       case 'file14':
         setFile14(file);
         setPdfFile14(URL.createObjectURL(file));
+        document.getElementById("del14").style.display = "block";
         break;
       case 'photo':
         setFilePhoto(file);
@@ -233,6 +250,96 @@ export default function manage() {
         break;
     }
   };
+
+  const handleRemoveFile = (inputName) => {
+    //input name is stateVariable name and then clear variable is = inputName
+    switch (inputName) {
+      case 'file1':
+        setFile1(null);
+        setPdfFile1('');
+        document.getElementById("file1").innerHTML = "ไม่ได้เลือกไฟล์ใด";
+        document.getElementById("del1").style.display = "none";
+        break;
+      case 'file2':
+        setFile2(null);
+        setPdfFile2('');
+        document.getElementById("file2").innerHTML = "ไม่ได้เลือกไฟล์ใด";
+        document.getElementById("del2").style.display = "none";
+        break;
+      case 'file3':
+        setFile3(null);
+        setPdfFile3('');
+        document.getElementById("file3").innerHTML = "ไม่ได้เลือกไฟล์ใด";
+        document.getElementById("del3").style.display = "none";
+        break;
+      case 'file4':
+        setFile4(null);
+        setPdfFile4('');
+        document.getElementById("file4").innerHTML = "ไม่ได้เลือกไฟล์ใด";
+        document.getElementById("del4").style.display = "none";
+        break;
+      case 'file5':
+        setFile5(null);
+        setPdfFile5('');
+        document.getElementById("file5").innerHTML = "ไม่ได้เลือกไฟล์ใด";
+        document.getElementById("del5").style.display = "none";
+        break;
+      case 'file6':
+        setFile6(null);
+        setPdfFile6('');
+        document.getElementById("file6").innerHTML = "ไม่ได้เลือกไฟล์ใด";
+        document.getElementById("del6").style.display = "none";
+        break;
+      case 'file7':
+        setFile7(null);
+        setPdfFile7('');
+        document.getElementById("file7").innerHTML = "ไม่ได้เลือกไฟล์ใด";
+        document.getElementById("del7").style.display = "none";
+        break;
+      case 'file8':
+        setFile8(null);
+        setPdfFile8('');
+        document.getElementById("file8").innerHTML = "ไม่ได้เลือกไฟล์ใด";
+        document.getElementById("del8").style.display = "none";
+        break;
+      case 'file9':
+        setFile9(null);
+        setPdfFile9('');
+        document.getElementById("file9").innerHTML = "ไม่ได้เลือกไฟล์ใด";
+        document.getElementById("del9").style.display = "none";
+        break;
+      case 'file10':
+        setFile10(null);
+        setPdfFile10('');
+        document.getElementById("file10").innerHTML = "ไม่ได้เลือกไฟล์ใด";
+        document.getElementById("del10").style.display = "none";
+        break;
+      case 'file11':
+        setFile11(null);
+        setPdfFile10('');
+        document.getElementById("file11").innerHTML = "ไม่ได้เลือกไฟล์ใด";
+        document.getElementById("del11").style.display = "none";
+        break;
+      case 'file12':
+          setFile12(null);
+          setPdfFile12('');
+          document.getElementById("file12").innerHTML = "ไม่ได้เลือกไฟล์ใด";
+          document.getElementById("del12").style.display = "none";
+          break;
+        case 'file13':
+          setFile13(null);
+          setPdfFile13('');
+          document.getElementById("file13").innerHTML = "ไม่ได้เลือกไฟล์ใด";
+          document.getElementById("del13").style.display = "none";
+          break;
+        case 'file14':
+          setFile14(null);
+          setPdfFile14('');
+          document.getElementById("file14").innerHTML = "ไม่ได้เลือกไฟล์ใด";
+          document.getElementById("del14").style.display = "none";
+          break;
+    }
+  }
 
   const generatePDF = async (e) => {
     let data = JSON.stringify({
@@ -273,7 +380,8 @@ export default function manage() {
     formData.append('data', data);
     photo && formData.append('photo', photo);
     // file3 && formData.append('file3', file3);
-
+    // console.log("formData")
+    // console.log(formData)
     try {
       const response = await Axios.post('http://localhost:3001/api/submitPif', formData, {
         headers: {
@@ -548,15 +656,16 @@ export default function manage() {
 
               >สำเนาใบรับจดแจ้งเครื่องสำอาง</Typography>
               <Box sx={{
-                display: { xs: "", md: "inline-grid" },
+                display: { xs: "", md: "table-caption" },
+               
               }}>
                 <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
                 <TextField type="date" id='expdate' />
               </Box>
                {pdfFile1 === '' ? 
               <Box sx={{
-                width: '800px',
-                height: '500px',
+                width: '300px',
+                height: '200px',
                 borderRadius: '5px',
                 boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
                 marginTop: "20px",
@@ -569,34 +678,57 @@ export default function manage() {
                   
                   
                  }}>
-                  <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"250px" ,justifyContent:"center"}} />
-                
+                  <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
+                  <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
                 </Box>
                 
               </Box>
               :
-              <embed src={pdfFile1} width="800px" height="500px" />
+              <embed src={pdfFile1} width="300px" height="450px" />
               }
               <Box
                 style={{
+              
                   borderRadius: '5px',
                   boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.25)',
                   marginTop: "10px"
+                  
                 }}>
                 <Button
+                  width="100%"
                   variant="contained"
                   component="label"
+                  marginTop="10px"
                 >
                   <input
+                 
                     id="filename"
                     type="file"
                     onChange={(event) => handleFileChange('file1', event)}
                     hidden
                   />เลือกไฟล์
+                  
+                 
                 </Button>
-                <span id="file1" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
+                
+                <span  id="file1" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด
+                
 
+                </span>
+
+                <CancelIcon  id="del1" onClick={() => handleRemoveFile('file1')}
+                sx={{
+                  fontSize: "20px",
+                  float:'right',
+                  marginTop:"7px",
+                  marginRight:"15px",
+                  color:"red",
+                  display:"none"
+              }} /> 
+               
               </Box>
+              
+
                 <hr></hr>
               <Typography variant="h6"
                 sx={{
@@ -605,16 +737,17 @@ export default function manage() {
                 }}
 
               >หนังสือยืนยันการเป็นเจ้าของเครื่องสำอาง /  Letter of Authorization </Typography>
-              <Box sx={{
-                display: { xs: "", md: "inline-grid" },
+               <Box sx={{
+                display: { xs: "", md: "table-caption" },
+               
               }}>
                 <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
                 <TextField type="date" id='expdate' />
               </Box>
               {pdfFile2 === '' ? 
               <Box sx={{
-                width: '800px',
-                height: '500px',
+                width: '300px',
+                height: '200px',
                 borderRadius: '5px',
                 boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
                 marginTop: "20px",
@@ -627,13 +760,13 @@ export default function manage() {
                   
                   
                  }}>
-                  <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"250px" ,justifyContent:"center"}} />
-                
+                 <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
+                  <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
                 </Box>
                 
               </Box>
               :
-              <embed src={pdfFile2} width="800px" height="500px" /> 
+              <embed src={pdfFile2} width="300px" height="450px" /> 
               }
               <Box
                 style={{
@@ -653,6 +786,16 @@ export default function manage() {
                   />เลือกไฟล์
                 </Button>
                 <span id="file2" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
+                <CancelIcon id="del2" onClick={() => handleRemoveFile('file2')}
+                sx={{
+                  fontSize: "20px",
+                  float:'right',
+                  marginTop:"7px",
+                  marginRight:"15px",
+                  color:"red",
+                  display:"none"
+                }}/>
+
               </Box>
               <hr></hr>
 
@@ -660,16 +803,17 @@ export default function manage() {
                 2. สูตรส่วนประกอบของเครื่องสำอาง
               </Typography>
               <Box sx={{
-                display: { xs: "", md: "inline-grid" },
+                display: { xs: "", md: "table-caption" },
+               
               }}>
-                <Typography variant="h8">วันหมดอายุของเอกสาร</Typography>
+                <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
                 <TextField type="date" id='expdate' />
               </Box>
 
               {pdfFile3 === '' ? 
               <Box sx={{
-                width: '800px',
-                height: '500px',
+                width: '300px',
+                height: '200px',
                 borderRadius: '5px',
                 boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
                 marginTop: "20px",
@@ -682,13 +826,13 @@ export default function manage() {
                   
                   
                  }}>
-                  <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"250px" ,justifyContent:"center"}} />
-                
+                   <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
+                  <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
                 </Box>
                 
               </Box>
               :
-              <embed src={pdfFile3} width="800px" height="500px" />
+              <embed src={pdfFile3} width="300px" height="450px" />
               }
 
               <Box
@@ -709,20 +853,33 @@ export default function manage() {
                   />เลือกไฟล์
                 </Button>
                 <span id="file3" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
+                <CancelIcon  id="del3" onClick={() => handleRemoveFile('file3')}
+                sx={{
+                  fontSize: "20px",
+                  float:'right',
+                  marginTop:"7px",
+                  marginRight:"15px",
+                  color:"red",
+                  display:"none"
+                }}/>
+
+
               </Box>
 
               <hr></hr>
               <Typography variant="h6">3. ฉลากเครื่องสำอาง</Typography>
               <Box sx={{
-                display: { xs: "", md: "inline-grid" },
+                display: { xs: "", md: "table-caption" },
+               
               }}>
                 <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
                 <TextField type="date" id='expdate' />
               </Box>
+
               {pdfFile4 === '' ? 
               <Box sx={{
-                width: '800px',
-                height: '500px',
+                width: '300px',
+                height: '200px',
                 borderRadius: '5px',
                 boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
                 marginTop: "20px",
@@ -735,13 +892,13 @@ export default function manage() {
                   
                   
                  }}>
-                  <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"250px" ,justifyContent:"center"}} />
-                
+                   <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
+                  <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
                 </Box>
                 
               </Box>
               :
-              <embed src={pdfFile4} width="800px" height="500px" />
+              <embed src={pdfFile4} width="300px" height="450px" />
               }
               <Box
                 style={{
@@ -761,6 +918,16 @@ export default function manage() {
                   />เลือกไฟล์
                 </Button>
                 <span id="file4" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
+                <CancelIcon  id="del4" onClick={() => handleRemoveFile('file4')}
+                sx={{
+                  fontSize: "20px",
+                  float:'right',
+                  marginTop:"7px",
+                  marginRight:"15px",
+                  color:"red",
+                  display:"none"
+                }}/>
+
               </Box>
               <hr></hr>
 
@@ -775,16 +942,18 @@ export default function manage() {
                 }}
 
               >ข้อมูลการผลิต</Typography>
-              <Box sx={{
-                display: { xs: "", md: "inline-grid" },
+               <Box sx={{
+                display: { xs: "", md: "table-caption" },
+               
               }}>
                 <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
                 <TextField type="date" id='expdate' />
               </Box>
+
                {pdfFile5 === '' ? 
               <Box sx={{
-                width: '800px',
-                height: '500px',
+                width: '300px',
+                height: '200px',
                 borderRadius: '5px',
                 boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
                 marginTop: "20px",
@@ -797,13 +966,13 @@ export default function manage() {
                   
                   
                  }}>
-                  <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"250px" ,justifyContent:"center"}} />
-                
+                   <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
+                  <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
                 </Box>
                 
               </Box>
               :
-              <embed src={pdfFile5} width="800px" height="500px" />
+              <embed src={pdfFile5} width="300px" height="450px" />
               }
               <Box
                 style={{
@@ -823,6 +992,16 @@ export default function manage() {
                   />เลือกไฟล์
                 </Button>
                 <span id="file5" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
+                <CancelIcon  id="del5" onClick={() => handleRemoveFile('file5')}
+                sx={{
+                  fontSize: "20px",
+                  float:'right',
+                  marginTop:"7px",
+                  marginRight:"15px",
+                  color:"red",
+                  display:"none"
+                }}/>
+
               </Box>
                 <hr></hr>
               <Typography variant="h6"
@@ -832,16 +1011,18 @@ export default function manage() {
                 }}
 
               >GMP / ISO</Typography>
-              <Box sx={{
-                display: { xs: "", md: "inline-grid" },
+               <Box sx={{
+                display: { xs: "", md: "table-caption" },
+               
               }}>
                 <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
                 <TextField type="date" id='expdate' />
               </Box>
+
                {pdfFile6 === '' ? 
               <Box sx={{
-                width: '800px',
-                height: '500px',
+                width: '300px',
+                height: '200px',
                 borderRadius: '5px',
                 boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
                 marginTop: "20px",
@@ -854,13 +1035,13 @@ export default function manage() {
                   
                   
                  }}>
-                  <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"250px" ,justifyContent:"center"}} />
-                
+                   <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
+                  <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
                 </Box>
                 
               </Box>
               :
-              <embed src={pdfFile6} width="800px" height="500px" />
+              <embed src={pdfFile6} width="300px" height="450px" />
               }
               <Box
                 style={{
@@ -880,22 +1061,34 @@ export default function manage() {
                   />เลือกไฟล์
                 </Button>
                 <span id="file6" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
+                <CancelIcon  id="del6" onClick={() => handleRemoveFile('file6')}
+                sx={{
+                  fontSize: "20px",
+                  float:'right',
+                  marginTop:"7px",
+                  marginRight:"15px",
+                  color:"red",
+                  display:"none"
+                }}/>
+
               </Box>
               <hr></hr>
 
               <Typography variant="h6">
                 5.รายงานสรุปอาการอันไม่พึงประสงค์จากการใช้เครื่องสำอาง
               </Typography>
-              <Box sx={{
-                display: { xs: "", md: "inline-grid" },
+               <Box sx={{
+                display: { xs: "", md: "table-caption" },
+               
               }}>
                 <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
                 <TextField type="date" id='expdate' />
               </Box>
+
               {pdfFile7 === '' ? 
               <Box sx={{
-                width: '800px',
-                height: '500px',
+                width: '300px',
+                height: '200px',
                 borderRadius: '5px',
                 boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
                 marginTop: "20px",
@@ -908,13 +1101,13 @@ export default function manage() {
                   
                   
                  }}>
-                  <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"250px" ,justifyContent:"center"}} />
-                
+                  <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
+                  <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
                 </Box>
                 
               </Box>
               :
-              <embed src={pdfFile7} width="800px" height="500px" />
+              <embed src={pdfFile7} width="300px" height="450px" />
               }
 
               <Box
@@ -935,22 +1128,34 @@ export default function manage() {
                   />เลือกไฟล์
                 </Button>
                 <span id="file7" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
+                <CancelIcon  id="del7" onClick={() => handleRemoveFile('file7')}
+                sx={{
+                  fontSize: "20px",
+                  float:'right',
+                  marginTop:"7px",
+                  marginRight:"15px",
+                  color:"red",
+                  display:"none"
+                }}/>
+
               </Box>
               <hr></hr>
 
               <Typography variant="h6">
                 6. การประเมินความสอดคล้องของการกล่าวอ้างสรรพคุณเครื่องสำอาง
               </Typography>
-              <Box sx={{
-                display: { xs: "", md: "inline-grid" },
+               <Box sx={{
+                display: { xs: "", md: "table-caption" },
+               
               }}>
                 <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
                 <TextField type="date" id='expdate' />
               </Box>
+
               {pdfFile8 === '' ? 
               <Box sx={{
-                width: '800px',
-                height: '500px',
+                width: '300px',
+                height: '200px',
                 borderRadius: '5px',
                 boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
                 marginTop: "20px",
@@ -963,13 +1168,13 @@ export default function manage() {
                   
                   
                  }}>
-                  <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"250px" ,justifyContent:"center"}} />
-                
+                   <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
+                  <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
                 </Box>
                 
               </Box>
               :
-              <embed src={pdfFile8} width="800px" height="500px" />
+              <embed src={pdfFile8} width="300px" height="450px" />
               }
 
               <Box
@@ -990,6 +1195,16 @@ export default function manage() {
                   />เลือกไฟล์
                 </Button>
                 <span id="file8" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
+                <CancelIcon  id="del8" onClick={() => handleRemoveFile('file8')}
+                sx={{
+                  fontSize: "20px",
+                  float:'right',
+                  marginTop:"7px",
+                  marginRight:"15px",
+                  color:"red",
+                  display:"none"
+                }}/>
+
               </Box>
             </AccordionDetails>
           </Accordion>
@@ -1003,16 +1218,18 @@ export default function manage() {
               <Typography variant="h6">
                 1. ข้อกำหนดของวัตถุดิบ
               </Typography>
-              <Box sx={{
-                display: { xs: "", md: "inline-grid" },
+               <Box sx={{
+                display: { xs: "", md: "table-caption" },
+               
               }}>
                 <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
                 <TextField type="date" id='expdate' />
               </Box>
+
               {pdfFile9 === '' ? 
               <Box sx={{
-                width: '800px',
-                height: '500px',
+                width: '300px',
+                height: '200px',
                 borderRadius: '5px',
                 boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
                 marginTop: "20px",
@@ -1025,13 +1242,13 @@ export default function manage() {
                   
                   
                  }}>
-                  <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"250px" ,justifyContent:"center"}} />
-                
+                  <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
+                  <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
                 </Box>
                 
               </Box>
               :
-              <embed src={pdfFile9} width="800px" height="500px" />
+              <embed src={pdfFile9} width="300px" height="450px" />
               }
 
               <Box
@@ -1052,22 +1269,34 @@ export default function manage() {
                   />เลือกไฟล์
                 </Button>
                 <span id="file9" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
+                <CancelIcon id="del9" onClick={() => handleRemoveFile('file9')}
+                sx={{
+                  fontSize: "20px",
+                  float:'right',
+                  marginTop:"7px",
+                  marginRight:"15px",
+                  color:"red",
+                  display:"none"
+                }}/>
+
               </Box>
 
                 <hr></hr>
               <Typography variant="h6" sx={{ marginTop: { xs: "10px", md: "10px" } }}>
                 certificate of analysis (COA)
               </Typography>
-              <Box sx={{
-                display: { xs: "", md: "inline-grid" },
+               <Box sx={{
+                display: { xs: "", md: "table-caption" },
+               
               }}>
                 <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
                 <TextField type="date" id='expdate' />
               </Box>
+
               {pdfFile10 === '' ? 
               <Box sx={{
-                width: '800px',
-                height: '500px',
+                width: '300px',
+                height: '200px',
                 borderRadius: '5px',
                 boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
                 marginTop: "20px",
@@ -1080,13 +1309,13 @@ export default function manage() {
                   
                   
                  }}>
-                  <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"250px" ,justifyContent:"center"}} />
-                
+                  <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
+                  <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
                 </Box>
                 
               </Box>
               :
-              <embed src= {pdfFile10} width="800px" height="500px" />
+              <embed src= {pdfFile10} width="300px" height="450px" />
               }
 
               <Box
@@ -1107,22 +1336,33 @@ export default function manage() {
                   />เลือกไฟล์
                 </Button>
                 <span id="file10" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
+                <CancelIcon  id="del10" onClick={() => handleRemoveFile('file10')}
+                sx={{
+                  fontSize: "20px",
+                  float:'right',
+                  marginTop:"7px",
+                  marginRight:"15px",
+                  color:"red",
+                  display:"none"
+                }}/>
+
               </Box>
               <hr></hr>
 
               <Typography variant="h6">
                 2. ข้อมูลแสดงความปลอดภัยของวัตถุดิบทุกรายการ (Safety Data Sheet : SDS)
               </Typography>
-              <Box sx={{
-                display: { xs: "", md: "inline-grid" },
+               <Box sx={{
+                display: { xs: "", md: "table-caption" },
+               
               }}>
                 <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
                 <TextField type="date" id='expdate' />
               </Box>
               {pdfFile11 === '' ? 
               <Box sx={{
-                width: '800px',
-                height: '500px',
+                width: '300px',
+                height: '200px',
                 borderRadius: '5px',
                 boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
                 marginTop: "20px",
@@ -1135,13 +1375,13 @@ export default function manage() {
                   
                   
                  }}>
-                  <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"250px" ,justifyContent:"center"}} />
-                
+                   <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
+                  <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
                 </Box>
                 
               </Box>
               :
-              <embed src={pdfFile11} width="800px" height="500px" />
+              <embed src={pdfFile11} width="300px" height="450px" />
               }
 
               <Box
@@ -1162,6 +1402,16 @@ export default function manage() {
                   />เลือกไฟล์
                 </Button>
                 <span id="file11" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
+                <CancelIcon  id="del11" onClick={() => handleRemoveFile('file11')}
+                sx={{
+                  fontSize: "20px",
+                  float:'right',
+                  marginTop:"7px",
+                  marginRight:"15px",
+                  color:"red",
+                  display:"none"
+                }}/>
+
               </Box>
 
 
@@ -1175,15 +1425,16 @@ export default function manage() {
 
               <Typography variant="h6">1. สูตรแม่บท (Master formula)</Typography>
               <Box sx={{
-                display: { xs: "", md: "inline-grid" },
+                display: { xs: "", md: "table-caption" },
+               
               }}>
                 <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
                 <TextField type="date" id='expdate' />
               </Box>
               {pdfFile12 === '' ? 
               <Box sx={{
-                width: '800px',
-                height: '500px',
+                width: '300px',
+                height: '200px',
                 borderRadius: '5px',
                 boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
                 marginTop: "20px",
@@ -1196,13 +1447,13 @@ export default function manage() {
                   
                   
                  }}>
-                  <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"250px" ,justifyContent:"center"}} />
-                
+                  <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
+                  <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
                 </Box>
                 
               </Box>
               :
-              <embed src={pdfFile12} width="800px" height="500px" />
+              <embed src={pdfFile12} width="300px" height="450px" />
               }
               <Box
                 style={{
@@ -1222,20 +1473,31 @@ export default function manage() {
                   />เลือกไฟล์
                 </Button>
                 <span id="file12" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
+                <CancelIcon  id="del12" onClick={() => handleRemoveFile('file12')}
+                sx={{
+                  fontSize: "20px",
+                  float:'right',
+                  marginTop:"7px",
+                  marginRight:"15px",
+                  color:"red",
+                  display:"none"
+                }}/>
+
               </Box>
               <hr></hr>
 
               <Typography variant="h6">2. ข้อกำหนดของเครื่องสำอางสำเร็จรูป (Specification of cosmetic finished product)</Typography>
               <Box sx={{
-                display: { xs: "", md: "inline-grid" },
+                display: { xs: "", md: "table-caption" },
+               
               }}>
                 <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
                 <TextField type="date" id='expdate' />
               </Box>
               {pdfFile13 === '' ? 
               <Box sx={{
-                width: '800px',
-                height: '500px',
+                width: '300px',
+                height: '200px',
                 borderRadius: '5px',
                 boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
                 marginTop: "20px",
@@ -1248,13 +1510,13 @@ export default function manage() {
                   
                   
                  }}>
-                  <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"250px" ,justifyContent:"center"}} />
-                
+                   <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
+                  <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
                 </Box>
                 
               </Box>
               :
-              <embed src={pdfFile13} width="800px" height="500px" />
+              <embed src={pdfFile13} width="300px" height="450px" />
               }
               <Box
                 style={{
@@ -1274,20 +1536,31 @@ export default function manage() {
                   />เลือกไฟล์
                 </Button>
                 <span id="file13" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
+                <CancelIcon  id="del13" onClick={() => handleRemoveFile('file13')}
+                sx={{
+                  fontSize: "20px",
+                  float:'right',
+                  marginTop:"7px",
+                  marginRight:"15px",
+                  color:"red",
+                  display:"none"
+                }}/>
+
               </Box>
               <hr></hr>
 
               <Typography variant="h6">3. วิธีการทดสอบเครื่องสำอางสำเร็จรูป (Testing method for cosmetic finished product) </Typography>
               <Box sx={{
-                display: { xs: "", md: "inline-grid" },
+                display: { xs: "", md: "table-caption" },
+               
               }}>
                 <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
                 <TextField type="date" id='expdate' />
               </Box>
               {pdfFile14 === '' ? 
               <Box sx={{
-                width: '800px',
-                height: '500px',
+                width: '300px',
+                height: '200px',
                 borderRadius: '5px',
                 boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
                 marginTop: "20px",
@@ -1300,13 +1573,14 @@ export default function manage() {
                   
                   
                  }}>
-                  <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"250px" ,justifyContent:"center"}} />
-                
+                   <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
+                  <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
                 </Box>
                 
               </Box>
               :
-              <embed src={pdfFile14} width="800px" height="500px" />
+              <embed src={pdfFile14} width="300px" height="450px" />
+              
               }
               <Box
                 style={{
@@ -1325,7 +1599,20 @@ export default function manage() {
                     hidden
                   />เลือกไฟล์
                 </Button>
+                
                 <span id="file14" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
+
+              
+                 <CancelIcon  id="del14" onClick={() => handleRemoveFile('file14')}
+                sx={{
+                  fontSize: "20px",
+                  float:'right',
+                  marginTop:"7px",
+                  marginRight:"15px",
+                  color:"red",
+                  display:"none"
+                }}/>
+
               </Box>
 
             </AccordionDetails>
