@@ -407,6 +407,7 @@ export default function manage() {
     setExpanded(newExpanded ? panel : false);
   };
 
+//
   
   return (
     <>
@@ -659,9 +660,30 @@ export default function manage() {
                 <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
                 <TextField type="date" id='expdate' />
               </Box>
-               
-              <embed src={pdfFile1} width="300px" height="450px" style={{display:pdfFile1===''? 'none' : 'block'}}/>
-              
+               {pdfFile1 === '' ? 
+              <Box sx={{
+                width: '300px',
+                height: '200px',
+                borderRadius: '5px',
+                boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
+                marginTop: "20px",
+                backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
+
+              }}>
+                <Box sx={{
+                  justifyContent: { xs: "", md: "center" },
+                  textAlign: { xs: "center", md: "center" },
+                  
+                  
+                 }}>
+                  <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
+                  <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
+                </Box>
+                
+              </Box>
+              :
+              <embed src={pdfFile1} width="300px" height="450px" />
+              }
               <Box
                 style={{
               
@@ -720,9 +742,30 @@ export default function manage() {
                 <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
                 <TextField type="date" id='expdate' />
               </Box>
-              
-              <embed src={pdfFile2} width="300px" height="450px" style={{display:pdfFile2===''? 'none' : 'block'}}/> 
-              
+              {pdfFile2 === '' ? 
+              <Box sx={{
+                width: '300px',
+                height: '200px',
+                borderRadius: '5px',
+                boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
+                marginTop: "20px",
+                backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
+
+              }}>
+                <Box sx={{
+                  justifyContent: { xs: "", md: "center" },
+                  textAlign: { xs: "center", md: "center" },
+                  
+                  
+                 }}>
+                 <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
+                  <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
+                </Box>
+                
+              </Box>
+              :
+              <embed src={pdfFile2} width="300px" height="450px" /> 
+              }
               <Box
                 style={{
                   borderRadius: '5px',
@@ -765,10 +808,30 @@ export default function manage() {
                 <TextField type="date" id='expdate' />
               </Box>
 
-             
-              
-              <embed src={pdfFile3} width="300px" height="450px" style={{display:pdfFile3===''? 'none' : 'block'}}/>
-              
+              {pdfFile3 === '' ? 
+              <Box sx={{
+                width: '300px',
+                height: '200px',
+                borderRadius: '5px',
+                boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
+                marginTop: "20px",
+                backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
+
+              }}>
+                <Box sx={{
+                  justifyContent: { xs: "", md: "center" },
+                  textAlign: { xs: "center", md: "center" },
+                  
+                  
+                 }}>
+                   <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
+                  <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
+                </Box>
+                
+              </Box>
+              :
+              <embed src={pdfFile3} width="300px" height="450px" />
+              }
 
               <Box
                 style={{
@@ -811,9 +874,30 @@ export default function manage() {
                 <TextField type="date" id='expdate' />
               </Box>
 
-              
-              <embed src={pdfFile4} width="300px" height="450px" style={{display:pdfFile4===''? 'none' : 'block'}}/>
-              
+              {pdfFile4 === '' ? 
+              <Box sx={{
+                width: '300px',
+                height: '200px',
+                borderRadius: '5px',
+                boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
+                marginTop: "20px",
+                backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
+
+              }}>
+                <Box sx={{
+                  justifyContent: { xs: "", md: "center" },
+                  textAlign: { xs: "center", md: "center" },
+                  
+                  
+                 }}>
+                   <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
+                  <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
+                </Box>
+                
+              </Box>
+              :
+              <embed src={pdfFile4} width="300px" height="450px" />
+              }
               <Box
                 style={{
                   borderRadius: '5px',
@@ -864,9 +948,30 @@ export default function manage() {
                 <TextField type="date" id='expdate' />
               </Box>
 
-               
-              <embed src={pdfFile5} width="300px" height="450px" style={{display:pdfFile5===''? 'none' : 'block'}}/>
-              
+               {pdfFile5 === '' ? 
+              <Box sx={{
+                width: '300px',
+                height: '200px',
+                borderRadius: '5px',
+                boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
+                marginTop: "20px",
+                backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
+
+              }}>
+                <Box sx={{
+                  justifyContent: { xs: "", md: "center" },
+                  textAlign: { xs: "center", md: "center" },
+                  
+                  
+                 }}>
+                   <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
+                  <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
+                </Box>
+                
+              </Box>
+              :
+              <embed src={pdfFile5} width="300px" height="450px" />
+              }
               <Box
                 style={{
                   borderRadius: '5px',
@@ -912,9 +1017,30 @@ export default function manage() {
                 <TextField type="date" id='expdate' />
               </Box>
 
-               
-              <embed src={pdfFile6} width="300px" height="450px" style={{display:pdfFile6===''? 'none' : 'block'}}/>
-              
+               {pdfFile6 === '' ? 
+              <Box sx={{
+                width: '300px',
+                height: '200px',
+                borderRadius: '5px',
+                boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
+                marginTop: "20px",
+                backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
+
+              }}>
+                <Box sx={{
+                  justifyContent: { xs: "", md: "center" },
+                  textAlign: { xs: "center", md: "center" },
+                  
+                  
+                 }}>
+                   <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
+                  <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
+                </Box>
+                
+              </Box>
+              :
+              <embed src={pdfFile6} width="300px" height="450px" />
+              }
               <Box
                 style={{
                   borderRadius: '5px',
@@ -957,8 +1083,30 @@ export default function manage() {
                 <TextField type="date" id='expdate' />
               </Box>
 
-              <embed src={pdfFile7} width="300px" height="450px" style={{display:pdfFile7===''? 'none' : 'block'}}/>
-              
+              {pdfFile7 === '' ? 
+              <Box sx={{
+                width: '300px',
+                height: '200px',
+                borderRadius: '5px',
+                boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
+                marginTop: "20px",
+                backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
+
+              }}>
+                <Box sx={{
+                  justifyContent: { xs: "", md: "center" },
+                  textAlign: { xs: "center", md: "center" },
+                  
+                  
+                 }}>
+                  <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
+                  <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
+                </Box>
+                
+              </Box>
+              :
+              <embed src={pdfFile7} width="300px" height="450px" />
+              }
 
               <Box
                 style={{
@@ -1002,9 +1150,30 @@ export default function manage() {
                 <TextField type="date" id='expdate' />
               </Box>
 
-             
-              <embed src={pdfFile8} width="300px" height="450px" style={{display:pdfFile8===''? 'none' : 'block'}}/>
-              
+              {pdfFile8 === '' ? 
+              <Box sx={{
+                width: '300px',
+                height: '200px',
+                borderRadius: '5px',
+                boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
+                marginTop: "20px",
+                backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
+
+              }}>
+                <Box sx={{
+                  justifyContent: { xs: "", md: "center" },
+                  textAlign: { xs: "center", md: "center" },
+                  
+                  
+                 }}>
+                   <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
+                  <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
+                </Box>
+                
+              </Box>
+              :
+              <embed src={pdfFile8} width="300px" height="450px" />
+              }
 
               <Box
                 style={{
@@ -1055,9 +1224,30 @@ export default function manage() {
                 <TextField type="date" id='expdate' />
               </Box>
 
-             
-              <embed src={pdfFile9} width="300px" height="450px" style={{display:pdfFile9===''? 'none' : 'block'}}/>
-              
+              {pdfFile9 === '' ? 
+              <Box sx={{
+                width: '300px',
+                height: '200px',
+                borderRadius: '5px',
+                boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
+                marginTop: "20px",
+                backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
+
+              }}>
+                <Box sx={{
+                  justifyContent: { xs: "", md: "center" },
+                  textAlign: { xs: "center", md: "center" },
+                  
+                  
+                 }}>
+                  <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
+                  <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
+                </Box>
+                
+              </Box>
+              :
+              <embed src={pdfFile9} width="300px" height="450px" />
+              }
 
               <Box
                 style={{
@@ -1101,9 +1291,30 @@ export default function manage() {
                 <TextField type="date" id='expdate' />
               </Box>
 
-              
-              <embed src= {pdfFile10} width="300px" height="450px" style={{display:pdfFile10===''? 'none' : 'block'}}/>
-              
+              {pdfFile10 === '' ? 
+              <Box sx={{
+                width: '300px',
+                height: '200px',
+                borderRadius: '5px',
+                boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
+                marginTop: "20px",
+                backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
+
+              }}>
+                <Box sx={{
+                  justifyContent: { xs: "", md: "center" },
+                  textAlign: { xs: "center", md: "center" },
+                  
+                  
+                 }}>
+                  <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
+                  <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
+                </Box>
+                
+              </Box>
+              :
+              <embed src= {pdfFile10} width="300px" height="450px" />
+              }
 
               <Box
                 style={{
@@ -1146,9 +1357,30 @@ export default function manage() {
                 <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
                 <TextField type="date" id='expdate' />
               </Box>
-              
-              <embed src={pdfFile11} width="300px" height="450px"style={{display:pdfFile11===''? 'none' : 'block'}} />
-              
+              {pdfFile11 === '' ? 
+              <Box sx={{
+                width: '300px',
+                height: '200px',
+                borderRadius: '5px',
+                boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
+                marginTop: "20px",
+                backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
+
+              }}>
+                <Box sx={{
+                  justifyContent: { xs: "", md: "center" },
+                  textAlign: { xs: "center", md: "center" },
+                  
+                  
+                 }}>
+                   <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
+                  <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
+                </Box>
+                
+              </Box>
+              :
+              <embed src={pdfFile11} width="300px" height="450px" />
+              }
 
               <Box
                 style={{
@@ -1197,9 +1429,30 @@ export default function manage() {
                 <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
                 <TextField type="date" id='expdate' />
               </Box>
-              
-              <embed src={pdfFile12} width="300px" height="450px" style={{display:pdfFile12===''? 'none' : 'block'}}/>
-              
+              {pdfFile12 === '' ? 
+              <Box sx={{
+                width: '300px',
+                height: '200px',
+                borderRadius: '5px',
+                boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
+                marginTop: "20px",
+                backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
+
+              }}>
+                <Box sx={{
+                  justifyContent: { xs: "", md: "center" },
+                  textAlign: { xs: "center", md: "center" },
+                  
+                  
+                 }}>
+                  <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
+                  <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
+                </Box>
+                
+              </Box>
+              :
+              <embed src={pdfFile12} width="300px" height="450px" />
+              }
               <Box
                 style={{
                   borderRadius: '5px',
@@ -1239,9 +1492,30 @@ export default function manage() {
                 <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
                 <TextField type="date" id='expdate' />
               </Box>
-              
-              <embed src={pdfFile13} width="300px" height="450px" style={{display:pdfFile13===''? 'none' : 'block'}} />
-              
+              {pdfFile13 === '' ? 
+              <Box sx={{
+                width: '300px',
+                height: '200px',
+                borderRadius: '5px',
+                boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
+                marginTop: "20px",
+                backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
+
+              }}>
+                <Box sx={{
+                  justifyContent: { xs: "", md: "center" },
+                  textAlign: { xs: "center", md: "center" },
+                  
+                  
+                 }}>
+                   <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
+                  <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
+                </Box>
+                
+              </Box>
+              :
+              <embed src={pdfFile13} width="300px" height="450px" />
+              }
               <Box
                 style={{
                   borderRadius: '5px',
@@ -1281,10 +1555,31 @@ export default function manage() {
                 <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
                 <TextField type="date" id='expdate' />
               </Box>
-             
-              <embed src={pdfFile14} width="300px" height="450px" style={{display:pdfFile14===''? 'none' : 'block'}}/>
+              {pdfFile14 === '' ? 
+              <Box sx={{
+                width: '300px',
+                height: '200px',
+                borderRadius: '5px',
+                boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
+                marginTop: "20px",
+                backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
+
+              }}>
+                <Box sx={{
+                  justifyContent: { xs: "", md: "center" },
+                  textAlign: { xs: "center", md: "center" },
+                  
+                  
+                 }}>
+                   <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
+                  <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
+                </Box>
+                
+              </Box>
+              :
+              <embed src={pdfFile14} width="300px" height="450px" />
               
-              
+              }
               <Box
                 style={{
                   borderRadius: '5px',
