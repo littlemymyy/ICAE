@@ -166,7 +166,7 @@ const check = () => {
 
   // const saveFile = () => {
   //   let load = {
-  //     uname : sessionStorage.getItem("uname") ,
+  //     uname : localStorage.getItem("uname") ,
   //     gname : groupName ,
   //     fillterg : fillterg ,
   //     dd : list
@@ -191,9 +191,9 @@ const check = () => {
         filltergA: JSON.stringify(fillterg),
       },
     });
-    // sessionStorage.setItem('myArray', JSON.stringify(list));
-    // sessionStorage.setItem('gname' , groupName)
-    // sessionStorage.setItem('fillterg' , JSON.stringify(fillterg) )
+    // localStorage.setItem('myArray', JSON.stringify(list));
+    // localStorage.setItem('gname' , groupName)
+    // localStorage.setItem('fillterg' , JSON.stringify(fillterg) )
     //router.push('/c2A', undefined , { shallow: true, state: { list , fillterg} })
   };
 
@@ -210,7 +210,7 @@ const check = () => {
           }}
 
         >
-            <Box 
+            <Box
             sx={{
 
                 justifyContent: { xs: "", md: "center" },
@@ -227,7 +227,7 @@ const check = () => {
               marginBottom: "20px",
             }}>
                 <h1>ตรวจสอบความถูกต้องก่อนจดแจ้ง</h1>
-                
+
                 <div className="litetext">
                     <p>ลดระยะเวลาในการแก้ไขและลดค่าใช้จ่ายของคุณในการจดแจ้งอย.  </p>
                     <p>เช็คสูตรหรือหาข้อมูลเพิ่มเติมกับเราได้เลย</p>
@@ -259,14 +259,14 @@ const check = () => {
       <Box sx={{
         display: "flex",
         justifyContent: "space-around",
-       
+
       }}>
           <Box sx={{
             display: "grid"
           }} >
-          
+
           <div className="radioSelect">
-            
+
             <Box sx={{
               display: "flex"
             }}>
@@ -287,7 +287,7 @@ const check = () => {
               />
             )}
 
-            
+
             <label>ผลิตภัณฑ์เกี่ยวกับผม</label>
             </Box>
 
@@ -394,7 +394,7 @@ const check = () => {
             </Box>
 
             <Box>
-          
+
             {op1[6] === 0 ? (
               <input
                 type="checkbox"
@@ -520,7 +520,7 @@ const check = () => {
             )}
             <label>ผลิตภัณฑ์เกี่ยวกับผ้าเย็น</label>
             </Box>
-          
+
 
             <Box>
             {op1[12] === 0 ? (

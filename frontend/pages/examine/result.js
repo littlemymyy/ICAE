@@ -5,6 +5,7 @@ import { AiOutlineDelete } from "react-icons/ai";
 import { useState ,useEffect } from 'react';
 import Axios from "axios";
 import Footer from '@/components/Footer';
+import Swal from 'sweetalert2'
 
 const c2A = () => {
     const router = useRouter();
@@ -22,20 +23,20 @@ const c2A = () => {
     const [show, setShow] = useState([])
     const [email , setEmail] = useState("")
 
-    
+
    // const parsedArray = storedArrayString ? JSON.parse(dataArray) : [];
 
-    // Retrieve other data from sessionStorage
-   
+    // Retrieve other data from localStorage
 
 
 
 
 
 
-    const filltergB = filltergA ? JSON.parse(filltergA) : []; 
+
+    const filltergB = filltergA ? JSON.parse(filltergA) : [];
     const parsedArray = dataArray ? JSON.parse(dataArray) : [];
-    //const parsedArray = 
+    //const parsedArray =
     useEffect(()=>{
       let mail = localStorage.getItem("uemail")
       setEmail(mail)
@@ -64,10 +65,10 @@ const c2A = () => {
                 res[i]["per1"] = 0;
               }
               setData(res);
-              
+
               // Call the check function for each item in parsedArray
-          
-           
+
+
             }) .catch(error => {
               console.error(error);
              // return res.status(500).json({ error: "Error sending email" });
@@ -100,7 +101,7 @@ const c2A = () => {
             },);
 
     }, [])
-    // check dupicate 
+    // check dupicate
     const checklist = (list1 , dd) => {
       for( let i = 0 ; i<list1.length ; i++ ){
         if(list1[i].cas === dd.cas){
@@ -110,7 +111,7 @@ const c2A = () => {
       return 1
     }
 
-  
+
     const percentChange = (idx, e) => {
       let sumb = 0
       console.log(list[idx])
@@ -134,9 +135,9 @@ const c2A = () => {
         sumb += parseFloat(list[i].per1)
       }
       setSum(sumb)
-  
+
     }
-  
+
     const percentChange2 = (idx , e) => {
       // console.log(list2[idx])
       // console.log(e)
@@ -181,7 +182,7 @@ const c2A = () => {
         setShow([])
         setSearch_input("")
       }
-  
+
       else {
         list.push(result)
         setList([...list])
@@ -192,8 +193,8 @@ const c2A = () => {
       setSearch_input("")
       console.log(result)
     }
-  
-    
+
+
     const clickDelete = (e) => {
       list.splice(e, 1)
       setList([...list])
@@ -203,7 +204,7 @@ const c2A = () => {
         sumc += parseInt(list[i].per1);
       }
       setSum(sumc);
-    } 
+    }
 
     const clickDelete2 = (e) => {
       elist.splice(e, 1)
@@ -225,25 +226,72 @@ const c2A = () => {
       setSum(sum2);
     }
 
+    const preSaveFile = () => {
+      const axios = require('axios');
+      let data = JSON.stringify({
+        "firstName": "TestFirstname1",
+        "lastName": "PetchLastname"
+      });
+
+      let config = {
+        method: 'get',
+        maxBodyLength: Infinity,
+        url: `http://localhost:3001/api/get_history?groupname=${groupName}&email=${localStorage.getItem("uname")}`,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        data : data
+      };
+
+      axios.request(config)
+      .then((response) => {
+        let data = JSON.parse(JSON.stringify(response.data));
+        console.log(data)
+        if (data.message === 'haveData') {
+          Swal.fire({
+            icon: "info",
+            title: "พบข้อมูลซ้ำ",
+            text: "ถ้าคุณบันทึก ข้อมูลเก่าจะถูกลบออก ต้องการจะบันทึกหรือไม่ ?",
+            showCancelButton: true,
+            confirmButtonText: 'บันทึก',
+            cancelButtonText: 'ยกเลิก',
+          }).then((result) => {
+            if (result.isConfirmed) {
+              saveFile()
+            }
+          });
+        }
+        else {
+          saveFile()
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+
+
+    }
+
     const saveFile = () => {
-      
+
       if(unlist.length > 0 ) {
         list.push(...unlist)
       }
       if(elist.length > 0){
         list.push(...elist)
       }
-      
-     
+
+
       console.log("is list")
       console.log(list)
       let load = {
-        uname : sessionStorage.getItem("uname") ,
+        uname : localStorage.getItem("uname") ,
         gname : groupName ,
         fillterg : filltergB ,
-        dd : list, 
+        dd : list,
         email : email,
-        
+
       }
       Axios({
         url : "http://localhost:3001/api/savefile",
@@ -254,8 +302,8 @@ const c2A = () => {
         router.push("/examine/record")
       })
     }
-    
-    
+
+
   return (
     <div>
          <Navbar/>
@@ -271,7 +319,7 @@ const c2A = () => {
           onChange={(e) => resultsearch(e.target.value)}
         />
         <br />
-      </div> 
+      </div>
 
       <div className='show'>
         {
@@ -422,12 +470,12 @@ const c2A = () => {
           : null
 
       }
-       <div className='App'>ยอดรวมทั้งหมด : {sum} 
+       <div className='App'>ยอดรวมทั้งหมด : {sum}
        <br />
-       <button className='C2_sava1' onClick={saveFile}> บันทึก </button>
+       <button className='C2_sava1' onClick={preSaveFile}> บันทึก </button>
        </div>
        <Footer/>
-     
+
   </div>
   )
 }

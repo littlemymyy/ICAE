@@ -126,19 +126,19 @@ export default function manage() {
       setShowData([...showData]);
     };
     getFda();
-    var userData = sessionStorage.getItem("uemail");
+    var userData = localStorage.getItem("uemail");
     setFda(fdaNo);
     console.log(userData);
     console.log(fdaNo);
 
     const getdata = async () => {
       let load = {
-        id: sessionStorage.getItem("orid"),
+        id: localStorage.getItem("orid"),
         fda: fdaNo,
       };
       const res = await Axios.post("http://localhost:3001/api/pifData", load);
 
-     
+
 
       console.log("First");
       console.log(res.data);
@@ -213,7 +213,7 @@ export default function manage() {
       else {
         let nowDate0 = new Date();
         let diff = [0,0,0,0,0,0,0,0,0,0,0,0,0]
-  
+
         diff[0] = newDate0 - nowDate0;
         diff[1] = newDate1 - nowDate0;
         diff[2] = newDate2 - nowDate0;
@@ -227,17 +227,17 @@ export default function manage() {
         diff[10] = newDate10 - nowDate0;
         diff[11] = newDate11 - nowDate0;
         diff[12] = newDate12 - nowDate0;
-        
+
         console.log("firsaat")
         console.log(newDate12)
         // for(let i = 0 ; i< 13 ;i++){
         //   console.log(diff[i])
         // }
        // console.log(diff[0])
-       
+
         for(let i = 0 ; i<13 ; i++){
-        
-  
+
+
           if (diff[i] < 0) {
             console.log("หมดอาย6");
             showDate[i] = "หมดอายุแล้ว";
@@ -615,8 +615,8 @@ export default function manage() {
       rec_create_when: new Date(),
       expdate: document.getElementById("expdate").value,
       filename: document.getElementById("filename").value,
-      email: sessionStorage.getItem("uemail"),
-      id: sessionStorage.getItem("orid"),
+      email: localStorage.getItem("uemail"),
+      id: localStorage.getItem("orid"),
       fda_num: fda_num,
       fdadoc_date: formatDate(fdadoc_date),
       formula_doc_date: formatDate(formula_doc_date),
@@ -654,7 +654,7 @@ export default function manage() {
     photo && formData.append("photo", photo);
     // file3 && formData.append('file3', file3);
 
-    
+
       if(e === 1){
         try {
           const response = await Axios.post(
@@ -685,9 +685,9 @@ export default function manage() {
         }
     }
     else {
-      
+
     }
-      
+
   };
 
   const handleChange = (panel) => (event, newExpanded) => {
@@ -1214,7 +1214,7 @@ export default function manage() {
                 />
               </Box>
               <hr></hr>
-              
+
               <Typography variant="h6">
                 2. สูตรส่วนประกอบของเครื่องสำอาง
               </Typography>

@@ -17,7 +17,7 @@ export default function showpif(){
 
 
     useEffect(() => {
-      var userData = sessionStorage.getItem("uemail");
+      var userData = localStorage.getItem("uemail");
       console.log(userData);
         Axios.request(
             {
@@ -40,7 +40,7 @@ export default function showpif(){
         }
         )
     }, []);
- 
+
     return(
         <>
         <Navbar />
@@ -53,45 +53,45 @@ export default function showpif(){
             paddingTop: { xs: "50px", md: "50px" },
             paddingBottom: { xs: "50px", md: "50px" },
           }}
-        
+
         >
-            <Box className="pif_left" 
+            <Box className="pif_left"
             sx={{
-                
+
                 justifyContent: { xs: "", md: "center" },
                 display: { xs: "block", md: "flex" },
-                
+
 
             }}
-            
+
             >
                 <img src="/secret-file.png" style={{ maxWidth: 0 + "150px" }}/>
-                
+
             </Box>
             <Box className="pif_right">
-                 
+
                 <h1>ระบบจัดการ PIF</h1>
                 <h1>(Product Information File)</h1>
-                
-            
+
+
             </Box>
         </Box>
 
-        <Box 
+        <Box
         sx={{
-                                   
+
             justifyContent: { xs: "", md: "center" },
             display: { xs: "block", md: "flex" },
             textAlign: { xs: "center", md: "center" },
             paddingTop: { xs: "30px", md: "30px" },
-           
-          
+
+
         }}>
             <Typography variant='h5'>รายการผลิตภัณฑ์ที่จัดทำ PIF </Typography>
         </Box>
 
         <Box display="flex" alignItems="center">
-       
+
         </Box>
         <Box display="flex" alignItems="center">
         <div className="input-icons">
@@ -103,14 +103,14 @@ export default function showpif(){
             setSearch(e.target.value);
           }}
         />
-       
-       
+
+
         </div>
-     
+
         </Box>
 
         <Grid container spacing={0}>
-        {data ? 
+        {data ?
         data.filter((item) => {
           if (search == "") {
             return item

@@ -12,7 +12,6 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { useRouter } from 'next/router';
-import { IoMdNotifications } from "react-icons/io";
 
 
 const pages = ['หน้าหลัก', 'ตรวจสอบสูตรสารเคมี', 'การจัดการPIF' , 'ประวัติการตรวจสอบสูตรสารเคมี','คลังความรู้'];
@@ -47,21 +46,21 @@ function Navbar() {
                 router.push("/Knowledge/home")
             }
             else if(selectName === pages[1]){
-                router.push("/login/Sigin");
+                router.push("/login/Signin");
             }
             else if(selectName === "การจัดการpif"){
-                
-                if(sessionStorage.getItem("uemail") === ""){
-                    router.push("/login/Sigin");
+
+                if(localStorage.getItem("uemail") === ""){
+                    router.push("/login/Signin");
                 }
-                
+
             }
             else if(selectName === pages[3]){
-                router.push("/login/Sigin");
+                router.push("/login/Signin");
             }
         }
 
-       
+
 
         if(uname !== '') {
             if(selectName === pages[0]){
@@ -71,11 +70,15 @@ function Navbar() {
                 router.push("/examine/check");
             }
             else if(selectName === "การจัดการpif"){
-                
-                if(sessionStorage.getItem("uemail")){
-                    router.push("/pif/productslist")
+                if(localStorage.getItem("uemail")){
+                    if(localStorage.getItem("orid") === 'null'){
+                        router.push("/team/team")
+                    }else{
+                        router.push("/pif/productslist")
+                    }
+                }else{
+                    router.push("/login/Signin");
                 }
-                
             }
             else if(selectName === pages[3]){
                 router.push("/examine/record")
@@ -83,10 +86,9 @@ function Navbar() {
             else if(selectName === pages[4]){
                 router.push("/Knowledge/home")
             }
-            // else if(selectName === pages[4]){
-            //     router.push("/Test01")
-            //     console.log('Test01');
-            // }
+            else {
+                router.push("/login/Signin");
+            }
         }
     };
     const handleOpenSignIn = () => {
@@ -104,35 +106,28 @@ function Navbar() {
         else if(selectName === settings[1]){
 
         }
-      
         else if(selectName === settings[2]) {
             console.log('OK');
-            
-            sessionStorage.removeItem("uemail");
-            sessionStorage.removeItem("uname");
-            sessionStorage.removeItem("uicon");
-            sessionStorage.removeItem("upass");
-
-            localStorage.removeItem("uemail")
+            localStorage.removeItem("status");
+            localStorage.removeItem("orid");
             localStorage.removeItem("uname");
+            localStorage.removeItem("uemail");
             localStorage.removeItem("uicon");
-            localStorage.removeItem("upass");
             setUname("");
             setIcon("");
             router.push("/");
         }
-      
     };
 
     React.useEffect(() => {
-        if(!sessionStorage.getItem('uname')) {
+        if(!localStorage.getItem('uname')) {
             setUname('');
             setIcon('');
         }
         else {
-            setUname(sessionStorage.getItem('uname'));
-            setIcon(sessionStorage.getItem("uicon"));
-            setStatus(sessionStorage.getItem('status'))
+            setUname(localStorage.getItem('uname'));
+            setIcon(localStorage.getItem("uicon"));
+            setStatus(localStorage.getItem('status'))
         }
     }, [])
 
@@ -146,15 +141,15 @@ function Navbar() {
 
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
-                    <img className='logo' width={'80px'} src="/icae_logo.png" 
+                    <img className='logo' width={'80px'} src="/icae_logo.png"
                     sx={{
-                        display: { xs: 'none', md: 'flex' }, 
+                        display: { xs: 'none', md: 'flex' },
                         mr: 1 ,
-                        
+
                     }}/>
 
                 <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none'} }}>
-                
+
                     <IconButton
                     size="large"
                     aria-label="account of current user"
@@ -243,8 +238,8 @@ function Navbar() {
                         <Avatar alt="Remy Sharp" src= {icon} />
                     </IconButton>
                     </Tooltip>
-                     
-                   
+
+
 
                  </Box> */}
 
@@ -283,7 +278,7 @@ function Navbar() {
                     ))}
                     </Menu>
                 </Box>
-                : 
+                :
                 <Box sx={{ flexGrow: 0 }}>
                     <Tooltip title="Open settings">
                     <IconButton onClick={handleOpenSignIn} sx={{ p: 0 }}>
@@ -313,8 +308,8 @@ function Navbar() {
             </Container>
             </Box>
             </AppBar>
-       
-       
+
+
     )
 }
 

@@ -44,7 +44,7 @@ const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: '',
-    database: 'cosmetic1'
+    database: 'cosmetic'
 });
 
 const pdfStorage = multer.diskStorage({
@@ -179,8 +179,8 @@ app.post('/api/submitPif', pdfUpload.any(), (req, res) => {
    const filek = filePaths[10] || "-";//sds
    const filel = filePaths[11] || "-";//master formula
    const filem = filePaths[12] || "-";//Specification of cosmetic finished product)
-   const filen = filePaths[13] || "-";//Testing 
-  
+   const filen = filePaths[13] || "-";//Testing
+
 
             // if(filea.length === 0) {
             //     filea += "-"
@@ -221,7 +221,7 @@ app.post('/api/submitPif', pdfUpload.any(), (req, res) => {
             // else if(filel.length === 0) {
             //     filel += "-"
             // }
-   
+
             // console.log(filea.length);
             // console.log(fileb);
             // console.log(filec);
@@ -238,7 +238,7 @@ app.post('/api/submitPif', pdfUpload.any(), (req, res) => {
 //    const filej = req.files[9].path.toString()
 //    const filek = req.files[10].path.toString()
 //    const filel = req.files[11].path.toString()
-   
+
 
 //  console.log(filea)
 //  console.log(fileb)
@@ -255,9 +255,9 @@ app.post('/api/submitPif', pdfUpload.any(), (req, res) => {
 
 
    //console.log(files)
-    
-    
-  
+
+
+
 
 
 
@@ -276,7 +276,7 @@ app.post('/api/submitPif', pdfUpload.any(), (req, res) => {
             //     if(data[i]  === null || data[i] === " "){
             //         data[i] = "-"
             //     }
-                
+
             // }
            // console.log(data)
            // console.log(req.files.data)
@@ -351,8 +351,8 @@ app.post('/api/submitPif', pdfUpload.any(), (req, res) => {
                         img_path = files[i].path;
                 }
             }catch(err){
-                console.log("no any file upload") 
-                console.log(err) 
+                console.log("no any file upload")
+                console.log(err)
             }
 
             let pdfFileName = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + '-' + Date.now();
@@ -376,10 +376,10 @@ app.post('/api/submitPif', pdfUpload.any(), (req, res) => {
             // console.log(filek.length)
             // console.log(filel.length)
 
-           
+
           //  console.log(data.fdadoc_date)
 
-         
+
 
           db.query( 'INSERT INTO pif( email, file_name, img_path, pdf_path, expdate, rec_create_when, organization_id, fda_license, fdadoc, letter_authorization, formula_doc , label_doc , manufacture_doc , gmp_iso, eff_report, efficient_report,spec ,coa,sds, masterformula, specification, testing_doc, status, fdadoc_date, letter_authorization_date, formula_doc_date , label_doc_date , manufacture_doc_date , gmp_iso_date, eff_report_date, efficient_report_date, sds_date, masterformula_date, specification_date, testing_doc_date ,coa_date) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
           [data.email, data.filename, img_path, pdf_path, data.expdate, new Date(),data.id ,data.fda_num , filea , fileb , filec ,filed, filee,filef,fileg,fileh,filei ,filej ,filek ,filel,filem,filen,"1",data.fdadoc_date,data.letter_authorization_date,data.formula_doc_date , data.label_doc_date , data.manufacture_doc_date ,data.gmp_iso_date ,data.eff_report_date , data.efficient_report_date , data.sds_date , data.masterformula_date, data.specification_date , data.testing_doc_date ,data.coa ],
@@ -393,14 +393,14 @@ app.post('/api/submitPif', pdfUpload.any(), (req, res) => {
             console.log(result)
               res.json({status: "ok", pdf_path: pdf_path, img_path: img_path});
           }
-     }) 
+     })
 
      //update product data
      const sql = 'UPDATE product SET status = ? WHERE organization_id = ? AND fda_license = ?';
      db.query(sql, ["1" ,data.id , data.fda_num ], (err, result) => {
          if (err) {
              console.error('Error updating product status:', err);
-             
+
          } else {
              // Handle the result or send a success response
              console.log(result)
@@ -414,7 +414,7 @@ app.post('/api/submitPif', pdfUpload.any(), (req, res) => {
   res.status(500).send('Internal Server Error');
 }
 
- 
+
 })
 
 
@@ -430,9 +430,9 @@ app.post('/api/submitPifEdit', pdfUpload.any(), (req, res) => {
      const files = req.body.data;
      const filePaths = req.files.map(file => file.path.toString());
     // console.log(files)
-  
+
    //  console.log(filePaths);
- 
+
      const filea = filePaths[0] || "-";//fda => fdadoc
      const fileb = filePaths[1] || "-";//Autorization  => letter_authorization
      const filec = filePaths[2] || "-";//formu  => formula_doc
@@ -446,10 +446,10 @@ app.post('/api/submitPifEdit', pdfUpload.any(), (req, res) => {
      const filek = filePaths[10] || "-";//sds => 	sds
      const filel = filePaths[11] || "-";//master formula => masterformula
      const filem = filePaths[12] || "-";//Specification of cosmetic finished product)=>specification
-     const filen = filePaths[13] || "-";//Testing =>testing_doc 
+     const filen = filePaths[13] || "-";//Testing =>testing_doc
 
 
-    // get file 
+    // get file
      let update = [filePaths[0] , filePaths[1] , filePaths[2] , filePaths[3] , filePaths[4] , filePaths[5] ,filePaths[6] ,filePaths[7] ,filePaths[8] ,filePaths[9] ,filePaths[10] ,filePaths[11] ,filePaths[12] ,filePaths[13]]
      let update1 = ["filea", "fileb" , "filec" , "filed" , "filee" , "filef" ,"fileg" ,"fileh" ,"filei" ,"filej" ,"filek" ,"filel" , "filem" , "filen"]
      let fname = [",fdadoc = ?" , ",letter_authorization = ? " ,",formula_doc = ? " , ",label_doc = ? " , ",manufacture_doc = ?", ",gmp_iso = ?" , ",eff_report = ? " ,",efficient_report = ?" ,", spec = ?" ,",coa_doc = ?" , " ,sds = ?"," ,masterformula = ?" ," ,specification = ?" ,",testing_doc = ? "]
@@ -457,7 +457,7 @@ app.post('/api/submitPifEdit', pdfUpload.any(), (req, res) => {
      let update2 = []
      console.log("update")
      console.log(update)
-     
+
      for(let i = 0 ; i < update.length ;i++){
         console.log("for loop")
         console.log(update[i])
@@ -475,22 +475,22 @@ app.post('/api/submitPifEdit', pdfUpload.any(), (req, res) => {
      }
      let sqlcut = ""
      sqlcut += columname.substring(0,columname.length-1)
-    
+
      console.log(sqlcut)
      console.log("update2")
      console.log(update2)
-    
+
      console.log(columname)
-   
+
       try {
           let img_path = '';
           let pdf_path = '';
-  
+
           (async () => {
              console.log(JSON.parse(req.body.data))
               const data = JSON.parse(req.body.data);
               console.log(data)
-  
+
               pdfMake.fonts = {
                   THSarabunNew: {
                       normal: 'THSarabun.ttf',
@@ -499,9 +499,9 @@ app.post('/api/submitPifEdit', pdfUpload.any(), (req, res) => {
                       bolditalics: 'THSarabun-BoldItalic.ttf'
                   }
               }
-  
+
               pdfMake.vfs = vfsFonts.pdfMake.vfs;
-  
+
               const docDefinition = {
                       content: [
                           { text:'ข้อมูลเกี่ยวกับเครื่องสำอาง (PRODUCTS INFORMATION FILE : PIF)', style: 'header' },
@@ -516,8 +516,8 @@ app.post('/api/submitPifEdit', pdfUpload.any(), (req, res) => {
                           {text:`ชื่อผู้ผลิต: ${data.inputentrepreneur}`},
                           {text:`ชื่อผู้ผลิตต่างประเทศ: ${data.inputFentrepreneur}`},
                           {text:`รายละเอียดเพิ่มเติม: ${data.setDes}`}
-  
-  
+
+
                       ],
                       styles: {
                           header: {
@@ -531,27 +531,27 @@ app.post('/api/submitPifEdit', pdfUpload.any(), (req, res) => {
                           font: 'THSarabunNew'
                       }
                   };
-  
+
               const pdfDoc = pdfMake.createPdf(docDefinition);
               const fileName = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + '-' + Date.now();
               const pdfPath = path.join(__dirname, 'uploads', `${fileName}.pdf`);
-  
+
               const buffer = await new Promise((resolve, reject) => {
                   pdfDoc.getBuffer((buffer) => {
                       resolve(buffer);
                   });
               });
-  
+
               await fs.writeFile(pdfPath, buffer);
-  
+
               const firstPath = path.join('./uploads', `${fileName}.pdf`);
               console.log(firstPath)
-  
+
               //merge pdf
               const merger = new PDFMerger();
             const files = req.files;
             console.log(files);
-  
+
               await merger.add(firstPath);
               try{
                   for(let i = 0 ; i < files.length ; i++){
@@ -561,20 +561,20 @@ app.post('/api/submitPifEdit', pdfUpload.any(), (req, res) => {
                           img_path = files[i].path;
                   }
               }catch(err){
-                  console.log("no any file upload") 
-                  console.log(err) 
+                  console.log("no any file upload")
+                  console.log(err)
               }
-  
+
               let pdfFileName = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + '-' + Date.now();
               await merger.save(`uploads/${pdfFileName}.pdf`).then((pdfBuffer) => {
                   console.log(pdfBuffer);
               });
-  
+
               console.log(pdfFileName)
               pdf_path = path.join('./uploads', `${pdfFileName}.pdf`);
-  
 
-  
+
+
              for(let i = 0 ; i< sqlobj.length; i++){
                 console.log(sqlobj[i])
                 console.log(update2[i])
@@ -606,9 +606,9 @@ app.post('/api/submitPifEdit', pdfUpload.any(), (req, res) => {
      const files = req.body.data;
      const filePaths = req.files.map(file => file.path.toString());
     // console.log(files)
-  
+
    //  console.log(filePaths);
- 
+
      const filea = filePaths[0] || "-";//fda => fdadoc
      const fileb = filePaths[1] || "-";//Autorization  => letter_authorization
      const filec = filePaths[2] || "-";//formu  => formula_doc
@@ -622,10 +622,10 @@ app.post('/api/submitPifEdit', pdfUpload.any(), (req, res) => {
      const filek = filePaths[10] || "-";//sds => 	sds
      const filel = filePaths[11] || "-";//master formula => masterformula
      const filem = filePaths[12] || "-";//Specification of cosmetic finished product)=>specification
-     const filen = filePaths[13] || "-";//Testing =>testing_doc 
+     const filen = filePaths[13] || "-";//Testing =>testing_doc
 
 
-    // get file 
+    // get file
      let update = [filePaths[0] , filePaths[1] , filePaths[2] , filePaths[3] , filePaths[4] , filePaths[5] ,filePaths[6] ,filePaths[7] ,filePaths[8] ,filePaths[9] ,filePaths[10] ,filePaths[11] ,filePaths[12] ,filePaths[13]]
      let update1 = ["filea", "fileb" , "filec" , "filed" , "filee" , "filef" ,"fileg" ,"fileh" ,"filei" ,"filej" ,"filek" ,"filel" , "filem" , "filen"]
      let fname = [",fdadoc = ?" , ",letter_authorization = ? " ,",formula_doc = ? " , ",label_doc = ? " , ",manufacture_doc = ?", ",gmp_iso = ?" , ",eff_report = ? " ,",efficient_report = ?" ,", spec = ?" ,",coa_doc = ?" , " ,sds = ?"," ,masterformula = ?" ," ,specification = ?" ,",testing_doc = ? "]
@@ -633,7 +633,7 @@ app.post('/api/submitPifEdit', pdfUpload.any(), (req, res) => {
      let update2 = []
      console.log("update")
      console.log(update)
-     
+
      for(let i = 0 ; i < update.length ;i++){
         console.log("for loop")
         console.log(update[i])
@@ -651,22 +651,22 @@ app.post('/api/submitPifEdit', pdfUpload.any(), (req, res) => {
      }
      let sqlcut = ""
      sqlcut += columname.substring(0,columname.length-1)
-    
+
      console.log(sqlcut)
      console.log("update2")
      console.log(update2)
-    
+
      console.log(columname)
-   
+
       try {
           let img_path = '';
           let pdf_path = '';
-  
+
           (async () => {
              console.log(JSON.parse(req.body.data))
               const data = JSON.parse(req.body.data);
               console.log(data)
-  
+
               pdfMake.fonts = {
                   THSarabunNew: {
                       normal: 'THSarabun.ttf',
@@ -675,9 +675,9 @@ app.post('/api/submitPifEdit', pdfUpload.any(), (req, res) => {
                       bolditalics: 'THSarabun-BoldItalic.ttf'
                   }
               }
-  
+
               pdfMake.vfs = vfsFonts.pdfMake.vfs;
-  
+
               const docDefinition = {
                       content: [
                           { text:'ข้อมูลเกี่ยวกับเครื่องสำอาง (PRODUCTS INFORMATION FILE : PIF)', style: 'header' },
@@ -692,8 +692,8 @@ app.post('/api/submitPifEdit', pdfUpload.any(), (req, res) => {
                           {text:`ชื่อผู้ผลิต: ${data.inputentrepreneur}`},
                           {text:`ชื่อผู้ผลิตต่างประเทศ: ${data.inputFentrepreneur}`},
                           {text:`รายละเอียดเพิ่มเติม: ${data.setDes}`}
-  
-  
+
+
                       ],
                       styles: {
                           header: {
@@ -707,27 +707,27 @@ app.post('/api/submitPifEdit', pdfUpload.any(), (req, res) => {
                           font: 'THSarabunNew'
                       }
                   };
-  
+
               const pdfDoc = pdfMake.createPdf(docDefinition);
               const fileName = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + '-' + Date.now();
               const pdfPath = path.join(__dirname, 'uploads', `${fileName}.pdf`);
-  
+
               const buffer = await new Promise((resolve, reject) => {
                   pdfDoc.getBuffer((buffer) => {
                       resolve(buffer);
                   });
               });
-  
+
               await fs.writeFile(pdfPath, buffer);
-  
+
               const firstPath = path.join('./uploads', `${fileName}.pdf`);
               console.log(firstPath)
-  
+
               //merge pdf
               const merger = new PDFMerger();
             const files = req.files;
             console.log(files);
-  
+
               await merger.add(firstPath);
               try{
                   for(let i = 0 ; i < files.length ; i++){
@@ -737,20 +737,20 @@ app.post('/api/submitPifEdit', pdfUpload.any(), (req, res) => {
                           img_path = files[i].path;
                   }
               }catch(err){
-                  console.log("no any file upload") 
-                  console.log(err) 
+                  console.log("no any file upload")
+                  console.log(err)
               }
-  
+
               let pdfFileName = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + '-' + Date.now();
               await merger.save(`uploads/${pdfFileName}.pdf`).then((pdfBuffer) => {
                   console.log(pdfBuffer);
               });
-  
+
               console.log(pdfFileName)
               pdf_path = path.join('./uploads', `${pdfFileName}.pdf`);
-  
 
-  
+
+
              for(let i = 0 ; i< sqlobj.length; i++){
                 console.log(sqlobj[i])
                 console.log(update2[i])
@@ -770,8 +770,8 @@ app.post('/api/submitPifEdit', pdfUpload.any(), (req, res) => {
     console.error('Error merging PDFs:', error);
     res.status(500).send('Internal Server Error');
   }
-  
-   
+
+
   })
 
 
@@ -963,9 +963,8 @@ app.post('/api/setsignUp' , jsonParser, async (req , res ) => {
 
     console.log(fullname + " " + email + " " + password +" " + repassword)
 
-    const sql = `INSERT INTO  employee(em_email , em_fullname , em_icon , em_pass , status , organization_id ) VALUES(?,?,?,?,?,?);  `
-    db.query(sql,[email , fullname ,"/pandaU.png" , password , "U" , "-" ] , (err, result) => {
-       // res.status(201).json("Signup Successfully")
+    const sql = `INSERT INTO  employee(em_email , em_fullname , em_icon , em_pass , status ) VALUES(?,?,?,?,?);  `
+    db.query(sql,[email , fullname ,"/pandaU.png" , password , "U" ] , (err, result) => {
        console.log("singup :")
        console.log(result)
        if(err) {
@@ -988,9 +987,18 @@ app.post('/api/setsignUp' , jsonParser, async (req , res ) => {
     let message = {
         from: EMAIL,
         to: email,
-        subject: "WellCome To ICae",
-        text: "Successfully Register with us",
-        html: "Successfully Register with us",
+        subject: "Welcome to ICAE",
+        text: "Welcome to ICAE,\n\n Thank you for registering with us.",
+        html: `
+        <body style="font-family: 'Arial', sans-serif; background-color: #f4f4f4; color: #333; text-align: center; padding: 20px;">
+            <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                <h1 style="color: #007bff;">Welcome to ICAE</h1>
+                <p style="font-size: 16px;">Thank you for registering with us.</p><br><br><br>
+                <p style="font-size: 14px; color: #555;">Regards,</p>
+                <p style="font-size: 14px; color: #555;">ICAE Team</p>
+            </div>
+        </body>
+        `,
     };
 
     transporter.sendMail(message)
@@ -1022,7 +1030,7 @@ app.post('/api/checkMail',(req,res)=>{
                 res.send("not-Dupicate")
             }
             console.log(result)
-           
+
         }
     })
 
@@ -1092,6 +1100,24 @@ app.post('/api/searchBybodypartEdit', (req,res) => {
 })
 
 
+app.get('/api/get_history', jsonParser, (req, res) => {
+    db.execute(
+        'SELECT * FROM chemicalgroup WHERE groupname = ? AND email = ?',
+        [req.query.groupname, req.query.email],
+        (err, result) => {
+            if(err) {
+                res.json({status:'error',message:err});
+                return;
+            }
+            if(result.length > 0) {
+                res.json({status:'ok',message:'haveData'})
+            }
+            else {
+                res.json({status:'error',message:'noData'});
+            }
+        })
+})
+
 // save file from user check
 app.post('/api/savefile' , (req , res) => {
     console.log("saveFile from data ")
@@ -1123,16 +1149,11 @@ app.post('/api/savefile' , (req , res) => {
         if(err)
             console.log(result)
     })
-    // let i = 0
-    // console.log("uname = " + uname)
-    // console.log(dd[i])
-    // console.log([dd[i].cas , dd[i].cname , dd[i].cmname , dd[i].per , dd[i].st , "-" , "-" , dd[i].bodypart , dd[i].color , gname , dd[i].per1 , uname , udate ])
     for( let i = 0 ; i < dd.length ; i++ ){
         const sql1 = 'INSERT INTO chemicalgroup (cas , cname , cmname , per , st , img , des, bodypart , color , groupname , per1 , uname , udate , fillterg , email) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); '
         db.query(sql1,[dd[i].cas , dd[i].cname , dd[i].cmname , dd[i].per , dd[i].st , "-" , "-" , dd[i].bodypart , dd[i].color , gname , dd[i].per1 , uname , date , newstr , email ] , (err, result)=>{
            console.log(result)
         })
-
     }
     res.send("Ok")
 
@@ -1360,7 +1381,7 @@ app.get('/api/fetchData', async (req, res) => {
       //  console.log(data)
       //console.log(data)
       const $ = cheerio.load(data);
-   
+
         const  dataAll =[]
 
 
@@ -1486,7 +1507,7 @@ app.post('/api/sendNotification' , (req,res) => {
         }
     })
    }
- 
+
 }
 )
 
@@ -1502,10 +1523,10 @@ const chcekFdaExp = async (e) => {
           console.log(data)
         //console.log(data)
         const $ = cheerio.load(data);
-     
+
           const  dataAll =[]
-  
-  
+
+
       //dd is list of strings from data response
       const dd = ["ContentPlaceHolder1_lb_status",'ContentPlaceHolder1_lb_status_lct',"ContentPlaceHolder1_lb_no_regnos","ContentPlaceHolder1_lb_type" , "ContentPlaceHolder1_lb_format_regnos" ,"ContentPlaceHolder1_lb_trade_Tpop",
           "ContentPlaceHolder1_lb_cosnm_Tpop","ContentPlaceHolder1_lb_appdate" ,"ContentPlaceHolder1_lb_expdate" , "ContentPlaceHolder1_lb_mode","ContentPlaceHolder1_lb_applicability_name" , "ContentPlaceHolder1_lb_application_name",
@@ -1622,7 +1643,7 @@ const sendEmailNotifications=() => {
                 //console.log(result[0].em_email)
                 //console.log(result.length)
                 for(let i = 0 ; i<result.length ; i++){
-                     let   message = { 
+                     let   message = {
                         from: EMAIL,
                         to: result[i].em_email,
                         subject: "ใบอนุญาต อย. ใกล้หมดอายุแล้ว",
@@ -2020,7 +2041,7 @@ const storage = multer.diskStorage({
     },
     filename:  (req, file, cb) => {
       // Use Date.now() to make sure the filename is unique
-     
+
       cb(null, file.originalname+path.extname(file.originalname));
     },
   });
@@ -2030,7 +2051,7 @@ const storage = multer.diskStorage({
   app.post('/upload', upload.single('image'), (req, res) => {
     res.send('File uploaded!');
   });
-  
+
 
 
 
@@ -2070,14 +2091,14 @@ app.post('/api/storageProduct',(req,res)=>{
         photo = "-"
     }
 
-    
-    
+
+
     let arr = []
     const str = expdate
     arr.push(str.split("/"))
     console.log(arr)
     let year1 = parseInt(arr[0][2])-543
-    let month1 = parseInt(arr[0][1])-1 
+    let month1 = parseInt(arr[0][1])-1
     let date1 = parseInt(arr[0][0])
 
     let exp = new Date(year1,month1,date1)
@@ -2093,8 +2114,8 @@ app.post('/api/storageProduct',(req,res)=>{
             res.send("OK")
         }
     })
-  
-      
+
+
 })
 
 //Delete Product from Productlist
@@ -2129,7 +2150,7 @@ app.post('/api/userDeleteProduct' , (req,res)=>{
 
     }
 
-   
+
 })
 
 app.post('/api/DeleteGroupName', (req, res) => {
