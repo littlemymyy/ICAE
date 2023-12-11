@@ -39,7 +39,7 @@ const team = () => {
     const [no , setNo] = useState([])
     const [st , setSt] = useState(0)
     const [teamdata , setTeamdata] = useState([])
-    
+
 
     useEffect(() => {
         const feactData = async () => {
@@ -50,16 +50,16 @@ const team = () => {
               //  console.log(res1.data)
                 setData(res.data)
                 setTeamdata(res1.data)
-                
+
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         };
 
-        
+
         feactData();
-    }, []); 
-    
+    }, []);
+
     const resultsearch = (e) => {
         if (e.length === 0) {
             setShow([]);
@@ -76,8 +76,8 @@ const team = () => {
               });
               setShow(results1);
           }
-    } 
-   
+    }
+
     const checkG = (team) => {
         for (let i = 0; i < teamdata.length; i++) {
           if (team === teamdata[i]) {
@@ -98,8 +98,8 @@ const team = () => {
         }
         else  {
             setSt(1)
-            console.log( sessionStorage.getItem("uemail"))
-            let email =  sessionStorage.getItem("uemail")
+            console.log( localStorage.getItem("uemail"))
+            let email =  localStorage.getItem("uemail")
             let load = {
                 email : email ,
                 data : team ,
@@ -112,33 +112,33 @@ const team = () => {
                     icon: "success"
                   });
                   console.log(res.data)
-                  sessionStorage.setItem("orid" , res.data)
+                  localStorage.setItem("orid" , res.data)
                   router.push("/pif/productslist")
-                 
-                  
+
+
             } catch (error) {
                 console.error(error);
-              
+
             }
         }
-       
+
     }
 
- 
+
 
     const add = (e) => {
         no.push(e)
         setNo([...no])
-        
+
           const result = data.find(({ no }) => no === e);
           console.log("...........");
           console.log(result);
           setList([...list, result]);
           setShow([]);
           setSearch_input("");
-    
+
           console.log(list);
-       
+
       };
 
 
@@ -161,7 +161,7 @@ const team = () => {
         else if(e.type === 4){
           removelist(e.idx)
           removeNo(e.no)
-          
+
         }
     }
 
@@ -218,21 +218,21 @@ const team = () => {
                   router.push("/team/manage");
                    // pathname: '/team/manage',
                     // query: { team: team },
-                  
+
 
             }  catch (error) {
                 console.error(error);
-                
+
             }
         }
         send()
    }
-  
+
 
   return (
     <div>
         <Navbar/>
-        
+
         <h1 style={{ textAlign: 'center' }}>สร้างทีมของคุณเพื่อรังสรรค์การทำงาน</h1>
         <Box
     display="flex"
@@ -274,9 +274,9 @@ const team = () => {
 </Box>
 
 
-    
+
     {/* { st === 1 ?
-         
+
          <div className="input-icons">
          <i className="fa fa-search icon"></i>
          <input
@@ -288,25 +288,25 @@ const team = () => {
          <br />
        </div>
        : null
-       
+
 
     } */}
 
       {/* <div className="show">
         {search_input.length
           ? show.map((value, idx) =>
-             
+
                 <p onClick={() => add(value.no)} key={value.idx}>
-                  
+
                   {value.em_fullname}
                 </p>
-              
+
             )
           : null}
       </div> */}
 
       {
-        list.length ? 
+        list.length ?
         <table className="C1A_styled-table">
         <thead>
           <tr>
@@ -331,7 +331,7 @@ const team = () => {
       id="demo-simple-select"
       label="เพิ่มสถานะ"
       onChange={(e) => handleChange(e.target.value)}
-      
+
     >
       <MenuItem value={{ type: 1, no: value.no, idx }}>หัวหน้า</MenuItem>
       <MenuItem value={{ type: 2, no: value.no, idx }}>ผู้แก้</MenuItem>
@@ -352,7 +352,7 @@ const team = () => {
         </tbody>
       </table>
       : null
-        
+
       }
 
 

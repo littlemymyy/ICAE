@@ -30,39 +30,35 @@ export default function productslist() {
   const Swal = require('sweetalert2')
   const [age, setAge] = useState('');
   let see = 0 ;
-  
-  
+
+
 
   useEffect(() => {
-    let name = sessionStorage.getItem("uname")
+    let name = localStorage.getItem("uname")
     setUname(name)
-    console.log(sessionStorage.getItem("orid"));
-    let ida = sessionStorage.getItem("orid");
+    console.log(localStorage.getItem("orid"));
+    let ida = localStorage.getItem("orid");
 
- 
+
     const fetchData = async () => {
     //  console.log("kkk")
      console.log(ida)
-      if(ida === "-"){
-        // alert("ok")
+      if (ida === 'null') {
         router.push("/team/team")
       }
-
       else  {
         setId(ida);
         console.log(ida)
         let load = {
           data: ida
         };
-
-      
         try {
           const res = await Axios({
             url: "http://localhost:3001/api/productData",
             method: "post",
             data: load,
           });
-       
+
           if(res.data.length === 0 ){
             router.push("/pif/createByfda")
           }
@@ -106,9 +102,9 @@ export default function productslist() {
           w.cosnameC
           &&
           (w.cosname.toLowerCase().includes(a) || w.cosname.toUpperCase().includes(a) || w.cosnameC.toUpperCase().includes(a)||w.cosname.toLowerCase().includes(a)||w.cosnameC.toLowerCase().includes(a)))
-        
+
       });
-      
+
       setShow(results1)
       console.log(results1)
     }
@@ -183,7 +179,7 @@ export default function productslist() {
     else {
       router.push({
         pathname: "/pif/upload_edit",
-  
+
         query: {
           fdaNo : fda_license ,
         },
@@ -279,7 +275,7 @@ export default function productslist() {
 
   }
 
-  
+
 
   return (
     <>
@@ -328,10 +324,10 @@ export default function productslist() {
 
         }}>
 
-      
-            
+
+
             <Typography variant='h5'>รายการผลิตภัณฑ์ ของ {id}</Typography>
-        
+
       </Box>
       <Box display="flex" alignItems="center">
         <div className="input-icons">
@@ -354,7 +350,7 @@ export default function productslist() {
             ทีมของคุณ
           </Button>
 
-          
+
                             <FormControl size="medium" sx={{ m: 1, minWidth: 150 }}  >
                               <InputLabel id="demo-simple-select-label">
                                 การกรอกข้อมูล
@@ -379,11 +375,11 @@ export default function productslist() {
                                 </MenuItem>
                               </Select>
                             </FormControl>
-                          
+
           </div >
       </Box>
 
-     
+
       <br />
       <div className="bodyTproductlist">
         <div className="table_section"></div>
@@ -442,11 +438,11 @@ export default function productslist() {
 </td>
 
                 </tr>
-                
+
 
               ))
             }
-           
+
           </tbody>
         </table>
 
@@ -460,7 +456,7 @@ export default function productslist() {
 
       </div>
 
-   
+
 
 
       <Footer />

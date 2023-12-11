@@ -16,7 +16,7 @@ const c3 = () => {
     const [search_input, setSearch_input] = useState("");
     const [show, setShow] = useState([])
     const [dd , setDd] = useState([])
-    
+
 
     useEffect(() => {
         const queryString = window.location.search
@@ -24,7 +24,7 @@ const c3 = () => {
         const gname = searchParams.get("gname")
         setGroupName(gname)
         let splitArray = []
-        
+
         // console.log(gname)
         let load = {
             gname : gname
@@ -33,7 +33,7 @@ const c3 = () => {
             url: "http://localhost:3001/api/getGroupNamebyname",
             method: "post",
             data : load,
-          }).then ((response) => { 
+          }).then ((response) => {
             console.log(response.data)
             setList(response.data)
             // console.log(response.data[0].fillterg.split(",").map(String))
@@ -41,7 +41,7 @@ const c3 = () => {
             splitArray = response.data[0].fillterg.split(",").map(String)
            // console.log(splitArray)
 
-         
+
             setDd(splitArray)
             getAll(splitArray)
 
@@ -89,7 +89,7 @@ const c3 = () => {
           console.log(results1)
         }
       }
-    
+
       const add = (e) => {
         const result = data.find(({ cas }) => cas === e)
         if (result.st === 2) {
@@ -98,7 +98,7 @@ const c3 = () => {
           setShow([])
           setSearch_input("")
         }
-    
+
         else {
           list.push(result)
           setList([...list])
@@ -130,9 +130,9 @@ const c3 = () => {
           total += parseFloat(list[i].per1)
         }
         setSum(total)
-    
+
       }
-    
+
       const percentChange2 = (idx , e) => {
         // console.log(list2[idx])
         // console.log(e)
@@ -146,13 +146,13 @@ const c3 = () => {
           setList2([...list2])
         }
       }
-    
+
 
       const clickDelete = (e) => {
         list.splice(e, 1)
         setList([...list])
       }
-    
+
       const clickDelete_unlist = (e) => {
         unlist.splice(e, 1)
         setUnlist([...list])
@@ -161,11 +161,11 @@ const c3 = () => {
         list2.splice(e, 1)
         setList2([...list])
       }
-    
+
       const saveFile = () => {
         let load = {
-          uname : sessionStorage.getItem("uname") ,
-          gname : groupName, 
+          uname : localStorage.getItem("uname") ,
+          gname : groupName,
           fillterg : dd ,
           dd : list
         }
@@ -181,7 +181,7 @@ const c3 = () => {
          // return res.status(500).json({ error: "Error sending email" });
       });
       }
-    
+
   return (
     <div>
         <Navbar></Navbar>
@@ -261,7 +261,7 @@ const c3 = () => {
       }
 
 {
-        
+
         list2.length  ? (
         <div>
         <h3 className="label_Y">สารกำหนดปริมาณ</h3>
@@ -301,7 +301,7 @@ const c3 = () => {
           </tbody>
         </table>
       </div>
-   
+
      ) : null
 
   }
@@ -349,10 +349,10 @@ const c3 = () => {
         ) : null
 
       }
-      <div className='App'>ยอดรวมทั้งหมด {sum} 
+      <div className='App'>ยอดรวมทั้งหมด {sum}
       </div>
       {
-        sum === 100 ? 
+        sum === 100 ?
         <button className='C1_save' onClick={saveFile}> บันทึก </button>
         : <button disabled> บันทึก </button>
       }

@@ -49,15 +49,15 @@ const manage = () => {
 
 
   useEffect(() => {
-    if(sessionStorage.getItem("uemail") === null ){
+    if(localStorage.getItem("uemail") === null ){
         router.push("/")
     }
-    if(sessionStorage.getItem("orid") === ""){
+    if(localStorage.getItem("orid") === ""){
         router.push("/team/team")
     }
-    let id = sessionStorage.getItem("orid");
-    let email = sessionStorage.getItem("uemail")
-    let st = sessionStorage.getItem("status")
+    let id = localStorage.getItem("orid");
+    let email = localStorage.getItem("uemail")
+    let st = localStorage.getItem("status")
     console.log("session : ")
     console.log(id);
     setStatusU(st)
@@ -75,7 +75,7 @@ const manage = () => {
           //  console.log(res1.data)
             setData1(res.data)
             setTeamdata(res1.data)
-            
+
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -100,12 +100,12 @@ const manage = () => {
                 console.log(ida)
                 setId(ida)
             }
-           
+
             console.log(ida)
             const feactData = async () => {
-        
+
                 let load = {
-               
+
                     data: res.data,
                   };
               try {
@@ -125,16 +125,16 @@ const manage = () => {
         } catch (error) {
             console.log(error)
         }
-        
+
     }
 
 
 
-   
+
     // const feactData = async () => {
-        
+
     //     let load = {
-       
+
     //         data: ida,
     //       };
     //   try {
@@ -151,7 +151,7 @@ const manage = () => {
     // };
     feactData1();
     // feactData();
-    
+
   }, []);
 
   const checkdb = async (e) => {
@@ -174,7 +174,7 @@ const manage = () => {
           });
           setShow(results1);
       }
-} 
+}
 
 
 const checkG = (e) => {
@@ -191,7 +191,7 @@ const checkG = (e) => {
   };
 
   const add = (e) => {
-  
+
     if (checkG( e) ) {
       alert("กรุณาเลือกคนอื่น");
     } else {
@@ -301,7 +301,7 @@ const checkG = (e) => {
   const handleDelete = (e) => {
     removelist(e.idx)
     removeNo(e.no)
-   
+
   }
 
   const removelist = (e) => {
@@ -346,7 +346,7 @@ const checkG = (e) => {
                 text: "เปลี่ยนชื่อ เรียบร้อย!",
                 icon: "success",
             });
-            sessionStorage.setItem("orid",teamName)
+            localStorage.setItem("orid",teamName)
             window.location.reload();
         }
     } catch (error) {
@@ -363,7 +363,7 @@ const handleChickAdd = () => {
 //     console.log("SendData")
 //     console.log(status)
 //     console.log(no)
-    
+
 //     let load = {
 //         st : status,
 //         no : no ,
@@ -387,16 +387,16 @@ const handleChickAdd = () => {
 //                   router.push("/team/manage");
 //                    // pathname: '/team/manage',
 //                     // query: { team: team },
-                  
+
 
 //             }  catch (error) {
 //                 console.error(error);
-                
+
 //             }
 //         }
 //         send()
 //    }
-  
+
 
   return (
     <div>
@@ -409,14 +409,14 @@ const handleChickAdd = () => {
                 <div className="table-title">
                   <div className="row">
                     <div className="col-sm-100">
-                      
+
                       <button  className="btn btn-secondary"  onClick={() => handleChickAdd()}>
                         <div className="material-icons">
                           <FaUserPlus /> เพิ่มสมาชิค
                         </div>
-                        
+
                       </button>
-    
+
                     </div>
                     <div className="col-sm-10">
                       <h2>
@@ -428,7 +428,7 @@ const handleChickAdd = () => {
                 </div>
                 <br />
                 {
-                    tap === 1 ? 
+                    tap === 1 ?
                     <div className="input-icons">
                     <i className="fa fa-search icon"></i>
                     <input
@@ -445,12 +445,12 @@ const handleChickAdd = () => {
             <div className="show">
                  {search_input.length
                      ? show.map((value, idx) =>
-             
+
                 <p onClick={() => add(value.no)} key={value.idx}>
-                  
+
                   {value.em_fullname}
                 </p>
-              
+
                           )
                      : null}
                      </div>
@@ -514,7 +514,7 @@ const handleChickAdd = () => {
                             className="deleteM"
                             title="Delete"
                             data-toggle="tooltip"
-                            
+
                           >
                             <i >
                               <TiUserDelete onClick={() => handleDelete({ no: value.no, idx })} />
@@ -539,14 +539,14 @@ const handleChickAdd = () => {
                <div className="table-title">
                  <div className="row">
                    <div className="col-sm-100">
-                     
+
                      <button   className="btn btn-secondary" disabled  >
                        <div className="material-icons">
                          <FaUserPlus /> เพิ่มสมาชิค
                        </div>
-                       
+
                      </button>
-   
+
                    </div>
                    <div className="col-sm-10">
                      <h2>
@@ -613,7 +613,7 @@ const handleChickAdd = () => {
                            className="deleteM"
                            title="Delete"
                            data-toggle="tooltip"
-                           
+
                          >
                            <i >
                              <TiUserDelete disabled onClick={() => handleDelete({ no: value.no, idx })} />
@@ -631,7 +631,7 @@ const handleChickAdd = () => {
                </div>
              </div>
            </div>
-         </div> }      
+         </div> }
 
 
 
@@ -641,10 +641,10 @@ const handleChickAdd = () => {
          </Button>
          ) : null}
              */}
-       
 
-    
-       
+
+
+
 
 
       <Footer></Footer>

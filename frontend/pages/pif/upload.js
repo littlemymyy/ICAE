@@ -54,8 +54,8 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 }));
 
 export default function manage() {
-  
- 
+
+
 
   const [expanded, setExpanded] = React.useState('panel1');
   const [fda_num , setFda_num] = useState("")
@@ -79,7 +79,7 @@ export default function manage() {
 
 
   useEffect(() => {
-    var userData = sessionStorage.getItem("uemail");
+    var userData = localStorage.getItem("uemail");
     console.log(userData);
   }, [])
 
@@ -171,7 +171,7 @@ export default function manage() {
   const [file14, setFile14] = useState(null);
   const [photo, setFilePhoto] = useState(null);
 
-  const [pdfFile1, setPdfFile1] = useState(''); 
+  const [pdfFile1, setPdfFile1] = useState('');
   const [pdfFile2, setPdfFile2] = useState('');
   const [pdfFile3, setPdfFile3] = useState('');
   const [pdfFile4, setPdfFile4] = useState('');
@@ -186,7 +186,7 @@ export default function manage() {
   const [pdfFile13, setPdfFile13] = useState('');
   const [pdfFile14, setPdfFile14] = useState('');
 
-  
+
 
   const handleFileChange = (inputName, event) => {
     const file = event.target.files[0];
@@ -382,8 +382,8 @@ export default function manage() {
       "rec_create_when": new Date(),
       "expdate": document.getElementById("expdate").value,
       "filename": document.getElementById("filename").value,
-      "email": sessionStorage.getItem("uemail"),
-      "id" : sessionStorage.getItem("orid"),
+      "email": localStorage.getItem("uemail"),
+      "id" : localStorage.getItem("orid"),
       "fda_num" : fda_num ,
       "fdadoc_date" : formatDate(fdadoc_date ),
       "formula_doc_date" : formatDate(formula_doc_date ),
@@ -442,7 +442,7 @@ export default function manage() {
           else if(e === 2) {
             window.location.href = "/pif/showpif"
           }
-          
+
         }
         else {
           alert("อัพโหลดเอกสารไม่สำเร็จ กรุณาลองใหม่อีกครั้ง")
@@ -457,7 +457,7 @@ export default function manage() {
   const handleChange = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
   };
-  
+
   return (
     <>
       <Navbar />
@@ -541,7 +541,7 @@ export default function manage() {
             <TextField type="date" id='expdate' />
           </Box>
         </Box>
-  
+
         <Box
           sx={{
             display: { xs: "grid", md: "grid" },
@@ -551,7 +551,7 @@ export default function manage() {
             paddingBottom: { xs: "10px", md: "10px" },
           }}>
           <Typography variant="h6">รูปภาพผลิตภัณฑ์</Typography>
-          
+
           <Box
             style={{
               width: "100%",
@@ -559,9 +559,9 @@ export default function manage() {
               boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.25)',
               marginTop: "10px"
             }}>
-            
+
             <Button
-          
+
               width="80%"
               variant="contained"
               component="label"
@@ -570,16 +570,16 @@ export default function manage() {
                 id="filename"
                 type="file"
                 accept="image/png, image/gif, image/jpeg"
-                
-                
+
+
                 onChange={(event) => handleFileChange('photo', event)}
-                                
+
                 hidden
               />เลือกไฟล์
             </Button>
-            
+
             <span id="photo" style={{ marginLeft: "5px", marginRight: "5px" }}>ไม่ได้เลือกไฟล์ใด</span>
-            
+
           </Box>
 
 
@@ -701,18 +701,18 @@ export default function manage() {
                   maeginbottom: { xs: "10px", md: "10px" }
                 }}
 
-              >สำเนาใบรับจดแจ้งเครื่องสำอาง 
+              >สำเนาใบรับจดแจ้งเครื่องสำอาง
               </Typography>
-                 
+
               <Box sx={{
                 display: { xs: "", md: "table-caption" },
-               
+
               }}>
                 <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
 
                 <TextField type="date" id='expdate'  onChange={(e) => setFdadoc_date(e.target.value)}/>
               </Box>
-               {pdfFile1 === '' ? 
+               {pdfFile1 === '' ?
               <Box sx={{
                 width: '300px',
                 height: '200px',
@@ -725,14 +725,14 @@ export default function manage() {
                 <Box sx={{
                   justifyContent: { xs: "", md: "center" },
                   textAlign: { xs: "center", md: "center" },
-                  
-                  
+
+
                  }}>
-               
+
                   <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
                   <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
                 </Box>
-                
+
               </Box>
               :
               <><p>{pdfFile1}</p>
@@ -741,11 +741,11 @@ export default function manage() {
               }
               <Box
                 style={{
-              
+
                   borderRadius: '5px',
                   boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.25)',
                   marginTop: "10px"
-                  
+
                 }}>
                 <Button
                   width="100%"
@@ -754,18 +754,18 @@ export default function manage() {
                   marginTop="10px"
                 >
                   <input
-                 
+
                     id="filename"
                     type="file"
                     onChange={(event) => handleFileChange('file1', event)}
                     hidden
                   />เลือกไฟล์
-                  
-                 
+
+
                 </Button>
-                
+
                 <span  id="file1" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด
-                
+
 
                 </span>
 
@@ -777,10 +777,10 @@ export default function manage() {
                   marginRight:"15px",
                   color:"red",
                   display:"none"
-              }} /> 
-               
+              }} />
+
               </Box>
-              
+
 
                 <hr></hr>
               <Typography variant="h6"
@@ -792,12 +792,12 @@ export default function manage() {
               >หนังสือยืนยันการเป็นเจ้าของเครื่องสำอาง /  Letter of Authorization </Typography>
                <Box sx={{
                 display: { xs: "", md: "table-caption" },
-               
+
               }}>
                 <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
                 <TextField type="date" id='expdate' onChange={(e) =>  setLetter_authorization_date(e.target.value)} />
               </Box>
-              {pdfFile2 === '' ? 
+              {pdfFile2 === '' ?
               <Box sx={{
                 width: '300px',
                 height: '200px',
@@ -810,16 +810,16 @@ export default function manage() {
                 <Box sx={{
                   justifyContent: { xs: "", md: "center" },
                   textAlign: { xs: "center", md: "center" },
-                  
-                  
+
+
                  }}>
                  <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
                   <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
                 </Box>
-                
+
               </Box>
               :
-              <embed src={pdfFile2} width="300px" height="450px" /> 
+              <embed src={pdfFile2} width="300px" height="450px" />
               }
               <Box
                 style={{
@@ -857,13 +857,13 @@ export default function manage() {
               </Typography>
               <Box sx={{
                 display: { xs: "", md: "table-caption" },
-               
+
               }}>
                 <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
                 <TextField type="date" id='expdate' onChange={(e) => setFormula_doc_date(e.target.value)} />
               </Box>
 
-              {pdfFile3 === '' ? 
+              {pdfFile3 === '' ?
               <Box sx={{
                 width: '300px',
                 height: '200px',
@@ -876,13 +876,13 @@ export default function manage() {
                 <Box sx={{
                   justifyContent: { xs: "", md: "center" },
                   textAlign: { xs: "center", md: "center" },
-                  
-                  
+
+
                  }}>
                    <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
                   <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
                 </Box>
-                
+
               </Box>
               :
               <embed src={pdfFile3} width="300px" height="450px" />
@@ -923,13 +923,13 @@ export default function manage() {
               <Typography variant="h6">3. ฉลากเครื่องสำอาง</Typography>
               <Box sx={{
                 display: { xs: "", md: "table-caption" },
-               
+
               }}>
                 <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
                 <TextField type="date" id='expdate' onChange={(e) => setLabel_doc_date(e.target.value)}/>
               </Box>
 
-              {pdfFile4 === '' ? 
+              {pdfFile4 === '' ?
               <Box sx={{
                 width: '300px',
                 height: '200px',
@@ -942,13 +942,13 @@ export default function manage() {
                 <Box sx={{
                   justifyContent: { xs: "", md: "center" },
                   textAlign: { xs: "center", md: "center" },
-                  
-                  
+
+
                  }}>
                    <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
                   <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
                 </Box>
-                
+
               </Box>
               :
               <embed src={pdfFile4} width="300px" height="450px" />
@@ -987,7 +987,7 @@ export default function manage() {
               <Typography variant="h6">
                 4. ข้อมูลเกี่ยวกับการผลิต
               </Typography>
-                
+
               <Typography variant="h6"
                 sx={{
                   marginTop: { xs: "10px", md: "10px" },
@@ -997,13 +997,13 @@ export default function manage() {
               >ข้อมูลการผลิต</Typography>
                <Box sx={{
                 display: { xs: "", md: "table-caption" },
-               
+
               }}>
                 <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
                 <TextField type="date" id='expdate' onChange={(e) =>setManufacture_doc_date(e.target.value)}/>
               </Box>
 
-               {pdfFile5 === '' ? 
+               {pdfFile5 === '' ?
               <Box sx={{
                 width: '300px',
                 height: '200px',
@@ -1016,13 +1016,13 @@ export default function manage() {
                 <Box sx={{
                   justifyContent: { xs: "", md: "center" },
                   textAlign: { xs: "center", md: "center" },
-                  
-                  
+
+
                  }}>
                    <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
                   <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
                 </Box>
-                
+
               </Box>
               :
               <embed src={pdfFile5} width="300px" height="450px" />
@@ -1066,13 +1066,13 @@ export default function manage() {
               >GMP / ISO</Typography>
                <Box sx={{
                 display: { xs: "", md: "table-caption" },
-               
+
               }}>
                 <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
                 <TextField type="date" id='expdate' onChange={(e) => setGmp_iso(e.target.value)} />
               </Box>
 
-               {pdfFile6 === '' ? 
+               {pdfFile6 === '' ?
               <Box sx={{
                 width: '300px',
                 height: '200px',
@@ -1085,13 +1085,13 @@ export default function manage() {
                 <Box sx={{
                   justifyContent: { xs: "", md: "center" },
                   textAlign: { xs: "center", md: "center" },
-                  
-                  
+
+
                  }}>
                    <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
                   <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
                 </Box>
-                
+
               </Box>
               :
               <embed src={pdfFile6} width="300px" height="450px" />
@@ -1132,13 +1132,13 @@ export default function manage() {
               </Typography>
                <Box sx={{
                 display: { xs: "", md: "table-caption" },
-               
+
               }}>
                 <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
                 <TextField type="date" id='expdate' onChange={(e) => setEff_report_date(e.target.value)}/>
               </Box>
 
-              {pdfFile7 === '' ? 
+              {pdfFile7 === '' ?
               <Box sx={{
                 width: '300px',
                 height: '200px',
@@ -1151,13 +1151,13 @@ export default function manage() {
                 <Box sx={{
                   justifyContent: { xs: "", md: "center" },
                   textAlign: { xs: "center", md: "center" },
-                  
-                  
+
+
                  }}>
                   <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
                   <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
                 </Box>
-                
+
               </Box>
               :
               <embed src={pdfFile7} width="300px" height="450px" />
@@ -1199,13 +1199,13 @@ export default function manage() {
               </Typography>
                <Box sx={{
                 display: { xs: "", md: "table-caption" },
-               
+
               }}>
                 <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
                 <TextField type="date" id='expdate' onChange={(e) =>setEfficient_report_date(e.target.value)} />
               </Box>
 
-              {pdfFile8 === '' ? 
+              {pdfFile8 === '' ?
               <Box sx={{
                 width: '300px',
                 height: '200px',
@@ -1218,13 +1218,13 @@ export default function manage() {
                 <Box sx={{
                   justifyContent: { xs: "", md: "center" },
                   textAlign: { xs: "center", md: "center" },
-                  
-                  
+
+
                  }}>
                    <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
                   <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
                 </Box>
-                
+
               </Box>
               :
               <embed src={pdfFile8} width="300px" height="450px" />
@@ -1273,13 +1273,13 @@ export default function manage() {
               </Typography>
                <Box sx={{
                 display: { xs: "", md: "table-caption" },
-               
+
               }}>
                 <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
                 <TextField type="date" id='expdate' onChange={(e) =>  setSds_date(e.target.value)}/>
               </Box>
 
-              {pdfFile9 === '' ? 
+              {pdfFile9 === '' ?
               <Box sx={{
                 width: '300px',
                 height: '200px',
@@ -1292,13 +1292,13 @@ export default function manage() {
                 <Box sx={{
                   justifyContent: { xs: "", md: "center" },
                   textAlign: { xs: "center", md: "center" },
-                  
-                  
+
+
                  }}>
                   <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
                   <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
                 </Box>
-                
+
               </Box>
               :
               <embed src={pdfFile9} width="300px" height="450px" />
@@ -1340,13 +1340,13 @@ export default function manage() {
               </Typography>
                <Box sx={{
                 display: { xs: "", md: "table-caption" },
-               
+
               }}>
                 <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
                 <TextField type="date" id='expdate'onChange={(e) =>  setCoa(e.target.value)} />
               </Box>
 
-              {pdfFile10 === '' ? 
+              {pdfFile10 === '' ?
               <Box sx={{
                 width: '300px',
                 height: '200px',
@@ -1359,13 +1359,13 @@ export default function manage() {
                 <Box sx={{
                   justifyContent: { xs: "", md: "center" },
                   textAlign: { xs: "center", md: "center" },
-                  
-                  
+
+
                  }}>
                   <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
                   <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
                 </Box>
-                
+
               </Box>
               :
               <embed src= {pdfFile10} width="300px" height="450px" />
@@ -1407,12 +1407,12 @@ export default function manage() {
               </Typography>
                <Box sx={{
                 display: { xs: "", md: "table-caption" },
-               
+
               }}>
                 <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
                 <TextField type="date" id='expdate' onChange={(e) =>  setSds_date(e.target.value)} />
               </Box>
-              {pdfFile11 === '' ? 
+              {pdfFile11 === '' ?
               <Box sx={{
                 width: '300px',
                 height: '200px',
@@ -1425,13 +1425,13 @@ export default function manage() {
                 <Box sx={{
                   justifyContent: { xs: "", md: "center" },
                   textAlign: { xs: "center", md: "center" },
-                  
-                  
+
+
                  }}>
                    <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
                   <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
                 </Box>
-                
+
               </Box>
               :
               <embed src={pdfFile11} width="300px" height="450px" />
@@ -1479,12 +1479,12 @@ export default function manage() {
               <Typography variant="h6">1. สูตรแม่บท (Master formula)</Typography>
               <Box sx={{
                 display: { xs: "", md: "table-caption" },
-               
+
               }}>
                 <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
                 <TextField type="date" id='expdate' onChange={(e) =>  setMasterformula_date(e.target.value)} />
               </Box>
-              {pdfFile12 === '' ? 
+              {pdfFile12 === '' ?
               <Box sx={{
                 width: '300px',
                 height: '200px',
@@ -1497,13 +1497,13 @@ export default function manage() {
                 <Box sx={{
                   justifyContent: { xs: "", md: "center" },
                   textAlign: { xs: "center", md: "center" },
-                  
-                  
+
+
                  }}>
                   <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
                   <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
                 </Box>
-                
+
               </Box>
               :
               <embed src={pdfFile12} width="300px" height="450px" />
@@ -1542,12 +1542,12 @@ export default function manage() {
               <Typography variant="h6">2. ข้อกำหนดของเครื่องสำอางสำเร็จรูป (Specification of cosmetic finished product)</Typography>
               <Box sx={{
                 display: { xs: "", md: "table-caption" },
-               
+
               }}>
                 <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
                 <TextField type="date" id='expdate' onChange={(e) => setSpecification_date(e.target.value)} />
               </Box>
-              {pdfFile13 === '' ? 
+              {pdfFile13 === '' ?
               <Box sx={{
                 width: '300px',
                 height: '200px',
@@ -1560,13 +1560,13 @@ export default function manage() {
                 <Box sx={{
                   justifyContent: { xs: "", md: "center" },
                   textAlign: { xs: "center", md: "center" },
-                  
-                  
+
+
                  }}>
                    <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
                   <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
                 </Box>
-                
+
               </Box>
               :
               <embed src={pdfFile13} width="300px" height="450px" />
@@ -1605,12 +1605,12 @@ export default function manage() {
               <Typography variant="h6">3. วิธีการทดสอบเครื่องสำอางสำเร็จรูป (Testing method for cosmetic finished product) </Typography>
               <Box sx={{
                 display: { xs: "", md: "table-caption" },
-               
+
               }}>
                 <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
                 <TextField type="date" id='expdate' onChange={(e) => setTesting_doc_date(e.target.value)}/>
               </Box>
-              {pdfFile14 === '' ? 
+              {pdfFile14 === '' ?
               <Box sx={{
                 width: '300px',
                 height: '200px',
@@ -1623,17 +1623,17 @@ export default function manage() {
                 <Box sx={{
                   justifyContent: { xs: "", md: "center" },
                   textAlign: { xs: "center", md: "center" },
-                  
-                  
+
+
                  }}>
                    <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
                   <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
                 </Box>
-                
+
               </Box>
               :
               <embed src={pdfFile14} width="300px" height="450px" />
-              
+
               }
               <Box
                 style={{
@@ -1652,10 +1652,10 @@ export default function manage() {
                     hidden
                   />เลือกไฟล์
                 </Button>
-                
+
                 <span id="file14" style={{ marginLeft: "10px" }}>ไม่ได้เลือกไฟล์ใด</span>
 
-              
+
                  <CancelIcon  id="del14" onClick={() => handleRemoveFile('file14')}
                 sx={{
                   fontSize: "20px",
@@ -1690,7 +1690,7 @@ export default function manage() {
           textAlign="center"
           variant="contained"
           color="success"
-          
+
           sx={{ mt: 3, mb: 2 }}
           onClick={() => {generatePDF(1)}}
         >
@@ -1714,10 +1714,10 @@ export default function manage() {
       </Box>
     </Box>
       {/* <Button onClick={(e) => { generatePDF(e) }}>Generate PDF</Button> */}
-      
+
       <Footer />
 
-      
+
     </>
   )
 

@@ -41,7 +41,7 @@ const add = () => {
     const [id , setId] = useState("")
 
     useEffect(() => {
-        let ida = sessionStorage.getItem("orid")
+        let ida = localStorage.getItem("orid")
         setId(ida)
         const feactData = async () => {
             try {
@@ -51,15 +51,15 @@ const add = () => {
               //  console.log(res1.data)
                 setData(res.data)
                 setTeamdata(res1.data)
-                
+
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         };
 
-        
+
         feactData();
-    }, []); 
+    }, []);
 
 
     const resultsearch = (e) => {
@@ -78,30 +78,30 @@ const add = () => {
               });
               setShow(results1);
           }
-    } 
+    }
 
     const add = (e) => {
         no.push(e)
         setNo([...no])
-        
+
           const result = data.find(({ no }) => no === e);
           console.log("...........");
           console.log(result);
           setList([...list, result]);
           setShow([]);
           setSearch_input("");
-    
+
           console.log(list);
-       
+
       };
 
       const  handleclick = (e) => {
         console.log("handeChang")
-       
+
        if(e === 2){
           removelist(e.idx)
           removeNo(e.no)
-          
+
         }
         else {
             sendData()
@@ -125,7 +125,7 @@ const add = () => {
                         method : "post",
                         data : load
                     })
-    
+
                     Swal.fire({
                         position: "center",
                         icon: "success",
@@ -136,11 +136,11 @@ const add = () => {
                      // router.push("/team/manage");
                        // pathname: '/team/manage',
                         // query: { team: team },
-                      
-    
+
+
                 }  catch (error) {
                     console.error(error);
-                    
+
                 }
             }
             send()
@@ -150,16 +150,16 @@ const add = () => {
 
 
   return (
-   
 
-    
+
+
     <div>
         <Navbar/>
 
             <h1 style={{ textAlign: 'center' }}>เพิ่มผู้คนที่แสนพิเศษเพื่อรังสรรค์การทำงาน</h1>
 
-          
-         
+
+
          <div className="input-icons">
          <i className="fa fa-search icon"></i>
          <input
@@ -170,24 +170,24 @@ const add = () => {
          />
          <br />
        </div>
-    
- 
+
+
       <div className="show">
         {search_input.length
           ? show.map((value, idx) =>
-             
+
                 <p onClick={() => add(value.no)} key={value.idx}>
-                  
+
                   {value.em_fullname}
                 </p>
-              
+
             )
           : null}
       </div>
 
 
       {
-        list.length ? 
+        list.length ?
         <table className="C1A_styled-table">
         <thead>
           <tr>
@@ -217,7 +217,7 @@ const add = () => {
         </tbody>
       </table>
       : null
-        
+
       }
 
 

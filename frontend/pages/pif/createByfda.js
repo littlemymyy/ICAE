@@ -40,7 +40,7 @@ const createByfda = () => {
   const router = useRouter()
   const Swal = require('sweetalert2')
   const [id,setId] = useState("")
-  
+
   const [imageName , setImageName] = useState("")
 
   // Handle the selected image file
@@ -52,7 +52,7 @@ const createByfda = () => {
     let n = str.indexOf("/")
     str = str.substring(n+1)
     // alert(str)
-    let blob = file.slice(0, file.size, file.type); 
+    let blob = file.slice(0, file.size, file.type);
     let newFile = new File([blob], fda_num+"."+str, {type: file.type});
     setImageName(fda_num+"."+str)
     console.log(newFile)
@@ -68,8 +68,8 @@ const createByfda = () => {
 
   // get email from session
   useEffect(() => {
-    let userData = sessionStorage.getItem("uemail");
-    let orid = sessionStorage.getItem("orid")
+    let userData = localStorage.getItem("uemail");
+    let orid = localStorage.getItem("orid")
     setId(orid)
     setEmail(userData)
 
@@ -108,14 +108,14 @@ const createByfda = () => {
           cosname : res.data[6],
           expdate : res.data[8],
           bodyPart : res.data[10],
-          company : res.data[13] , 
+          company : res.data[13] ,
           fcompany : res.data[14],
           fda_num : num,
           ordid : id ,
           email : localStorage.getItem("uemail")
 
 }]
-       
+
         // data[0]["cas"] = res.data[1]
         setData(dd)
         console.log(res.data)
@@ -167,19 +167,19 @@ const createByfda = () => {
     let dd = data[0];
     //dd["photo"] = imageName;
     console.log(dd);
-  
+
     const formData = new FormData();
     formData.append('image', imageFile);
-  
+
     const fetchData = async () => {
       try {
         // const res = await Axios.post('http://localhost:3001/api/submitPif', formData, {
-        
+
         // });
         // console.log(res.data);
-  
+
         const res1 = await Axios.post("http://localhost:3001/api/storageProduct", dd);
-  
+
         if (res1.data) {
           Swal.fire({
             position: "center",
@@ -194,7 +194,7 @@ const createByfda = () => {
         console.log(error);
       }
     };
-  
+
     fetchData();
   };
 
@@ -204,14 +204,14 @@ const createByfda = () => {
       <div className="card">
         <div className="photo">
           <div className="photo" >
-          
-              
-            
-              
+
+
+
+
               <div>
                 <img src="/new-product.png" alt="" height="600px" width="400px" />
                </div>
-           
+
 
           </div>
           <input
@@ -314,6 +314,6 @@ const createByfda = () => {
     </div>
   )
 }
-  
+
 
 export default createByfda
