@@ -11,6 +11,11 @@ import AvatarGroup from '@mui/material/AvatarGroup';
 import { useState } from 'react';
 import { FaEdit } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormHelperText from '@mui/material/FormHelperText';
+import FormControl from '@mui/material/FormControl';
 
 
 
@@ -23,6 +28,8 @@ export default function productslist() {
   const [id, setId] = useState("")
   const [uName, setUname] = useState("")
   const Swal = require('sweetalert2')
+  const [age, setAge] = useState('');
+  let see = 0 ;
   
   
 
@@ -161,16 +168,118 @@ export default function productslist() {
    }
   }
 
-  const handleButtonClickEdit = (e) => {
+  const handleButtonClickEdit = (e,fda_license) => {
     if( e=== "0" ){
-      router.push("/pif/manage")
+      router.push({
+        pathname : "/pif/manage",
+        query : {
+          fdaNo : fda_license
+        }
+
+      }
+        )
 
     }
     else {
-      router.push("/pif/upload_edit")
+      router.push({
+        pathname: "/pif/upload_edit",
+  
+        query: {
+          fdaNo : fda_license ,
+        },
+      });
     }
 
   }
+
+  const handleChange = (e) => {
+    if(e === 1){
+      see += e;
+      const feactData = async () => {
+        let load = {
+          id : id ,
+          con : "1"
+        }
+        try{
+          const res = await Axios.post("http://localhost:3001/api/sort" ,load)
+
+          console.log(res.data)
+
+          await setShow(res.data)
+
+        } catch(error){
+          console.log(error)
+        }
+      }
+      feactData()
+    }
+
+    if(e === 2){
+      see += e;
+      const feactData = async () => {
+        let load = {
+          id : id ,
+          con : "2"
+        }
+        try{
+          const res = await Axios.post("http://localhost:3001/api/sort" ,load)
+
+          console.log(res.data)
+
+          await setShow(res.data)
+
+        } catch(error){
+          console.log(error)
+        }
+      }
+      feactData()
+    }
+
+    if(e === 3){
+      see += e;
+      const feactData = async () => {
+        let load = {
+          id : id ,
+          con : "3"
+        }
+        try{
+          const res = await Axios.post("http://localhost:3001/api/sort" ,load)
+
+          console.log(res.data)
+
+          await setShow(res.data)
+
+        } catch(error){
+          console.log(error)
+        }
+      }
+      feactData()
+    }
+
+    if(e === 4){
+      see += e;
+      const feactData = async () => {
+        let load = {
+          id : id ,
+          con : "4"
+        }
+        try{
+          const res = await Axios.post("http://localhost:3001/api/sort" ,load)
+
+          console.log(res.data)
+
+          await setShow(res.data)
+
+        } catch(error){
+          console.log(error)
+        }
+      }
+      feactData()
+    }
+
+  }
+
+  
 
   return (
     <>
@@ -244,8 +353,36 @@ export default function productslist() {
           <Button variant="contained" size="medium" sx={{ ml: 2 }} style={buttonStyle} onClick={() => handleButtonClick(3)}>
             ทีมของคุณ
           </Button>
+
+          
+                            <FormControl size="medium" sx={{ m: 1, minWidth: 150 }}  >
+                              <InputLabel id="demo-simple-select-label">
+                                การกรอกข้อมูล
+                              </InputLabel>
+                              <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                label="การกรอกข้อมูล"
+                                onChange={(e) => handleChange(e.target.value)}
+                              >
+                                <MenuItem value={ 1 }>
+                                  วันที่มากไปน้อย
+                                </MenuItem>
+                                <MenuItem value={  2 }>
+                                  วันที่น้อยไปมาก
+                                </MenuItem>
+                                <MenuItem value={ 3 }>
+                                ตามตัวอักษร ก-ฮ
+                                </MenuItem>
+                                <MenuItem value={ 4 }>
+                                ตามตัวอักษร ฮ-ก
+                                </MenuItem>
+                              </Select>
+                            </FormControl>
+                          
           </div >
       </Box>
+
      
       <br />
       <div className="bodyTproductlist">
@@ -254,7 +391,6 @@ export default function productslist() {
           <thead className="tpl">
             <tr className="trplc">
             <th className="plac">ลำดับ</th>
-            <th className="plac">รูปภาพ</th>
             <th className="plac">เลขจดแจ้ง</th>
             <th className="plac">ชื่อการค้า</th>
             <th className="plac">ชื่อผลิตภัณฑ์</th>
@@ -268,17 +404,42 @@ export default function productslist() {
              show.map((value , idx)=>(
                 <tr className="trplc" key={idx}>
                   <td className="plac" >{idx+1}</td>
-                  <td className="plac" >{value.img_path}</td>
                   <td className="plac">{value.fda_license}</td>
                   <td className="plac">{value.cosnameC}</td>
                   <td className="plac">{value.cosname}</td>
                   <td className="plac">{value.expdate}</td>
+
+                  {/* {value.img_path} */}
                   {
                     value.status === "0" ?
                     <td>ไม่มี</td>
                     : <td>มี</td>
                   }
-                  <td className="plTD"><button className="pl"><FaEdit onClick={() => handleButtonClickEdit(value.status)}/> </button>  <button className="pl"><MdDeleteForever  onClick={()=>handledelete(value.no , idx , value.status,value.fda_license)} /> </button>  </td>
+                  <td className="plTD">
+  {
+    value.status === "0" ? (
+      <>
+        <button className="pl" onClick={() => handleButtonClickEdit(value.status, value.fda_license)}>
+        สร้าง PIF <FaEdit />
+        </button>
+        <button className="pl" onClick={() => handledelete(value.no, idx, value.status, value.fda_license)}>
+          ลบ &nbsp;
+        <MdDeleteForever />
+</button>
+      </>
+    ) : (
+      <>
+        <button className="pl" onClick={() => handleButtonClickEdit(value.status, value.fda_license)}>
+        แก้ไข PIF <FaEdit />
+        </button>
+        <button className="pl" onClick={() => handledelete(value.no, idx, value.status, value.fda_license)}>
+          ลบ &nbsp;
+        <MdDeleteForever />
+        </button>
+      </>
+    )
+  }
+</td>
 
                 </tr>
                 

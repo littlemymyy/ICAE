@@ -125,6 +125,7 @@ export default function showpif(){
             >
                 <CardMedia sx={{textAlign:"center", marginTop:"20px"}}>
                 <img src={`http://localhost:3001/${item.img_path}`} style={{ width: "150px" , height:"150px",  objectFit: "cover" ,textAlign:"center"}}/>
+                {/* <p>{`http://localhost:3001/${item.img_path}`}</p> */}
                 </CardMedia>
               <CardContent sx={{ marginLeft:"50px", marginRight:"50px" }}>
                 <Typography gutterBottom variant="h6" textAlign="center" component="div">

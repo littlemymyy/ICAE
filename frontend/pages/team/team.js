@@ -78,7 +78,7 @@ const team = () => {
           }
     } 
    
-    const checkG = () => {
+    const checkG = (team) => {
         for (let i = 0; i < teamdata.length; i++) {
           if (team === teamdata[i]) {
             return 1;
@@ -189,6 +189,12 @@ const team = () => {
     console.log(status)
     console.log(no)
     console.log(team)
+
+    if(checkG(team) === 1 ){
+      alert("มีคนใช้ชื่อทีมนี้ช่ำแล้วกรุณาเปลี่ยนชื่อ")
+      window.location.reload()
+    }
+
     let load = {
         st : status,
         no : no ,

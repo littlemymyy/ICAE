@@ -96,7 +96,7 @@ export default function Home(){
                     <TableRow key={index} style={index % 2 === 0 ? evenRowStyle : null} >
                         <TableCell align="left">{item.cas}</TableCell>
                         {
-                            cmname === "-" || cmname ==="" ?
+                            item.cmname === "-" || item.cmname ==="" ?
                             <TableCell align="left">{item.cname}</TableCell>
                             : <TableCell align="left">{item.cmname}</TableCell>
                         }

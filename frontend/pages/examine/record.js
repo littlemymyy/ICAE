@@ -4,6 +4,11 @@ import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router';
 import { AiOutlineDelete ,RiDraftFill } from "react-icons/ai";
 import { FcOk } from "react-icons/fc";
+import DeleteIcon from '@mui/icons-material/Delete';
+import SendIcon from '@mui/icons-material/Send';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import EditNoteIcon from '@mui/icons-material/EditNote';
 
 const record = () => {
   const [gname , setGname] = useState([])
@@ -12,22 +17,27 @@ const record = () => {
   const router = useRouter();
 
   useEffect(() => {
+    let email = localStorage.getItem("uemail")
+    let load = {
+      email : email
+    }
+    console.log(email)
     const fetchdata = async () =>{
       try{
-        const gn = await Axios.get(`http://localhost:3001/api/getGroupName`);
+        const gn = await Axios.post(`http://localhost:3001/api/getGroupName`,load);
         console.log(gn.data)
         setGname(gn.data)
         setShow(gn.data)
         console.log(gn.data);
-        for(let i = 0; i < gn.data.length; i++) {
-          let load = {
-            data : gn.data[i].groupname
-          }
-          const d = await Axios({
-            url : `http://localhost:3001/api/getGroupNameSt`,
-            method : 'post',
-            data :  load  , 
-          })
+        // for(let i = 0; i < gn.data.length; i++) {
+        //   let load = {
+        //     data : gn.data[i].groupname
+        //   }
+          // const d = await Axios({
+          //   // url : `http://localhost:3001/api/getGroupNameSt`,
+          //   // method : 'post',
+          //   // data :  load  , 
+          // })
 
           //const d = Axios(gn.data[i].groupname)
           // const d = Axios with gn.data[i].groupname
@@ -36,7 +46,7 @@ const record = () => {
           // setStatus([...status])
           // show[i]['status'] = d.data[0].sum
           // setShow([...show])
-        }
+        //}
 
       }catch(error){
         console.error(error)
@@ -72,6 +82,16 @@ const record = () => {
           }
         })
   }
+
+  const clickDelete = (idx , groupName) => {
+    show.splice(idx,1);
+    setShow([...show])
+    let load = {
+      email : localStorage.getItem("uemail") ,
+      groupName : groupName
+    }
+    Axios.post("http://localhost:3001/api/DeleteGroupName" ,load)
+  }
   return (
     <div>
       <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet"></link>
@@ -102,24 +122,26 @@ const record = () => {
                   <th className='C1A_th2'>วันที่</th>
                   <th className='C1A_th3'>ชื่อไฟล์</th>
                   <th style={{ textAlign: 'center' }}>ตัวเลือก</th>
-                  <th></th>
+                
                 </tr>
               </thead>
               <tbody>
                 {
                   show.length ?
                     show.map((value, idx) => (
-                      <tr onClick={()=>sendgroupname(value.groupname)}>
+                      <tr>
                         <td>{idx + 1}</td>
                         <td>{value.udate}</td>
                         <td>{value.groupname}</td>
-                        
-                       
-                        <td><AiOutlineDelete onClick={() => clickDelete(idx)} /></td>
-                        {
-
-                        }
-                        
+                        <td style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>  <Stack direction="row" spacing={2}>
+                    
+                        <Button variant="outlined" endIcon={<EditNoteIcon />}onClick={()=>sendgroupname(value.groupname)}>
+                          แก้ไข
+                        </Button>
+                      <Button variant="outlined" endIcon={<DeleteIcon />} onClick={() => clickDelete(idx , value.groupname)} >
+                        ลบ
+                     </Button>
+                       </Stack></td>
                       </tr>
                     ))
                     : null

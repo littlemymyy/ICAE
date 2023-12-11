@@ -20,6 +20,7 @@ const c2A = () => {
     const [fillterg , setFillterg] = useState("")
     const [search_input, setSearch_input] = useState("");
     const [show, setShow] = useState([])
+    const [email , setEmail] = useState("")
 
     
    // const parsedArray = storedArrayString ? JSON.parse(dataArray) : [];
@@ -36,6 +37,8 @@ const c2A = () => {
     const parsedArray = dataArray ? JSON.parse(dataArray) : [];
     //const parsedArray = 
     useEffect(()=>{
+      let mail = localStorage.getItem("uemail")
+      setEmail(mail)
       let aa = 0
       console.log("is comming")
       console.log(parsedArray)
@@ -238,7 +241,8 @@ const c2A = () => {
         uname : sessionStorage.getItem("uname") ,
         gname : groupName ,
         fillterg : filltergB ,
-        dd : list,
+        dd : list, 
+        email : email,
         
       }
       Axios({
@@ -247,7 +251,7 @@ const c2A = () => {
         data : load ,
       }).then((response) => {
         alert("เพิ่มรายเรียบร้อย")
-        router.push("/c1A")
+        router.push("/examine/record")
       })
     }
     

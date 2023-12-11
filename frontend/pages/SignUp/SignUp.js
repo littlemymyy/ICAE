@@ -108,18 +108,66 @@ export default function SignUp() {
     return /\S+@\S+\.\S+/.test(email);
   }
 
+  // const checkmail = async (email) => {
+  
+   
+  // }
  
-  const handleChange = (event) =>{
+  const handleChange = async (event) => {
     if (!isValidEmail(event.target.value)) {
       setError('Email is invalid');
       console.log("email")
     } else {
       setError(null);
-     // console.log("ok")
-    }
+      // console.log("ok")
+  
+      // Call the checkmail function and await the result
+      try{
+        let load = {
+          email : event.target.value,
+        }
+        const res = await Axios.post("http://localhost:3001/api/checkMail",load)
+        console.log(res.data)
 
-    setEmail(event.target.value);
-  }
+        if(res.data === "Dupicate"){
+          Swal.fire({
+            icon: "error",
+            title: "ระบบตรวจว่า",
+            text: "มีการใช้อีเมล์นี้แล้ว กรุณาเปลี่ยนอีเมล์!",
+          });
+          window.location.reload()
+        }
+        else {
+          setEmail(event.target.value);
+        }
+
+      } catch (error){
+        console.log(error)
+      }
+
+
+
+
+
+      //const result = await checkmail(event.target.value);
+     // console.log("is result : " + result)
+  
+      // Check the result and display an alert if the email is a duplicate
+      // if (result === "Duplicate") {
+      //   alert("Duplicate email");
+      //   Swal.fire({
+      //     icon: "error",
+      //     title: "ระบบตรวจว่า",
+      //     text: "มีการใช้อีเมล์นี้แล้ว กรุณาเปลี่ยนอีเมล์!",
+      //   });
+      // } else {
+        
+      //   setEmail(event.target.value);
+      // }
+    }
+  };
+  
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -138,16 +186,17 @@ export default function SignUp() {
       });
      
     }
+
     else if(data1.password !== data1.repassword){
       Swal.fire({
         title: "The Internet?",
         text: "กรุณาใส่รหัสผ่านให้เหมือนกัน",
         icon: "question"
       });
-     
-      
-      
     }
+
+
+
     else {
       console.log(data1)
       Axios({
@@ -296,7 +345,7 @@ export default function SignUp() {
             
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="/SignIn" variant="body2">
+                <Link href="/login/SignIn" variant="body2">
                   คุณเป็นสมาชิกใช่ไหม? เข้าสู่ระบบ
                 </Link>
               </Grid>

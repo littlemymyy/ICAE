@@ -16,7 +16,7 @@ import { IoMdNotifications } from "react-icons/io";
 
 
 const pages = ['หน้าหลัก', 'ตรวจสอบสูตรสารเคมี', 'การจัดการPIF' , 'ประวัติการตรวจสอบสูตรสารเคมี','คลังความรู้'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const settings = ['หน้าโปรไฟล์',  'การแจ้งเตือน', 'ออกจากระบบ'];
 
 function Navbar() {
     const router = useRouter();
@@ -38,12 +38,36 @@ function Navbar() {
         setAnchorElNav(null);
         const selectName = ev.nativeEvent.target.outerText.toLowerCase();
         console.log(selectName)
-        
+
+        if(uname === ""){
+            if(selectName === pages[0]){
+                router.push("/")
+            }
+            else if(selectName === pages[4]){
+                router.push("/Knowledge/home")
+            }
+            else if(selectName === pages[1]){
+                router.push("/login/Sigin");
+            }
+            else if(selectName === "การจัดการpif"){
+                
+                if(sessionStorage.getItem("uemail") === ""){
+                    router.push("/login/Sigin");
+                }
+                
+            }
+            else if(selectName === pages[3]){
+                router.push("/login/Sigin");
+            }
+        }
+
+       
+
         if(uname !== '') {
             if(selectName === pages[0]){
                 router.push("/")
             }
-            else if(selectName === pages[1]){
+            if(selectName === pages[1]){
                 router.push("/examine/check");
             }
             else if(selectName === "การจัดการpif"){
@@ -80,16 +104,19 @@ function Navbar() {
         else if(selectName === settings[1]){
 
         }
-        else if(selectName === settings[2]){
-                
-        }
-        else if(selectName === settings[3]) {
+      
+        else if(selectName === settings[2]) {
             console.log('OK');
             
             sessionStorage.removeItem("uemail");
             sessionStorage.removeItem("uname");
             sessionStorage.removeItem("uicon");
             sessionStorage.removeItem("upass");
+
+            localStorage.removeItem("uemail")
+            localStorage.removeItem("uname");
+            localStorage.removeItem("uicon");
+            localStorage.removeItem("upass");
             setUname("");
             setIcon("");
             router.push("/");

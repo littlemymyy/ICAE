@@ -13,6 +13,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import CloseIcon from '@mui/icons-material/Close';
 import CancelIcon from '@mui/icons-material/Cancel';
 import DatePicker from "react-datepicker";
+import { useRouter } from "next/router";
 
 const Accordion = styled((props) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -58,6 +59,7 @@ export default function manage() {
 
   const [expanded, setExpanded] = React.useState('panel1');
   const [fda_num , setFda_num] = useState("")
+  const router = useRouter()
 
   //exp date All
   const [fdadoc_date , setFdadoc_date] = useState(null)
@@ -73,6 +75,7 @@ export default function manage() {
   const [specification_date , setSpecification_date] = useState(null)
   const [	testing_doc_date , setTesting_doc_date] = useState(null)
   const [coa , setCoa] = useState(null)
+  const {fdaNo} = router.query
 
 
   useEffect(() => {
@@ -187,6 +190,7 @@ export default function manage() {
 
   const handleFileChange = (inputName, event) => {
     const file = event.target.files[0];
+    console.log(file)
     console.log(inputName);
     document.getElementById(inputName).innerHTML = event.target.files[0].name
 
@@ -383,6 +387,7 @@ export default function manage() {
       "fda_num" : fda_num ,
       "fdadoc_date" : formatDate(fdadoc_date ),
       "formula_doc_date" : formatDate(formula_doc_date ),
+      "letter_authorization_date" : formatDate(letter_authorization_date),
       "label_doc_date" : formatDate (label_doc_date) ,
       "manufacture_doc_date" : formatDate(manufacture_doc_date) ,
       "gmp_iso_date" :formatDate(gmp_iso_date) ,
@@ -431,7 +436,13 @@ export default function manage() {
         if (res.data.status === "ok") {
           alert("อัพโหลดเอกสารสำเร็จ")
           //redirect to http://localhost:3000/pif/productslist
-          window.location.href = "/pif/showpif"
+          if(e === 1){
+            router.push("/pif/productslist")
+          }
+          else if(e === 2) {
+            window.location.href = "/pif/showpif"
+          }
+          
         }
         else {
           alert("อัพโหลดเอกสารไม่สำเร็จ กรุณาลองใหม่อีกครั้ง")
@@ -613,7 +624,7 @@ export default function manage() {
 
                   // Center items in Y axis,
                 }}>
-                <TextField onChange={(e) => { fetchData(e) }} id="regitnumber" variant="outlined" label="เลขที่จดแจ้ง" style={{ width: "50%", marginTop: "10px" }} />
+                <TextField  onChange={(e) => { fetchData(e) }} id="regitnumber" variant="outlined" label="เลขที่จดแจ้ง" style={{ width: "50%", marginTop: "10px" }} />
               </Box>
 
 
@@ -724,7 +735,9 @@ export default function manage() {
                 
               </Box>
               :
+              <><p>{pdfFile1}</p>
               <embed src={pdfFile1} width="300px" height="450px" />
+              </>
               }
               <Box
                 style={{
@@ -1679,6 +1692,7 @@ export default function manage() {
           color="success"
           
           sx={{ mt: 3, mb: 2 }}
+          onClick={() => {generatePDF(1)}}
         >
           บันทึก
         </Button>
@@ -1692,7 +1706,7 @@ export default function manage() {
           textAlign="center"
           variant="contained"
           color="success"
-          onClick={(e) => { generatePDF(e) }}
+          onClick={() => { generatePDF(2) }}
           sx={{ mt: 3, mb: 2 }}
         >
          รวบรวมข้อมูลและบันทึกเป็นไฟล์ PDF
