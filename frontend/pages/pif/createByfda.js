@@ -14,7 +14,7 @@ import { rgb } from "pdf-lib";
 import { fetch } from "pdf-lib";
 import { Box, TextField, Typography, Button } from "@mui/material";
 import Axios from "axios";
-import { data } from "jquery";
+import { data, error } from "jquery";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -47,11 +47,11 @@ const createByfda = () => {
   const handleImageChange = (event) => {
     let file = event.target.files[0];
     console.log(file)
-    alert(file.type)
+    // alert(file.type)
     let str = file.type
     let n = str.indexOf("/")
     str = str.substring(n+1)
-    alert(str)
+    // alert(str)
     let blob = file.slice(0, file.size, file.type); 
     let newFile = new File([blob], fda_num+"."+str, {type: file.type});
     setImageName(fda_num+"."+str)
@@ -60,9 +60,9 @@ const createByfda = () => {
   };
 
   // Trigger the hidden file input
-  const handleButtonClick = () => {
-    document.getElementById('fileInput').click();
-  };
+  // const handleButtonClick = () => {
+  //   document.getElementById('fileInput').click();
+  // };
 
 
 
@@ -111,7 +111,8 @@ const createByfda = () => {
           company : res.data[13] , 
           fcompany : res.data[14],
           fda_num : num,
-          ordid : id
+          ordid : id ,
+          email : localStorage.getItem("uemail")
 
 }]
        
@@ -163,62 +164,54 @@ const createByfda = () => {
   }
 
   const sendData = () => {
-    let dd = data[0]
-    dd["photo"] = imageName
-    console.log(dd)
-
+    let dd = data[0];
+    //dd["photo"] = imageName;
+    console.log(dd);
+  
     const formData = new FormData();
     formData.append('image', imageFile);
-
+  
     const fetchData = async () => {
-      try{
-        const response = await Axios('http://localhost:3001/upload', {
-          method: 'POST',
-          body: formData, });
-          console.log(response.data);
-      } catch(error){
-        console.log(error)
-      }
-    }
-
-    Axios.post("http://localhost:3001/api/storageProduct",dd).then((response)=>{
-      if(response.data){
-        Swal.fire({
-          position: "center",
-          icon: "success",
-          title: "บันทึกเรียบร้อย",
-          showConfirmButton: false,
-          timer: 1500
-        });
-        router.push("/pif/productslist")
+      try {
+        // const res = await Axios.post('http://localhost:3001/api/submitPif', formData, {
         
+        // });
+        // console.log(res.data);
+  
+        const res1 = await Axios.post("http://localhost:3001/api/storageProduct", dd);
+  
+        if (res1.data) {
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "บันทึกเรียบร้อย",
+            showConfirmButton: false,
+            timer: 1500
+          });
+          router.push("/pif/productslist");
+        }
+      } catch (error) {
+        console.log(error);
       }
-    }).catch((error) => {
-      console.log(error);
-    });
-
-   fetchData()
-  }
+    };
+  
+    fetchData();
+  };
 
   return (
     <div>
       <Navbar />
       <div className="card">
         <div className="photo">
-          <div className="photo" onClick={handleButtonClick}>
-            {imageFile ? (
-              <img
-                src={URL.createObjectURL(imageFile)}
-                alt="Product"
-                height="400px"
-                width="400px"
-              />
-            ) : (
-              <div >
-                <img src="/upload1.png" alt="" height="400px" width="400px" />
-                อัพโหลดรูปภาพผลิตภัณท์
-              </div>
-            )}
+          <div className="photo" >
+          
+              
+            
+              
+              <div>
+                <img src="/new-product.png" alt="" height="600px" width="400px" />
+               </div>
+           
 
           </div>
           <input
@@ -321,5 +314,6 @@ const createByfda = () => {
     </div>
   )
 }
+  
 
 export default createByfda

@@ -74,6 +74,11 @@ export default function SignIn() {
           // em_icon : "/test01.png"
           // em_pass : "12345"
           console.log(response.data[0].em_email)
+          localStorage.setItem("uemail" , response.data[0].em_email)
+          localStorage.setItem("uname" , response.data[0].em_fullname);
+          localStorage.setItem("uicon" , response.data[0].em_icon);
+          localStorage.setItem('orid', response.data[0].organization_id)
+          
           sessionStorage.setItem("uname" , response.data[0].em_fullname);
           sessionStorage.setItem("uemail" , response.data[0].em_email)
           sessionStorage.setItem("uicon" , response.data[0].em_icon);
