@@ -1765,21 +1765,30 @@ app.post("/api/pifInfo" , (req , res) => {
 // get user Admin or S
 app.get('/api/getuserTeam/', (req, res) => {
 
-    const sql = `SELECT * FROM employee WHERE status = "U"  && organization_id = "-" `
-    db.query(sql,(err, result) =>{
-        console.log(result)
-        res.send(result)
-    })
+    try{
+        const sql = `SELECT * FROM employee WHERE status = "U"  && organization_id = "-" `
+        db.query(sql,(err, result) => {
+            console.log(result)
+            res.send(result)
+        })
+    }catch(err){
+        console.log(err)
+    }
 })
 
-app.get('/api/getuserTeamName/', (req, res) => {
-
-    const sql = `SELECT  no FROM employee WHERE organization_id != "" `
-    db.query(sql,(err, result) =>{
-        //console.log(result)
-        res.send(result)
-    })
+app.get('/api/getTeam/', (req, res) => {
+    try{
+        const sql = `SELECT DISTINCT organization_id FROM employee WHERE organization_id != ''`
+        db.query(sql,(err, result) =>{
+            //console.log(result)
+            res.send(result)
+        })
+    }
+    catch(err){
+        console.log(err)
+    }
 })
+
 
 //update S and team
 app.post('/api/updateteam', (req, res) => {
@@ -1788,28 +1797,6 @@ app.post('/api/updateteam', (req, res) => {
 
     console.log(team);
     console.log(email)
-    // const sql = 'UPDATE employee SET organization_id = ? , status = ?  WHERE em_email = ?';
-    // db.query(sql, [team, email , "S"], (err, result) => {
-    //     if (err) {
-    //         console.log(err);
-    //         res.status(500).send('Internal Server Error');
-    //     } else {
-    //         console.log(result)
-    //         res.send(result);
-    //     }
-    // });
-
-//     const sql = 'INSERT INTO employee organization_id = ? , status = ?  WHERE em_email = ?  ';
-// db.query(sql, [ team, "S" , email], (err, result) => {
-//     if (err) {
-//         console.log(err);
-//         res.status(500).send('Internal Server Error');
-//     } else {
-//         console.log(result)
-//         res.send(result);
-//     }
-// });
-
 
 const sql = 'UPDATE employee SET organization_id = ?, status = ? WHERE em_email = ?';
 db.query(sql, [team, "S", email], (err, result) => {

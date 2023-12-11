@@ -39,17 +39,18 @@ const team = () => {
     const [no , setNo] = useState([])
     const [st , setSt] = useState(0)
     const [teamdata , setTeamdata] = useState([])
+    const [alreadyHaveTeam , setAlreadyHaveTeam] = useState([])
 
 
     useEffect(() => {
         const feactData = async () => {
             try {
                 const res = await Axios.get("http://localhost:3001/api/getuserTeam/");
-                const res1 = await Axios.get("http://localhost:3001/api/getuserTeamName/")
+                const alreadyTeam = await Axios.get("http://localhost:3001/api/getTeam/")
                 console.log(res.data)
-              //  console.log(res1.data)
+                console.log(alreadyTeam.data)
                 setData(res.data)
-                setTeamdata(res1.data)
+                setAlreadyHaveTeam(alreadyTeam.data)
 
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -79,21 +80,26 @@ const team = () => {
     }
 
     const checkG = (team) => {
-        for (let i = 0; i < teamdata.length; i++) {
-          if (team === teamdata[i]) {
-            return 1;
+      let found = 0;
+
+      alreadyHaveTeam.forEach(element => {
+          if (element.organization_id === team) {
+              console.log('found');
+              found = 1;
           }
-        }
-        return 0;
-      };
+          console.log(element);
+      });
+
+      return found;
+  };
 
     const handleChick = async() => {
-        if(checkG === 1){
+      console.log(checkG(team))
+        if(checkG(team) === 1){
             Swal.fire({
                 icon: "error",
-                title: "Oops...",
-                text: "มีคนใช้ชื่อนี้แล้ว!",
-                footer: 'กรุณาเปลี่ยนชื่อ'
+                title: "พบข้อผิดพลาด",
+                text: "มีคนใช้ชื่อนี้แล้ว! กรุณาเลือกชื่อทีมใหม่",
               });
         }
         else  {
@@ -112,7 +118,7 @@ const team = () => {
                     icon: "success"
                   });
                   console.log(res.data)
-                  localStorage.setItem("orid" , res.data)
+                  localStorage.setItem("orid" , team)
                   router.push("/pif/productslist")
 
 

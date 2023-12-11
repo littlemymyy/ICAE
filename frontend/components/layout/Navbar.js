@@ -46,21 +46,19 @@ function Navbar() {
                 router.push("/Knowledge/home")
             }
             else if(selectName === pages[1]){
-                router.push("/login/Signin");
+                router.push("/login/SignIn");
             }
             else if(selectName === "การจัดการpif"){
 
                 if(localStorage.getItem("uemail") === ""){
-                    router.push("/login/Signin");
+                    router.push("/login/SignIn");
                 }
 
             }
             else if(selectName === pages[3]){
-                router.push("/login/Signin");
+                router.push("/login/SignIn");
             }
         }
-
-
 
         if(uname !== '') {
             if(selectName === pages[0]){
@@ -77,7 +75,7 @@ function Navbar() {
                         router.push("/pif/productslist")
                     }
                 }else{
-                    router.push("/login/Signin");
+                    router.push("/login/SignIn");
                 }
             }
             else if(selectName === pages[3]){
@@ -87,7 +85,7 @@ function Navbar() {
                 router.push("/Knowledge/home")
             }
             else {
-                router.push("/login/Signin");
+                router.push("/login/SignIn");
             }
         }
     };

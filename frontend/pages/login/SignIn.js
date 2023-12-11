@@ -47,6 +47,12 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function SignIn() {
+  React.useEffect(() => {
+    if (localStorage.getItem("uemail") !== null) {
+      router.push("/");
+    }
+  }, []);
+
   const router = useRouter();
   const Swal = require('sweetalert2')
   const handleSubmit = (event) => {
