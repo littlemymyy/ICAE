@@ -1,1 +1,1 @@
-reactStrictMode: true,
+reactStrictMode: false,

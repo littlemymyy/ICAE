@@ -39,12 +39,12 @@ const UserManage = () => {
 
     useEffect(() => {
 
-        // Check Status 
-    //    let a =  sessionStorage.getItem("status") === "A"
+        // Check Status
+    //    let a =  localStorage.getItem("status") === "A"
     //    if( a !== "A"){
     //     router.push("/")
     //    }
-       
+
         //FetchData From Employee
         const fetchData0 = async () => {
          try {
@@ -60,10 +60,10 @@ const UserManage = () => {
 };
 
 fetchData0();
-       
 
-       
-    
+
+
+
     }, []);
 
 
@@ -83,14 +83,14 @@ fetchData0();
               });
               setShow(results1);
           }
-    } 
+    }
 
 
-   
-    
+
+
       const add = (e) => {
         console.log(e)
-      
+
         // if (checkG(data, e)) {
         //   alert("กรุณาเลือกคนอื่น");
         // } else {
@@ -102,7 +102,7 @@ fetchData0();
         //   setData([...data, result]);
         //   setShow([]);
         //   setSearch_input("");
-    
+
         //   console.log(data);
         // }
       };
@@ -259,28 +259,28 @@ fetchData0();
     <div>
         <Navbar />
 
-        
-           
+
+
             <div className="container-xl">
             <div className="table-responsive">
               <div className="table-wrapper">
                 <div className="table-title">
                   <div className="row">
                     <div className="col-sm-100">
-                      
-                    
-    
+
+
+
                     </div>
                     <div className="col-sm-10">
                       <h2>
-                        การจัดการ <b>สมาชิคของผู้ดูแลระบบ 
+                        การจัดการ <b>สมาชิคของผู้ดูแลระบบ
                          </b>
                       </h2>
                     </div>
                   </div>
                 </div>
                 <br />
-               
+
 
                     <div className="input-icons">
                     <i className="fa fa-search icon"></i>
@@ -292,17 +292,17 @@ fetchData0();
                     />
                     <br />
                   </div>
-               
+
 
             {/* <div className="show">
                  {search_input.length
                      ? show.map((value, idx) =>
-             
+
                 <p onClick={() => add(value.no)} key={value.idx}>
-                  
+
                   {value.em_fullname}
                 </p>
-              
+
                           )
                      : null}
                      </div> */}
@@ -371,7 +371,7 @@ fetchData0();
                             className="deleteM"
                             title="Delete"
                             data-toggle="tooltip"
-                            
+
                           >
                             <i >
                               <TiUserDelete onClick={() => handleDelete({ no: value.no, idx })} />
@@ -390,11 +390,11 @@ fetchData0();
               </div>
             </div>
           </div>
-         
+
 
 
     </div>
-    
+
   )
 }
 

@@ -1,62 +1,5 @@
-// import Navbar from "@/components/layout/Navbar";
-// import Footer from "@/components/Footer";
-// import { Box, Button, Checkbox, Typography } from "@mui/material";
-// import { Fragment } from "react";
-// import TextField from '@mui/material/TextField';
-// import Link from '@mui/material/Link';
-// import Grid from '@mui/material/Grid';
-// import FormControlLabel from '@mui/material/FormControlLabel';
-// export default function Login() {
-//   return (
-//     <>
-//       <Navbar />
-
-//       <Box display="block" justifyContent='center' textAlign={'center'}>
-//         <Box>
-//         <Typography variant="h4">ยินดีต้อนรับ</Typography>
-//         <Typography variant="h4">ICAE เข้าสู่ระบบ</Typography>
-//         </Box>
-//         <img src="/icae_logo.png" style={{ maxWidth: 140 + "px" }} />
-//         <Box display="block">
-//           <Box margin={'0px 0px 20px 0px'} >
-//             <TextField label="อีเมล์" variant="outlined" />
-//           </Box>
-//           <Box margin={'0px 0px 20px 0px'} >
-//             <TextField label="รหัสผ่าน" variant="outlined" />
-//           </Box>
-//         </Box>
-//           <Grid container>
-//             <FormControlLabel control={<Checkbox defaultChecked />} label="จำฉัน" />
-//             <Grid item>
-//               <Link href="#" variant="body2">
-//                 {"ลืมรหัสผ่าน?"}
-//               </Link>
-//             </Grid>
-//           </Grid>
-        
-//         <Box display="block" justifyContent='center' textAlign={'center'} >
-//           <Box margin={'0px 0px 30px 0px'}  justifyContent={'center'} >
-//             <Button variant="contained">เข้าสู่ระบบ</Button>
-//           </Box>
-//           <Box margin={'0px 0px 30px 0px'}  justifyContent={'center'} >
-//             <Button variant="contained">สมัครสมาชิก</Button>
-//           </Box>
-//         </Box>
-
-
-//       </Box>
-      
-
-
-//       <Footer />
-//     </>
-//   );
-
-// }
-
 import Footer from "@/components/Footer";
 import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
@@ -65,21 +8,17 @@ import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Navbar from "@/components/layout/Navbar";
 import Axios from "axios";
-import { useForm, SubmitHandler } from "react-hook-form"
 import { useRouter } from 'next/router';
-   
+
 
 function Copyright(props) {
-  
+
   return (
-    
-        
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
       <Link color="inherit" href="https://mui.com/">
@@ -88,8 +27,6 @@ function Copyright(props) {
       {new Date().getFullYear()}
       {'.'}
     </Typography>
-
-
   );
 }
 
@@ -98,26 +35,56 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function SignUp() {
-  const router = useRouter();  
+  const router = useRouter();
   const [email , setEmail] = React.useState('')
   const [error , setError] = React.useState(null)
+  const Swal = require('sweetalert2')
+  const [approve, setApprove] = React.useState('')
 
   function isValidEmail(email) {
     return /\S+@\S+\.\S+/.test(email);
   }
 
- 
-  const handleChange = (event) =>{
+  // const checkmail = async (email) => {
+
+
+  // }
+
+  const handleChange = async (event) => {
     if (!isValidEmail(event.target.value)) {
       setError('Email is invalid');
       console.log("email")
     } else {
       setError(null);
-      console.log("ok")
-    }
+      // console.log("ok")
 
-    setEmail(event.target.value);
-  }
+      // Call the checkmail function and await the result
+      try{
+        let load = {
+          email : event.target.value,
+        }
+        const res = await Axios.post("http://localhost:3001/api/checkMail",load)
+        console.log(res.data)
+
+        if(res.data === "Dupicate"){
+          Swal.fire({
+            icon: "error",
+            title: "พบข้อผิดพลาด",
+            text: "มีการใช้อีเมล์นี้แล้ว กรุณาเปลี่ยนอีเมล์!",
+          });
+          window.location.reload()
+        }
+        else {
+          setEmail(event.target.value);
+        }
+
+      } catch (error){
+        console.log(error)
+      }
+    }
+  };
+
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -126,30 +93,73 @@ export default function SignUp() {
       lastname : data.get('lastName'),
       email: data.get('email'),
       password: data.get('password'),
-      repassword : data.get('confirmpassword')
+      repassword : data.get('confirmpassword'),
+      approve : approve
     }
-    if (!isValidEmail(data1.email)) {
-      alert("กรุณาใส่อีเมลให้ถูกต้อง")
+    if (data1.firstname === "" || data1.lastname === "" || data1.email === "" || data1.password === "" || data1.repassword === "" || data1.apprive === false) {
+      Swal.fire({
+        icon: "error",
+        title: "พบข้อผิดพลาด",
+        text: "กรุณากรอกข้อมูลให้ครบถ้วน",
+      });
+    }
+    else if (!isValidEmail(data1.email)) {
+      Swal.fire({
+        icon: "error",
+        title: "พบข้อผิดพลาด",
+        text: "กรุณาใส่อีเมลให้ถูกต้อง?",
+      });
+
     }
     else if(data1.password !== data1.repassword){
-      alert("กรุณาใส่รหัสผ่านให้เหมือนกัน")
+      Swal.fire({
+        icon: "error",
+        title: "พบข้อผิดพลาด",
+        text: "กรุณาใส่รหัสผ่านให้เหมือนกัน",
+      });
+    }
+    else if(approve !== 'ok'){
+      Swal.fire({
+        icon: "error",
+        title: "พบข้อผิดพลาด",
+        text: "กรุณายอมรับกฎข้อบังคับของเว็บไซต์",
+      });
     }
     else {
       console.log(data1)
       Axios({
         url: "http://localhost:3001/api/setsignUp",
         method: "post",
-        headers: { 
+        headers: {
           'Content-Type': 'application/json'
         },
         data: data1
         })
         .then(function (response) {
-          console.log(response.data)
-          alert("สมัครสมาชิกเรียบร้อย")
-          router.push("/SignIn")
-          
-        })
+          //console.log(response.data)
+
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "center",
+            marginTop : "100px" ,
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            }
+          });
+          Toast.fire({
+            icon: "success",
+            title: "สมัครสมาชิคสำเร็จ"
+          });
+
+          router.push("/login/SignIn")
+
+        }).catch( (error) => {
+          console.log(error);
+        });
 
     // else if(email.include("@gmail.com")){
     //   alert("ok")
@@ -175,8 +185,8 @@ export default function SignUp() {
             alignItems: 'center',
           }}
         >
-          
-         
+
+
           <Typography component="h1" variant="h5">
             ยินดีต้อนรับ
           </Typography>
@@ -241,16 +251,19 @@ export default function SignUp() {
                 />
               </Grid>
               <Grid item xs={12}>
-                
+
                 <FormControlLabel
                   control={<Checkbox color="primary" />}
                   label="ฉันเห็นด้วยกับกฎข้อบังคับของเว็บไซต์ ICAE"
+                  id="approve"
+                  name="approve"
+                  onChange={(e) => setApprove('ok')}
                 />
               </Grid>
-              
+
             </Grid>
-            
-              <Button 
+
+              <Button
               type="submit"
               fullWidth
               variant="contained"
@@ -259,11 +272,11 @@ export default function SignUp() {
               สมัครสมาชิก
             </Button>
 
-            
-            
+
+
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="/SignIn" variant="body2">
+                <Link href="/login/SignIn" variant="body2">
                   คุณเป็นสมาชิกใช่ไหม? เข้าสู่ระบบ
                 </Link>
               </Grid>
@@ -274,10 +287,10 @@ export default function SignUp() {
       </Container>
       <Footer />
     </ThemeProvider>
-    
-    
-    
+
+
+
   );
-  
-        
+
+
 }
