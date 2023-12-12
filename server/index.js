@@ -36,11 +36,6 @@ app.use(bodyParser.urlencoded({extended: true , limit : "35mb" , parameterLimit 
 //app.use(express.static("files"));
 const secretKey = crypto.randomBytes(32).toString('hex');
 
-app.use(session({
-    secret: secretKey,
-    resave: false,
-    saveUninitialized: true,
-  }));
 
 app.use('/uploads', express.static('uploads'));
 
@@ -56,9 +51,10 @@ const pdfStorage = multer.diskStorage({
     destination: (req, file, cb) => {
       cb(null, 'uploads/');
     },
-    filename: function ( req, file, cb ) {
+    filename:  ( req, file, cb ) => {
         //req.body is empty...
         //How could I get the new_file_name property sent from client here?
+        console.log(file)
         cb( null, Date.now() + '-' + file.originalname);
     }
 });
@@ -67,9 +63,14 @@ const pdfUpload = multer({ storage: pdfStorage });
 
 //not use
 app.post('/generate-pdf', pdfUpload.single('file'), (req, res) => {
+    console.log("Name.....")
+    let originalFileName = req.files.originalname
+    console.log(originalFileName)
+    res.json({ filename: req.file.filename })
     const content = req.body.text;
-    console.log(content)
-
+   // console.log(content)
+   console.log("req file name")
+    console.log(req.file.filename)
     try {
         pdfMake.fonts = {
             THSarabunNew: {
@@ -135,11 +136,13 @@ app.post('/generate-pdf', pdfUpload.single('file'), (req, res) => {
 app.post('/mergePdf', pdfUpload.any(), (req, res) => {
     const merger = new PDFMerger();
     const files = req.files;
-    console.log(files);
+   // console.log(files);
 
     try {
         (async () => {
             for(let i = 0 ; i < files.length ; i++){
+                //console.log("file [i]")
+               // console.log(files[i])
                 await merger.add(files[i].path);
             }
             await merger.save('uploads/mergedpdf.pdf').then((pdfBuffer) => {
@@ -153,14 +156,130 @@ app.post('/mergePdf', pdfUpload.any(), (req, res) => {
 });
 
 app.post('/api/submitPif', pdfUpload.any(), (req, res) => {
+  //     console.log("submit")
+   //console.log(req.files)
+   const file = req.files
+ //  console.log("...................")
+   const files = req.body.data;
+   const filePaths = req.files.map(file => file.path.toString());
+  // console.log(files)
+
+ //  console.log(filePaths);
+
+   const filea = filePaths[0] || "-";//fda
+   const fileb = filePaths[1] || "-";//Autorization
+   const filec = filePaths[2] || "-";//formu
+   const filed = filePaths[3] || "-";//label
+   const filee = filePaths[4] || "-";//manufu
+   const filef = filePaths[5] || "-";//Gmp
+   const fileg = filePaths[6] || "-";//eff
+   const fileh = filePaths[7] || "-";//efficent
+   const filei = filePaths[8] || "-";//spec
+   const filej = filePaths[9] || "-";//Coa
+   const filek = filePaths[10] || "-";//sds
+   const filel = filePaths[11] || "-";//master formula
+   const filem = filePaths[12] || "-";//Specification of cosmetic finished product)
+   const filen = filePaths[13] || "-";//Testing
+
+
+            // if(filea.length === 0) {
+            //     filea += "-"
+            // }
+            // else if(fileb.length === 0) {
+            //     fileb += "-"
+            // }
+            // else if(filec.length === 0) {
+            //     filec += "-"
+            // }
+            // else if(filed.length === 0) {
+            //     filed += "-"
+            // }
+            // else if(filee.length === 0) {
+            //     filee += "-"
+            // }
+            // else if(filea.length === 0) {
+            //     filea += "-"
+            // }
+            // else if(filef.length === 0) {
+            //     filef += "-"
+            // }
+            // else if(fileg.length === 0) {
+            //     fileg += "-"
+            // }
+            // else if(fileh.length === 0) {
+            //     fileh += "-"
+            // }
+            // else if(filei.length === 0) {
+            //     filei += "-"
+            // }
+            // else if(filej.length === 0) {
+            //     filej += "-"
+            // }
+            // else if(filek.length === 0) {
+            //     filek += "-"
+            // }
+            // else if(filel.length === 0) {
+            //     filel += "-"
+            // }
+
+            // console.log(filea.length);
+            // console.log(fileb);
+            // console.log(filec);
+
+//    const filea = file[0].path.toString()
+//    const fileb = file[1].path.toString()
+//    const filec = req.files[2].path.toString()
+//    const filed = req.files[3].path.toString()
+//    const filee = req.files[4].path.toString()
+//    const filef = req.files[5].path.toString()
+//    const fileg = req.files[6].path.toString()
+//    const fileh = req.files[7].path.toString()
+//    const filei = req.files[8].path.toString()
+//    const filej = req.files[9].path.toString()
+//    const filek = req.files[10].path.toString()
+//    const filel = req.files[11].path.toString()
+
+
+//  console.log(filea)
+//  console.log(fileb)
+//  console.log(filec)
+//  console.log(filed)
+//  console.log(filee)
+//  console.log(filef)
+//  console.log(fileg)
+//  console.log(fileh)
+//  console.log(filei)
+//  console.log(filej)
+//  console.log(filek)
+//  console.log(filel)
+
+
+   //console.log(files)
+
+
+
+
+
+
+
     try {
         let img_path = '';
         let pdf_path = '';
 
         (async () => {
-            console.log(JSON.parse(req.body.data))
+           // console.log("file sumitPDF")
+           console.log(JSON.parse(req.body.data))
             const data = JSON.parse(req.body.data);
-            // console.log(req.files.data)
+            console.log(data)
+
+            // for(let i = 0 ; i<data.length ; i++){
+            //     if(data[i]  === null || data[i] === " "){
+            //         data[i] = "-"
+            //     }
+
+            // }
+           // console.log(data)
+           // console.log(req.files.data)
             pdfMake.fonts = {
                 THSarabunNew: {
                     normal: 'THSarabun.ttf',
@@ -219,8 +338,9 @@ app.post('/api/submitPif', pdfUpload.any(), (req, res) => {
 
             //merge pdf
             const merger = new PDFMerger();
-            const files = req.files;
-            console.log(files);
+          const files = req.files;
+            console.log("file AA")
+          console.log(files);
 
             await merger.add(firstPath);
             try{
@@ -243,25 +363,445 @@ app.post('/api/submitPif', pdfUpload.any(), (req, res) => {
             console.log(pdfFileName)
             pdf_path = path.join('./uploads', `${pdfFileName}.pdf`);
 
+            // console.log(filea.length)
+            // console.log(fileb.length)
+            //  console.log(filec.length)
+            // console.log(filed.length)
+            // console.log(filee.length)
+            // console.log(filef.length)
+            // console.log(fileg.length)
+            // console.log(fileh.length)
+            // console.log(filei.length)
+            // console.log(filej.length)
+            // console.log(filek.length)
+            // console.log(filel.length)
 
-            db.query('INSERT INTO pif (email, file_name, img_path, pdf_path, expdate, rec_create_when) VALUES (?,?,?,?,?,?)',
-                [data.email, data.filename, img_path, pdf_path, data.expdate, new Date()],
-                (err, result) => {
-                if(err) {
-                    console.log(err)
-                    res.json({status: "error", message: err});
-                    return;
-                }
-                else {
-                    res.json({status: "ok", pdf_path: pdf_path, img_path: img_path});
-                }
-            })
-        })()
-    } catch (error) {
-        console.error('Error merging PDFs:', error);
-        res.status(500).send('Internal Server Error');
-    }
+
+          //  console.log(data.fdadoc_date)
+
+
+
+          db.query( 'INSERT INTO pif( email, file_name, img_path, pdf_path, expdate, rec_create_when, organization_id, fda_license, fdadoc, letter_authorization, formula_doc , label_doc , manufacture_doc , gmp_iso, eff_report, efficient_report,spec ,coa,sds, masterformula, specification, testing_doc, status, fdadoc_date, letter_authorization_date, formula_doc_date , label_doc_date , manufacture_doc_date , gmp_iso_date, eff_report_date, efficient_report_date, sds_date, masterformula_date, specification_date, testing_doc_date ,coa_date) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+          [data.email, data.filename, img_path, pdf_path, data.expdate, new Date(),data.id ,data.fda_num , filea , fileb , filec ,filed, filee,filef,fileg,fileh,filei ,filej ,filek ,filel,filem,filen,"1",data.fdadoc_date,data.letter_authorization_date,data.formula_doc_date , data.label_doc_date , data.manufacture_doc_date ,data.gmp_iso_date ,data.eff_report_date , data.efficient_report_date , data.sds_date , data.masterformula_date, data.specification_date , data.testing_doc_date ,data.coa ],
+          (err, result) => {
+          if(err) {
+              console.log(err)
+              res.json({status: "error", message: err});
+              return;
+          }
+          else {
+            console.log(result)
+              res.json({status: "ok", pdf_path: pdf_path, img_path: img_path});
+          }
+     })
+
+     //update product data
+     const sql = 'UPDATE product SET status = ? WHERE organization_id = ? AND fda_license = ?';
+     db.query(sql, ["1" ,data.id , data.fda_num ], (err, result) => {
+         if (err) {
+             console.error('Error updating product status:', err);
+
+         } else {
+             // Handle the result or send a success response
+             console.log(result)
+             //res.send('Update successful');
+         }
+     });
+
+  })()
+} catch (error) {
+  console.error('Error merging PDFs:', error);
+  res.status(500).send('Internal Server Error');
+}
+
+
 })
+
+
+
+
+
+//// for now i not have Edit that this /api/submitPifEdit
+app.post('/api/submitPifEdit', pdfUpload.any(), (req, res) => {
+    //     console.log("submit")
+     //console.log(req.files)
+     const file = req.files
+   //  console.log("...................")
+     const files = req.body.data;
+     const filePaths = req.files.map(file => file.path.toString());
+    // console.log(files)
+
+   //  console.log(filePaths);
+
+     const filea = filePaths[0] || "-";//fda => fdadoc
+     const fileb = filePaths[1] || "-";//Autorization  => letter_authorization
+     const filec = filePaths[2] || "-";//formu  => formula_doc
+     const filed = filePaths[3] || "-";//label =>label_doc
+     const filee = filePaths[4] || "-";//manufu => 	manufacture_doc
+     const filef = filePaths[5] || "-";//Gmp => gmp_iso
+     const fileg = filePaths[6] || "-";//eff => eff_report
+     const fileh = filePaths[7] || "-";//efficent => efficient_report
+     const filei = filePaths[8] || "-";//spec => spec
+     const filej = filePaths[9] || "-";//Coa => coa_doc
+     const filek = filePaths[10] || "-";//sds => 	sds
+     const filel = filePaths[11] || "-";//master formula => masterformula
+     const filem = filePaths[12] || "-";//Specification of cosmetic finished product)=>specification
+     const filen = filePaths[13] || "-";//Testing =>testing_doc
+
+
+    // get file
+     let update = [filePaths[0] , filePaths[1] , filePaths[2] , filePaths[3] , filePaths[4] , filePaths[5] ,filePaths[6] ,filePaths[7] ,filePaths[8] ,filePaths[9] ,filePaths[10] ,filePaths[11] ,filePaths[12] ,filePaths[13]]
+     let update1 = ["filea", "fileb" , "filec" , "filed" , "filee" , "filef" ,"fileg" ,"fileh" ,"filei" ,"filej" ,"filek" ,"filel" , "filem" , "filen"]
+     let fname = [",fdadoc = ?" , ",letter_authorization = ? " ,",formula_doc = ? " , ",label_doc = ? " , ",manufacture_doc = ?", ",gmp_iso = ?" , ",eff_report = ? " ,",efficient_report = ?" ,", spec = ?" ,",coa_doc = ?" , " ,sds = ?"," ,masterformula = ?" ," ,specification = ?" ,",testing_doc = ? "]
+     let sqlobj = []
+     let update2 = []
+     console.log("update")
+     console.log(update)
+
+     for(let i = 0 ; i < update.length ;i++){
+        console.log("for loop")
+        console.log(update[i])
+        if(update[i] !== undefined ){
+            console.log(i+"foorloop")
+          update2.push(update1[i])
+          sqlobj.push(fname[i])
+
+        }
+     }
+
+     let columname = ""
+     for(let i = 0 ; i < sqlobj.length ;i++){
+        columname += sqlobj[i] +" ,"
+     }
+     let sqlcut = ""
+     sqlcut += columname.substring(0,columname.length-1)
+
+     console.log(sqlcut)
+     console.log("update2")
+     console.log(update2)
+
+     console.log(columname)
+
+      try {
+          let img_path = '';
+          let pdf_path = '';
+
+          (async () => {
+             console.log(JSON.parse(req.body.data))
+              const data = JSON.parse(req.body.data);
+              console.log(data)
+
+              pdfMake.fonts = {
+                  THSarabunNew: {
+                      normal: 'THSarabun.ttf',
+                      bold: 'THSarabun-Bold.ttf',
+                      italics: 'THSarabun-Italic.ttf',
+                      bolditalics: 'THSarabun-BoldItalic.ttf'
+                  }
+              }
+
+              pdfMake.vfs = vfsFonts.pdfMake.vfs;
+
+              const docDefinition = {
+                      content: [
+                          { text:'ข้อมูลเกี่ยวกับเครื่องสำอาง (PRODUCTS INFORMATION FILE : PIF)', style: 'header' },
+                          {text:`เลขที่จดแจ้ง: ${data.inputregisNumber}` },
+                          {text:`ชื่อทางการค้าเครื่องสำอาง: ${data.inputcomName}` },
+                          {text:`ชื่อเครื่องสำอาง: ${data.inputcosName}`},
+                          {text:`ประเภทของเครื่องสำอาง: ${data.inputtypeGoods}`},
+                          {text:`วันที่จดแจ้ง: ${data.inputdateS}`},
+                          {text:`วันที่ใบอนุญาตหมดอายุ:${data.inputexpDate}`},
+                          {text:`จุดประสงค์การใช้: ${data.inputobjGoods}`},
+                          {text:`ลักษณะทางกายภาพ: ${data.Inputpy}`},
+                          {text:`ชื่อผู้ผลิต: ${data.inputentrepreneur}`},
+                          {text:`ชื่อผู้ผลิตต่างประเทศ: ${data.inputFentrepreneur}`},
+                          {text:`รายละเอียดเพิ่มเติม: ${data.setDes}`}
+
+
+                      ],
+                      styles: {
+                          header: {
+                              fontSize: 18,
+                              bold: true,
+                              alignment: 'center',
+                              margin: [10, 10, 10, 10]
+                          }
+                      },
+                      defaultStyle: {
+                          font: 'THSarabunNew'
+                      }
+                  };
+
+              const pdfDoc = pdfMake.createPdf(docDefinition);
+              const fileName = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + '-' + Date.now();
+              const pdfPath = path.join(__dirname, 'uploads', `${fileName}.pdf`);
+
+              const buffer = await new Promise((resolve, reject) => {
+                  pdfDoc.getBuffer((buffer) => {
+                      resolve(buffer);
+                  });
+              });
+
+              await fs.writeFile(pdfPath, buffer);
+
+              const firstPath = path.join('./uploads', `${fileName}.pdf`);
+              console.log(firstPath)
+
+              //merge pdf
+              const merger = new PDFMerger();
+            const files = req.files;
+            console.log(files);
+
+              await merger.add(firstPath);
+              try{
+                  for(let i = 0 ; i < files.length ; i++){
+                      if (files[i].mimetype === 'application/pdf')
+                          await merger.add(files[i].path);
+                      if (files[i].mimetype === 'image/jpeg' || files[i].mimetype === 'image/png')
+                          img_path = files[i].path;
+                  }
+              }catch(err){
+                  console.log("no any file upload")
+                  console.log(err)
+              }
+
+              let pdfFileName = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + '-' + Date.now();
+              await merger.save(`uploads/${pdfFileName}.pdf`).then((pdfBuffer) => {
+                  console.log(pdfBuffer);
+              });
+
+              console.log(pdfFileName)
+              pdf_path = path.join('./uploads', `${pdfFileName}.pdf`);
+
+
+
+             for(let i = 0 ; i< sqlobj.length; i++){
+                console.log(sqlobj[i])
+                console.log(update2[i])
+                const sql = "UPDATE pif  SET email = ? , img_path = ? , expdate = ? , rec_create_when = ? ,status = ? , fdadoc_date = ? , letter_authorization_date = ? , formula_doc_date = ? , label_doc_date = ? , manufacture_doc_date = ? , gmp_iso_date =? , eff_report_date = ? , efficient_report_date = ? ,sds_date = ? , masterformula_date = ? , specification_date =?, testing_doc_date =? , coa_date = ?" + sqlobj[i] + "WHERE organization_id = ? AND fda_license = ?"
+                db.query(sql ,[data.email , img_path ,data.expdate , new Date() ,"3" ,  data.fdadoc_date , data.letter_authorization_date , data.formula_doc_date , data.label_doc_date , data.manufacture_doc_date , data.gmp_iso_date , data.eff_report_date , data.efficient_report_date, data.sds_date , data.masterformula_date , data.specification_date , data.testing_doc_date , data.coa , update2[i] ,data.id , data.inputregisNumber] , (error , result) => {
+                    if(error){
+                        console.log(error)
+                    }
+                    else {
+                        res.send("Comple")
+                    }
+                })
+             }
+
+    })()
+  } catch (error) {
+    console.error('Error merging PDFs:', error);
+    res.status(500).send('Internal Server Error');
+  }
+  })
+
+
+
+  app.post('/api/submitPifEditToGetPifReport', pdfUpload.any(), (req, res) => {
+    //     console.log("submit")
+     //console.log(req.files)
+     const file = req.files
+   //  console.log("...................")
+     const files = req.body.data;
+     const filePaths = req.files.map(file => file.path.toString());
+    // console.log(files)
+
+   //  console.log(filePaths);
+
+     const filea = filePaths[0] || "-";//fda => fdadoc
+     const fileb = filePaths[1] || "-";//Autorization  => letter_authorization
+     const filec = filePaths[2] || "-";//formu  => formula_doc
+     const filed = filePaths[3] || "-";//label =>label_doc
+     const filee = filePaths[4] || "-";//manufu => 	manufacture_doc
+     const filef = filePaths[5] || "-";//Gmp => gmp_iso
+     const fileg = filePaths[6] || "-";//eff => eff_report
+     const fileh = filePaths[7] || "-";//efficent => efficient_report
+     const filei = filePaths[8] || "-";//spec => spec
+     const filej = filePaths[9] || "-";//Coa => coa_doc
+     const filek = filePaths[10] || "-";//sds => 	sds
+     const filel = filePaths[11] || "-";//master formula => masterformula
+     const filem = filePaths[12] || "-";//Specification of cosmetic finished product)=>specification
+     const filen = filePaths[13] || "-";//Testing =>testing_doc
+
+
+    // get file
+     let update = [filePaths[0] , filePaths[1] , filePaths[2] , filePaths[3] , filePaths[4] , filePaths[5] ,filePaths[6] ,filePaths[7] ,filePaths[8] ,filePaths[9] ,filePaths[10] ,filePaths[11] ,filePaths[12] ,filePaths[13]]
+     let update1 = ["filea", "fileb" , "filec" , "filed" , "filee" , "filef" ,"fileg" ,"fileh" ,"filei" ,"filej" ,"filek" ,"filel" , "filem" , "filen"]
+     let fname = [",fdadoc = ?" , ",letter_authorization = ? " ,",formula_doc = ? " , ",label_doc = ? " , ",manufacture_doc = ?", ",gmp_iso = ?" , ",eff_report = ? " ,",efficient_report = ?" ,", spec = ?" ,",coa_doc = ?" , " ,sds = ?"," ,masterformula = ?" ," ,specification = ?" ,",testing_doc = ? "]
+     let sqlobj = []
+     let update2 = []
+     console.log("update")
+     console.log(update)
+
+     for(let i = 0 ; i < update.length ;i++){
+        console.log("for loop")
+        console.log(update[i])
+        if(update[i] !== undefined ){
+            console.log(i+"foorloop")
+          update2.push(update1[i])
+          sqlobj.push(fname[i])
+
+        }
+     }
+
+     let columname = ""
+     for(let i = 0 ; i < sqlobj.length ;i++){
+        columname += sqlobj[i] +" ,"
+     }
+     let sqlcut = ""
+     sqlcut += columname.substring(0,columname.length-1)
+
+     console.log(sqlcut)
+     console.log("update2")
+     console.log(update2)
+
+     console.log(columname)
+
+      try {
+          let img_path = '';
+          let pdf_path = '';
+
+          (async () => {
+             console.log(JSON.parse(req.body.data))
+              const data = JSON.parse(req.body.data);
+              console.log(data)
+
+              pdfMake.fonts = {
+                  THSarabunNew: {
+                      normal: 'THSarabun.ttf',
+                      bold: 'THSarabun-Bold.ttf',
+                      italics: 'THSarabun-Italic.ttf',
+                      bolditalics: 'THSarabun-BoldItalic.ttf'
+                  }
+              }
+
+              pdfMake.vfs = vfsFonts.pdfMake.vfs;
+
+              const docDefinition = {
+                      content: [
+                          { text:'ข้อมูลเกี่ยวกับเครื่องสำอาง (PRODUCTS INFORMATION FILE : PIF)', style: 'header' },
+                          {text:`เลขที่จดแจ้ง: ${data.inputregisNumber}` },
+                          {text:`ชื่อทางการค้าเครื่องสำอาง: ${data.inputcomName}` },
+                          {text:`ชื่อเครื่องสำอาง: ${data.inputcosName}`},
+                          {text:`ประเภทของเครื่องสำอาง: ${data.inputtypeGoods}`},
+                          {text:`วันที่จดแจ้ง: ${data.inputdateS}`},
+                          {text:`วันที่ใบอนุญาตหมดอายุ:${data.inputexpDate}`},
+                          {text:`จุดประสงค์การใช้: ${data.inputobjGoods}`},
+                          {text:`ลักษณะทางกายภาพ: ${data.Inputpy}`},
+                          {text:`ชื่อผู้ผลิต: ${data.inputentrepreneur}`},
+                          {text:`ชื่อผู้ผลิตต่างประเทศ: ${data.inputFentrepreneur}`},
+                          {text:`รายละเอียดเพิ่มเติม: ${data.setDes}`}
+
+
+                      ],
+                      styles: {
+                          header: {
+                              fontSize: 18,
+                              bold: true,
+                              alignment: 'center',
+                              margin: [10, 10, 10, 10]
+                          }
+                      },
+                      defaultStyle: {
+                          font: 'THSarabunNew'
+                      }
+                  };
+
+              const pdfDoc = pdfMake.createPdf(docDefinition);
+              const fileName = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + '-' + Date.now();
+              const pdfPath = path.join(__dirname, 'uploads', `${fileName}.pdf`);
+
+              const buffer = await new Promise((resolve, reject) => {
+                  pdfDoc.getBuffer((buffer) => {
+                      resolve(buffer);
+                  });
+              });
+
+              await fs.writeFile(pdfPath, buffer);
+
+              const firstPath = path.join('./uploads', `${fileName}.pdf`);
+              console.log(firstPath)
+
+              //merge pdf
+              const merger = new PDFMerger();
+            const files = req.files;
+            console.log(files);
+
+              await merger.add(firstPath);
+              try{
+                  for(let i = 0 ; i < files.length ; i++){
+                      if (files[i].mimetype === 'application/pdf')
+                          await merger.add(files[i].path);
+                      if (files[i].mimetype === 'image/jpeg' || files[i].mimetype === 'image/png')
+                          img_path = files[i].path;
+                  }
+              }catch(err){
+                  console.log("no any file upload")
+                  console.log(err)
+              }
+
+              let pdfFileName = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + '-' + Date.now();
+              await merger.save(`uploads/${pdfFileName}.pdf`).then((pdfBuffer) => {
+                  console.log(pdfBuffer);
+              });
+
+              console.log(pdfFileName)
+              pdf_path = path.join('./uploads', `${pdfFileName}.pdf`);
+
+
+
+             for(let i = 0 ; i< sqlobj.length; i++){
+                console.log(sqlobj[i])
+                console.log(update2[i])
+                const sql = "UPDATE pif  SET email = ? , img_path = ? , expdate = ? , rec_create_when = ? ,status = ? , fdadoc_date = ? , letter_authorization_date = ? , formula_doc_date = ? , label_doc_date = ? , manufacture_doc_date = ? , gmp_iso_date =? , eff_report_date = ? , efficient_report_date = ? ,sds_date = ? , masterformula_date = ? , specification_date =?, testing_doc_date =? , coa_date = ?" + sqlobj[i] + "WHERE organization_id = ? AND fda_license = ?"
+                db.query(sql ,[data.email , img_path ,data.expdate , new Date() ,"3" ,  data.fdadoc_date , data.letter_authorization_date , data.formula_doc_date , data.label_doc_date , data.manufacture_doc_date , data.gmp_iso_date , data.eff_report_date , data.efficient_report_date, data.sds_date , data.masterformula_date , data.specification_date , data.testing_doc_date , data.coa , update2[i] ,data.id , data.inputregisNumber] , (error , result) => {
+                    if(error){
+                        console.log(error)
+                    }
+                    else {
+                        res.send("Comple")
+                    }
+                })
+             }
+
+    })()
+  } catch (error) {
+    console.error('Error merging PDFs:', error);
+    res.status(500).send('Internal Server Error');
+  }
+
+
+  })
+
+
+
+
+
+
+
+
+
+
+
+
+
+app.post('/api/pifData', (req, res) => {
+
+    const id = req.body.id
+    const fda = req.body.fda
+    const sql = 'SELECT * FROM pif WHERE organization_id = ? AND fda_license = ?';
+    const values = [id, fda];
+
+    db.query(sql, values, (err, result) => {
+        if (err) {
+            console.error(err);
+            res.status(500).send('Internal Server Error');
+        } else {
+            res.send(result);
+        }
+    });
+});
 
 app.get('/api/pif', jsonParser, (req, res) => {
     db.execute(
@@ -352,11 +892,11 @@ app.post('/api/getUser/', (req, res) => {
             transporter.sendMail(message)
                 .then(() => {
                     // Sending response after email is sent
-                    return res.status(201).json({ msg: "Email has been sent, and signup was successful" });
+                   // return res.status(201).json({ msg: "Email has been sent, and signup was successful" });
                 })
                 .catch(error => {
                     console.error(error);
-                    return res.status(500).json({ error: "Error sending email" });
+                   /// return res.status(500).json({ error: "Error sending email" });
                 });
 
         }
@@ -417,18 +957,14 @@ app.post('/api/setsignUp' , jsonParser, async (req , res ) => {
     const lastName = req.body.lastname
     const email = req.body.email
     console.log(req.body)
-
     const password = crypto.createHash("sha1").update(req.body.password).digest("hex")
-
-
     const repassword = req.body.repassword
     const fullname = firstName +" "+lastName
 
     console.log(fullname + " " + email + " " + password +" " + repassword)
 
-    const sql = `INSERT INTO  employee(em_email , em_fullname , em_icon , em_pass , status) VALUES(?,?,?,?,?);  `
+    const sql = `INSERT INTO  employee(em_email , em_fullname , em_icon , em_pass , status ) VALUES(?,?,?,?,?);  `
     db.query(sql,[email , fullname ,"/pandaU.png" , password , "U" ] , (err, result) => {
-       // res.status(201).json("Signup Successfully")
        console.log("singup :")
        console.log(result)
        if(err) {
@@ -451,9 +987,18 @@ app.post('/api/setsignUp' , jsonParser, async (req , res ) => {
     let message = {
         from: EMAIL,
         to: email,
-        subject: "WellCome To ICae",
-        text: "Successfully Register with us",
-        html: "Successfully Register with us",
+        subject: "Welcome to ICAE",
+        text: "Welcome to ICAE,\n\n Thank you for registering with us.",
+        html: `
+        <body style="font-family: 'Arial', sans-serif; background-color: #f4f4f4; color: #333; text-align: center; padding: 20px;">
+            <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                <h1 style="color: #007bff;">Welcome to ICAE</h1>
+                <p style="font-size: 16px;">Thank you for registering with us.</p><br><br><br>
+                <p style="font-size: 14px; color: #555;">Regards,</p>
+                <p style="font-size: 14px; color: #555;">ICAE Team</p>
+            </div>
+        </body>
+        `,
     };
 
     transporter.sendMail(message)
@@ -465,6 +1010,96 @@ app.post('/api/setsignUp' , jsonParser, async (req , res ) => {
             console.error(error);
             return res.status(500).json({ error: "Error sending email" });
         });
+})
+
+
+//Check sign up Email dupicate
+app.post('/api/checkMail',(req,res)=>{
+    const email = req.body.email
+
+    const sql = "SELECT em_email FROM employee WHERE em_email = ?"
+    db.query(sql , [email] , (err , result)=>{
+        if(err) {
+            console.log(err)
+        }
+        else {
+            if(result.length > 0 ){
+                res.send("Dupicate")
+            }
+            else if(result.length <=0) {
+                res.send("not-Dupicate")
+            }
+            console.log(result)
+
+        }
+    })
+
+
+})
+
+app.get('/api/getChemicalByGroup', jsonParser, (req, res) => {
+    db.execute(
+        `select
+        G.groupname,
+        G.per1,
+        G.email,
+        G.udate,
+        G.uname,
+        G.fillterg,
+        C.*
+        from
+            chemicalgroup G
+        LEFT JOIN chemical C ON G.cname = C.cname AND G.cmname = C.cmname
+        WHERE G.groupname = ?`,
+        [req.query.groupname], (err, result) => {
+            if(err) {
+                res.json({status:'error',message:err});
+                return;
+            }
+            if(result.length > 0) {
+                res.json({status:'ok',message:result})
+            }
+            else {
+                res.json({status:'error',message:'No data found'});
+            }
+        }
+
+    )}
+);
+
+app.get('/api/getAllChemical', jsonParser, (req, res) => {
+    db.execute(
+        'SELECT * FROM chemical',
+        (err, result) => {
+            if(err) {
+                res.json({status:'error',message:err});
+                return;
+            }
+            if(result.length > 0) {
+                res.json({status:'ok',message:result})
+            }
+            else {
+                res.json({status:'error',message:'No data found'});
+            }
+        })
+})
+
+app.get('/api/getChemicalByCas', jsonParser, (req, res) => {
+    db.execute(
+        'SELECT * FROM chemical WHERE cas = ?',
+        [req.query.cas],
+        (err, result) => {
+            if(err) {
+                res.json({status:'error',message:err});
+                return;
+            }
+            if(result.length > 0) {
+                res.json({status:'ok',message:result})
+            }
+            else {
+                res.json({status:'error',message:'No data found'});
+            }
+        })
 })
 
 //Show data by fillter data
@@ -530,19 +1165,39 @@ app.post('/api/searchBybodypartEdit', (req,res) => {
 })
 
 
+app.get('/api/get_history', jsonParser, (req, res) => {
+    db.execute(
+        'SELECT * FROM chemicalgroup WHERE groupname = ? AND email = ?',
+        [req.query.groupname, req.query.email],
+        (err, result) => {
+            if(err) {
+                res.json({status:'error',message:err});
+                return;
+            }
+            if(result.length > 0) {
+                res.json({status:'ok',message:'haveData'})
+            }
+            else {
+                res.json({status:'error',message:'noData'});
+            }
+        })
+})
+
 // save file from user check
 app.post('/api/savefile' , (req , res) => {
-    // console.log(req.body)
+    console.log("saveFile from data ")
+     console.log(req.body)
     const uname = req.body.uname
     const gname = req.body.gname
     const dd  = req.body.dd
     const fillterg = req.body.fillterg
+    const email = req.body.email
     const date = new Date();
     let day= String(date.getDate()).padStart(2,"0");
     let month = String(date.getMonth()+1).padStart(2,"0");
     let year = date.getFullYear()
     let udate = day+ "-" + month + "-" + year;
-
+    console.log(req.body.email)
     let str = ""
     for(let i = 0 ; i< fillterg.length ; i++){
         str+=fillterg[i]+","
@@ -559,16 +1214,11 @@ app.post('/api/savefile' , (req , res) => {
         if(err)
             console.log(result)
     })
-    // let i = 0
-    // console.log("uname = " + uname)
-    // console.log(dd[i])
-    // console.log([dd[i].cas , dd[i].cname , dd[i].cmname , dd[i].per , dd[i].st , "-" , "-" , dd[i].bodypart , dd[i].color , gname , dd[i].per1 , uname , udate ])
     for( let i = 0 ; i < dd.length ; i++ ){
-        const sql1 = 'INSERT INTO chemicalgroup (cas , cname , cmname , per , st , img , des, bodypart , color , groupname , per1 , uname , udate , fillterg) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?); '
-        db.query(sql1,[dd[i].cas , dd[i].cname , dd[i].cmname , dd[i].per , dd[i].st , "-" , "-" , dd[i].bodypart , dd[i].color , gname , dd[i].per1 , uname , date , newstr  ] , (err, result)=>{
+        const sql1 = 'INSERT INTO chemicalgroup (cas , cname , cmname , per , st , img , des, bodypart , color , groupname , per1 , uname , udate , fillterg , email) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); '
+        db.query(sql1,[dd[i].cas , dd[i].cname , dd[i].cmname , dd[i].per , dd[i].st , "-" , "-" , dd[i].bodypart , dd[i].color , gname , dd[i].per1 , uname , date , newstr , email ] , (err, result)=>{
            console.log(result)
         })
-
     }
     res.send("Ok")
 
@@ -576,12 +1226,19 @@ app.post('/api/savefile' , (req , res) => {
 
 
 // get user file name
-app.get('/api/getGroupName',(req,res)=>{
-    const sql = 'SELECT DISTINCT groupname , udate FROM chemicalgroup ORDER BY udate ASC;'
-    db.query(sql,(err, result) =>{
-        console.log(result);
+app.post('/api/getGroupName',(req,res)=>{
+    console.log(req.body)
+    const email = req.body.email
+    const sql = 'SELECT DISTINCT groupname, udate FROM chemicalgroup WHERE email = ? ORDER BY udate ASC';
+    // Assuming you're using a database library with support for parameterized queries
+    db.query(sql, [email], (err, result) => {
+      if (err) throw err;
+      // Process the query result
+      else {
         res.send(result)
-    })
+      }
+      console.log(result);
+    });
 })
 
 // get user file name Where File name
@@ -780,62 +1437,20 @@ app.get('/api/annex/search', jsonParser, (req, res) => {
 app.get('/api/fetchData', async (req, res) => {
 
     const fda = req.query.data;
-    console.log("is Fda")
+    //console.log("is Fda")
  //   console.log(fda)
-
-
-
-      let status = ""
-      let locationStatus = ""
-      let registrationNumber = ""
-      let typeRegis = ""
-      let formatRegis = ""
-      let comName = ""
-      let cosName = ""
-      let deteS = ""
-      let expDate = ""
-      let typeGoods =""
-      let bodypart = ""
-      let objGoods = ""
-      let conGoods = ""
-      let entrepreneur = ""
-      let Fentrepreneur = ""
-
 
     try {
       const response = await fetch('http://pertento.fda.moph.go.th/FDA_SEARCH_CENTER/PRODUCT/export_cmt_detail.aspx?regnos='+fda);
       const data = await response.text();
+      //  console.log(data)
       //console.log(data)
       const $ = cheerio.load(data);
-    //   let txt = '<span id="ContentPlaceHolder1_lb_status">'
-    //     let st = data.indexOf(txt)
-    //     let a  = data.substring(st+1)
-    //     let st2 = a.indexOf('</span>')
-    //     status = data.substring(st+txt.length,st2+st+1);
-    //     console.log(status)
 
-    //  txt = 'ContentPlaceHolder1_lb_status_lct'
-    //     st = data.indexOf(txt)
-    //     a = data.substring(st+1)
-    //     st2 = a.indexOf('</span>')
-    //     locationStatus = data.substring(st+txt.length+2 , st2+st+1)
-    //     console.log(locationStatus)
-
-    // txt = 'ContentPlaceHolder1_lb_no_regnos'
-    //     st = data.indexOf(txt)
-    //     a = data.substring(st+1)
-    //     st2 = a.indexOf('</span>')
-    //     registrationNumber = data.substring(st+txt.length+2 , st2+st+1)
-    //     console.log(registrationNumber)
-
-    // txt = 'ContentPlaceHolder1_lb_type'
-    // st = data.indexOf(txt)
-    // a = data.substring(st+1)
-    // st2 = a.indexOf('</span>')
-    // typeRegis = data.substring(st+txt.length+2 , st2+st+1)
-    // console.log(typeRegis)
         const  dataAll =[]
 
+
+    //dd is list of strings from data response
     const dd = ["ContentPlaceHolder1_lb_status",'ContentPlaceHolder1_lb_status_lct',"ContentPlaceHolder1_lb_no_regnos","ContentPlaceHolder1_lb_type" , "ContentPlaceHolder1_lb_format_regnos" ,"ContentPlaceHolder1_lb_trade_Tpop",
         "ContentPlaceHolder1_lb_cosnm_Tpop","ContentPlaceHolder1_lb_appdate" ,"ContentPlaceHolder1_lb_expdate" , "ContentPlaceHolder1_lb_mode","ContentPlaceHolder1_lb_applicability_name" , "ContentPlaceHolder1_lb_application_name",
     "ContentPlaceHolder1_lb_condition" ,"ContentPlaceHolder1_lb_usernm_pop" , "ContentPlaceHolder1_lb_fac_pop"]
@@ -845,51 +1460,23 @@ app.get('/api/fetchData', async (req, res) => {
        if(st > -1){
         let a = data.substring(st+1)
         let st2 = a.indexOf('</span>')
-       let b = data.substring(st+txt.length+2 , st2+st+1)
+       let c = data.substring(st+txt.length+2 , st2+st+1).replace("<br />", ' ')
+       let b = c.replace("<br/>"," ")
        dataAll.push(b)
-
        }
        else {
         dataAll.push("N/A")
-
        }
-
     }
     console.log(dataAll)
-
-
-    //          // const tempElement = document.createElement('div');
-    //         //   tempElement.innerHTML = data;
-
-            //     status = $('#ContentPlaceHolder1_lb_status').text() || 'N/A';
-            //    locationStatus = $('#ContentPlaceHolder1_lb_status_lct').text() || 'N/A';
-            //    registrationNumber = $('#ContentPlaceHolder1_lb_no_regnos').text() || 'N/A';
-            //    typeRegis = $('#ContentPlaceHolder1_lb_type').text() || 'N/A';
-            //    formatRegis = $('#ContentPlaceHolder1_lb_format_regnos').text() || 'N/A';
-            //    comName = $('#ContentPlaceHolder1_lb_trade_Tpop').text() || 'N/A';
-            //    cosName = $('#ContentPlaceHolder1_lb_cosnm_Tpop').text() || 'N/A';
-            //    dateS = $('#ContentPlaceHolder1_lb_appdate').text() || 'N/A';
-            //    expDate = $('#ContentPlaceHolder1_lb_expdate').text() || 'N/A';
-            //    typeGoods = $('#ContentPlaceHolder1_lb_mode').text() || 'N/A';
-            //    bodypart = $('#ContentPlaceHolder1_lb_applicability_name').text() || 'N/A';
-            //    objGoods = $('#ContentPlaceHolder1_lb_application_name').text() || 'N/A';
-            //    conGoods = $('#ContentPlaceHolder1_lb_condition').text() || 'N/A';
-            //    entrepreneur = $('#ContentPlaceHolder1_lb_usernm_pop').text() || 'N/A';
-            //    Fentrepreneur = $('#ContentPlaceHolder1_lb_fac_pop').text() || 'N/A';
-
-            //    let arr = [status,locationStatus, registrationNumber,typeRegis,formatRegis,comName, cosName,dateS,expDate,typeGoods, bodypart,objGoods,conGoods, entrepreneur,Fentrepreneur]
-
-
-//     //   console.log(locationStatus)
-//     //   console.log(expDate)
-//     //   console.log(Fentrepreneur)
-//     console.log(arr)
 res.send(dataAll);
 } catch (error) {
   console.error('Error fetching data:', error);
   res.status(500).json({ error: 'Internal Server Error' });
 }
 });
+
+
 
 app.post('/api/setsignUpA' , jsonParser, (req , res ) => {
     console.log(req.body)
@@ -904,12 +1491,13 @@ app.post('/api/setsignUpA' , jsonParser, (req , res ) => {
     console.log(fullname + " " + email + " " + password +" " +" "+st +" "+ oid)
 
     const sql = `INSERT INTO  employee(em_email , em_fullname , em_icon , em_pass , status , organization_id) VALUES(?,?,?,?,?,?);  `
-    db.query(sql,[email , fullname ,"/test01.png" , password , st , oid ] , (err, result) => {
+    db.query(sql,[email , fullname ,"/pandaA.png" , password , st , oid ] , (err, result) => {
         res.send('OK')
     })
     //res.send("ok")
 
 })
+
 
 // get user Team ID
 app.post('/api/getorId/', (req, res) => {
@@ -959,33 +1547,91 @@ app.post('/api/searchAll', (req,res) => {
 
 })
 
+//send Notification Index Page
 app.post('/api/sendNotification' , (req,res) => {
     console.log("send Notification")
 
    console.log(req.body)
-   const email = req.body.email
-   const sql = 'SELECT email , fda_license,expdate FROM pif WHERE expdate <= CURDATE() + INTERVAL 1 MONTH AND em_email = ?';
+   const orid = req.body.orid
+   if(orid === "-"){
+    res.status(200).send('Notthing' );
+   }
+   else {
+    console.log("that else")
+   const sql = 'SELECT email , fda_license,expdate FROM product WHERE expdate <= CURDATE() + INTERVAL 1 MONTH AND organization_id = ?';
 
-    db.query(sql , [email], (err , result) => {
+    db.query(sql , [orid], (err , result) => {
         if (err){
+            console.log("go that now")
             console.log("Error " , err)
         }
         else {
             console.log(result)
-            res.send(result)
+            res.status(200).send( result );
+           // res.send(result)
         }
     })
+   }
+
 }
 )
 
-// getPif Info by Team id
-app.post('/api/pifData' , (req, res) => {
+
+
+const chcekFdaExp = async (e) => {
+    let num = []
+
+
+    try {
+        const response = await fetch('http://pertento.fda.moph.go.th/FDA_SEARCH_CENTER/PRODUCT/export_cmt_detail.aspx?regnos='+fda);
+        const data = await response.text();
+          console.log(data)
+        //console.log(data)
+        const $ = cheerio.load(data);
+
+          const  dataAll =[]
+
+
+      //dd is list of strings from data response
+      const dd = ["ContentPlaceHolder1_lb_status",'ContentPlaceHolder1_lb_status_lct',"ContentPlaceHolder1_lb_no_regnos","ContentPlaceHolder1_lb_type" , "ContentPlaceHolder1_lb_format_regnos" ,"ContentPlaceHolder1_lb_trade_Tpop",
+          "ContentPlaceHolder1_lb_cosnm_Tpop","ContentPlaceHolder1_lb_appdate" ,"ContentPlaceHolder1_lb_expdate" , "ContentPlaceHolder1_lb_mode","ContentPlaceHolder1_lb_applicability_name" , "ContentPlaceHolder1_lb_application_name",
+      "ContentPlaceHolder1_lb_condition" ,"ContentPlaceHolder1_lb_usernm_pop" , "ContentPlaceHolder1_lb_fac_pop"]
+      for(let i =0 ; i<dd.length ;i++){
+         let  txt = dd[i]
+         let st = data.indexOf(txt)
+         if(st > -1){
+          let a = data.substring(st+1)
+          let st2 = a.indexOf('</span>')
+         let c = data.substring(st+txt.length+2 , st2+st+1).replace("<br />", ' ')
+         let b = c.replace("<br/>"," ")
+         dataAll.push(b)
+         }
+         else {
+          dataAll.push("N/A")
+         }
+      }
+      console.log(dataAll)
+  res.send(dataAll);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+
+
+
+}
+
+
+
+
+// getproduct Info by Team id
+app.post('/api/productData' , (req, res) => {
     console.log("PifData")
     console.log(req.body.data)
     const id = req.body.data.trim()
 
     if(id){
-        const sql = 'SELECT reportname, fda_license, reportdate FROM pif_storage WHERE organization_id = ?';
+        const sql = 'SELECT no,fda_license, cosnameC , cosname , expdate , img_path ,status FROM product WHERE organization_id = ?';
 
         db.query(sql, [id], (err, result) => {
             if (err) {
@@ -998,7 +1644,7 @@ app.post('/api/pifData' , (req, res) => {
         });
     }
    else {
-    res.sendStatus(0)
+    res.send(0)
    }
 
 
@@ -1047,7 +1693,7 @@ app.get("/api/AddminManageUser" , (req , res) => {
 
 // Send Exp Date to user by Email
 const sendEmailNotifications=() => {
-    const sql = 'SELECT fda_license , email, expdate FROM pif WHERE expdate <= CURDATE() + INTERVAL 1 MONTH';
+    const sql = 'SELECT fda_license , email, expdate  FROM product WHERE expdate <= CURDATE() + INTERVAL 1 MONTH ';
 
     db.query(sql , (err , result) => {
         if(err) {
@@ -1151,19 +1797,19 @@ app.post("/api/pifInfo" , (req , res) => {
 
 
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, 'uploads/');
-    }, filename: function (req, file, cb) {
-        cb(null, file.originalname);
-      },
-    });
-    const upload = multer({ storage: storage });
+// const storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//       cb(null, 'uploads/');
+//     }, filename: function (req, file, cb) {
+//         cb(null, file.originalname);
+//       },
+//     });
+//     const upload = multer({ storage: storage });
 
-app.post('/api/upload-pdf' , (req , res) => {
-    const file = req.body
-    console.log(file)
-})
+// app.post('/api/upload-pdf' , (req , res) => {
+//     const file = req.body
+//     console.log(file)
+// })
 
 
 
@@ -1184,21 +1830,30 @@ app.post('/api/upload-pdf' , (req , res) => {
 // get user Admin or S
 app.get('/api/getuserTeam/', (req, res) => {
 
-    const sql = `SELECT * FROM employee WHERE status = "U"  && organization_id ="" `
-    db.query(sql,(err, result) =>{
-        console.log(result)
-        res.send(result)
-    })
+    try{
+        const sql = `SELECT * FROM employee WHERE status = "U"  && organization_id = "-" `
+        db.query(sql,(err, result) => {
+            console.log(result)
+            res.send(result)
+        })
+    }catch(err){
+        console.log(err)
+    }
 })
 
-app.get('/api/getuserTeamName/', (req, res) => {
-
-    const sql = `SELECT  no FROM employee WHERE organization_id != "" `
-    db.query(sql,(err, result) =>{
-        //console.log(result)
-        res.send(result)
-    })
+app.get('/api/getTeam/', (req, res) => {
+    try{
+        const sql = `SELECT DISTINCT organization_id FROM employee WHERE organization_id != ''`
+        db.query(sql,(err, result) =>{
+            //console.log(result)
+            res.send(result)
+        })
+    }
+    catch(err){
+        console.log(err)
+    }
 })
+
 
 //update S and team
 app.post('/api/updateteam', (req, res) => {
@@ -1207,28 +1862,6 @@ app.post('/api/updateteam', (req, res) => {
 
     console.log(team);
     console.log(email)
-    // const sql = 'UPDATE employee SET organization_id = ? , status = ?  WHERE em_email = ?';
-    // db.query(sql, [team, email , "S"], (err, result) => {
-    //     if (err) {
-    //         console.log(err);
-    //         res.status(500).send('Internal Server Error');
-    //     } else {
-    //         console.log(result)
-    //         res.send(result);
-    //     }
-    // });
-
-//     const sql = 'INSERT INTO employee organization_id = ? , status = ?  WHERE em_email = ?  ';
-// db.query(sql, [ team, "S" , email], (err, result) => {
-//     if (err) {
-//         console.log(err);
-//         res.status(500).send('Internal Server Error');
-//     } else {
-//         console.log(result)
-//         res.send(result);
-//     }
-// });
-
 
 const sql = 'UPDATE employee SET organization_id = ?, status = ? WHERE em_email = ?';
 db.query(sql, [team, "S", email], (err, result) => {
@@ -1435,12 +2068,217 @@ app.post('/api/changeNameTeam' , (req , res) => {
 
     })
 
-    const sql1 = `UPDATE pif_storage SET organization_id = ? WHERE organization_id = ?`;
+    const sql1 = `UPDATE pif SET organization_id = ? WHERE organization_id = ?`;
     db.query(sql1 , [team , id ] ,  (err , result) => {
         if(err){
             console.log(err)
         }
     })
+
+    const sql2 = `UPDATE product SET organization_id = ? WHERE organization_id = ?`;
+    db.query(sql2 , [team , id ] ,  (err , result) => {
+        if(err){
+            console.log(err)
+        }
+    })
+
+})
+
+
+
+
+const storage = multer.diskStorage({
+    destination:  (req, file, cb) => {
+      cb(null, 'uploads/'); // Destination folder for uploaded files
+    },
+    filename:  (req, file, cb) => {
+      // Use Date.now() to make sure the filename is unique
+
+      cb(null, file.originalname+path.extname(file.originalname));
+    },
+  });
+
+  const upload = multer({storage:storage})
+
+  app.post('/upload', upload.single('image'), (req, res) => {
+    res.send('File uploaded!');
+  });
+
+
+
+
+
+//Add product
+app.post('/api/storageProduct',(req,res)=>{
+    console.log("Product")
+    console.log(req.body)
+
+    for(let i=0 ;i<req.body.length ; i++){
+        if(req.body[i]==="N/A"){
+            req.body[i] === "-"
+        }
+    }
+    const status = req.body.status
+    const locationStatus = req.body.locationstatus
+    const type = req.body.type
+    const typeOfGoods = req.body.typeOfGoods
+    const cosnameC = req.body.cosnameC
+    const cosname = req.body.cosname
+    const expdate = req.body.expdate
+    const bodyPart = req.body.bodyPart
+    const company = req.body.company
+    const fcompany = req.body.fcompany
+    const fda_num = req.body.fda_num
+    let photo = req.body.photo
+    const id = req.body.ordid
+    const email = req.body.email
+
+
+
+    console.log(id)
+
+    console.log(fda_num)
+
+    if(photo === null){
+        photo = "-"
+    }
+
+
+
+    let arr = []
+    const str = expdate
+    arr.push(str.split("/"))
+    console.log(arr)
+    let year1 = parseInt(arr[0][2])-543
+    let month1 = parseInt(arr[0][1])-1
+    let date1 = parseInt(arr[0][0])
+
+    let exp = new Date(year1,month1,date1)
+
+    console.log(exp)
+
+    const sql = 'INSERT INTO  product (locationstatus, type, typeOfGoods, cosnameC, cosname, expdate, bodyPart, company, fcompany, fda_license, img_path , organization_id ,status , email ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)'
+    db.query(sql , [locationStatus,type,typeOfGoods,cosnameC,cosname,exp,bodyPart,company,fcompany,fda_num,"-",id,"0" , email] ,(err , result)=>{
+        if(err) {
+            console.log(err)
+        }
+        else {
+            res.send("OK")
+        }
+    })
+
+
+})
+
+//Delete Product from Productlist
+app.post('/api/userDeleteProduct' , (req,res)=>{
+    console.log("No...")
+    const id = req.body.id
+    const no =req.body.data
+    const fda = req.body.fda_num
+    const status = req.body.status
+    console.log(req.body)
+
+    const sql = 'DELETE FROM product WHERE fda_license = ? AND organization_id = ? '
+    db.query(sql,[fda , id],(error , result)=>{
+        if(error){
+            console.log(error)
+        }
+        else{
+            res.status(200).send("DELETEED")
+        }
+    })
+
+    if(status === "1"){
+        const sql1 = 'DELETE FROM pif WHERE fda_license = ?'
+        db.query(sql1,[fda] ,(error , result) =>{
+            if(error){
+                console.log(error)
+            }
+            else{
+                res.status(200).send("DELETEED")
+            }
+        } )
+
+    }
+
+
+})
+
+app.post('/api/DeleteGroupName', (req, res) => {
+    const email = req.body.email;
+    const groupName = req.body.groupName;
+
+    const sql = 'DELETE FROM chemicalgroup WHERE email = ? AND groupname = ?';
+    db.query(sql, [email, groupName], (err, result) => {
+        if (err) {
+            console.log(err);
+            res.status(500).send("Internal Server Error");
+        } else {
+            console.log(result);
+            res.send("Delete");
+        }
+    });
+});
+
+app.post('/api/sort', (req , res) => {
+    const id = req.body.id
+    const con = req.body.con
+
+    if(con === "1"){
+        const sql = 'SELECT * FROM product WHERE organization_id = ? ORDER BY expdate DESC'
+        db.query(sql , [id], (err , result) => {
+            if (err){
+                console.log("Error " , err)
+            }
+            else {
+                console.log(result)
+                res.send(result)
+            }
+        })
+    }
+
+    if(con === "2"){
+        const sql = 'SELECT * FROM product WHERE organization_id = ? ORDER BY expdate ASC'
+        db.query(sql , [id], (err , result) => {
+            if (err){
+                console.log("Error " , err)
+            }
+            else {
+                console.log(result)
+                res.send(result)
+            }
+        })
+    }
+
+    if(con === "3"){
+        const sql = 'SELECT * FROM product WHERE organization_id = ? ORDER BY cosname ASC'
+        db.query(sql , [id], (err , result) => {
+            if (err){
+                console.log("Error " , err)
+            }
+            else {
+                console.log(result)
+                res.send(result)
+            }
+        })
+    }
+
+    if(con === "4"){
+        const sql = 'SELECT * FROM product WHERE organization_id = ? ORDER BY cosname DESC'
+        db.query(sql , [id], (err , result) => {
+            if (err){
+                console.log("Error " , err)
+            }
+            else {
+                console.log(result)
+                res.send(result)
+            }
+        })
+    }
+
+
+
 })
 
 

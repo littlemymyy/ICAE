@@ -11,16 +11,23 @@ import TabPanel from '@mui/lab/TabPanel';
 
 
 export default function manage() {
+    const router = useRouter()
     const [value, setValue] = React.useState('1');
+    const {fdaNo} = router.query
 
     const handleChange = (event, newValue) => {
     setValue(newValue);
     };
 
-    const router = useRouter();
-    const handleClick = (e, path) => {
-    e.preventDefault();
-    router.push(path);
+   
+    const handleClick = () => {
+        router.push({
+            pathname : "/pif/upload",
+            query : {
+                fdaNo : fdaNo
+            }
+
+        })
     };
 
     return(
@@ -138,7 +145,7 @@ export default function manage() {
     }}
     
     >
-        <Button onClick={(e) => handleClick(e, "/pif/upload")} style={{ Width:"100%" , borderRadius:"5px", backgroundColor:"#299D95" }}>
+        <Button onClick={() => handleClick()} style={{ Width:"100%" , borderRadius:"5px", backgroundColor:"#299D95" }}>
                 
                     <Typography sx={{ fontSize: 14 }} color="white" >
                         คลิกเพื่อเข้าสู่หน้าการจัดการ PIF
