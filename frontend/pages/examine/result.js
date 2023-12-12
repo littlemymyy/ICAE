@@ -46,7 +46,8 @@ const c2A = () => {
       setSum(0)
       for(let i = 0; i < parsedArray.length; i++) {
         if(parsedArray[i].st != 2 && parsedArray[i].per1 <= parsedArray[i].per) {
-          aa += parseFloat(parsedArray[i].per1)
+          console.log(parsedArray[i].per1)
+          aa += (parsedArray[i].per1 * 1)
         }
       }
       setSum(aa);
@@ -66,14 +67,10 @@ const c2A = () => {
               }
               setData(res);
 
-              // Call the check function for each item in parsedArray
-
-
             }) .catch(error => {
               console.error(error);
-             // return res.status(500).json({ error: "Error sending email" });
           });
-            // console.log(parsedArray)
+
             parsedArray.find(e => {
               if (e.st === 2) {
                 console.log(".......")
@@ -336,7 +333,7 @@ const c2A = () => {
       </div>
 
 
-    {
+      {
         list.length ? (
           <div>
             <h3 className="label_G">สารที่สามารถใช้ได้</h3>
@@ -347,6 +344,7 @@ const c2A = () => {
                   <th className='C1A_th2'>CAS NO</th>
                   <th className='C1A_th3'>ชื่อ</th>
                   <th className='C1A_th4'>ปริมาณสาร %</th>
+                  <th className='C1_th5'>หมายเหตุ</th>
                   <th style={{ textAlign: 'center' }}>ตัวเลือก</th>
                 </tr>
               </thead>
@@ -364,8 +362,9 @@ const c2A = () => {
                             <td>{value.cmname}</td>
                         }
                         <td>
-                          <input type='number' defaultValue={value.per1} onChange={(e) => percentChange(idx, e.target.value)} />
+                          <input type="number" min="0" defaultValue={value.per1 ? value.per1 : 1} onChange={(e) => percentChange(idx, e.target.value)} />
                         </td>
+                        <td>-</td>
                         <td><AiOutlineDelete onClick={() => clickDelete(idx)} /></td>
                       </tr>
                     ))
@@ -375,23 +374,21 @@ const c2A = () => {
             </table>
           </div>
         )
-
           : null
-
       }
 
-{
+      {
         elist.length ? (
           <div>
             <h3 className="label_Y">สารกำหนดปริมาณ</h3>
-            <table className="C3_styled-table">
+            <table className="history_styled-table">
               <thead >
                 <tr >
-                  <th className='C3_th1'>ลำดับ</th>
-                  <th className='C3_th2'>CAS NO</th>
-                  <th className='C3_th3'>ชื่อ</th>
-                  <th className='C3_th4'>ปริมาณสาร %</th>
-                  <th className='C3_th5'>หมายเหตุ</th>
+                  <th className='history_th1'>ลำดับ</th>
+                  <th className='history_th2'>CAS NO</th>
+                  <th className='history_th3'>ชื่อ</th>
+                  <th className='history_th4'>ปริมาณสาร %</th>
+                  <th className='history_th5'>หมายเหตุ</th>
                   <th style={{ textAlign: 'center' }}>ตัวเลือก</th>
                 </tr>
               </thead>
@@ -409,7 +406,7 @@ const c2A = () => {
                             <td>{value.cmname}</td>
                         }
                         <td>
-                          <input type='number' defaultValue={value.per1} onChange={(e) => percentChange2(idx, e.target.value)} />
+                          <input type="number" min="0" defaultValue={value.per1 ? value.per1 : 1} onChange={(e) => percentChange2(idx, e.target.value)} />
                         </td>
                         <td>ปริมาณสารที่ใช้ได้คือ {value.per }</td>
                         <td><AiOutlineDelete onClick={() => clickDelete2(idx)} /></td>
@@ -421,13 +418,9 @@ const c2A = () => {
             </table>
           </div>
         )
-
           : null
-
       }
-
-
-{
+      {
         unlist.length ? (
           <div>
            <h3 className="label_Y">สารที่ไม่สามารถใช้ได้</h3>
@@ -438,6 +431,7 @@ const c2A = () => {
                   <th className='C2_th2'>CAS NO</th>
                   <th className='C2_th3'>ชื่อ</th>
                   <th className='C2_th4'>ปริมาณสาร %</th>
+                  <th className='C2_th5'>เหตุผล</th>
                   <th style={{ textAlign: 'center' }}>ตัวเลือก</th>
                 </tr>
               </thead>
@@ -455,8 +449,9 @@ const c2A = () => {
                             <td>{value.cmname}</td>
                         }
                         <td>
-                          <input type='number' disabled defaultValue={value.per1} onChange={(e) => percentChange(idx, e.target.value)} />
+                          <input type="number" min="0" disabled defaultValue={value.per1 ? value.per1 : 1} onChange={(e) => percentChange(idx, e.target.value)} />
                         </td>
+                        <td>-</td>
                         <td><AiOutlineDelete onClick={() => clickDelete3(idx)} /></td>
                       </tr>
                     ))
@@ -466,11 +461,10 @@ const c2A = () => {
             </table>
           </div>
         )
-
           : null
-
       }
-       <div className='App'>ยอดรวมทั้งหมด : {sum}
+
+       <div className='App'>ยอดรวมสารที่ใช้ได้ทั้งหมด : {sum}
        <br />
        <button className='C2_sava1' onClick={preSaveFile}> บันทึก </button>
        </div>

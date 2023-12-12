@@ -1037,6 +1037,71 @@ app.post('/api/checkMail',(req,res)=>{
 
 })
 
+app.get('/api/getChemicalByGroup', jsonParser, (req, res) => {
+    db.execute(
+        `select
+        G.groupname,
+        G.per1,
+        G.email,
+        G.udate,
+        G.uname,
+        G.fillterg,
+        C.*
+        from
+            chemicalgroup G
+        LEFT JOIN chemical C ON G.cname = C.cname AND G.cmname = C.cmname
+        WHERE G.groupname = ?`,
+        [req.query.groupname], (err, result) => {
+            if(err) {
+                res.json({status:'error',message:err});
+                return;
+            }
+            if(result.length > 0) {
+                res.json({status:'ok',message:result})
+            }
+            else {
+                res.json({status:'error',message:'No data found'});
+            }
+        }
+
+    )}
+);
+
+app.get('/api/getAllChemical', jsonParser, (req, res) => {
+    db.execute(
+        'SELECT * FROM chemical',
+        (err, result) => {
+            if(err) {
+                res.json({status:'error',message:err});
+                return;
+            }
+            if(result.length > 0) {
+                res.json({status:'ok',message:result})
+            }
+            else {
+                res.json({status:'error',message:'No data found'});
+            }
+        })
+})
+
+app.get('/api/getChemicalByCas', jsonParser, (req, res) => {
+    db.execute(
+        'SELECT * FROM chemical WHERE cas = ?',
+        [req.query.cas],
+        (err, result) => {
+            if(err) {
+                res.json({status:'error',message:err});
+                return;
+            }
+            if(result.length > 0) {
+                res.json({status:'ok',message:result})
+            }
+            else {
+                res.json({status:'error',message:'No data found'});
+            }
+        })
+})
+
 //Show data by fillter data
 app.post('/api/searchBybodypart', (req,res) => {
     //SELECT * FROM chemical WHERE
