@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from 'react'
-import Axios from "axios";
-import Navbar from '@/components/layout/Navbar';
-import { AiOutlineDelete } from "react-icons/ai";
+import React from 'react'
+import Navbar from '@/components/layout/Navbar'
 import { useRouter } from 'next/router';
+import { AiOutlineDelete } from "react-icons/ai";
+import { useState ,useEffect } from 'react';
+import Axios from "axios";
+import Footer from '@/components/Footer';
+import Swal from 'sweetalert2'
 
-const c3 = () => {
+const history = () => {
     const router = useRouter()
     const [groupName, setGroupName] = useState("")
     const [list , setList] = useState([])
@@ -13,9 +16,9 @@ const c3 = () => {
     const [data , setData] = useState([])
     const [oldData , setOldData] = useState([]);
     const [sum , setSum] = useState(0)
-    const [search_input, setSearch_input] = useState("");
     const [show, setShow] = useState([])
     const [dd , setDd] = useState([])
+    const [chemical , setChemical] = useState([])
 
 
     useEffect(() => {
@@ -23,87 +26,90 @@ const c3 = () => {
         const searchParams = new URLSearchParams(queryString)
         const gname = searchParams.get("gname")
         setGroupName(gname)
-        let splitArray = []
 
-        // console.log(gname)
-        let load = {
-            gname : gname
-        }
         Axios  ({
-            url: "http://localhost:3001/api/getGroupNamebyname",
-            method: "post",
-            data : load,
+            url: "http://localhost:3001/api/getChemicalByGroup?groupname=" + gname,
+            method: "get"
           }).then ((response) => {
             console.log(response.data)
-            setList(response.data)
-            // console.log(response.data[0].fillterg.split(",").map(String))
+            if (response.data.status === "ok") {
+              let resData = JSON.parse(JSON.stringify(response.data.message))
+              resData.forEach(element => {
+                add(element)
+                console.log('added : ' + element)
+              });
+            }else{
+              console.log(response.data)
+            }
 
-            splitArray = response.data[0].fillterg.split(",").map(String)
-           // console.log(splitArray)
+          }).catch(error => {
+            router.push("/")
+          });
 
+          Axios  ({
+            url: "http://localhost:3001/api/getAllChemical",
+            method: "get"
+          }).then ((response) => {
+            if (response.data.status === "ok") {
+              setChemical(response.data.message)
+            }else{
+              console.log(response.data)
+            }
 
-            setDd(splitArray)
-            getAll(splitArray)
-
-
-            // setDd(splitArray);
-            // dd.push(response.data[0].fillterg.split(",").map(String))
-            // setDd([...dd])
-            // setDd(response.data[0].fillterg.split(",").map(String))
-          })
-
+          }).catch(error => {
+            router.push("/")
+          });
     },[])
 
-    const getAll = (fillterg) =>{
-        let dd = {
-            fillterg : fillterg
-          }
-          console.log(dd)
-          Axios({
-            url: "http://localhost:3001/api/searchBybodypartEdit",
-            method: "post",
-            data: dd ,
-          }).then((response) => {
-            setData(response.data)
-            // console.log(response.data)
+    const resultsearch = (e) => {
+        if (e === "") {
+          setShow([])
+        } else {
+          let result = chemical.filter((w) => {
+          return (
+            e &&
+            w &&
+            w.cas &&
+            w.cname &&
+            w.cmname &&
+            (w.cname.toLowerCase().includes(e) || w.cas.includes(e) || w.cmname.toLowerCase().includes(e)));
           })
+          setShow(result)
+        }
+
     }
 
-    const resultsearch = (e) => {
-        setSearch_input(e)
-        if (e.length == 0) {
-          setShow([])
+    const addData = (e) => {
+      Axios  ({
+        url: "http://localhost:3001/api/getChemicalByCas?cas=" + e,
+        method: "get"
+      }).then ((response) => {
+        if (response.data.status === "ok") {
+          let resData = JSON.parse(JSON.stringify(response.data.message))
+          add(resData[0])
+        }else{
+          console.log(response.data)
         }
-        else {
-          const results1 = data.filter((w) => {
-            return (
-              e &&
-              w &&
-              w.cas &&
-              w.cname &&
-              w.cmname &&
-              (w.cname.toLowerCase().includes(e) || w.cas.includes(e) || w.cmname.toLowerCase().includes(e))
-            );
-          });
-          setShow(results1)
-          console.log(results1)
-        }
-      }
 
+      }).catch(error => {
+        router.push("/")
+      });
+    }
       const add = (e) => {
-        const result = data.find(({ cas }) => cas === e)
+        let result = e
         if (result.st === 2) {
           unlist.push(result)
           setUnlist([...unlist])
-          setShow([])
-          setSearch_input("")
         }
-
+        else if (e.per1 > e.per) {
+          list2.push(result)
+          setList([...list])
+          setSum(sum + parseFloat(result.per1))
+        }
         else {
           list.push(result)
           setList([...list])
-          setShow([])
-          setSearch_input("")
+          setSum(sum + parseFloat(result.per1))
         }
         console.log(result)
       }
@@ -162,12 +168,27 @@ const c3 = () => {
         setList2([...list])
       }
 
-      const saveFile = () => {
+      const SaveFile = () => {
+        let dataList = []
+
+        if (list.length > 0){
+          dataList.push(...list)
+        }
+        if (list2.length > 0){
+          dataList.push(...list2)
+        }
+        if (unlist.length > 0){
+          dataList.push(...unlist)
+        }
+
+        console.log(dataList)
+
         let load = {
           uname : localStorage.getItem("uname") ,
           gname : groupName,
-          fillterg : dd ,
-          dd : list
+          fillterg : '',
+          dd : dataList,
+          email : dataList[0].email
         }
         Axios({
           url : "http://localhost:3001/api/savefile",
@@ -175,7 +196,7 @@ const c3 = () => {
           data : load ,
         }).then((response) => {
           alert("เพิ่มรายเรียบร้อย")
-          router.push("/Groupname")
+          router.push("/examine/record")
         }).catch(error => {
           console.error(error);
          // return res.status(500).json({ error: "Error sending email" });
@@ -193,7 +214,6 @@ const c3 = () => {
         <i className="fa fa-search icon"></i>
         <input placeholder='ค้นหาโดยชื่อสารเคมี, CAS NO  etc'
           className="in"
-          value={search_input}
           onChange={(e) => resultsearch(e.target.value)}
         />
         <br />
@@ -204,9 +224,9 @@ const c3 = () => {
           show.length ?
             show.map((value) => (
               value.cmname === "-" ?
-                <p onClick={() => add(value.cas)} key={value.cas}>  {value.cname}</p>
+                <p onClick={() => addData(value.cas)} key={value.cas}>  {value.cname}</p>
                 :
-                <p onClick={() => add(value.cas)} key={value.cas}> {value.cmname}</p>
+                <p onClick={() => addData(value.cas)} key={value.cas}> {value.cmname}</p>
             ))
             : null
         }
@@ -225,7 +245,7 @@ const c3 = () => {
                   <th className='C1_th2'>CAS NO</th>
                   <th className='C1_th3'>ชื่อ</th>
                   <th className='C1_th4'>ปริมาณสาร %</th>
-                  <th className='C1_th5'>เหตุผล</th>
+                  <th className='C1_th5'>หมายเหตุ</th>
                   <th>ตัวเลือก</th>
                 </tr>
               </thead>
@@ -243,9 +263,9 @@ const c3 = () => {
                             <td>{value.cmname}</td>
                         }
                         <td>
-                          <input defaultValue={value.per1} onChange={(e) => percentChange(idx, e.target.value)} />
+                          <input type="number" min="0" defaultValue={value.per1 ? value.per1 : 1} onChange={(e) => percentChange(idx, e.target.value)} />
                         </td>
-                        <td>{value.des}</td>
+                        <td>-</td>
                         <td><AiOutlineDelete onClick={() => clickDelete(idx)} /></td>
                       </tr>
                     ))
@@ -265,14 +285,14 @@ const c3 = () => {
         list2.length  ? (
         <div>
         <h3 className="label_Y">สารกำหนดปริมาณ</h3>
-        <table className="C3_styled-table">
+        <table className="history_styled-table">
           <thead >
             <tr >
-              <th className='C3_th1'>ลำดับ</th>
-              <th className='C3_th2'>CAS NO</th>
-              <th className='C3_th3'>ชื่อ</th>
-              <th className='C3_th4'>ปริมาณสาร %</th>
-              <th className='C3_th5'>เหตุผล</th>
+              <th className='history_th1'>ลำดับ</th>
+              <th className='history_th2'>CAS NO</th>
+              <th className='history_th3'>ชื่อ</th>
+              <th className='history_th4'>ปริมาณสาร %</th>
+              <th className='history_th5'>หมายเหตุ</th>
               <th></th>
             </tr>
           </thead>
@@ -290,10 +310,10 @@ const c3 = () => {
                         <td>{value.cmname}</td>
                     }
                     <td>
-                      <input value={value.per1} onChange={(e) => percentChange2(idx, e.target.value)} />
+                      <input type="number" min="0" value={value.per1 ? value.per1 : 1}  onChange={(e) => percentChange2(idx, e.target.value)} />
                     </td>
-                    <td>{value.des}</td>
-                    <td></td>
+                    <td>ปริมาณสารที่ใช้ได้คือ {value.per }</td>
+                    <th><AiOutlineDelete onClick={() => clickDelete_list2(idx)} /></th>
                   </tr>
                 ))
                 : null
@@ -317,7 +337,7 @@ const c3 = () => {
                   <th className='C2_th2'>CAS NO</th>
                   <th className='C2_th3'>ชื่อ</th>
                   <th className='C2_th4'>ปริมาณสาร %</th>
-                  <th className='C2_th5'>เหตุผล</th>
+                  <th className='C2_th5'>หมายเหตุ</th>
                   <th></th>
                 </tr>
               </thead>
@@ -335,10 +355,10 @@ const c3 = () => {
                             <td>{value.cmname}</td>
                         }
                         <td>
-                          <input disabled onChange={(e) => percentChange(idx, e.target.value)} />
+                          <input type="number" min="0" disabled value={value.per1 ? value.per1 : 1} onChange={(e) => percentChange(idx, e.target.value)} />
                         </td>
-                        <td>{value.des}</td>
-                        <th><AiOutlineDelete onClick={() => clickDelete(idx)} /></th>
+                        <td>-</td>
+                        <th><AiOutlineDelete onClick={() => clickDelete_unlist(idx)} /></th>
                       </tr>
                     ))
                     : null
@@ -349,16 +369,13 @@ const c3 = () => {
         ) : null
 
       }
-      <div className='App'>ยอดรวมทั้งหมด {sum}
-      </div>
-      {
-        sum === 100 ?
-        <button className='C1_save' onClick={saveFile}> บันทึก </button>
-        : <button disabled> บันทึก </button>
-      }
-
-    </div>
+      <div className='App'>ยอดรวมสารที่ใช้ได้ทั้งหมด : {sum}
+       <br />
+       <button className='C1_sava1' onClick={SaveFile}> บันทึก </button>
+       </div>
+       <Footer/>
+  </div>
   )
 }
 
-export default c3
+export default history

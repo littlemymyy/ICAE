@@ -36,7 +36,7 @@ const record = () => {
           // const d = await Axios({
           //   // url : `http://localhost:3001/api/getGroupNameSt`,
           //   // method : 'post',
-          //   // data :  load  , 
+          //   // data :  load  ,
           // })
 
           //const d = Axios(gn.data[i].groupname)
@@ -53,7 +53,7 @@ const record = () => {
       }
     }
       fetchdata()
-    
+
   },[])
 
   const resultsearch = (e) => {
@@ -71,12 +71,12 @@ const record = () => {
             console.log(results1)
             setShow(results1)
       }
-      
+
   }
 
   const sendgroupname = (groupname) => {
       router.push({
-          pathname : '/examine/c3' , 
+          pathname : '/examine/history' ,
           query : {
             gname: groupname,
           }
@@ -99,7 +99,7 @@ const record = () => {
         <div className='C2_labal'>
             ประวัติการตรวจสอบสูตรเครื่องสำอาง
         </div>
-        
+
         <br />
       <div className="input-icons">
         <i className="fa fa-search icon"></i>
@@ -110,7 +110,7 @@ const record = () => {
         />
         <br />
         <div>
-     
+
       </div>
 
       </div>
@@ -122,7 +122,7 @@ const record = () => {
                   <th className='C1A_th2'>วันที่</th>
                   <th className='C1A_th3'>ชื่อไฟล์</th>
                   <th style={{ textAlign: 'center' }}>ตัวเลือก</th>
-                
+
                 </tr>
               </thead>
               <tbody>
@@ -134,7 +134,7 @@ const record = () => {
                         <td>{value.udate}</td>
                         <td>{value.groupname}</td>
                         <td style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>  <Stack direction="row" spacing={2}>
-                    
+
                         <Button variant="outlined" endIcon={<EditNoteIcon />}onClick={()=>sendgroupname(value.groupname)}>
                           แก้ไข
                         </Button>
