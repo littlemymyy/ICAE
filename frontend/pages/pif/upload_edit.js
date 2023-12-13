@@ -252,20 +252,20 @@ export default function manage() {
 
       console.log(arr);
       setData(res.data);
-      setPdfFile1(res.data[0].fdadoc);
-      setPdfFile2(res.data[0].letter_authorization);
-      setPdfFile3(res.data[0].formula_doc);
-      setPdfFile4(res.data[0].label_doc);
-      setPdfFile5(res.data[0].manufacture_doc);
-      setPdfFile6(res.data[0].gmp_iso);
-      setPdfFile7(res.data[0].eff_report);
-      setPdfFile8(res.data[0].efficient_report);
-      setPdfFile9(res.data[0].spec);
-      setPdfFile10(res.data[0].coa);
-      setPdfFile11(res.data[0].sds )
-      setPdfFile12(res.data[0].masterformula)
-      setPdfFile13(res.data[0].specification)
-      setPdfFile14(res.data[0].testing_doc)
+      setPdfFile1('http://localhost:3001/'+res.data[0].fdadoc);
+      setPdfFile2('http://localhost:3001/'+res.data[0].letter_authorization);
+      setPdfFile3('http://localhost:3001/'+res.data[0].formula_doc);
+      setPdfFile4('http://localhost:3001/'+res.data[0].label_doc);
+      setPdfFile5('http://localhost:3001/'+res.data[0].manufacture_doc);
+      setPdfFile6('http://localhost:3001/'+res.data[0].gmp_iso);
+      setPdfFile7('http://localhost:3001/'+res.data[0].eff_report);
+      setPdfFile8('http://localhost:3001/'+res.data[0].efficient_report);
+      setPdfFile9('http://localhost:3001/'+res.data[0].spec);
+      setPdfFile10('http://localhost:3001/'+res.data[0].coa);
+      setPdfFile11('http://localhost:3001/'+res.data[0].sds )
+      setPdfFile12('http://localhost:3001/'+res.data[0].masterformula)
+      setPdfFile13('http://localhost:3001/'+res.data[0].specification)
+      setPdfFile14('http://localhost:3001/'+res.data[0].testing_doc)
 
       //console.log(res.data)
     };
@@ -418,6 +418,7 @@ export default function manage() {
         break;
       case "file5":
         setFile5(file);
+        console.log('URL',URL.createObjectURL(file));
         setPdfFile5(URL.createObjectURL(file));
         change[4] = 1
         setChange[4] = 1
@@ -618,19 +619,19 @@ export default function manage() {
       email: sessionStorage.getItem("uemail"),
       id: sessionStorage.getItem("orid"),
       fda_num: fda_num,
-      fdadoc_date: formatDate(fdadoc_date),
-      formula_doc_date: formatDate(formula_doc_date),
-      letter_authorization_date: formatDate(letter_authorization_date),
-      label_doc_date: formatDate(label_doc_date),
-      manufacture_doc_date: formatDate(manufacture_doc_date),
-      gmp_iso_date: formatDate(gmp_iso_date),
-      eff_report_date: formatDate(eff_report_date),
-      efficient_report_date: formatDate(efficient_report_date),
-      sds_date: formatDate(sds_date),
-      masterformula_date: formatDate(masterformula_date),
-      specification_date: formatDate(specification_date),
-      testing_doc_date: formatDate(testing_doc_date),
-      coa: formatDate(coa),
+      fdadoc_date: fdadoc_date || '-',
+      formula_doc_date: formula_doc_date || '-',
+      letter_authorization_date: letter_authorization_date || '-',
+      label_doc_date: label_doc_date || '-',
+      manufacture_doc_date: manufacture_doc_date || '-',
+      gmp_iso_date: gmp_iso_date || '-',
+      eff_report_date: eff_report_date || '-',
+      efficient_report_date: efficient_report_date || '-',
+      sds_date: sds_date || '-',
+      masterformula_date: masterformula_date || '-',
+      specification_date: specification_date || '-',
+      testing_doc_date: testing_doc_date || '-',
+      coa: coa || '-',
     });
 
     //for upload file
@@ -668,7 +669,7 @@ export default function manage() {
             }
           ).then((res) => {
             console.log(res);
-            if (res.data.status === "ok") {
+            if (res.data === "Comple") {
               alert("อัพโหลดเอกสารสำเร็จ");
               //redirect to http://localhost:3000/pif/productslist
               if (e === 1) {
@@ -996,7 +997,6 @@ export default function manage() {
                 }}
               >
                 <Typography variant="h8">วันหมดอายุของเอกสาร</Typography>
-
                 <TextField
                   type="date"
                   id="expdate"
@@ -1038,7 +1038,7 @@ export default function manage() {
                 </Box>
               ) : change[0] === 0 ? (
                 <embed
-                  src={`http://localhost:3001/${pdfFile1}`}
+                  src={`${pdfFile1}`}
                   width="300px"
                   height="450px"
                 />
@@ -1157,7 +1157,7 @@ export default function manage() {
                 </Box>
               ) : change[0] === 0 ? (
                 <embed
-                  src={`http://localhost:3001/${pdfFile2}`}
+                  src={`${pdfFile2}`}
                   width="300px"
                   height="450px"
                 />
@@ -1265,7 +1265,7 @@ export default function manage() {
                 </Box>
               ) : change[0] === 0 ? (
                 <embed
-                  src={`http://localhost:3001/${pdfFile3}`}
+                  src={`${pdfFile3}`}
                   width="300px"
                   height="450px"
                 />
@@ -1371,7 +1371,7 @@ export default function manage() {
                 </Box>
               ) : change[0] === 0 ? (
                 <embed
-                  src={`http://localhost:3001/${pdfFile4}`}
+                  src={`${pdfFile4}`}
                   width="300px"
                   height="450px"
                 />
@@ -1488,7 +1488,7 @@ sx={{
 </Box>
 ) : change[0] === 0 ? (
 <embed
-src={`http://localhost:3001/${pdfFile5}`}
+src={`${pdfFile5}`}
 width="300px"
 height="450px"
 />
@@ -1610,7 +1610,7 @@ data[0].manufacture_doc}{" "}
              </Box>
            ) : change[0] === 0 ? (
              <embed
-               src={`http://localhost:3001/${pdfFile6}`}
+               src={`${pdfFile6}`}
                width="300px"
                height="450px"
              />
@@ -1724,7 +1724,7 @@ data[0].manufacture_doc}{" "}
             </Box>
           ) : change[0] === 0 ? (
             <embed
-              src={`http://localhost:3001/${pdfFile7}`}
+              src={`${pdfFile7}`}
               width="300px"
               height="450px"
             />
@@ -1834,7 +1834,7 @@ sx={{
 </Box>
 ) : change[0] === 0 ? (
 <embed
-src={`http://localhost:3001/${pdfFile8}`}
+src={`${pdfFile8}`}
 width="300px"
 height="450px"
 />
@@ -1958,7 +1958,7 @@ sx={{
 </Box>
 ) : change[0] === 0 ? (
 <embed
-src={`http://localhost:3001/${pdfFile9}`}
+src={`${pdfFile9}`}
 width="300px"
 height="450px"
 />
@@ -2075,7 +2075,7 @@ sx={{
 </Box>
 ) : change[0] === 0 ? (
 <embed
-src={`http://localhost:3001/${pdfFile10}`}
+src={`${pdfFile10}`}
 width="300px"
 height="450px"
 />
@@ -2189,7 +2189,7 @@ data[0].coa_doc}{" "}
               </Box>
             ) : change[0] === 0 ? (
               <embed
-                src={`http://localhost:3001/${pdfFile11}`}
+                src={`${pdfFile11}`}
                 width="300px"
                 height="450px"
               />
@@ -2316,7 +2316,7 @@ sx={{
 </Box>
 ) : change[0] === 0 ? (
 <embed
-src={`http://localhost:3001/${pdfFile12}`}
+src={`${pdfFile12}`}
 width="300px"
 height="450px"
 />
@@ -2431,7 +2431,7 @@ sx={{
 </Box>
 ) : change[0] === 0 ? (
 <embed
-src={`http://localhost:3001/${pdfFile13}`}
+src={`${pdfFile13}`}
 width="300px"
 height="450px"
 />
@@ -2546,7 +2546,7 @@ sx={{
 </Box>
 ) : change[0] === 0 ? (
 <embed
-src={`http://localhost:3001/${pdfFile14}`}
+src={`${pdfFile14}`}
 width="300px"
 height="450px"
 />

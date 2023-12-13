@@ -432,7 +432,7 @@ export default function manage() {
         data: data
       })
       .then (res => {
-        console.log(res);
+        console.log('res.data', res.data);
         if (res.data.status === "ok") {
           alert("อัพโหลดเอกสารสำเร็จ")
           //redirect to http://localhost:3000/pif/productslist

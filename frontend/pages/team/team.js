@@ -111,8 +111,7 @@ const team = () => {
                     text: "เพื่มชื่อทีมหรือชื่อบริษัทสำเร็จ",
                     icon: "success"
                   });
-                  console.log(res.data)
-                  sessionStorage.setItem("orid" , res.data)
+                  sessionStorage.setItem("orid" , team)
                   router.push("/pif/productslist")
                  
                   
@@ -190,10 +189,7 @@ const team = () => {
     console.log(no)
     console.log(team)
 
-    if(checkG(team) === 1 ){
-      alert("มีคนใช้ชื่อทีมนี้ช่ำแล้วกรุณาเปลี่ยนชื่อ")
-      window.location.reload()
-    }
+   
 
     let load = {
         st : status,

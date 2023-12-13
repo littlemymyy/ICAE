@@ -100,9 +100,7 @@ export default function Home(){
                             <TableCell align="left">{item.cname}</TableCell>
                             : <TableCell align="left">{item.cmname}</TableCell>
                         }
-                       
                         
-
                     </TableRow>
                 ))}
                 </TableBody>

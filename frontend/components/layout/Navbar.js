@@ -47,17 +47,17 @@ function Navbar() {
                 router.push("/Knowledge/home")
             }
             else if(selectName === pages[1]){
-                router.push("/login/Sigin");
+                router.push("/login/SignIn");
             }
             else if(selectName === "การจัดการpif"){
                 
                 if(sessionStorage.getItem("uemail") === ""){
-                    router.push("/login/Sigin");
+                    router.push("/login/SignIn");
                 }
                 
             }
             else if(selectName === pages[3]){
-                router.push("/login/Sigin");
+                router.push("/login/SignIn");
             }
         }
 

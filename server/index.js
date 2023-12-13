@@ -381,7 +381,7 @@ app.post('/api/submitPif', pdfUpload.any(), (req, res) => {
 
          
 
-          db.query( 'INSERT INTO pif( email, file_name, img_path, pdf_path, expdate, rec_create_when, organization_id, fda_license, fdadoc, letter_authorization, formula_doc , label_doc , manufacture_doc , gmp_iso, eff_report, efficient_report,spec ,coa,sds, masterformula, specification, testing_doc, status, fdadoc_date, letter_authorization_date, formula_doc_date , label_doc_date , manufacture_doc_date , gmp_iso_date, eff_report_date, efficient_report_date, sds_date, masterformula_date, specification_date, testing_doc_date ,coa_date) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+          db.query( 'INSERT INTO pif( email, file_name, img_path, pdf_path, expdate, rec_create_when, organization_id, fda_license, fdadoc, letter_authorization, formula_doc , label_doc , manufacture_doc , gmp_iso, eff_report, efficient_report,spec ,coa_doc,sds, masterformula, specification, testing_doc, status, fdadoc_date, letter_authorization_date, formula_doc_date , label_doc_date , manufacture_doc_date , gmp_iso_date, eff_report_date, efficient_report_date, sds_date, masterformula_date, specification_date, testing_doc_date ,coa_date) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
           [data.email, data.filename, img_path, pdf_path, data.expdate, new Date(),data.id ,data.fda_num , filea , fileb , filec ,filed, filee,filef,fileg,fileh,filei ,filej ,filek ,filel,filem,filen,"1",data.fdadoc_date,data.letter_authorization_date,data.formula_doc_date , data.label_doc_date , data.manufacture_doc_date ,data.gmp_iso_date ,data.eff_report_date , data.efficient_report_date , data.sds_date , data.masterformula_date, data.specification_date , data.testing_doc_date ,data.coa ],
           (err, result) => {
           if(err) {
@@ -423,73 +423,60 @@ app.post('/api/submitPif', pdfUpload.any(), (req, res) => {
 
 //// for now i not have Edit that this /api/submitPifEdit
 app.post('/api/submitPifEdit', pdfUpload.any(), (req, res) => {
-    //     console.log("submit")
-     //console.log(req.files)
-     const file = req.files
-   //  console.log("...................")
-     const files = req.body.data;
-     const filePaths = req.files.map(file => file.path.toString());
-    // console.log(files)
-  
-   //  console.log(filePaths);
+    
+    const file = req.files
+
+    const files = req.body.data;
+    const filePaths = req.files.map(file => file.path.toString());
+    console.log('files', files);
+
  
-     const filea = filePaths[0] || "-";//fda => fdadoc
-     const fileb = filePaths[1] || "-";//Autorization  => letter_authorization
-     const filec = filePaths[2] || "-";//formu  => formula_doc
-     const filed = filePaths[3] || "-";//label =>label_doc
-     const filee = filePaths[4] || "-";//manufu => 	manufacture_doc
-     const filef = filePaths[5] || "-";//Gmp => gmp_iso
-     const fileg = filePaths[6] || "-";//eff => eff_report
-     const fileh = filePaths[7] || "-";//efficent => efficient_report
-     const filei = filePaths[8] || "-";//spec => spec
-     const filej = filePaths[9] || "-";//Coa => coa_doc
-     const filek = filePaths[10] || "-";//sds => 	sds
-     const filel = filePaths[11] || "-";//master formula => masterformula
-     const filem = filePaths[12] || "-";//Specification of cosmetic finished product)=>specification
-     const filen = filePaths[13] || "-";//Testing =>testing_doc 
+    const filea = filePaths[0] || "-";//fda => fdadoc
+    const fileb = filePaths[1] || "-";//Autorization  => letter_authorization
+    const filec = filePaths[2] || "-";//formu  => formula_doc
+    const filed = filePaths[3] || "-";//label =>label_doc
+    const filee = filePaths[4] || "-";//manufu => 	manufacture_doc
+    const filef = filePaths[5] || "-";//Gmp => gmp_iso
+    const fileg = filePaths[6] || "-";//eff => eff_report
+    const fileh = filePaths[7] || "-";//efficent => efficient_report
+    const filei = filePaths[8] || "-";//spec => spec
+    const filej = filePaths[9] || "-";//Coa => coa_doc
+    const filek = filePaths[10] || "-";//sds => 	sds
+    const filel = filePaths[11] || "-";//master formula => masterformula
+    const filem = filePaths[12] || "-";//Specification of cosmetic finished product)=>specification
+    const filen = filePaths[13] || "-";//Testing =>testing_doc 
 
 
     // get file 
-     let update = [filePaths[0] , filePaths[1] , filePaths[2] , filePaths[3] , filePaths[4] , filePaths[5] ,filePaths[6] ,filePaths[7] ,filePaths[8] ,filePaths[9] ,filePaths[10] ,filePaths[11] ,filePaths[12] ,filePaths[13]]
-     let update1 = ["filea", "fileb" , "filec" , "filed" , "filee" , "filef" ,"fileg" ,"fileh" ,"filei" ,"filej" ,"filek" ,"filel" , "filem" , "filen"]
-     let fname = [",fdadoc = ?" , ",letter_authorization = ? " ,",formula_doc = ? " , ",label_doc = ? " , ",manufacture_doc = ?", ",gmp_iso = ?" , ",eff_report = ? " ,",efficient_report = ?" ,", spec = ?" ,",coa_doc = ?" , " ,sds = ?"," ,masterformula = ?" ," ,specification = ?" ,",testing_doc = ? "]
-     let sqlobj = []
-     let update2 = []
-     console.log("update")
-     console.log(update)
-     
-     for(let i = 0 ; i < update.length ;i++){
-        console.log("for loop")
-        console.log(update[i])
+    let update = [filePaths[0] , filePaths[1] , filePaths[2] , filePaths[3] , filePaths[4] , filePaths[5] ,filePaths[6] ,filePaths[7] ,filePaths[8] ,filePaths[9] ,filePaths[10] ,filePaths[11] ,filePaths[12] ,filePaths[13]]
+    let update1 = [filea, fileb , filec , filed , filee , filef ,fileg ,fileh ,filei ,filej ,filek ,filel , filem , filen]
+    let fname = [",fdadoc = ?" , ",letter_authorization = ? " ,",formula_doc = ? " , ",label_doc = ? " , ",manufacture_doc = ?", ",gmp_iso = ?" , ",eff_report = ? " ,",efficient_report = ?" ,", spec = ?" ,",coa_doc = ?" , " ,sds = ?"," ,masterformula = ?" ," ,specification = ?" ,",testing_doc = ? "]
+    let sqlobj = []
+    let update2 = []
+
+    
+    for(let i = 0 ; i < update.length ;i++){
         if(update[i] !== undefined ){
-            console.log(i+"foorloop")
-          update2.push(update1[i])
-          sqlobj.push(fname[i])
+            update2.push(update1[i])
+            sqlobj.push(fname[i])
 
         }
-     }
+    }
 
-     let columname = ""
-     for(let i = 0 ; i < sqlobj.length ;i++){
+    let columname = ""
+    for(let i = 0 ; i < sqlobj.length ;i++){
         columname += sqlobj[i] +" ,"
-     }
-     let sqlcut = ""
-     sqlcut += columname.substring(0,columname.length-1)
-    
-     console.log(sqlcut)
-     console.log("update2")
-     console.log(update2)
-    
-     console.log(columname)
+    }
+    let sqlcut = ""
+    sqlcut += columname.substring(0,columname.length-1)
    
-      try {
-          let img_path = '';
-          let pdf_path = '';
+    try {
+        let img_path = '';
+        let pdf_path = '';
   
-          (async () => {
-             console.log(JSON.parse(req.body.data))
+        (async () => {
               const data = JSON.parse(req.body.data);
-              console.log(data)
+              console.log('data=>',data)
   
               pdfMake.fonts = {
                   THSarabunNew: {
@@ -545,12 +532,10 @@ app.post('/api/submitPifEdit', pdfUpload.any(), (req, res) => {
               await fs.writeFile(pdfPath, buffer);
   
               const firstPath = path.join('./uploads', `${fileName}.pdf`);
-              console.log(firstPath)
   
               //merge pdf
               const merger = new PDFMerger();
-            const files = req.files;
-            console.log(files);
+                const files = req.files;
   
               await merger.add(firstPath);
               try{
@@ -567,27 +552,23 @@ app.post('/api/submitPifEdit', pdfUpload.any(), (req, res) => {
   
               let pdfFileName = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + '-' + Date.now();
               await merger.save(`uploads/${pdfFileName}.pdf`).then((pdfBuffer) => {
-                  console.log(pdfBuffer);
+                  console.log("pdfBuffer => ",pdfBuffer);
               });
   
-              console.log(pdfFileName)
               pdf_path = path.join('./uploads', `${pdfFileName}.pdf`);
   
 
   
              for(let i = 0 ; i< sqlobj.length; i++){
-                console.log(sqlobj[i])
-                console.log(update2[i])
                 const sql = "UPDATE pif  SET email = ? , img_path = ? , expdate = ? , rec_create_when = ? ,status = ? , fdadoc_date = ? , letter_authorization_date = ? , formula_doc_date = ? , label_doc_date = ? , manufacture_doc_date = ? , gmp_iso_date =? , eff_report_date = ? , efficient_report_date = ? ,sds_date = ? , masterformula_date = ? , specification_date =?, testing_doc_date =? , coa_date = ?" + sqlobj[i] + "WHERE organization_id = ? AND fda_license = ?"
                 db.query(sql ,[data.email , img_path ,data.expdate , new Date() ,"3" ,  data.fdadoc_date , data.letter_authorization_date , data.formula_doc_date , data.label_doc_date , data.manufacture_doc_date , data.gmp_iso_date , data.eff_report_date , data.efficient_report_date, data.sds_date , data.masterformula_date , data.specification_date , data.testing_doc_date , data.coa , update2[i] ,data.id , data.inputregisNumber] , (error , result) => {
                     if(error){
-                        console.log(error)
+                        res.status(500).send(error)
                     }
-                    else {
-                        res.send("Comple")
-                    }
+                    
                 })
              }
+             res.send("Comple")
 
     })()
   } catch (error) {
@@ -737,8 +718,8 @@ app.post('/api/submitPifEdit', pdfUpload.any(), (req, res) => {
                           img_path = files[i].path;
                   }
               }catch(err){
-                  console.log("no any file upload") 
-                  console.log(err) 
+                 console.log("no any file upload") 
+                console.log(err) 
               }
   
               let pdfFileName = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + '-' + Date.now();
@@ -795,7 +776,7 @@ app.post('/api/pifData', (req, res) => {
 
     db.query(sql, values, (err, result) => {
         if (err) {
-            console.error(err);
+           // console.error(err);
             res.status(500).send('Internal Server Error');
         } else {
             res.send(result);
@@ -833,10 +814,10 @@ app.post('/api/uploadCsv/', (req, res) => {
     })
 
     for(let i = 0 ; i < data.length; i++){
-        console.log(i + " " + data[i].cas);
+        //console.log(i + " " + data[i].cas);
         const sql = 'INSERT INTO chemical(cas, cname, per, st, info, eff, img) VALUES(?,?,?,?,?,?,?);'
         db.query(sql,[data[i].cas, data[i].cname, data[i].per, data[i].st, data[i].info, data[i].eff , data[i].img] , (err, result)=>{
-            console.log(result)
+            //console.log(result)
         })
     }
     res.send('OK');
@@ -854,14 +835,14 @@ app.post('/api/uploadCsv/', (req, res) => {
 app.post('/api/getUser/', (req, res) => {
     const email = req.body.email;
     const password = crypto.createHash("sha1").update(req.body.password).digest("hex")
-    console.log(email + " " + password)
+    //console.log(email + " " + password)
     const sql = `SELECT em_fullname,em_icon , status , organization_id , em_email FROM employee WHERE em_email = '${email}' AND em_pass = '${password}' `
     db.query(sql,(err, result) =>{
         if(err) {
-            console.log(err)
+          //console.log(err)
         }
         else {
-            console.log(result)
+           //console.log(result)
             res.send(result)
         }
 
@@ -913,7 +894,7 @@ app.post('/api/AddminAdd' , (req, res) => {
 
         const sql = 'INSERT INTO chemical(cas, cname, per, st , info, eff, img) VALUES (?,?,?,?,?,?,?);'
             db.query(sql,[data.cas, data.cname , data.per , data.st , data.info , data.eff , data.img ] , (err, result)=>{
-                console.log(result.affectedRows);
+               // console.log(result.affectedRows);
             })
 
     res.send('OK');
@@ -926,9 +907,9 @@ app.post('/api/AddminAdd' , (req, res) => {
 app.post('/api/setdata' , (req , res) => {
     const data = req.body.data
     const st = req.body.st
-    console.log(data)
-    console.log(st)
-    console.log(data.length)
+   // console.log(data)
+   // console.log(st)
+   // console.log(data.length)
     let count = 0
 
     for(let i =0; i< data.length; i++){
@@ -946,7 +927,7 @@ app.post('/api/setdata' , (req , res) => {
         // console.log(count)
 
     }
-    console.log(count)
+   // console.log(count)
     res.send('OK');
 })
 
@@ -956,18 +937,18 @@ app.post('/api/setsignUp' , jsonParser, async (req , res ) => {
     const firstName = req.body.firstname
     const lastName = req.body.lastname
     const email = req.body.email
-    console.log(req.body)
+   // console.log(req.body)
     const password = crypto.createHash("sha1").update(req.body.password).digest("hex")
     const repassword = req.body.repassword
     const fullname = firstName +" "+lastName
 
-    console.log(fullname + " " + email + " " + password +" " + repassword)
+   // console.log(fullname + " " + email + " " + password +" " + repassword)
 
     const sql = `INSERT INTO  employee(em_email , em_fullname , em_icon , em_pass , status , organization_id ) VALUES(?,?,?,?,?,?);  `
     db.query(sql,[email , fullname ,"/pandaU.png" , password , "U" , "-" ] , (err, result) => {
        // res.status(201).json("Signup Successfully")
-       console.log("singup :")
-       console.log(result)
+      // console.log("singup :")
+      // console.log(result)
        if(err) {
         console.error(err)
         return res.status(500).json({error: "have someing worng"})
@@ -1012,7 +993,7 @@ app.post('/api/checkMail',(req,res)=>{
     const sql = "SELECT em_email FROM employee WHERE em_email = ?"
     db.query(sql , [email] , (err , result)=>{
         if(err) {
-            console.log(err)
+          //  console.log(err)
         }
         else {
             if(result.length > 0 ){
@@ -1021,7 +1002,7 @@ app.post('/api/checkMail',(req,res)=>{
             else if(result.length <=0) {
                 res.send("not-Dupicate")
             }
-            console.log(result)
+           // console.log(result)
            
         }
     })
@@ -1035,8 +1016,8 @@ app.post('/api/searchBybodypart', (req,res) => {
     //bodypart LIKE '%skin%'
     //OR bodypart LIKE '%face%' OR bodypart LIKE '%body%' OR bodypart LIKE '%powder%' OR bodypart LIKE '%hand%';
     const dd = req.body
-    console.log("........")
-    console.log(dd)
+   // console.log("........")
+   // console.log(dd)
     let bodypart = ""
     let queryWord = "SELECT * FROM chemical WHERE "
     for(let i = 0 ; i< dd.length; i++) {
@@ -1050,14 +1031,14 @@ app.post('/api/searchBybodypart', (req,res) => {
             queryWord += ";";
         }
     }
-    console.log(queryWord)
+   // console.log(queryWord)
     //
     const sql = queryWord
     db.query(sql, (err , result) => {
-        console.log(result);
+      //  console.log(result);
         res.send(result)
     })
-    console.log(queryWord)
+   // console.log(queryWord)
 })
 
 //Show data by fillter data
@@ -1066,8 +1047,8 @@ app.post('/api/searchBybodypartEdit', (req,res) => {
     //bodypart LIKE '%skin%'
     //OR bodypart LIKE '%face%' OR bodypart LIKE '%body%' OR bodypart LIKE '%powder%' OR bodypart LIKE '%hand%';
     const dd = req.body.fillterg
-    console.log("........")
-    console.log(dd)
+   // console.log("........")
+   // console.log(dd)
     let bodypart = ""
     let queryWord = "SELECT * FROM chemical WHERE "
     for(let i = 0 ; i< dd.length; i++) {
@@ -1081,21 +1062,21 @@ app.post('/api/searchBybodypartEdit', (req,res) => {
             queryWord += ";";
         }
     }
-    console.log(queryWord)
+   // console.log(queryWord)
     //
     const sql = queryWord
     db.query(sql, (err , result) => {
-        console.log(result);
+       // console.log(result);
         res.send(result)
     })
-    console.log(queryWord)
+    //console.log(queryWord)
 })
 
 
 // save file from user check
 app.post('/api/savefile' , (req , res) => {
-    console.log("saveFile from data ")
-     console.log(req.body)
+    //console.log("saveFile from data ")
+     //console.log(req.body)
     const uname = req.body.uname
     const gname = req.body.gname
     const dd  = req.body.dd
@@ -1106,7 +1087,7 @@ app.post('/api/savefile' , (req , res) => {
     let month = String(date.getMonth()+1).padStart(2,"0");
     let year = date.getFullYear()
     let udate = day+ "-" + month + "-" + year;
-    console.log(req.body.email)
+    //console.log(req.body.email)
     let str = ""
     for(let i = 0 ; i< fillterg.length ; i++){
         str+=fillterg[i]+","
@@ -1115,13 +1096,13 @@ app.post('/api/savefile' , (req , res) => {
 
     let newstr = str.substring(0,str.length-1)
 
-    console.log(newstr)
+    //console.log(newstr)
 
 
     const sql =  'DELETE FROM chemicalgroup WHERE groupname =  "' + gname + '"'
     db.query(sql,(err, result)=>{
         if(err)
-            console.log(result)
+           console.log(result)
     })
     // let i = 0
     // console.log("uname = " + uname)
@@ -1130,7 +1111,7 @@ app.post('/api/savefile' , (req , res) => {
     for( let i = 0 ; i < dd.length ; i++ ){
         const sql1 = 'INSERT INTO chemicalgroup (cas , cname , cmname , per , st , img , des, bodypart , color , groupname , per1 , uname , udate , fillterg , email) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); '
         db.query(sql1,[dd[i].cas , dd[i].cname , dd[i].cmname , dd[i].per , dd[i].st , "-" , "-" , dd[i].bodypart , dd[i].color , gname , dd[i].per1 , uname , date , newstr , email ] , (err, result)=>{
-           console.log(result)
+          // console.log(result)
         })
 
     }
@@ -1141,7 +1122,7 @@ app.post('/api/savefile' , (req , res) => {
 
 // get user file name
 app.post('/api/getGroupName',(req,res)=>{
-    console.log(req.body)
+   // console.log(req.body)
     const email = req.body.email
     const sql = 'SELECT DISTINCT groupname, udate FROM chemicalgroup WHERE email = ? ORDER BY udate ASC';
     // Assuming you're using a database library with support for parameterized queries
@@ -1151,7 +1132,7 @@ app.post('/api/getGroupName',(req,res)=>{
       else {
         res.send(result)
       }
-      console.log(result);
+      //console.log(result);
     });
 })
 
@@ -1161,7 +1142,7 @@ app.post('/api/getGroupNamebyname' , (req,res) => {
     const gname = req.body.gname
     const sql = 'SELECT * FROM chemicalgroup WHERE groupname = "' + gname + '"';
     db.query(sql,(err, result) =>{
-        console.log(result);
+       // console.log(result);
         res.send(result)
     })
 
@@ -1192,7 +1173,7 @@ app.get('/api/annex', jsonParser, (req, res) => {
 app.get('/api/getalldata' , (req , res ) => {
     const sql =  'SELECT * FROM chemical'
     db.query(sql , (err , result) => {
-        console.log(result);
+      //console.log(result);
         res.send(result)
     })
 
@@ -1203,7 +1184,7 @@ app.post('/api/getalldataAddminEdit' , (req , res ) => {
     const no = req.body.no
     const sql =  'SELECT * FROM chemical WHERE no ='+ no
     db.query(sql , (err , result) => {
-        console.log(result);
+        //console.log(result);
         res.send(result)
     })
 
@@ -1221,42 +1202,42 @@ app.post('/api/getalldataAddminUpdateByType' , (req , res ) => {
     const per = req.body.per
     const st = req.body.st
     const des = req.body.des
-    console.log( [cas , cmname , per , st , des , no ] );
+   // console.log( [cas , cmname , per , st , des , no ] );
     //            UPDATE chemical SET cas=?,cmname=?,per=?,st=?,des=? WHERE no = ?
     const sql =  'UPDATE chemical set cas = ? , cmname = ? , per = ? , st = ? , des = ? WHERE no = ? '
 
     db.query(sql , [cas , cmname , per , st , des , no ] , (err , result) => {
-        console.log(result);
+       // console.log(result);
         res.send(result)
      })
 
 })
 
-// app.post('/api/getdatachangegroup' , (req , res) => {
-//     const no = req.body
+app.post('/api/getdatachangegroup' , (req , res) => {
+    const no = req.body
 
-//     let num = ""
-//     let queryWord = "SELECT * FROM chemical WHERE "
+    let num = ""
+    let queryWord = "SELECT * FROM chemical WHERE "
 
 
-//     for(let i = 0 ; i<no.length ; i++){
-//        num = " no = " + no[i] + " "
-//         queryWord += num
-//         if(i < no.length - 1) {
-//             queryWord += " OR "
-//         }
-//         else {
-//             queryWord += ";";
-//         }
-//     }
-//     console.log(queryWord)
-//     const sql = queryWord
-//     db.query(sql , (err , result) => {
-//         console.log(result);
-//         res.send(result)
-//     })
+    for(let i = 0 ; i<no.length ; i++){
+       num = " no = " + no[i] + " "
+        queryWord += num
+        if(i < no.length - 1) {
+            queryWord += " OR "
+        }
+        else {
+            queryWord += ";";
+        }
+    }
+    console.log(queryWord)
+    const sql = queryWord
+    db.query(sql , (err , result) => {
+        console.log(result);
+        res.send(result)
+    })
 
-// })
+})
 
 //Admin chang annex
 app.post('/api/saveStfromchangegroup' , (req , res) => {
@@ -1268,7 +1249,7 @@ app.post('/api/saveStfromchangegroup' , (req , res) => {
         const sql = "UPDATE chemical SET st = ? WHERE no = ?";
         db.query(sql , [st , num[i]], function (err, result) {
           if (err) throw err;
-          console.log(result.affectedRows + " record(s) updated");
+         // console.log(result.affectedRows + " record(s) updated");
         });
 
     }
@@ -1280,7 +1261,7 @@ app.post('/api/saveStfromchangegroup' , (req , res) => {
 app.get('/api/showdataUV' , (req , res) => {
     const sql = "SELECT COUNT(*) as num FROM `chemical` WHERE st = 6"
     db.query(sql , (err , result) => {
-        console.log(result);
+       // console.log(result);
         res.send(result)
     })
 
@@ -1289,7 +1270,7 @@ app.get('/api/showdataUV' , (req , res) => {
 app.get('/api/showdataAn2' , (req , res) => {
     const sql = "SELECT COUNT(*) as num FROM `chemical` WHERE st = 2"
     db.query(sql , (err , result) => {
-        console.log(result);
+       // console.log(result);
         res.send(result)
     })
 })
@@ -1297,7 +1278,7 @@ app.get('/api/showdataAn2' , (req , res) => {
 app.get('/api/showdataST0' , (req , res) => {
     const sql = "SELECT COUNT(*) as num FROM `chemical` WHERE st = 0"
     db.query(sql , (err , result) => {
-        console.log(result);
+     //   console.log(result);
         res.send(result)
     })
 })
@@ -1305,7 +1286,7 @@ app.get('/api/showdataST0' , (req , res) => {
 app.get('/api/showdataAn4' , (req , res) => {
     const sql = "SELECT COUNT(*) as num FROM `chemical` WHERE st = 4"
     db.query(sql , (err , result) => {
-        console.log(result);
+      //  console.log(result);
         res.send(result)
     })
 })
@@ -1313,7 +1294,7 @@ app.get('/api/showdataAn4' , (req , res) => {
 app.get('/api/showdataAn5' , (req , res) => {
     const sql = "SELECT COUNT(*) as num FROM `chemical` WHERE st = 5"
     db.query(sql , (err , result) => {
-        console.log(result);
+     //   console.log(result);
         res.send(result)
     })
 })
@@ -1321,14 +1302,14 @@ app.get('/api/showdataAn5' , (req , res) => {
 app.get('/api/showdataAn0' , (req , res) => {
     const sql = "SELECT COUNT(*) as num FROM `chemical` WHERE st != 2"
     db.query(sql , (err , result) => {
-        console.log(result);
+     //   console.log(result);
         res.send(result)
     })
 })
 
 app.get('/api/annex/search', jsonParser, (req, res) => {
     const name = "%"+req.query.name+"%"
-    console.log(name)
+  //  console.log(name)
     db.execute(
         'SELECT * FROM chemical WHERE cmname LIKE ? OR cas LIKE ?',
         [name,name],
@@ -1385,7 +1366,7 @@ app.get('/api/fetchData', async (req, res) => {
     console.log(dataAll)
 res.send(dataAll);
 } catch (error) {
-  console.error('Error fetching data:', error);
+ // console.error('Error fetching data:', error);
   res.status(500).json({ error: 'Internal Server Error' });
 }
 });
@@ -1393,7 +1374,7 @@ res.send(dataAll);
 
 
 app.post('/api/setsignUpA' , jsonParser, (req , res ) => {
-    console.log(req.body)
+   // console.log(req.body)
     const fullname = req.body.em_fullname
     const email = req.body.em_email
     const st = req.body.status
@@ -1402,7 +1383,7 @@ app.post('/api/setsignUpA' , jsonParser, (req , res ) => {
 
 
 
-    console.log(fullname + " " + email + " " + password +" " +" "+st +" "+ oid)
+   // console.log(fullname + " " + email + " " + password +" " +" "+st +" "+ oid)
 
     const sql = `INSERT INTO  employee(em_email , em_fullname , em_icon , em_pass , status , organization_id) VALUES(?,?,?,?,?,?);  `
     db.query(sql,[email , fullname ,"/pandaA.png" , password , st , oid ] , (err, result) => {
@@ -1416,10 +1397,10 @@ app.post('/api/setsignUpA' , jsonParser, (req , res ) => {
 // get user Team ID
 app.post('/api/getorId/', (req, res) => {
     const orid = req.body.data
-    console.log(orid)
+   // console.log(orid)
     const sql = `SELECT * FROM employee WHERE organization_id	= ${orid}  `
     db.query(sql,(err, result) =>{
-        console.log(result)
+      //  console.log(result)
         res.send(result)
     })
 })
@@ -1429,7 +1410,7 @@ app.get('/api/getuserAs/', (req, res) => {
 
     const sql = `SELECT * FROM employee WHERE status = "A" OR status = "S"  `
     db.query(sql,(err, result) =>{
-        console.log(result)
+      //  console.log(result)
         res.send(result)
     })
 })
@@ -1437,11 +1418,11 @@ app.get('/api/getuserAs/', (req, res) => {
 // delete user by addmin or S
 app.post('/api/deluserAS' , (req , res) => {
     const no = req.body.data
-    console.log(no)
+   // console.log(no)
 
     const sql = 'DELETE FROM `employee` WHERE no = ' + no
     db.query(sql,(err, result) =>{
-        console.log(result)
+        //console.log(result)
         res.send(result)
     })
 })
@@ -1451,11 +1432,11 @@ app.post('/api/searchAll', (req,res) => {
     //SELECT * FROM chemical WHERE
     //bodypart LIKE '%skin%'
     //OR bodypart LIKE '%face%' OR bodypart LIKE '%body%' OR bodypart LIKE '%powder%' OR bodypart LIKE '%hand%';
-    console.log("........")
+    //console.log("........")
     let bodypart = ""
     let sql = "SELECT * FROM chemical  "
     db.query(sql, (err , result) => {
-        console.log(result);
+       // console.log(result);
         res.send(result)
     })
 
@@ -1463,21 +1444,21 @@ app.post('/api/searchAll', (req,res) => {
 
 //send Notification Index Page
 app.post('/api/sendNotification' , (req,res) => {
-    console.log("send Notification")
+    //console.log("send Notification")
 
-   console.log(req.body)
+   //console.log(req.body)
    const orid = req.body.orid
    if(orid === "-"){
     res.status(200).send('Notthing' );
    }
    else {
-    console.log("that else")
+   // console.log("that else")
    const sql = 'SELECT email , fda_license,expdate FROM product WHERE expdate <= CURDATE() + INTERVAL 1 MONTH AND organization_id = ?';
 
     db.query(sql , [orid], (err , result) => {
         if (err){
-            console.log("go that now")
-            console.log("Error " , err)
+           // console.log("go that now")
+          //  console.log("Error " , err)
         }
         else {
             console.log(result)
@@ -1499,7 +1480,7 @@ const chcekFdaExp = async (e) => {
     try {
         const response = await fetch('http://pertento.fda.moph.go.th/FDA_SEARCH_CENTER/PRODUCT/export_cmt_detail.aspx?regnos='+fda);
         const data = await response.text();
-          console.log(data)
+         // console.log(data)
         //console.log(data)
         const $ = cheerio.load(data);
      
@@ -1524,7 +1505,7 @@ const chcekFdaExp = async (e) => {
           dataAll.push("N/A")
          }
       }
-      console.log(dataAll)
+      //console.log(dataAll)
   res.send(dataAll);
   } catch (error) {
     console.error('Error fetching data:', error);
@@ -1549,10 +1530,10 @@ app.post('/api/productData' , (req, res) => {
 
         db.query(sql, [id], (err, result) => {
             if (err) {
-                console.log(err);
+              //  console.log(err);
                 res.status(500).json({ error: 'Internal Server Error' });
             } else {
-                console.log('Query Result:', result);
+               // console.log('Query Result:', result);
                 res.send(result)
             }
         });
@@ -1566,8 +1547,8 @@ app.post('/api/productData' , (req, res) => {
 
 // upload and set id === organization_id  if not set organization_id  = en_email
 app.post('/api/pifDataEmail' , (req, res) => {
-    console.log("PifData")
-    console.log(req.body.data)
+   // console.log("PifData")
+   // console.log(req.body.data)
     const id = req.body.data.trim()
 
     if(id){
@@ -1616,8 +1597,8 @@ const sendEmailNotifications=() => {
         }
 
         else if (result.length > 0 ){
-            console.log('Result from database :', result);
-            console.log("Ok")
+            //console.log('Result from database :', result);
+           // console.log("Ok")
 
                 //console.log(result[0].em_email)
                 //console.log(result.length)
@@ -1631,13 +1612,13 @@ const sendEmailNotifications=() => {
                     };
 
                  sendEmail(message)
-                   console.log(message)
+                  // console.log(message)
                 }
 
 
         }
         else {
-            console.log("No expDate")
+            //console.log("No expDate")
         }
     })
 //})
@@ -1664,7 +1645,7 @@ const sendEmail = (message) => {
                        // return res.status(201).json({ msg: "Email has been sent, and signup was successful" });
                     })
                     .catch(error => {
-                        console.error(error);
+                       // console.error(error);
                        // return res.status(500).json({ error: "Error sending email" });
                     });
 }
@@ -1701,7 +1682,7 @@ app.post("/api/pifInfo" , (req , res) => {
      const sql = 'SELECT em_email FROM pif_storage WHERE em_email = ?'
      db.query(sql ,[email], (err , result) => {
          if(err){
-             console.log(err)
+            /// console.log(err)
          }
          else {
              res.send(result)
@@ -1746,7 +1727,7 @@ app.get('/api/getuserTeam/', (req, res) => {
 
     const sql = `SELECT * FROM employee WHERE status = "U"  && organization_id = "-" `
     db.query(sql,(err, result) =>{
-        console.log(result)
+        //console.log(result)
         res.send(result)
     })
 })
@@ -1765,8 +1746,8 @@ app.post('/api/updateteam', (req, res) => {
     const team = req.body.data;
     const email = req.body.email;
 
-    console.log(team);
-    console.log(email)
+    //console.log(team);
+   // console.log(email)
     // const sql = 'UPDATE employee SET organization_id = ? , status = ?  WHERE em_email = ?';
     // db.query(sql, [team, email , "S"], (err, result) => {
     //     if (err) {
@@ -1793,10 +1774,10 @@ app.post('/api/updateteam', (req, res) => {
 const sql = 'UPDATE employee SET organization_id = ?, status = ? WHERE em_email = ?';
 db.query(sql, [team, "S", email], (err, result) => {
     if (err) {
-        console.log(err);
+       // console.log(err);
         res.status(500).send('Internal Server Error');
     } else {
-        console.log(result);
+       // console.log(result);
         res.send(result);
     }
 });
@@ -1814,7 +1795,7 @@ app.post('/api/updateStutus', (req, res) => {
         const sql = 'UPDATE employee SET organization_id = ? , status = ? WHERE no = ?';
         db.query(sql, [team,st[i] , no[i]], (err, result) => {
                 if (err) {
-                    console.log(err);
+                   // console.log(err);
                     res.status(500).send('Internal Server Error');
                 } else {
                     res.send(result);
@@ -1845,7 +1826,7 @@ app.post('/api/updateManageUser', (req, res) => {
         const sql = 'UPDATE employee SET organization_id = ? , status = ? WHERE no = ?';
         db.query(sql, [team,st , no], (err, result) => {
                 if (err) {
-                    console.log(err);
+                  //  console.log(err);
                     res.status(500).send('Internal Server Error');
                 } else {
                     res.send(result);
@@ -1866,7 +1847,7 @@ app.post('/api/updateManageUserAdmin', (req, res) => {
         const sql = 'UPDATE employee SET organization_id = ? , status = ? WHERE no = ?';
         db.query(sql, ["-",st , no], (err, result) => {
                 if (err) {
-                    console.log(err);
+                  //  console.log(err);
                     res.status(500).send('Internal Server Error');
                 } else {
                     res.send(result);
@@ -1889,9 +1870,9 @@ app.post('/api/getuserTeamManage', (req, res) => {
        // console.log("is "+id[i])
         ida += id[0].organization_id
 
-    console.log("is a New ida : "+ida)
+   // console.log("is a New ida : "+ida)
 
-  console.log(id)
+ // console.log(id)
     const sql = `SELECT em_fullname , no ,status FROM employee WHERE  organization_id = ? `
     db.query(sql,[ida],(err, result) =>{
       //  console.log(id)
@@ -1919,11 +1900,11 @@ app.post('/api/getuserTeamMangeByemail', (req, res) => {
 
 //Manage User for Delete from user group and Pif
 app.post('/api/getuserDelete', (req, res) => {
-    console.log("A getTeammanageDeltete")
+    //console.log("A getTeammanageDeltete")
     const id = req.body.id
     const no = req.body.data
-    console.log(req.body.data)
-   console.log(id)
+    //console.log(req.body.data)
+  // console.log(id)
    const sql = `UPDATE employee SET organization_id  = NULL , status = ?  WHERE no = ?`;
     db.query(sql , ["U",no ] ,(err , result) => {
         if(err){
@@ -1949,11 +1930,11 @@ app.post('/api/getuserDelete', (req, res) => {
 });
 
 app.post('/api/getuserDeleteAdmin', (req, res) => {
-    console.log("A getTeammanageDelteteAdmin")
+    //console.log("A getTeammanageDelteteAdmin")
     const id = req.body.id
     const no = req.body.data
-    console.log(req.body.data)
-   console.log(id)
+   // console.log(req.body.data)
+   //console.log(id)
    const sql = `DELETE FROM employee WHERE no = ?`;
     db.query(sql , [no ] ,(err , result) => {
         if(err){
@@ -1979,7 +1960,7 @@ app.post('/api/getuserDeleteAdmin', (req, res) => {
 });
 
 app.post('/api/changeNameTeam' , (req , res) => {
-    console.log("changeNaem na Ja")
+    //console.log("changeNaem na Ja")
   //  const teamS = req.session.orid = req.body.data;
     const team = req.body.data
     const id = req.body.id
@@ -1987,7 +1968,7 @@ app.post('/api/changeNameTeam' , (req , res) => {
     const sql = `UPDATE employee SET organization_id = ? WHERE organization_id = ?`;
     db.query(sql , [team , id ] ,  (err , result) => {
         if(err){
-            console.log(err)
+            //console.log(err)
         }
         else {
             res.status(200).send('update')
@@ -1998,14 +1979,14 @@ app.post('/api/changeNameTeam' , (req , res) => {
     const sql1 = `UPDATE pif SET organization_id = ? WHERE organization_id = ?`;
     db.query(sql1 , [team , id ] ,  (err , result) => {
         if(err){
-            console.log(err)
+            //console.log(err)
         }
     })
 
     const sql2 = `UPDATE product SET organization_id = ? WHERE organization_id = ?`;
     db.query(sql2 , [team , id ] ,  (err , result) => {
         if(err){
-            console.log(err)
+            //console.log(err)
         }
     })
 
@@ -2037,8 +2018,8 @@ const storage = multer.diskStorage({
 
 //Add product
 app.post('/api/storageProduct',(req,res)=>{
-    console.log("Product")
-    console.log(req.body)
+    //console.log("Product")
+   // console.log(req.body)
 
     for(let i=0 ;i<req.body.length ; i++){
         if(req.body[i]==="N/A"){
@@ -2062,9 +2043,9 @@ app.post('/api/storageProduct',(req,res)=>{
 
 
 
-    console.log(id)
+    //console.log(id)
 
-    console.log(fda_num)
+    //console.log(fda_num)
 
     if(photo === null){
         photo = "-"
@@ -2087,7 +2068,7 @@ app.post('/api/storageProduct',(req,res)=>{
     const sql = 'INSERT INTO  product (locationstatus, type, typeOfGoods, cosnameC, cosname, expdate, bodyPart, company, fcompany, fda_license, img_path , organization_id ,status , email ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)'
     db.query(sql , [locationStatus,type,typeOfGoods,cosnameC,cosname,exp,bodyPart,company,fcompany,fda_num,"-",id,"0" , email] ,(err , result)=>{
         if(err) {
-            console.log(err)
+            //console.log(err)
         }
         else {
             res.send("OK")
@@ -2099,17 +2080,17 @@ app.post('/api/storageProduct',(req,res)=>{
 
 //Delete Product from Productlist
 app.post('/api/userDeleteProduct' , (req,res)=>{
-    console.log("No...")
+    //console.log("No...")
     const id = req.body.id
     const no =req.body.data
     const fda = req.body.fda_num
     const status = req.body.status
-    console.log(req.body)
+    console.log("is all data from userdeleteProduct",req.body)
 
     const sql = 'DELETE FROM product WHERE fda_license = ? AND organization_id = ? '
     db.query(sql,[fda , id],(error , result)=>{
         if(error){
-            console.log(error)
+            //console.log(error)
         }
         else{
             res.status(200).send("DELETEED")
@@ -2120,7 +2101,7 @@ app.post('/api/userDeleteProduct' , (req,res)=>{
         const sql1 = 'DELETE FROM pif WHERE fda_license = ?'
         db.query(sql1,[fda] ,(error , result) =>{
             if(error){
-                console.log(error)
+                //console.log(error)
             }
             else{
                 res.status(200).send("DELETEED")
@@ -2139,10 +2120,10 @@ app.post('/api/DeleteGroupName', (req, res) => {
     const sql = 'DELETE FROM chemicalgroup WHERE email = ? AND groupname = ?';
     db.query(sql, [email, groupName], (err, result) => {
         if (err) {
-            console.log(err);
+            //console.log(err);
             res.status(500).send("Internal Server Error");
         } else {
-            console.log(result);
+            //console.log(result);
             res.send("Delete");
         }
     });
@@ -2156,10 +2137,10 @@ app.post('/api/sort', (req , res) => {
         const sql = 'SELECT * FROM product WHERE organization_id = ? ORDER BY expdate DESC'
         db.query(sql , [id], (err , result) => {
             if (err){
-                console.log("Error " , err)
+                //console.log("Error " , err)
             }
             else {
-                console.log(result)
+                //console.log(result)
                 res.send(result)
             }
         })
@@ -2169,10 +2150,10 @@ app.post('/api/sort', (req , res) => {
         const sql = 'SELECT * FROM product WHERE organization_id = ? ORDER BY expdate ASC'
         db.query(sql , [id], (err , result) => {
             if (err){
-                console.log("Error " , err)
+                //console.log("Error " , err)
             }
             else {
-                console.log(result)
+                //console.log(result)
                 res.send(result)
             }
         })
@@ -2182,10 +2163,10 @@ app.post('/api/sort', (req , res) => {
         const sql = 'SELECT * FROM product WHERE organization_id = ? ORDER BY cosname ASC'
         db.query(sql , [id], (err , result) => {
             if (err){
-                console.log("Error " , err)
+              //console.log("Error " , err)
             }
             else {
-                console.log(result)
+                //console.log(result)
                 res.send(result)
             }
         })
@@ -2195,17 +2176,21 @@ app.post('/api/sort', (req , res) => {
         const sql = 'SELECT * FROM product WHERE organization_id = ? ORDER BY cosname DESC'
         db.query(sql , [id], (err , result) => {
             if (err){
-                console.log("Error " , err)
+                //console.log("Error " , err)
             }
             else {
-                console.log(result)
+               // console.log(result)
                 res.send(result)
             }
         })
     }
+})
 
 
+app.post('/api/getnotficationPIF' , (req , res) => {
+    const id = req.body.data
 
+    
 })
 
 

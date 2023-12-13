@@ -35,14 +35,19 @@ export default function productslist() {
 
   useEffect(() => {
     let name = sessionStorage.getItem("uname")
+    let email = localStorage.getItem("uemail")
     setUname(name)
     console.log(sessionStorage.getItem("orid"));
     let ida = sessionStorage.getItem("orid");
 
+    // const idget = async () => {
+
+    //   const res = await Axios.post("",load) 
+    // }
  
     const fetchData = async () => {
     //  console.log("kkk")
-     console.log(ida)
+     console.log('ida', ida);
       if(ida === "-"){
         // alert("ok")
         router.push("/team/team")
@@ -138,20 +143,20 @@ export default function productslist() {
   };
 
 
-  const handledelete =(e,idx,status,fda_license) => {
-    removeNo(e,status,fda_license)
+  const handledelete =(no,idx,status,fda_license) => {
+    removeNo(no,status,fda_license)
     removedata(idx)
   }
 
-  const removedata = (e) => {
-    data.splice(e,1)
+  const removedata = (idx) => {
+    data.splice(idx,1)
     setData([...data])
     console.log(data)
   }
 
-  const removeNo = async (e,status,fda_license) => {
+  const removeNo = async (no,status,fda_license) => {
     let load = {
-        data : e ,
+        data : no,
         id : id ,
         fda_num : fda_license ,
         status : status
@@ -330,7 +335,7 @@ export default function productslist() {
 
       
             
-            <Typography variant='h5'>รายการผลิตภัณฑ์ ของ {id}</Typography>
+            <Typography variant='h5'>รายการผลิตภัณฑ์ ของ { JSON.stringify(id)}</Typography>
         
       </Box>
       <Box display="flex" alignItems="center">
