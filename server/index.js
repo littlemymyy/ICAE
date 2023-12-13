@@ -2,11 +2,6 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const fs = require('fs').promises;
-const csv = require('csv-parser')
-const {convertArrayToCSV} = require('convert-array-to-csv')
-const xml2js = require('xml2js')
-const parser = new xml2js.Parser({attrkey : "ATTR"})
-const DomParser = require('dom-parser')
 const jsonParser = bodyParser.json()
 const mysql = require('mysql2')
 const crypto = require('crypto')
@@ -17,24 +12,21 @@ const pdfMake = require('pdfmake/build/pdfmake');
 const vfsFonts = require('pdfmake/build/vfs_fonts');
 const path = require('path');
 const nodemailer = require("nodemailer");
-const axios = require('axios');
-const { error } = require('console')
-const cron = require('node-cron');
 const http = require('http');
 const socketIo = require('socket.io');
 const {EMAIL , PASSWORD} = require('./env.js')
 const PDFMerger = require('pdf-merger-js');
+const jwt = require('jsonwebtoken');
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server);
+const secret = 'sirirat';
+
 app.use(bodyParser.json({limit: '35mb'}));
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended: true , limit : "35mb" , parameterLimit : 50000 }));
-//app.use(fileupload());
-//app.use(express.static("files"));
-const secretKey = crypto.randomBytes(32).toString('hex');
+
 
 
 app.use('/uploads', express.static('uploads'));
@@ -52,8 +44,6 @@ const pdfStorage = multer.diskStorage({
       cb(null, 'uploads/');
     },
     filename:  ( req, file, cb ) => {
-        //req.body is empty...
-        //How could I get the new_file_name property sent from client here?
         console.log(file)
         cb( null, Date.now() + '-' + file.originalname);
     }
@@ -63,14 +53,9 @@ const pdfUpload = multer({ storage: pdfStorage });
 
 //not use
 app.post('/generate-pdf', pdfUpload.single('file'), (req, res) => {
-    console.log("Name.....")
-    let originalFileName = req.files.originalname
-    console.log(originalFileName)
-    res.json({ filename: req.file.filename })
     const content = req.body.text;
-   // console.log(content)
-   console.log("req file name")
-    console.log(req.file.filename)
+    console.log(content)
+
     try {
         pdfMake.fonts = {
             THSarabunNew: {
@@ -133,16 +118,14 @@ app.post('/generate-pdf', pdfUpload.single('file'), (req, res) => {
 });
 
 //not use
-app.post('/mergePdf', pdfUpload.any(), (req, res) => {
+app.post('/api/mergePdf', pdfUpload.any(), (req, res) => {
     const merger = new PDFMerger();
     const files = req.files;
-   // console.log(files);
+    console.log(files);
 
     try {
         (async () => {
             for(let i = 0 ; i < files.length ; i++){
-                //console.log("file [i]")
-               // console.log(files[i])
                 await merger.add(files[i].path);
             }
             await merger.save('uploads/mergedpdf.pdf').then((pdfBuffer) => {
@@ -155,131 +138,63 @@ app.post('/mergePdf', pdfUpload.any(), (req, res) => {
     }
 });
 
+app.post('/api/savePdf', pdfUpload.any(), (req, res) => {
+    const merger = new PDFMerger();
+
+    //for file
+    const files = req.files;
+    console.log(files)
+    // const filesPath = req.files.map(file => file.path.toString());
+    let pdfPath = [];
+    console.log("\n\n")
+    console.log(files[0].fieldname.toString())
+    console.log(files[1].fieldname.toString())
+
+    for (let i = 0; i < 14; i++) {
+        files.forEach(file => {
+            if (file.fieldname.toString() === `file${i+1}`) {
+                pdfPath.push(file.path.toString());
+        }});
+
+        if (pdfPath[i] === undefined) {
+            pdfPath.push('-');
+        }
+    }
+
+    console.log(pdfPath);
+
+
+
+    // //for text data
+    // const data = JSON.parse(req.body.data);
+
+
+    // console.log(files);
+
+    // try {
+    //     (async () => {
+    //         for(let i = 0 ; i < files.length ; i++){
+    //             await merger.add(files[i].path);
+    //         }
+    //         await merger.save('uploads/mergedpdf.pdf').then((pdfBuffer) => {
+    //             res.send(pdfBuffer);
+    //             });
+    //     })()
+    // } catch (error) {
+    //     console.error('Error merging PDFs:', error);
+    //     res.status(500).send('Internal Server Error');
+    // }
+});
+
 app.post('/api/submitPif', pdfUpload.any(), (req, res) => {
-  //     console.log("submit")
-   //console.log(req.files)
-   const file = req.files
- //  console.log("...................")
-   const files = req.body.data;
-   const filePaths = req.files.map(file => file.path.toString());
-  // console.log(files)
-
- //  console.log(filePaths);
-
-   const filea = filePaths[0] || "-";//fda
-   const fileb = filePaths[1] || "-";//Autorization
-   const filec = filePaths[2] || "-";//formu
-   const filed = filePaths[3] || "-";//label
-   const filee = filePaths[4] || "-";//manufu
-   const filef = filePaths[5] || "-";//Gmp
-   const fileg = filePaths[6] || "-";//eff
-   const fileh = filePaths[7] || "-";//efficent
-   const filei = filePaths[8] || "-";//spec
-   const filej = filePaths[9] || "-";//Coa
-   const filek = filePaths[10] || "-";//sds
-   const filel = filePaths[11] || "-";//master formula
-   const filem = filePaths[12] || "-";//Specification of cosmetic finished product)
-   const filen = filePaths[13] || "-";//Testing
-
-
-            // if(filea.length === 0) {
-            //     filea += "-"
-            // }
-            // else if(fileb.length === 0) {
-            //     fileb += "-"
-            // }
-            // else if(filec.length === 0) {
-            //     filec += "-"
-            // }
-            // else if(filed.length === 0) {
-            //     filed += "-"
-            // }
-            // else if(filee.length === 0) {
-            //     filee += "-"
-            // }
-            // else if(filea.length === 0) {
-            //     filea += "-"
-            // }
-            // else if(filef.length === 0) {
-            //     filef += "-"
-            // }
-            // else if(fileg.length === 0) {
-            //     fileg += "-"
-            // }
-            // else if(fileh.length === 0) {
-            //     fileh += "-"
-            // }
-            // else if(filei.length === 0) {
-            //     filei += "-"
-            // }
-            // else if(filej.length === 0) {
-            //     filej += "-"
-            // }
-            // else if(filek.length === 0) {
-            //     filek += "-"
-            // }
-            // else if(filel.length === 0) {
-            //     filel += "-"
-            // }
-
-            // console.log(filea.length);
-            // console.log(fileb);
-            // console.log(filec);
-
-//    const filea = file[0].path.toString()
-//    const fileb = file[1].path.toString()
-//    const filec = req.files[2].path.toString()
-//    const filed = req.files[3].path.toString()
-//    const filee = req.files[4].path.toString()
-//    const filef = req.files[5].path.toString()
-//    const fileg = req.files[6].path.toString()
-//    const fileh = req.files[7].path.toString()
-//    const filei = req.files[8].path.toString()
-//    const filej = req.files[9].path.toString()
-//    const filek = req.files[10].path.toString()
-//    const filel = req.files[11].path.toString()
-
-
-//  console.log(filea)
-//  console.log(fileb)
-//  console.log(filec)
-//  console.log(filed)
-//  console.log(filee)
-//  console.log(filef)
-//  console.log(fileg)
-//  console.log(fileh)
-//  console.log(filei)
-//  console.log(filej)
-//  console.log(filek)
-//  console.log(filel)
-
-
-   //console.log(files)
-
-
-
-
-
-
-
     try {
         let img_path = '';
         let pdf_path = '';
 
         (async () => {
-           // console.log("file sumitPDF")
-           console.log(JSON.parse(req.body.data))
+            console.log(JSON.parse(req.body.data))
             const data = JSON.parse(req.body.data);
-            console.log(data)
-
-            // for(let i = 0 ; i<data.length ; i++){
-            //     if(data[i]  === null || data[i] === " "){
-            //         data[i] = "-"
-            //     }
-
-            // }
-           // console.log(data)
-           // console.log(req.files.data)
+            // console.log(req.files.data)
             pdfMake.fonts = {
                 THSarabunNew: {
                     normal: 'THSarabun.ttf',
@@ -338,9 +253,8 @@ app.post('/api/submitPif', pdfUpload.any(), (req, res) => {
 
             //merge pdf
             const merger = new PDFMerger();
-          const files = req.files;
-            console.log("file AA")
-          console.log(files);
+            const files = req.files;
+            console.log(files);
 
             await merger.add(firstPath);
             try{
@@ -363,62 +277,25 @@ app.post('/api/submitPif', pdfUpload.any(), (req, res) => {
             console.log(pdfFileName)
             pdf_path = path.join('./uploads', `${pdfFileName}.pdf`);
 
-            // console.log(filea.length)
-            // console.log(fileb.length)
-            //  console.log(filec.length)
-            // console.log(filed.length)
-            // console.log(filee.length)
-            // console.log(filef.length)
-            // console.log(fileg.length)
-            // console.log(fileh.length)
-            // console.log(filei.length)
-            // console.log(filej.length)
-            // console.log(filek.length)
-            // console.log(filel.length)
 
-
-          //  console.log(data.fdadoc_date)
-
-
-
-          db.query( 'INSERT INTO pif( email, file_name, img_path, pdf_path, expdate, rec_create_when, organization_id, fda_license, fdadoc, letter_authorization, formula_doc , label_doc , manufacture_doc , gmp_iso, eff_report, efficient_report,spec ,coa,sds, masterformula, specification, testing_doc, status, fdadoc_date, letter_authorization_date, formula_doc_date , label_doc_date , manufacture_doc_date , gmp_iso_date, eff_report_date, efficient_report_date, sds_date, masterformula_date, specification_date, testing_doc_date ,coa_date) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
-          [data.email, data.filename, img_path, pdf_path, data.expdate, new Date(),data.id ,data.fda_num , filea , fileb , filec ,filed, filee,filef,fileg,fileh,filei ,filej ,filek ,filel,filem,filen,"1",data.fdadoc_date,data.letter_authorization_date,data.formula_doc_date , data.label_doc_date , data.manufacture_doc_date ,data.gmp_iso_date ,data.eff_report_date , data.efficient_report_date , data.sds_date , data.masterformula_date, data.specification_date , data.testing_doc_date ,data.coa ],
-          (err, result) => {
-          if(err) {
-              console.log(err)
-              res.json({status: "error", message: err});
-              return;
-          }
-          else {
-            console.log(result)
-              res.json({status: "ok", pdf_path: pdf_path, img_path: img_path});
-          }
-     })
-
-     //update product data
-     const sql = 'UPDATE product SET status = ? WHERE organization_id = ? AND fda_license = ?';
-     db.query(sql, ["1" ,data.id , data.fda_num ], (err, result) => {
-         if (err) {
-             console.error('Error updating product status:', err);
-
-         } else {
-             // Handle the result or send a success response
-             console.log(result)
-             //res.send('Update successful');
-         }
-     });
-
-  })()
-} catch (error) {
-  console.error('Error merging PDFs:', error);
-  res.status(500).send('Internal Server Error');
-}
-
-
+            db.query('INSERT INTO pif (email, file_name, img_path, pdf_path, expdate, rec_create_when) VALUES (?,?,?,?,?,?)',
+                [data.email, data.filename, img_path, pdf_path, data.expdate, new Date()],
+                (err, result) => {
+                if(err) {
+                    console.log(err)
+                    res.json({status: "error", message: err});
+                    return;
+                }
+                else {
+                    res.json({status: "ok", pdf_path: pdf_path, img_path: img_path});
+                }
+            })
+        })()
+    } catch (error) {
+        console.error('Error merging PDFs:', error);
+        res.status(500).send('Internal Server Error');
+    }
 })
-
-
-
 
 
 //// for now i not have Edit that this /api/submitPifEdit
@@ -851,7 +728,18 @@ app.post('/api/uploadCsv/', (req, res) => {
 
 /////////////////////////////////////////////////////////////////
 // ADMIN / USER LOGING
-app.post('/api/getUser/', (req, res) => {
+
+app.post('/api/authen', jsonParser , function (req, res, next) {
+    try {
+        var checktoken = req.headers.authorization.split(' ')[1];
+        var decoded = jwt.verify(checktoken, secret);
+        res.json({status:'ok', decoded});
+    } catch(err){
+        res.json({status:'error', message: err.message});
+    }
+})
+
+app.post('/api/getUser/', jsonParser, (req, res) => {
     const email = req.body.email;
     const password = crypto.createHash("sha1").update(req.body.password).digest("hex")
     console.log(email + " " + password)
@@ -860,15 +748,18 @@ app.post('/api/getUser/', (req, res) => {
         if(err) {
             console.log(err)
         }
+        else if(result.length === 0){
+            console.log("Login failed")
+            res.json({status: 'error' , message: 'login failed'});
+        }
         else {
             console.log(result)
-            res.send(result)
+            var token = jwt.sign({ userid: result[0].em_email }, secret , { expiresIn: '3h'}); //create token
+            res.json({status: 'ok' , message: 'login success', result: result, token: token });
         }
 
-
         if(result.length>0){
-
-
+            try{
             let config = {
                 host: 'smtp.gmail.com',
                 port: 587 ,
@@ -898,7 +789,9 @@ app.post('/api/getUser/', (req, res) => {
                     console.error(error);
                    /// return res.status(500).json({ error: "Error sending email" });
                 });
-
+            }catch(err){
+                console.log(err)
+            }
         }
 
     })
@@ -2084,9 +1977,6 @@ app.post('/api/changeNameTeam' , (req , res) => {
 
 })
 
-
-
-
 const storage = multer.diskStorage({
     destination:  (req, file, cb) => {
       cb(null, 'uploads/'); // Destination folder for uploaded files
@@ -2105,71 +1995,6 @@ const storage = multer.diskStorage({
   });
 
 
-
-
-
-//Add product
-app.post('/api/storageProduct',(req,res)=>{
-    console.log("Product")
-    console.log(req.body)
-
-    for(let i=0 ;i<req.body.length ; i++){
-        if(req.body[i]==="N/A"){
-            req.body[i] === "-"
-        }
-    }
-    const status = req.body.status
-    const locationStatus = req.body.locationstatus
-    const type = req.body.type
-    const typeOfGoods = req.body.typeOfGoods
-    const cosnameC = req.body.cosnameC
-    const cosname = req.body.cosname
-    const expdate = req.body.expdate
-    const bodyPart = req.body.bodyPart
-    const company = req.body.company
-    const fcompany = req.body.fcompany
-    const fda_num = req.body.fda_num
-    let photo = req.body.photo
-    const id = req.body.ordid
-    const email = req.body.email
-
-
-
-    console.log(id)
-
-    console.log(fda_num)
-
-    if(photo === null){
-        photo = "-"
-    }
-
-
-
-    let arr = []
-    const str = expdate
-    arr.push(str.split("/"))
-    console.log(arr)
-    let year1 = parseInt(arr[0][2])-543
-    let month1 = parseInt(arr[0][1])-1
-    let date1 = parseInt(arr[0][0])
-
-    let exp = new Date(year1,month1,date1)
-
-    console.log(exp)
-
-    const sql = 'INSERT INTO  product (locationstatus, type, typeOfGoods, cosnameC, cosname, expdate, bodyPart, company, fcompany, fda_license, img_path , organization_id ,status , email ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)'
-    db.query(sql , [locationStatus,type,typeOfGoods,cosnameC,cosname,exp,bodyPart,company,fcompany,fda_num,"-",id,"0" , email] ,(err , result)=>{
-        if(err) {
-            console.log(err)
-        }
-        else {
-            res.send("OK")
-        }
-    })
-
-
-})
-
 //Delete Product from Productlist
 app.post('/api/userDeleteProduct' , (req,res)=>{
     console.log("No...")
@@ -2179,15 +2004,21 @@ app.post('/api/userDeleteProduct' , (req,res)=>{
     const status = req.body.status
     console.log(req.body)
 
-    const sql = 'DELETE FROM product WHERE fda_license = ? AND organization_id = ? '
-    db.query(sql,[fda , id],(error , result)=>{
-        if(error){
-            console.log(error)
-        }
-        else{
-            res.status(200).send("DELETEED")
-        }
-    })
+    db.execute(
+        'DELETE FROM product WHERE no = ?',
+        [req.body.no],
+        (err, result) => {
+            if(err) {
+                res.json({status:'error',message:err});
+                return;
+            }
+            if(result.length > 0) {
+                res.json({status:'ok',message:result})
+            }
+            else {
+                res.json({status:'error',message:'No data found'});
+            }
+        })
 
     if(status === "1"){
         const sql1 = 'DELETE FROM pif WHERE fda_license = ?'
@@ -2196,7 +2027,7 @@ app.post('/api/userDeleteProduct' , (req,res)=>{
                 console.log(error)
             }
             else{
-                res.status(200).send("DELETEED")
+                res.json({status:'ok',message:result})
             }
         } )
 
@@ -2204,6 +2035,78 @@ app.post('/api/userDeleteProduct' , (req,res)=>{
 
 
 })
+
+app.post('/api/insertPifProduct' , jsonParser , (req , res) => {
+    console.log("insertPifProduct")
+    db.execute(
+        `INSERT INTO pif_product (organization_id, created_by, created_when, pif_status, fda_license, product_name,
+            cosmetic_name, cosmetic_type, create_date, expire_date, cosmetic_reason, cosmetic_physical,
+            company_name, company_eng_name, more_info ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+            [req.body.organization_id, req.body.created_by, req.body.created_when, req.body.pif_status, req.body.fda_license, req.body.product_name,
+                req.body.cosmetic_name, req.body.cosmetic_type, req.body.create_date, req.body.expire_date, req.body.cosmetic_reason, req.body.cosmetic_physical,
+                req.body.company_name, req.body.company_eng_name, req.body.more_info],
+        (err, result) => {
+            if(err) {
+                console.log(err);
+                res.json({status:'error',message: err});
+            }
+            else {
+                res.json({status:'ok',message: result})
+            }
+        }
+    )
+});
+
+app.get('/api/getPifProductByOrganiztion', jsonParser, (req, res) => {
+    db.execute(
+        'SELECT * FROM pif_product WHERE organization_id = ?',
+        [req.query.organization_id],
+        (err, result) => {
+            if(err) {
+                res.json({status:'error',message:err});
+                return;
+            }
+            if(result.length > 0) {
+                res.json({status:'ok',message:result})
+            }
+            else {
+                res.json({status:'error',message:'No data found'});
+            }
+        })
+});
+
+app.get('/api/getPifProductByID', jsonParser, (req, res) => {
+    db.execute(
+        'SELECT * FROM pif_product WHERE id = ?',
+        [req.query.id],
+        (err, result) => {
+            if(err) {
+                res.json({status:'error',message:err});
+                return;
+            }
+            if(result.length > 0) {
+                res.json({status:'ok',message:result})
+            }
+            else {
+                res.json({status:'error',message:'No data found'});
+            }
+        })
+});
+
+app.post('/api/pifProductRemoveById', jsonParser, (req, res) => {
+    db.execute(
+        'DELETE FROM pif_product WHERE id = ?',
+        [req.query.id],
+        (err, result) => {
+            if(err) {
+                res.json({status:'error',message:err});
+                return;
+            }
+            else {
+                res.json({status:'ok',message:result})
+            }
+        })
+});
 
 app.post('/api/DeleteGroupName', (req, res) => {
     const email = req.body.email;
