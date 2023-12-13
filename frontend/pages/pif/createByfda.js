@@ -199,32 +199,16 @@ const createByfda = () => {
   };
 
   return (
-    <div>
+    <>
       <Navbar />
-      <div className="card">
-        <div className="photo">
-          <div className="photo" >
-
-
-
-
-              <div>
-                <img src="/new-product.png" alt="" height="600px" width="400px" />
-               </div>
-
-
-          </div>
-          <input
-            type="file"
-            id="fileInput"
-            accept="image/*"
-            style={{ display: 'none' }}
-            onChange={handleImageChange}
-          />
-
-        </div>
-        <div className="description">
-          <h1>สร้างผลิตภัณฑ์</h1>
+      
+       
+          <Box sx={{
+            marginLeft: { xs: "10px", md: "50px" },
+            marginBottom: { xs: "30px", md: "30px" },
+            marginTop: { xs: "30px", md: "30px" },
+          }}>
+          <h3>กรอกข้อมูลเพื่อสร้างผลิตภัณฑ์</h3>
           <Box
             sx={{
               display: 'flex',  // Set display to flex
@@ -303,15 +287,25 @@ const createByfda = () => {
           </Box>
 
 
-        </div>
+        </Box>
+        
+        <Box sx={{
+          textAlign: { xs: "center", md: "center" },
 
-        <Button onClick={() => sendData()} variant="contained" color="success" className="btnCfda">
+        }}>
+        <Button  type="submit"
+          textAlign="center"
+        
+        onClick={() => sendData()} variant="contained" color="success">
           บันทึก
         </Button>
+        </Box>
+        
+        
         <Footer />
-      </div>
-
-    </div>
+      
+        </>
+    
   )
 }
 
