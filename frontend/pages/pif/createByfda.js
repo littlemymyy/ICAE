@@ -41,30 +41,6 @@ const createByfda = () => {
   const Swal = require('sweetalert2')
   const [id,setId] = useState("")
 
-  const [imageName , setImageName] = useState("")
-
-  // Handle the selected image file
-  const handleImageChange = (event) => {
-    let file = event.target.files[0];
-    console.log(file)
-    // alert(file.type)
-    let str = file.type
-    let n = str.indexOf("/")
-    str = str.substring(n+1)
-    // alert(str)
-    let blob = file.slice(0, file.size, file.type);
-    let newFile = new File([blob], fda_num+"."+str, {type: file.type});
-    setImageName(fda_num+"."+str)
-    console.log(newFile)
-    setImageFile(newFile);
-  };
-
-  // Trigger the hidden file input
-  // const handleButtonClick = () => {
-  //   document.getElementById('fileInput').click();
-  // };
-
-
 
   // get email from session
   useEffect(() => {
@@ -72,10 +48,22 @@ const createByfda = () => {
     let orid = localStorage.getItem("orid")
     setId(orid)
     setEmail(userData)
-
-
   }, [])
 
+  const reformatDate = (input) => {
+    let date = input.split("/")
+    let day = date[0]
+    let month = date[1]
+    let year = (date[2]*1) - 543
+    if (day.length == 1) {
+      day = "0" + day
+    }
+    if (month.length == 1) {
+      month = "0" + month
+    }
+    let newDate = year + "-" + month + "-" + day
+    return newDate
+  }
 
   //Get Data from Fda
   const fetchData = async (e) => {
@@ -90,12 +78,6 @@ const createByfda = () => {
       }
     })
       .then((res) => {
-
-        // let arr = res.data[2].split("-")
-        // let fda_no = ""
-        // for(let i=0 ;i < arr.lenght ; i++){
-        //   fda_no += arr[i]
-        // }
 
         console.log("arr")
         console.log(num)
@@ -136,10 +118,10 @@ const createByfda = () => {
           document.getElementById("typeGoods").value = res.data[9]
 
           document.getElementById("dateS-label").className = updatedLabel
-          document.getElementById("dateS").value = res.data[7]
+          document.getElementById("dateS").value = reformatDate(res.data[7])
 
           document.getElementById("expDate-label").className = updatedLabel
-          document.getElementById("expDate").value = res.data[8]
+          document.getElementById("expDate").value = reformatDate(res.data[8])
 
           document.getElementById("objGoods-label").className = updatedLabel
           document.getElementById("objGoods").value = res.data[11]
@@ -163,46 +145,81 @@ const createByfda = () => {
       });
   }
 
+  const parseDateString = (dateString) => {
+    const parts = dateString.split('/');
+    const day = parseInt(parts[0], 10);
+    const month = parseInt(parts[1], 10) - 1; // Months are zero-based in JavaScript
+    const year = parseInt(parts[2], 10);
+
+    return new Date(year, month, day);
+  }
+
   const sendData = () => {
-    let dd = data[0];
-    //dd["photo"] = imageName;
-    console.log(dd);
 
-    const formData = new FormData();
-    formData.append('image', imageFile);
-
-    const fetchData = async () => {
       try {
-        // const res = await Axios.post('http://localhost:3001/api/submitPif', formData, {
-
-        // });
-        // console.log(res.data);
-
-        const res1 = await Axios.post("http://localhost:3001/api/storageProduct", dd);
-
-        if (res1.data) {
-          Swal.fire({
-            position: "center",
-            icon: "success",
-            title: "บันทึกเรียบร้อย",
-            showConfirmButton: false,
-            timer: 1500
-          });
-          router.push("/pif/productslist");
-        }
-      } catch (error) {
-        console.log(error);
+        var pif_product_data = JSON.stringify({
+          "organization_id": localStorage.getItem("orid"),
+          "created_by": localStorage.getItem("uemail"),
+          "created_when": new Date().toISOString().split('T')[0],
+          "pif_status": 0,
+          "fda_license": document.getElementById("regitnumber").value,
+          "product_name": document.getElementById("comName").value,
+          "cosmetic_name": document.getElementById("cosName").value,
+          "cosmetic_type": document.getElementById("typeGoods").value,
+          "create_date": document.getElementById("dateS").value,
+          "expire_date": document.getElementById("expDate").value,
+          "cosmetic_reason": document.getElementById("objGoods").value,
+          "cosmetic_physical": document.getElementById("py").value,
+          "company_name": document.getElementById("entrepreneur").value,
+          "company_eng_name": document.getElementById("fentrepreneur").value,
+          "more_info": document.getElementById("des").value
+        });
+      } catch {
+        Swal.fire({
+          icon: 'error',
+          title: 'เกิดข้อผิดพลาด',
+          text: 'กรุณาตรวจสอบความถูกต้องของข้อมูล',
+        })
       }
-    };
 
-    fetchData();
+
+      let config = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: 'http://localhost:3001/api/insertPifProduct',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        data : pif_product_data
+      };
+
+      Axios.request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+        Swal.fire({
+          icon: 'success',
+          title: 'สำเร็จ',
+          text: 'สร้างผลิตภัณฑ์สำเร็จ',
+        }).then((result) => {
+          router.push("/pif/productslist")
+        })
+      })
+      .catch((error) => {
+        console.log(error);
+        Swal.fire({
+          icon: 'error',
+          title: 'เกิดข้อผิดพลาด',
+          text: 'กรุณาตรวจสอบความถูกต้องของข้อมูล',
+        })
+      });
+
   };
 
   return (
     <>
       <Navbar />
-      
-       
+
+
           <Box sx={{
             marginLeft: { xs: "10px", md: "50px" },
             marginBottom: { xs: "30px", md: "30px" },
@@ -232,12 +249,12 @@ const createByfda = () => {
           </Box>
 
           <Box >
-            <TextField id="dateS" label="วันที่แจ้งจดแจ้ง" style={{ width: "50%", margin: "10px 0 0 0"}} />
+            <TextField id="dateS" type="date" label="วันที่แจ้งจดแจ้ง" InputLabelProps={{ shrink: true }}  style={{ width: "50%", margin: "10px 0 0 0"}} />
 
           </Box>
 
           <Box>
-            <TextField id="expDate" label="วันที่ใบอนุญาตหมดอายุ" style={{ width: "50%", margin: "10px 0 0 0" }} />
+            <TextField id="expDate" type="date" InputLabelProps={{ shrink: true }} label="วันที่ใบอนุญาตหมดอายุ" style={{ width: "50%", margin: "10px 0 0 0" }} />
 
           </Box>
           <Box >
@@ -288,24 +305,21 @@ const createByfda = () => {
 
 
         </Box>
-        
+
         <Box sx={{
           textAlign: { xs: "center", md: "center" },
 
         }}>
         <Button  type="submit"
           textAlign="center"
-        
+
         onClick={() => sendData()} variant="contained" color="success">
           บันทึก
         </Button>
         </Box>
-        
-        
         <Footer />
-      
+
         </>
-    
   )
 }
 

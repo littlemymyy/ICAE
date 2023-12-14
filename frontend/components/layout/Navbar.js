@@ -12,6 +12,9 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import Axios from "axios";
+import Swal from 'sweetalert2';
 
 
 const pages = ['หน้าหลัก', 'ตรวจสอบสูตรสารเคมี', 'การจัดการPIF' , 'ประวัติการตรวจสอบสูตรสารเคมี','คลังความรู้'];
@@ -25,6 +28,35 @@ function Navbar() {
     const [status, setStatus] = React.useState('');
     const [icon, setIcon] = React.useState('');
 
+
+    useEffect(() => {
+        console.log(router.pathname)
+        //check is not login page
+        if(router.pathname !== '/login/SignIn' && router.pathname !== '/Knowledge/home' && router.pathname !== '/' && router.pathname !== '/SignUp/SignUp'){
+            Axios.request(
+                {
+                    method: 'post',
+                    url: 'http://localhost:3001/api/authen',
+                    headers: { 'Authorization': 'Bearer '+ localStorage.getItem('token') },
+                }
+                ).then((response) => {
+                if(response.data.status === 'ok'){
+                    console.log('ok')
+                }else{
+                    router.push('/login/SignIn').then(() => {
+                        localStorage.clear();
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'กรุณาเข้าสู่ระบบก่อน'
+                        })
+                    })
+                    console.log(response.data)
+                }
+            }).catch((error) => {
+                console.log(error)
+            });
+        }
+    }, [])
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -106,11 +138,7 @@ function Navbar() {
         }
         else if(selectName === settings[2]) {
             console.log('OK');
-            localStorage.removeItem("status");
-            localStorage.removeItem("orid");
-            localStorage.removeItem("uname");
-            localStorage.removeItem("uemail");
-            localStorage.removeItem("uicon");
+            localStorage.clear();
             setUname("");
             setIcon("");
             router.push("/");
@@ -118,7 +146,7 @@ function Navbar() {
     };
 
     React.useEffect(() => {
-        if(!localStorage.getItem('uname')) {
+        if(!localStorage.getItem('token')) {
             setUname('');
             setIcon('');
         }

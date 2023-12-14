@@ -8,12 +8,9 @@ import MuiAccordionSummary from '@mui/material/AccordionSummary';
 import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import { Box, TextField, Typography, Button } from "@mui/material";
 import Axios from "axios";
-import { set } from "react-hook-form";
-import ClearIcon from '@mui/icons-material/Clear';
-import CloseIcon from '@mui/icons-material/Close';
 import CancelIcon from '@mui/icons-material/Cancel';
-import DatePicker from "react-datepicker";
 import { useRouter } from "next/router";
+import Swal from "sweetalert2";
 
 const Accordion = styled((props) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -47,46 +44,127 @@ const AccordionSummary = styled((props) => (
 }));
 
 
-
 const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
   padding: theme.spacing(2),
   borderTop: '1px solid rgba(0, 0, 0, .125)',
 }));
 
 export default function manage() {
-
-
-
   const [expanded, setExpanded] = React.useState('panel1');
-  const [fda_num , setFda_num] = useState("")
   const router = useRouter()
-
-  //exp date All
-  const [fdadoc_date , setFdadoc_date] = useState(null)
-  const [letter_authorization_date , setLetter_authorization_date] = useState(null)
-  const [formula_doc_date , setFormula_doc_date] = useState(null)
-  const [label_doc_date , setLabel_doc_date] = useState(null)
-  const [manufacture_doc_date , setManufacture_doc_date] = useState(null)
-  const [gmp_iso_date , setGmp_iso] =useState(null)
-  const [eff_report_date , setEff_report_date] = useState(null)
-  const [efficient_report_date , setEfficient_report_date] = useState(null)
-  const [sds_date , setSds_date] = useState(null)
-  const [masterformula_date , setMasterformula_date] = useState(null)
-  const [specification_date , setSpecification_date] = useState(null)
-  const [	testing_doc_date , setTesting_doc_date] = useState(null)
-  const [coa , setCoa] = useState(null)
-  const {fdaNo} = router.query
-
+  const {product_id} = router.query
+  const [product_data, setProductData] = useState([]);
+  const [pif_data, setPifData] = useState([]);
+  const [filename, setFilename] = useState('');
+  const [img_path, setImgPath] = useState('');
 
   useEffect(() => {
-    var userData = localStorage.getItem("uemail");
-    console.log(userData);
-  }, [])
+    var userData = sessionStorage.getItem("uemail");
+    console.log("product_id = " + product_id);
+      Axios.request(
+          {
+              method: 'get',
+              url: 'http://localhost:3001/api/getPifProductByID?id=' + product_id,
+              headers: { },
+              data : ''
+          }
+      ).then((response) => {
+          let data = JSON.stringify(response.data.message)
+          if (response.data.status === "ok"){
+            setProductData(response.data.message);
+            console.log(response.data.message)
+            setFirstData(response.data.message[0]);
+          }
+          else {
+            router.push("/pif/productslist")
+          }
+      }).catch((error) => {
+          console.log(error);
+          router.push("/pif/productslist")
+      }
+      )
 
-  // data from Thai FDA By Fda number
+      //for pif data (include file)
+      Axios.request(
+        {
+            method: 'get',
+            url: 'http://localhost:3001/api/getPifByID?product_id=' + product_id,
+            headers: { },
+            data : ''
+        }
+    ).then((response) => {
+        if (response.data.status === "ok"){
+          let resData = JSON.parse(JSON.stringify(response.data.message[0]))
+          console.log(resData)
+
+          // setPifData(resData);
+          document.getElementById("expdate").value =  convertDate(resData.expdate)
+          setFilename(resData.file_name)
+
+          document.getElementById("filename").value = resData.file_name
+
+          if (resData.img_path !== null){
+            setImgPath("http://localhost:3001/" + resData.img_path)
+            document.getElementById("photo").innerHTML = fullFilePath(resData.img_path)
+          }
+
+          for(let i = 0; i < 14; i++){
+            console.log(resData.file1_path)
+            if(resData["file"+(i+1)+"_path"] !== null){
+              displayOldFile("file"+(i+1), resData["file"+(i+1)+"_path"], resData["file"+(i+1)+"_exp"])
+            }
+          }
+        }else if (response.data.message === "No data found"){
+          console.log("No data pif found")
+        }else{
+          console.log("error")
+          // router.push("/pif/productslist")
+        }
+    }).catch((error) => {
+      // router.push("/pif/productslist")
+    }
+    )
+  }, [product_id]);
+
+  const setFirstData = async (e) => {
+    const updatedLabel = "MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root";
+
+    document.getElementById("regitnumber-label").className = updatedLabel
+    document.getElementById("regitnumber").value = e.fda_license
+
+    document.getElementById("comName-label").className = updatedLabel
+    document.getElementById("comName").value = e.product_name
+
+    document.getElementById("cosName-label").className = updatedLabel
+    document.getElementById("cosName").value = e.cosmetic_name
+
+    document.getElementById("typeGoods-label").className = updatedLabel
+    document.getElementById("typeGoods").value = e.cosmetic_type
+
+    document.getElementById("dateS-label").className = updatedLabel
+    document.getElementById("dateS").value = new Date(e.create_date).toISOString().slice(0, 10)
+
+    document.getElementById("expDate-label").className = updatedLabel
+    document.getElementById("expDate").value = new Date(e.expire_date).toISOString().slice(0, 10)
+
+    document.getElementById("objGoods-label").className = updatedLabel
+    document.getElementById("objGoods").value = e.cosmetic_reason
+
+    document.getElementById("py-label").className = updatedLabel
+    document.getElementById("py").value = e.cosmetic_physical
+
+    document.getElementById("entrepreneur-label").className = updatedLabel
+    document.getElementById("entrepreneur").value = e.company_name
+
+    document.getElementById("fentrepreneur-label").className = updatedLabel
+    document.getElementById("fentrepreneur").value = e.company_eng_name
+
+    document.getElementById("des-label").className = updatedLabel
+    document.getElementById("des").value = e.more_info
+  }
+
   const fetchData = async (e) => {
     console.log("e = " + e);
-    setFda_num(e.target.value)
     const res = await Axios({
       url: "http://localhost:3001/api/fetchData",
       method: "get",
@@ -129,30 +207,25 @@ export default function manage() {
 
           document.getElementById("fentrepreneur-label").className = updatedLabel
           document.getElementById("fentrepreneur").value = res.data[14]
-          console.log(res.data)
-          console.log(res.data[0])
-          setStatus(res.data[0])
-          setLocationStatus(res.data[1])
-          setTypeRegis(res.data[3])
-          setFormatRegis(res.data[4])
-          setComName(res.data[5])
-          setCosName(res.data[6])
-          setDateS(res.data[7])
-          setExpDate(res.data[8])
-          setTypeGoods(res.data[9])
-          setBodypart(res.data[10])
-          setObjGoods(res.data[11])
-          setEntrepreneur(res.data[13])
-          setConGoods(res.data[12])
-          setFentrepreneur(res.data[14])
         }
 
-        console.log("isFdaCoc")
-        console.log(fdadoc_date)
+
       })
       .catch((error) => {
         console.log(error);
       });
+  }
+
+  const convertDate = (input) => {
+    let date = new Date(input);
+    // Format to yyyy-mm-dd
+    let month = ('0' + (date.getMonth() + 1)).slice(-2);
+
+    let day = ('0' + date.getDate()).slice(-2);
+
+    let year = date.getFullYear();
+    let newDate = [year, month, day].join('-');
+    return newDate;
   }
 
   const [file1, setFile1] = useState(null);
@@ -186,11 +259,126 @@ export default function manage() {
   const [pdfFile13, setPdfFile13] = useState('');
   const [pdfFile14, setPdfFile14] = useState('');
 
+  const fullFilePath = (filePath) => {
+    let splitParts = filePath.split("-")
+    let resultString = splitParts.slice(1).join('-');
+    return resultString
+  }
 
+  const displayOldFile = (inputName, filePath, expDate) => {
+    let baseUrl = "http://localhost:3001/"
+    console.log(inputName);
+
+    document.getElementById(inputName).innerHTML = fullFilePath(filePath)
+
+    switch (inputName) {
+      case 'file1':
+        setPdfFile1(baseUrl+filePath);
+        document.getElementById("del1").style.display = "block";
+        if (expDate !== null){
+          document.getElementById("file1_exp").value = convertDate(expDate)
+        }
+        console.log("expDate = " + expDate)
+        break;
+      case 'file2':
+        setPdfFile2(baseUrl+filePath);
+        document.getElementById("del2").style.display = "block";
+        if (expDate !== null){
+        document.getElementById("file2_exp").value = convertDate(expDate)
+        }
+        break;
+      case 'file3':
+        setPdfFile3(baseUrl+filePath);
+        document.getElementById("del3").style.display = "block";
+        if (expDate !== null){
+        document.getElementById("file3_exp").value = convertDate(expDate)
+        }
+        break;
+      case 'file4':
+        setPdfFile4(baseUrl+filePath);
+        document.getElementById("del4").style.display = "block";
+        if (expDate !== null){
+        document.getElementById("file4_exp").value = convertDate(expDate)
+        }
+        break;
+      case 'file5':
+        setPdfFile5(baseUrl+filePath);
+        document.getElementById("del5").style.display = "block";
+        if (expDate !== null){
+        document.getElementById("file5_exp").value = convertDate(expDate)
+        }
+        break;
+      case 'file6':
+        setPdfFile6(baseUrl+filePath);
+        document.getElementById("del6").style.display = "block";
+        if (expDate !== null){
+        document.getElementById("file6_exp").value = convertDate(expDate)
+        }
+        break;
+      case 'file7':
+        setPdfFile7(baseUrl+filePath);
+        document.getElementById("del7").style.display = "block";
+        if (expDate !== null){
+        document.getElementById("file7_exp").value = convertDate(expDate)
+        }
+        break;
+      case 'file8':
+        setPdfFile8(baseUrl+filePath);
+        document.getElementById("del8").style.display = "block";
+        if (expDate !== null){
+        document.getElementById("file8_exp").value = convertDate(expDate)
+        }
+        break;
+      case 'file9':
+        setPdfFile9(baseUrl+filePath);
+        document.getElementById("del9").style.display = "block";
+        if (expDate !== null){
+        document.getElementById("file9_exp").value = convertDate(expDate)
+        }
+        break;
+      case 'file10':
+        setPdfFile10(baseUrl+filePath);
+        document.getElementById("del10").style.display = "block";
+        if (expDate !== null){
+        document.getElementById("file10_exp").value = convertDate(expDate)
+        }
+        break;
+      case 'file11':
+        setPdfFile11(baseUrl+filePath);
+        document.getElementById("del11").style.display = "block";
+        if (expDate !== null){
+        document.getElementById("file11_exp").value = convertDate(expDate)
+        }
+        break;
+      case 'file12':
+        setPdfFile12(baseUrl+filePath);
+        document.getElementById("del12").style.display = "block";
+        if (expDate !== null){
+        document.getElementById("file12_exp").value = convertDate(expDate)
+        }
+        break;
+      case 'file13':
+        setPdfFile13(baseUrl+filePath);
+        document.getElementById("del13").style.display = "block";
+        if (expDate !== null){
+        document.getElementById("file13_exp").value = convertDate(expDate)
+        }
+        break;
+      case 'file14':
+        setPdfFile14(baseUrl+filePath);
+        document.getElementById("del14").style.display = "block";
+        if (expDate !== null){
+        document.getElementById("file14_exp").value = convertDate(expDate)
+        }
+        break;
+      // Add more cases for additional inputs
+      default:
+        break;
+    }
+  };
 
   const handleFileChange = (inputName, event) => {
     const file = event.target.files[0];
-    console.log(file)
     console.log(inputName);
     document.getElementById(inputName).innerHTML = event.target.files[0].name
 
@@ -267,6 +455,7 @@ export default function manage() {
         break;
       case 'photo':
         setFilePhoto(file);
+        setImgPath(URL.createObjectURL(file));
         break;
       // Add more cases for additional inputs
       default:
@@ -363,43 +552,72 @@ export default function manage() {
           break;
     }
   }
-
-  const generatePDF = async (e) => {
-    const formatDate = (date) => (date instanceof Date ? date.toISOString() : "-")
+  const saveOnly = async (e) => {
+    if (document.getElementById("filename").value === "") {
+      Swal.fire({
+        icon: 'error',
+        title: 'กรุณากรอกชื่อผลิตภัณฑ์',
+      })
+      return;
+    }else if(document.getElementById("expdate").value === ""){
+      Swal.fire({
+        icon: 'error',
+        title: 'กรุณากรอกวันหมดอายุของเอกสาร',
+      })
+      return;
+    }
 
     let data = JSON.stringify({
-      "inputregisNumber": document.getElementById("regitnumber").value,
-      "inputcomName": document.getElementById("comName").value,
-      "inputcosName": document.getElementById("cosName").value,
-      "inputtypeGoods": document.getElementById("typeGoods").value,
-      "inputdateS": document.getElementById("dateS").value,
-      "inputexpDate": document.getElementById("expDate").value,
-      "inputobjGoods": document.getElementById("objGoods").value,
-      "Inputpy": document.getElementById("py").value,
-      "inputentrepreneur": document.getElementById("entrepreneur").value,
-      "inputFentrepreneur": document.getElementById("fentrepreneur").value,
-      "setDes": document.getElementById("des").value,
-      "rec_create_when": new Date(),
+      "fda_license": document.getElementById("regitnumber").value,
+      "product_name": document.getElementById("comName").value,
+      "cosmetic_name": document.getElementById("cosName").value,
+      "cosmetic_type": document.getElementById("typeGoods").value,
+      "create_date": document.getElementById("dateS").value,
+      "expire_date": document.getElementById("expDate").value,
+      "cosmetic_reason": document.getElementById("objGoods").value,
+      "cosmetic_physical": document.getElementById("py").value,
+      "company_name": document.getElementById("entrepreneur").value,
+      "company_eng_name": document.getElementById("fentrepreneur").value,
+      "more_info": document.getElementById("des").value,
+
+      //generic data
       "expdate": document.getElementById("expdate").value,
-      "filename": document.getElementById("filename").value,
+      "file_name": document.getElementById("filename").value,
       "email": localStorage.getItem("uemail"),
-      "id" : localStorage.getItem("orid"),
-      "fda_num" : fda_num ,
-      "fdadoc_date" : formatDate(fdadoc_date ),
-      "formula_doc_date" : formatDate(formula_doc_date ),
-      "letter_authorization_date" : formatDate(letter_authorization_date),
-      "label_doc_date" : formatDate (label_doc_date) ,
-      "manufacture_doc_date" : formatDate(manufacture_doc_date) ,
-      "gmp_iso_date" :formatDate(gmp_iso_date) ,
-      "eff_report_date" : formatDate(eff_report_date) ,
-      "efficient_report_date" : formatDate(efficient_report_date) ,
-      "sds_date" : formatDate(sds_date) ,
-      "masterformula_date" :formatDate( masterformula_date ),
-      "specification_date" : formatDate(specification_date ),
-      "testing_doc_date" : formatDate(testing_doc_date) ,
-      "coa" : formatDate(coa ),
+      "product_id": product_id,
+      "pif_status": 1,
 
+      //file_exp
+      "file1_exp" : document.getElementById("file1_exp").value,
+      "file2_exp" : document.getElementById("file2_exp").value,
+      "file3_exp" : document.getElementById("file3_exp").value,
+      "file4_exp" : document.getElementById("file4_exp").value,
+      "file5_exp" : document.getElementById("file5_exp").value,
+      "file6_exp" : document.getElementById("file6_exp").value,
+      "file7_exp" : document.getElementById("file7_exp").value,
+      "file8_exp" : document.getElementById("file8_exp").value,
+      "file9_exp" : document.getElementById("file9_exp").value,
+      "file10_exp" : document.getElementById("file10_exp").value,
+      "file11_exp" : document.getElementById("file11_exp").value,
+      "file12_exp" : document.getElementById("file12_exp").value,
+      "file13_exp" : document.getElementById("file13_exp").value,
+      "file14_exp" : document.getElementById("file14_exp").value,
 
+      //check old pdf has removed
+      "pdfFile1" : pdfFile1,
+      "pdfFile2" : pdfFile2,
+      "pdfFile3" : pdfFile3,
+      "pdfFile4" : pdfFile4,
+      "pdfFile5" : pdfFile5,
+      "pdfFile6" : pdfFile6,
+      "pdfFile7" : pdfFile7,
+      "pdfFile8" : pdfFile8,
+      "pdfFile9" : pdfFile9,
+      "pdfFile10" : pdfFile10,
+      "pdfFile11" : pdfFile11,
+      "pdfFile12" : pdfFile12,
+      "pdfFile13" : pdfFile13,
+      "pdfFile14" : pdfFile14,
 
     });
 
@@ -424,8 +642,87 @@ export default function manage() {
     photo && formData.append('photo', photo);
     // file3 && formData.append('file3', file3);
 
+    console.log(data)
+
     try {
-      const response = await Axios.post('http://localhost:3001/api/submitPif', formData, {
+      const response = await Axios.post('http://localhost:3001/api/savePdf', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: data
+      })
+      .then (res => {
+        console.log(res);
+        if (res.data === "latest_ok") {
+          Swal.fire({
+            icon: 'success',
+            title: 'บันทึกข้อมูลสำเร็จ',
+          }).then(() => {
+            router.push("/pif/productslist")
+          })
+        }
+        else {
+          Swal.fire({
+            icon: 'error',
+            title: 'บันทึกข้อมูลไม่สำเร็จ',
+            text: 'บันทึกข้อมูลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง'
+          })
+        }
+
+      })
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'บันทึกข้อมูลไม่สำเร็จ',
+        text: 'บันทึกข้อมูลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง'
+      }).then(() => {
+        console.error('Error uploading files:', error);
+      })
+    }
+  };
+
+  const generatePDF = async (e) => {
+    let data = JSON.stringify({
+      "inputregisNumber": document.getElementById("regitnumber").value,
+      "inputcomName": document.getElementById("comName").value,
+      "inputcosName": document.getElementById("cosName").value,
+      "inputtypeGoods": document.getElementById("typeGoods").value,
+      "inputdateS": document.getElementById("dateS").value,
+      "inputexpDate": document.getElementById("expDate").value,
+      "inputobjGoods": document.getElementById("objGoods").value,
+      "Inputpy": document.getElementById("py").value,
+      "inputentrepreneur": document.getElementById("entrepreneur").value,
+      "inputFentrepreneur": document.getElementById("fentrepreneur").value,
+      "setDes": document.getElementById("des").value,
+      "rec_create_when": new Date(),
+      "expdate": document.getElementById("expdate").value,
+      "filename": document.getElementById("filename").value,
+      "email": sessionStorage.getItem("uemail")
+    });
+
+    //for upload file
+    const formData = new FormData();
+
+    file1 && formData.append('file1', file1);
+    file2 && formData.append('file2', file2);
+    file3 && formData.append('file3', file3);
+    file4 && formData.append('file4', file4);
+    file5 && formData.append('file5', file5);
+    file6 && formData.append('file6', file6);
+    file7 && formData.append('file7', file7);
+    file8 && formData.append('file8', file8);
+    file9 && formData.append('file9', file9);
+    file10 && formData.append('file10', file10);
+    file11 && formData.append('file11', file11);
+    file12 && formData.append('file12', file12);
+    file13 && formData.append('file13', file13);
+    file14 && formData.append('file14', file14);
+    formData.append('data', data);
+    photo && formData.append('photo', photo);
+    // file3 && formData.append('file3', file3);
+
+    try {
+      const response = await Axios.post('http://localhost:3001/api/savePdf', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -436,13 +733,7 @@ export default function manage() {
         if (res.data.status === "ok") {
           alert("อัพโหลดเอกสารสำเร็จ")
           //redirect to http://localhost:3000/pif/productslist
-          if(e === 1){
-            router.push("/pif/productslist")
-          }
-          else if(e === 2) {
-            window.location.href = "/pif/showpif"
-          }
-
+          window.location.href = "/pif/showpif"
         }
         else {
           alert("อัพโหลดเอกสารไม่สำเร็จ กรุณาลองใหม่อีกครั้ง")
@@ -457,6 +748,7 @@ export default function manage() {
   const handleChange = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
   };
+
 
   return (
     <>
@@ -533,7 +825,12 @@ export default function manage() {
         >
           <Box>
             <Typography variant="h6">ชื่อผลิตภัณฑ์</Typography>
-            <TextField label="ชื่อผลิตภัณฑ์" id='filename' />
+            {
+              filename ?
+                <TextField label="ชื่อผลิตภัณฑ์" id='filename' InputLabelProps={{ shrink: true }} />
+                :
+                <TextField label="ชื่อผลิตภัณฑ์" id='filename' onChange={(e) => {setFilename(e.target.value)}} InputLabelProps={{ shrink: false }} />
+            }
           </Box>
 
           <Box>
@@ -550,30 +847,28 @@ export default function manage() {
             paddingTop: { xs: "30px", md: "30px" },
             paddingBottom: { xs: "10px", md: "10px" },
           }}>
+
           <Typography variant="h6">รูปภาพผลิตภัณฑ์</Typography>
+          {
+              img_path ?
+              <img src={img_path} style={{ maxWidth: 0 + "150px", margin: "auto" }} />
+              :
+              <img src="" style={{ display: "none" }} />
+            }
+          <Box style={{
+                width: "100%",
+                borderRadius: '5px',
+                boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.25)',
+                marginTop: "10px"
+          }}>
 
-          <Box
-            style={{
-              width: "100%",
-              borderRadius: '5px',
-              boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.25)',
-              marginTop: "10px"
-            }}>
 
-            <Button
-
-              width="80%"
-              variant="contained"
-              component="label"
-            >
+            <Button width="80%" variant="contained" component="label">
               <input
-                id="filename"
+                id="img_file"
                 type="file"
                 accept="image/png, image/gif, image/jpeg"
-
-
                 onChange={(event) => handleFileChange('photo', event)}
-
                 hidden
               />เลือกไฟล์
             </Button>
@@ -624,7 +919,7 @@ export default function manage() {
 
                   // Center items in Y axis,
                 }}>
-                <TextField  onChange={(e) => { fetchData(e) }} id="regitnumber" variant="outlined" label="เลขที่จดแจ้ง" style={{ width: "50%", marginTop: "10px" }} />
+                <TextField onChange={(e) => { fetchData(e) }} id="regitnumber" variant="outlined" label="เลขที่จดแจ้ง" style={{ width: "50%", marginTop: "10px" }} />
               </Box>
 
 
@@ -641,12 +936,11 @@ export default function manage() {
               </Box>
 
               <Box >
-                <TextField id="dateS" label="วันที่แจ้งจดแจ้ง" style={{ width: "50%", marginTop: "10px" }} />
-
+                <TextField id="dateS" type="date" InputLabelProps={{ shrink: true }} label="วันที่แจ้งจดแจ้ง" style={{ width: "50%", marginTop: "10px" }} />
               </Box>
 
               <Box>
-                <TextField id="expDate" label="วันที่ใบอนุญาตหมดอายุ" style={{ width: "50%", marginTop: "10px" }}/>
+                <TextField id="expDate" type="date" InputLabelProps={{ shrink: true }} label="วันที่ใบอนุญาตหมดอายุ" style={{ width: "50%", marginTop: "10px" }}/>
 
               </Box>
               <Box >
@@ -701,44 +995,17 @@ export default function manage() {
                   maeginbottom: { xs: "10px", md: "10px" }
                 }}
 
-              >สำเนาใบรับจดแจ้งเครื่องสำอาง
-              </Typography>
-
+              >สำเนาใบรับจดแจ้งเครื่องสำอาง</Typography>
               <Box sx={{
                 display: { xs: "", md: "table-caption" },
 
               }}>
                 <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
-
-                <TextField type="date" id='expdate'  onChange={(e) => setFdadoc_date(e.target.value)}/>
+                <TextField type="date" id='file1_exp' />
               </Box>
-               {pdfFile1 === '' ?
-              <Box sx={{
-                width: '300px',
-                height: '200px',
-                borderRadius: '5px',
-                boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
-                marginTop: "20px",
-                backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
 
-              }}>
-                <Box sx={{
-                  justifyContent: { xs: "", md: "center" },
-                  textAlign: { xs: "center", md: "center" },
+              <embed src={pdfFile1} width="300px" height="450px" style={{display:pdfFile1===''? 'none' : 'block'}}/>
 
-
-                 }}>
-
-                  <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
-                  <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
-                </Box>
-
-              </Box>
-              :
-              <><p>{pdfFile1}</p>
-              <embed src={pdfFile1} width="300px" height="450px" />
-              </>
-              }
               <Box
                 style={{
 
@@ -754,10 +1021,10 @@ export default function manage() {
                   marginTop="10px"
                 >
                   <input
-
-                    id="filename"
+                    id="filename1"
                     type="file"
                     onChange={(event) => handleFileChange('file1', event)}
+                    accept="application/pdf"
                     hidden
                   />เลือกไฟล์
 
@@ -795,32 +1062,11 @@ export default function manage() {
 
               }}>
                 <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
-                <TextField type="date" id='expdate' onChange={(e) =>  setLetter_authorization_date(e.target.value)} />
+                <TextField type="date" id='file2_exp' />
               </Box>
-              {pdfFile2 === '' ?
-              <Box sx={{
-                width: '300px',
-                height: '200px',
-                borderRadius: '5px',
-                boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
-                marginTop: "20px",
-                backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
 
-              }}>
-                <Box sx={{
-                  justifyContent: { xs: "", md: "center" },
-                  textAlign: { xs: "center", md: "center" },
+              <embed src={pdfFile2} width="300px" height="450px" style={{display:pdfFile2===''? 'none' : 'block'}}/>
 
-
-                 }}>
-                 <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
-                  <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
-                </Box>
-
-              </Box>
-              :
-              <embed src={pdfFile2} width="300px" height="450px" />
-              }
               <Box
                 style={{
                   borderRadius: '5px',
@@ -832,9 +1078,10 @@ export default function manage() {
                   component="label"
                 >
                   <input
-                    id="filename"
+                    id="filename2"
                     type="file"
                     onChange={(event) => handleFileChange('file2', event)}
+                    accept="application/pdf"
                     hidden
                   />เลือกไฟล์
                 </Button>
@@ -860,33 +1107,13 @@ export default function manage() {
 
               }}>
                 <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
-                <TextField type="date" id='expdate' onChange={(e) => setFormula_doc_date(e.target.value)} />
+                <TextField type="date" id='file3_exp' />
               </Box>
 
-              {pdfFile3 === '' ?
-              <Box sx={{
-                width: '300px',
-                height: '200px',
-                borderRadius: '5px',
-                boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
-                marginTop: "20px",
-                backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
-
-              }}>
-                <Box sx={{
-                  justifyContent: { xs: "", md: "center" },
-                  textAlign: { xs: "center", md: "center" },
 
 
-                 }}>
-                   <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
-                  <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
-                </Box>
+              <embed src={pdfFile3} width="300px" height="450px" style={{display:pdfFile3===''? 'none' : 'block'}}/>
 
-              </Box>
-              :
-              <embed src={pdfFile3} width="300px" height="450px" />
-              }
 
               <Box
                 style={{
@@ -899,9 +1126,10 @@ export default function manage() {
                   component="label"
                 >
                   <input
-                    id="filename"
+                    id="filename3"
                     type="file"
                     onChange={(event) => handleFileChange('file3', event)}
+                    accept="application/pdf"
                     hidden
                   />เลือกไฟล์
                 </Button>
@@ -926,33 +1154,12 @@ export default function manage() {
 
               }}>
                 <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
-                <TextField type="date" id='expdate' onChange={(e) => setLabel_doc_date(e.target.value)}/>
+                <TextField type="date" id='file4_exp' />
               </Box>
 
-              {pdfFile4 === '' ?
-              <Box sx={{
-                width: '300px',
-                height: '200px',
-                borderRadius: '5px',
-                boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
-                marginTop: "20px",
-                backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
 
-              }}>
-                <Box sx={{
-                  justifyContent: { xs: "", md: "center" },
-                  textAlign: { xs: "center", md: "center" },
+              <embed src={pdfFile4} width="300px" height="450px" style={{display:pdfFile4===''? 'none' : 'block'}}/>
 
-
-                 }}>
-                   <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
-                  <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
-                </Box>
-
-              </Box>
-              :
-              <embed src={pdfFile4} width="300px" height="450px" />
-              }
               <Box
                 style={{
                   borderRadius: '5px',
@@ -964,9 +1171,10 @@ export default function manage() {
                   component="label"
                 >
                   <input
-                    id="filename"
+                    id="filename4"
                     type="file"
                     onChange={(event) => handleFileChange('file4', event)}
+                    accept="application/pdf"
                     hidden
                   />เลือกไฟล์
                 </Button>
@@ -1000,33 +1208,12 @@ export default function manage() {
 
               }}>
                 <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
-                <TextField type="date" id='expdate' onChange={(e) =>setManufacture_doc_date(e.target.value)}/>
+                <TextField type="date" id='file5_exp' />
               </Box>
 
-               {pdfFile5 === '' ?
-              <Box sx={{
-                width: '300px',
-                height: '200px',
-                borderRadius: '5px',
-                boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
-                marginTop: "20px",
-                backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
 
-              }}>
-                <Box sx={{
-                  justifyContent: { xs: "", md: "center" },
-                  textAlign: { xs: "center", md: "center" },
+              <embed src={pdfFile5} width="300px" height="450px" style={{display:pdfFile5===''? 'none' : 'block'}}/>
 
-
-                 }}>
-                   <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
-                  <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
-                </Box>
-
-              </Box>
-              :
-              <embed src={pdfFile5} width="300px" height="450px" />
-              }
               <Box
                 style={{
                   borderRadius: '5px',
@@ -1038,9 +1225,10 @@ export default function manage() {
                   component="label"
                 >
                   <input
-                    id="filename"
+                    id="filename5"
                     type="file"
                     onChange={(event) => handleFileChange('file5', event)}
+                    accept="application/pdf"
                     hidden
                   />เลือกไฟล์
                 </Button>
@@ -1069,33 +1257,12 @@ export default function manage() {
 
               }}>
                 <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
-                <TextField type="date" id='expdate' onChange={(e) => setGmp_iso(e.target.value)} />
+                <TextField type="date" id='file6_exp' />
               </Box>
 
-               {pdfFile6 === '' ?
-              <Box sx={{
-                width: '300px',
-                height: '200px',
-                borderRadius: '5px',
-                boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
-                marginTop: "20px",
-                backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
 
-              }}>
-                <Box sx={{
-                  justifyContent: { xs: "", md: "center" },
-                  textAlign: { xs: "center", md: "center" },
+              <embed src={pdfFile6} width="300px" height="450px" style={{display:pdfFile6===''? 'none' : 'block'}}/>
 
-
-                 }}>
-                   <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
-                  <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
-                </Box>
-
-              </Box>
-              :
-              <embed src={pdfFile6} width="300px" height="450px" />
-              }
               <Box
                 style={{
                   borderRadius: '5px',
@@ -1107,9 +1274,10 @@ export default function manage() {
                   component="label"
                 >
                   <input
-                    id="filename"
+                    id="filename6"
                     type="file"
                     onChange={(event) => handleFileChange('file6', event)}
+                    accept="application/pdf"
                     hidden
                   />เลือกไฟล์
                 </Button>
@@ -1135,33 +1303,11 @@ export default function manage() {
 
               }}>
                 <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
-                <TextField type="date" id='expdate' onChange={(e) => setEff_report_date(e.target.value)}/>
+                <TextField type="date" id='file7_exp' />
               </Box>
 
-              {pdfFile7 === '' ?
-              <Box sx={{
-                width: '300px',
-                height: '200px',
-                borderRadius: '5px',
-                boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
-                marginTop: "20px",
-                backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
+              <embed src={pdfFile7} width="300px" height="450px" style={{display:pdfFile7===''? 'none' : 'block'}}/>
 
-              }}>
-                <Box sx={{
-                  justifyContent: { xs: "", md: "center" },
-                  textAlign: { xs: "center", md: "center" },
-
-
-                 }}>
-                  <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
-                  <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
-                </Box>
-
-              </Box>
-              :
-              <embed src={pdfFile7} width="300px" height="450px" />
-              }
 
               <Box
                 style={{
@@ -1174,9 +1320,10 @@ export default function manage() {
                   component="label"
                 >
                   <input
-                    id="filename"
+                    id="filename7"
                     type="file"
                     onChange={(event) => handleFileChange('file7', event)}
+                    accept="application/pdf"
                     hidden
                   />เลือกไฟล์
                 </Button>
@@ -1202,33 +1349,12 @@ export default function manage() {
 
               }}>
                 <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
-                <TextField type="date" id='expdate' onChange={(e) =>setEfficient_report_date(e.target.value)} />
+                <TextField type="date" id='file8_exp' />
               </Box>
 
-              {pdfFile8 === '' ?
-              <Box sx={{
-                width: '300px',
-                height: '200px',
-                borderRadius: '5px',
-                boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
-                marginTop: "20px",
-                backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
 
-              }}>
-                <Box sx={{
-                  justifyContent: { xs: "", md: "center" },
-                  textAlign: { xs: "center", md: "center" },
+              <embed src={pdfFile8} width="300px" height="450px" style={{display:pdfFile8===''? 'none' : 'block'}}/>
 
-
-                 }}>
-                   <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
-                  <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
-                </Box>
-
-              </Box>
-              :
-              <embed src={pdfFile8} width="300px" height="450px" />
-              }
 
               <Box
                 style={{
@@ -1241,9 +1367,10 @@ export default function manage() {
                   component="label"
                 >
                   <input
-                    id="filename"
+                    id="filename8"
                     type="file"
                     onChange={(event) => handleFileChange('file8', event)}
+                    accept="application/pdf"
                     hidden
                   />เลือกไฟล์
                 </Button>
@@ -1276,33 +1403,12 @@ export default function manage() {
 
               }}>
                 <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
-                <TextField type="date" id='expdate' onChange={(e) =>  setSds_date(e.target.value)}/>
+                <TextField type="date" id='file9_exp' />
               </Box>
 
-              {pdfFile9 === '' ?
-              <Box sx={{
-                width: '300px',
-                height: '200px',
-                borderRadius: '5px',
-                boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
-                marginTop: "20px",
-                backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
 
-              }}>
-                <Box sx={{
-                  justifyContent: { xs: "", md: "center" },
-                  textAlign: { xs: "center", md: "center" },
+              <embed src={pdfFile9} width="300px" height="450px" style={{display:pdfFile9===''? 'none' : 'block'}}/>
 
-
-                 }}>
-                  <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
-                  <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
-                </Box>
-
-              </Box>
-              :
-              <embed src={pdfFile9} width="300px" height="450px" />
-              }
 
               <Box
                 style={{
@@ -1315,9 +1421,10 @@ export default function manage() {
                   component="label"
                 >
                   <input
-                    id="filename"
+                    id="filename9"
                     type="file"
                     onChange={(event) => handleFileChange('file9', event)}
+                    accept="application/pdf"
                     hidden
                   />เลือกไฟล์
                 </Button>
@@ -1343,33 +1450,12 @@ export default function manage() {
 
               }}>
                 <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
-                <TextField type="date" id='expdate'onChange={(e) =>  setCoa(e.target.value)} />
+                <TextField type="date" id='file10_exp' />
               </Box>
 
-              {pdfFile10 === '' ?
-              <Box sx={{
-                width: '300px',
-                height: '200px',
-                borderRadius: '5px',
-                boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
-                marginTop: "20px",
-                backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
 
-              }}>
-                <Box sx={{
-                  justifyContent: { xs: "", md: "center" },
-                  textAlign: { xs: "center", md: "center" },
+              <embed src= {pdfFile10} width="300px" height="450px" style={{display:pdfFile10===''? 'none' : 'block'}}/>
 
-
-                 }}>
-                  <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
-                  <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
-                </Box>
-
-              </Box>
-              :
-              <embed src= {pdfFile10} width="300px" height="450px" />
-              }
 
               <Box
                 style={{
@@ -1382,9 +1468,10 @@ export default function manage() {
                   component="label"
                 >
                   <input
-                    id="filename"
+                    id="filename10"
                     type="file"
                     onChange={(event) => handleFileChange('file10', event)}
+                    accept="application/pdf"
                     hidden
                   />เลือกไฟล์
                 </Button>
@@ -1410,32 +1497,11 @@ export default function manage() {
 
               }}>
                 <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
-                <TextField type="date" id='expdate' onChange={(e) =>  setSds_date(e.target.value)} />
+                <TextField type="date" id='file11_exp' />
               </Box>
-              {pdfFile11 === '' ?
-              <Box sx={{
-                width: '300px',
-                height: '200px',
-                borderRadius: '5px',
-                boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
-                marginTop: "20px",
-                backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
 
-              }}>
-                <Box sx={{
-                  justifyContent: { xs: "", md: "center" },
-                  textAlign: { xs: "center", md: "center" },
+              <embed src={pdfFile11} width="300px" height="450px"style={{display:pdfFile11===''? 'none' : 'block'}} />
 
-
-                 }}>
-                   <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
-                  <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
-                </Box>
-
-              </Box>
-              :
-              <embed src={pdfFile11} width="300px" height="450px" />
-              }
 
               <Box
                 style={{
@@ -1448,9 +1514,10 @@ export default function manage() {
                   component="label"
                 >
                   <input
-                    id="filename"
+                    id="filename11"
                     type="file"
                     onChange={(event) => handleFileChange('file11', event)}
+                    accept="application/pdf"
                     hidden
                   />เลือกไฟล์
                 </Button>
@@ -1482,32 +1549,11 @@ export default function manage() {
 
               }}>
                 <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
-                <TextField type="date" id='expdate' onChange={(e) =>  setMasterformula_date(e.target.value)} />
+                <TextField type="date" id='file12_exp' />
               </Box>
-              {pdfFile12 === '' ?
-              <Box sx={{
-                width: '300px',
-                height: '200px',
-                borderRadius: '5px',
-                boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
-                marginTop: "20px",
-                backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
 
-              }}>
-                <Box sx={{
-                  justifyContent: { xs: "", md: "center" },
-                  textAlign: { xs: "center", md: "center" },
+              <embed src={pdfFile12} width="300px" height="450px" style={{display:pdfFile12===''? 'none' : 'block'}}/>
 
-
-                 }}>
-                  <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
-                  <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
-                </Box>
-
-              </Box>
-              :
-              <embed src={pdfFile12} width="300px" height="450px" />
-              }
               <Box
                 style={{
                   borderRadius: '5px',
@@ -1519,9 +1565,10 @@ export default function manage() {
                   component="label"
                 >
                   <input
-                    id="filename"
+                    id="filename12"
                     type="file"
                     onChange={(event) => handleFileChange('file12', event)}
+                    accept="application/pdf"
                     hidden
                   />เลือกไฟล์
                 </Button>
@@ -1545,32 +1592,11 @@ export default function manage() {
 
               }}>
                 <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
-                <TextField type="date" id='expdate' onChange={(e) => setSpecification_date(e.target.value)} />
+                <TextField type="date" id='file13_exp' />
               </Box>
-              {pdfFile13 === '' ?
-              <Box sx={{
-                width: '300px',
-                height: '200px',
-                borderRadius: '5px',
-                boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
-                marginTop: "20px",
-                backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
 
-              }}>
-                <Box sx={{
-                  justifyContent: { xs: "", md: "center" },
-                  textAlign: { xs: "center", md: "center" },
+              <embed src={pdfFile13} width="300px" height="450px" style={{display:pdfFile13===''? 'none' : 'block'}} />
 
-
-                 }}>
-                   <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
-                  <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
-                </Box>
-
-              </Box>
-              :
-              <embed src={pdfFile13} width="300px" height="450px" />
-              }
               <Box
                 style={{
                   borderRadius: '5px',
@@ -1582,9 +1608,10 @@ export default function manage() {
                   component="label"
                 >
                   <input
-                    id="filename"
+                    id="filename13"
                     type="file"
                     onChange={(event) => handleFileChange('file13', event)}
+                    accept="application/pdf"
                     hidden
                   />เลือกไฟล์
                 </Button>
@@ -1608,33 +1635,12 @@ export default function manage() {
 
               }}>
                 <Typography variant="h8" >วันหมดอายุของเอกสาร</Typography>
-                <TextField type="date" id='expdate' onChange={(e) => setTesting_doc_date(e.target.value)}/>
+                <TextField type="date" id='file14_exp' />
               </Box>
-              {pdfFile14 === '' ?
-              <Box sx={{
-                width: '300px',
-                height: '200px',
-                borderRadius: '5px',
-                boxShadow: '0px 0px 3px 2px rgba(0, 0, 0, 0.15)',
-                marginTop: "20px",
-                backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
 
-              }}>
-                <Box sx={{
-                  justifyContent: { xs: "", md: "center" },
-                  textAlign: { xs: "center", md: "center" },
+              <embed src={pdfFile14} width="300px" height="450px" style={{display:pdfFile14===''? 'none' : 'block'}}/>
 
 
-                 }}>
-                   <img src="/previewpdf.png" style={{ maxWidth: 0 + "50px",marginTop:"70px" ,justifyContent:"center",marginBottom:"5px"}} />
-                  <Typography fontSize={12} >ไม่ได้เลือกไฟล์ใด</Typography>
-                </Box>
-
-              </Box>
-              :
-              <embed src={pdfFile14} width="300px" height="450px" />
-
-              }
               <Box
                 style={{
                   borderRadius: '5px',
@@ -1646,9 +1652,10 @@ export default function manage() {
                   component="label"
                 >
                   <input
-                    id="filename"
+                    id="filename14"
                     type="file"
                     onChange={(event) => handleFileChange('file14', event)}
+                    accept="application/pdf"
                     hidden
                   />เลือกไฟล์
                 </Button>
@@ -1690,9 +1697,9 @@ export default function manage() {
           textAlign="center"
           variant="contained"
           color="success"
+          onClick={(e) => { saveOnly(e) }}
 
           sx={{ mt: 3, mb: 2 }}
-          onClick={() => {generatePDF(1)}}
         >
           บันทึก
         </Button>
@@ -1706,18 +1713,16 @@ export default function manage() {
           textAlign="center"
           variant="contained"
           color="success"
-          onClick={() => { generatePDF(2) }}
+          onClick={(e) => { generatePDF(e) }}
           sx={{ mt: 3, mb: 2 }}
         >
-         รวบรวมข้อมูลและบันทึกเป็นไฟล์ PDF
+         รวมข้อมูลและบันทึกเป็นไฟล์ PDF
         </Button>
       </Box>
     </Box>
       {/* <Button onClick={(e) => { generatePDF(e) }}>Generate PDF</Button> */}
 
       <Footer />
-
-
     </>
   )
 

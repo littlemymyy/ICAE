@@ -21,10 +21,9 @@ import FormControl from '@mui/material/FormControl';
 
 
 export default function productslist() {
-  const [show, setShow] = useState([])
   const router = useRouter()
   const [search_input, setSearch_input] = useState("");
-  const [data, setData] = useState([])
+  const [product_data, setProductData] = useState([])
   const [id, setId] = useState("")
   const [uName, setUname] = useState("")
   const Swal = require('sweetalert2')
@@ -47,28 +46,20 @@ export default function productslist() {
         router.push("/team/team")
       }
       else  {
-        setId(ida);
-        console.log(ida)
-        let load = {
-          data: ida
-        };
         try {
           const res = await Axios({
-            url: "http://localhost:3001/api/productData",
-            method: "post",
-            data: load,
-          });
-
-          if(res.data.length === 0 ){
-            router.push("/pif/createByfda")
-          }
-          console.log('Load Data')
-          console.log(res.data);
-          setData(res.data);
-          setShow(res.data)
+            url: "http://localhost:3001/api/getPifProductByOrganiztion?organization_id=" + ida,
+            method: "get",
+          }).then((res) => {
+            if (res.data.status === "error") {
+              router.push("/pif/createByfda")
+            }
+            else{
+              setProductData(res.data.message)
+            }
+          })
         } catch (error) {
           console.error("Error fetching data:", error);
-          // Handle the error, e.g., show a user-friendly message
         }
       }
 
@@ -133,55 +124,58 @@ export default function productslist() {
     }
   };
 
+  const handledelete = (e) => {
+    console.log(e)
+    try {
+      Axios.post("http://localhost:3001/api/pifProductRemoveById?id=" + e)
+      .then((res) => {
+          console.log(res.data)
+          console.log(res.data.status)
 
-  const handledelete =(e,idx,status,fda_license) => {
-    removeNo(e,status,fda_license)
-    removedata(idx)
-  }
-
-  const removedata = (e) => {
-    data.splice(e,1)
-    setData([...data])
-    console.log(data)
-  }
-
-  const removeNo = async (e,status,fda_license) => {
-    let load = {
-        data : e ,
-        id : id ,
-        fda_num : fda_license ,
-        status : status
+          if (res.data.status === 'ok') {
+            Swal.fire({
+              title: "สำเร็จ!",
+              text: "นำสินค้าออกจากระบบเรียบร้อย!",
+              icon: "success"
+            }).then(()=>{
+              window.location.reload()
+            })
+          }
+          else {
+          Swal.fire({
+              title: "ผิดพลาด!",
+              text: "นำสินค้าออกจากระบบไม่สำเร็จ!",
+              icon: "error"
+            });
+          }
+      })
+    }catch {
+        Swal.fire({
+            title: "ผิดพลาด!",
+            text: "นำสินค้าออกจากระบบไม่สำเร็จ!",
+            icon: "error"
+          });
     }
-    console.log("load from delete")
-    console.log(load)
-   const res = await Axios.post("http://localhost:3001/api/userDeleteProduct",load)
-   if(res.data) {
-    Swal.fire({
-        title: "สำเร็จ!",
-        text: "นำสินค้าออกจากระบบเรียบร้อย!",
-        icon: "success"
-      });
-   }
   }
 
-  const handleButtonClickEdit = (e,fda_license) => {
-    if( e=== "0" ){
+  const handleButtonClickEdit = (pif_status,id) => {
+    if( pif_status === 0 ){
       router.push({
         pathname : "/pif/manage",
         query : {
-          fdaNo : fda_license
+          product_id : id
         }
 
       }
         )
 
     }
-    else {
+    else if ( pif_status === 1 ) {
       router.push({
-        pathname: "/pif/upload_edit",
+        pathname: "/pif/upload",
 
         query: {
-          fdaNo : fda_license ,
+          product_id : id ,
         },
       });
     }
@@ -330,6 +324,9 @@ export default function productslist() {
 
       </Box>
       <Box display="flex" alignItems="center">
+
+
+
         <div className="input-icons">
           <i className="fa fa-search icon"></i>
           <input placeholder='ค้นหาผลิตภัณฑ์ของคุณ '
@@ -349,32 +346,6 @@ export default function productslist() {
           <Button variant="contained" size="medium" sx={{ ml: 2 }} style={buttonStyle} onClick={() => handleButtonClick(3)}>
             ทีมของคุณ
           </Button>
-
-
-                            <FormControl size="medium" sx={{ m: 1, minWidth: 150 }}  >
-                              <InputLabel id="demo-simple-select-label">
-                                การกรอกข้อมูล
-                              </InputLabel>
-                              <Select
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
-                                label="การกรอกข้อมูล"
-                                onChange={(e) => handleChange(e.target.value)}
-                              >
-                                <MenuItem value={ 1 }>
-                                  วันที่มากไปน้อย
-                                </MenuItem>
-                                <MenuItem value={  2 }>
-                                  วันที่น้อยไปมาก
-                                </MenuItem>
-                                <MenuItem value={ 3 }>
-                                ตามตัวอักษร ก-ฮ
-                                </MenuItem>
-                                <MenuItem value={ 4 }>
-                                ตามตัวอักษร ฮ-ก
-                                </MenuItem>
-                              </Select>
-                            </FormControl>
 
           </div >
       </Box>
@@ -396,68 +367,49 @@ export default function productslist() {
             </tr>
           </thead>
           <tbody>
-            {
-             show.map((value , idx)=>(
+          {
+             product_data.map((value , idx)=>(
                 <tr className="trplc" key={idx}>
                   <td className="plac" >{idx+1}</td>
                   <td className="plac">{value.fda_license}</td>
-                  <td className="plac">{value.cosnameC}</td>
-                  <td className="plac">{value.cosname}</td>
-                  <td className="plac">{value.expdate}</td>
-
-                  {/* {value.img_path} */}
+                  <td className="plac">{value.product_name}</td>
+                  <td className="plac">{value.cosmetic_name}</td>
+                  <td className="plac">{new Date(value.expire_date).toISOString().split('T')[0]}</td>
+                  { value.pif_status === 0 ? <td className="plac">ไม่มี</td> : <td className="plac">มี</td> }
+                  <td className="plac plaC">
                   {
-                    value.status === "0" ?
-                    <td>ไม่มี</td>
-                    : <td>มี</td>
-                  }
-                  <td className="plTD">
-  {
-    value.status === "0" ? (
-      <>
-        <button className="pl" onClick={() => handleButtonClickEdit(value.status, value.fda_license)}>
-        สร้าง PIF <FaEdit />
-        </button>
-        <button className="pl" onClick={() => handledelete(value.no, idx, value.status, value.fda_license)}>
-          ลบ &nbsp;
-        <MdDeleteForever />
-</button>
-      </>
-    ) : (
-      <>
-        <button className="pl" onClick={() => handleButtonClickEdit(value.status, value.fda_license)}>
-        แก้ไข PIF <FaEdit />
-        </button>
-        <button className="pl" onClick={() => handledelete(value.no, idx, value.status, value.fda_license)}>
-          ลบ &nbsp;
-        <MdDeleteForever />
-        </button>
-      </>
-    )
-  }
-</td>
+                    value.pif_status === 0 ? (
+                      <>
+                        <button className="pl" onClick={() => handleButtonClickEdit(value.pif_status, value.id)}>
+                        สร้าง PIF &nbsp;<FaEdit />
+                        </button>
+                        <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <button className="pl" onClick={() => handledelete(value.id)}>
+                          ลบ &nbsp;
+                        <MdDeleteForever />
+                        </button>
+                      </>
+                          ) : (
+                      <>
+                        <button className="pl" onClick={() => handleButtonClickEdit(value.pif_status, value.id)}>
+                        แก้ไข PIF &nbsp;<FaEdit />
+                        </button>
+                        <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <button className="pl" onClick={() => handledelete(value.id)}>
+                          ลบ &nbsp;
+                        <MdDeleteForever />
+                        </button>
+                      </>
+                          )
+                        }
+              </td>
 
                 </tr>
-
-
               ))
             }
-
           </tbody>
         </table>
-
       </div>
-
-
-
-      <br />
-
-      <div>
-
-      </div>
-
-
-
 
       <Footer />
         </>

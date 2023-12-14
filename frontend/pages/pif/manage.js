@@ -13,18 +13,18 @@ import TabPanel from '@mui/lab/TabPanel';
 export default function manage() {
     const router = useRouter()
     const [value, setValue] = React.useState('1');
-    const {fdaNo} = router.query
+    const {product_id} = router.query
 
     const handleChange = (event, newValue) => {
     setValue(newValue);
     };
 
-   
+
     const handleClick = () => {
         router.push({
             pathname : "/pif/upload",
             query : {
-                fdaNo : fdaNo
+                product_id : product_id
             }
 
         })
@@ -45,7 +45,7 @@ export default function manage() {
         >
             <Box className="manage_left"
             sx={{
-                
+
                 justifyContent: { xs: "", md: "center" },
                 display: { xs: "block", md: "flex" },
                 paddingTop: {xs:"50px", md:"50px"}
@@ -58,11 +58,11 @@ export default function manage() {
             </Box>
             <Box className="manage_right"
             sx={{
-                
+
                 textAlign:{xs:'center',md:"center"},
                 justifyContent:{xs:"center",md:"center"}
             }}
-            
+
             >
                 <Typography variant="h3"
                 sx={{
@@ -70,7 +70,7 @@ export default function manage() {
                     marginLeft:{xs:"50px",md:"50px"}
                 }}
                 >ระบบจัดการ PIF</Typography>
-                
+
             </Box>
     </Box>
 
@@ -80,14 +80,14 @@ export default function manage() {
             marginTop:{xs:"20px",md:"20px"},
             marginLeft:{xs:"80px",md:"80px"}
         }}
-        
+
         >
             เอกสารที่ต้องเตรียมสำหรับการจัดทำ PIF
         </Typography>
 
-        
 
-        
+
+
 
     </Box>
 
@@ -116,8 +116,8 @@ export default function manage() {
             <h7>5. รายงานสรุปอาการอันไม่พึงประสงค์จากการใช้เครื่องสำอาง (Adverse event report) กรณีมีการเกิดอาการอันไม่พึงประสงค์จากการใช้เครื่องสำอาง</h7><p></p>
             <h7>6. การประเมินความสอดคล้องของการกล่าวอ้างสรรพคุณเครื่องสำอาง ต้องมีข้อมูลสนับสนุนการอ้างประสิทธิภาพหรือสรรพคุณของเครื่องสำอางตามที่กล่าวอ้างบนฉลาก
 หรือโฆษณา </h7>
-        
-        
+
+
         </TabPanel>
         <TabPanel value="2">
             <h6>ส่วนที่ 2 ข้อมูลของวัตถุดิบ</h6>
@@ -141,17 +141,17 @@ export default function manage() {
         display: { xs: "block", md: "flex" },
         marginBottom:{xs:"30px",md:"30px"},
         marginTop:{xs:"30px",md:"30px"}
-    
+
     }}
-    
+
     >
         <Button onClick={() => handleClick()} style={{ Width:"100%" , borderRadius:"5px", backgroundColor:"#299D95" }}>
-                
+
                     <Typography sx={{ fontSize: 14 }} color="white" >
                         คลิกเพื่อเข้าสู่หน้าการจัดการ PIF
                     </Typography>
 
-                
+
         </Button>
     </Box>
 
