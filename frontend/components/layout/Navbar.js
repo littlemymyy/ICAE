@@ -18,7 +18,7 @@ import Swal from 'sweetalert2';
 
 
 const pages = ['หน้าหลัก', 'ตรวจสอบสูตรสารเคมี', 'การจัดการPIF' , 'ประวัติการตรวจสอบสูตรสารเคมี','คลังความรู้'];
-const settings = ['หน้าโปรไฟล์',  'การแจ้งเตือน', 'ออกจากระบบ'];
+const settings = ['ออกจากระบบ'];
 
 function Navbar() {
     const router = useRouter();
@@ -257,19 +257,6 @@ function Navbar() {
                     ))}
                 </Box>
 
-
-                {/* <Box sx={{ flexGrow: 0 }}>
-                    <Tooltip title="Open settings">
-                    <IconButton onClick={handleOpenUserMenu} sx={{ p: 1 }}>
-                        <Avatar alt="Remy Sharp" src= {icon} />
-                    </IconButton>
-                    </Tooltip>
-
-
-
-                 </Box> */}
-
-                {/* Start User Icon */}
                 {
                     uname !== '' ?
                 <Box sx={{ flexGrow: 0 }}>
@@ -295,7 +282,7 @@ function Navbar() {
                     onClose={handleCloseUserMenu}
                     >
                         <MenuItem key={'555'} >
-                    <Typography textAlign="center">{uname}</Typography>
+                    <Typography textAlign="center">สวัสดี, {uname}</Typography>
                     </MenuItem>
                     {settings.map((setting) => (
                         <MenuItem key={setting} onClick={handleCloseUserMenu}>
