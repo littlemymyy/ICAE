@@ -72,26 +72,20 @@ export default function SignIn() {
       data: load,
     })
       .then(function (response) {
-        if(response.data.length > 0 ) {
-          console.log(response.data);
+        if(response.data.status === "ok" ) {
 
-          // em_email : "test01@gmail.com"
-          // em_fullname : "test01"
-          // em_icon : "/test01.png"
-          // em_pass : "12345"
-          console.log(response.data[0].em_email)
-
-          localStorage.setItem("uname" , response.data[0].em_fullname);
-          localStorage.setItem("uemail" , response.data[0].em_email)
-          localStorage.setItem("uicon" , response.data[0].em_icon);
-          localStorage.setItem("status" , response.data[0].status);
-          localStorage.setItem('orid', response.data[0].organization_id)
+          localStorage.setItem("token" , response.data.token);
+          localStorage.setItem("uname" , response.data.result[0].em_fullname);
+          localStorage.setItem("uemail" , response.data.result[0].em_email)
+          localStorage.setItem("uicon" , response.data.result[0].em_icon);
+          localStorage.setItem("status" , response.data.result[0].status);
+          localStorage.setItem('orid', response.data.result[0].organization_id)
 
 
-          if(response.data[0].status === "A"){
+          if(response.data.result[0].status === "A"){
             router.push("/admin/Home");
           }
-          else if(response.data[0].status === "S") {
+          else if(response.data.result[0].status === "S") {
             router.push("/")
           }
           else {
