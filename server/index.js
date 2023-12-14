@@ -143,7 +143,7 @@ app.post('/api/savePdf', pdfUpload.any(), (req, res) => {
 
     //for file
     const files = req.files;
-    // const filesPath = req.files.map(file => file.path.toString());
+    console.log(files);
     let pdfPath = [];
     console.log("\n\n")
 
@@ -161,12 +161,13 @@ app.post('/api/savePdf', pdfUpload.any(), (req, res) => {
     let img_path = null;
     let pdf_path = null;
 
-    files.forEach(file => {
-        if (file.fieldname.toString() === 'photo')
+    for (let i = 0; i < files.length; i++){
+        if (files[i].mimetype === 'image/jpeg' || files[i].mimetype === 'image/png') {
             console.log("photo")
-            console.log(file.path.toString())
-            img_path = file.path.toString();
-    });
+            console.log(files[i].path.toString())
+            img_path = files[i].path.toString();
+        }
+    }
 
     let bodyData = JSON.parse(req.body.data);
 
@@ -190,7 +191,7 @@ app.post('/api/savePdf', pdfUpload.any(), (req, res) => {
                         file2_exp, file3_exp, file4_exp, file5_exp, file6_exp, file7_exp, file8_exp, file9_exp, file10_exp,
                         file11_exp, file12_exp, file13_exp, file14_exp)
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
-                    , [bodyData.product_id, bodyData.email,bodyData.file_name, img_path, pdf_path, bodyData.expdate,  new Date(),
+                    , [bodyData.product_id, bodyData.email,bodyData.file_name, img_path || null, pdf_path, bodyData.expdate,  new Date(),
                         pdfPath[0] || null, pdfPath[1]|| null, pdfPath[2]|| null, pdfPath[3]|| null, pdfPath[4]|| null, pdfPath[5]|| null, pdfPath[6]|| null, pdfPath[7]|| null,
                         pdfPath[8]|| null, pdfPath[9]|| null, pdfPath[10]|| null, pdfPath[11]|| null, pdfPath[12]|| null, pdfPath[13]|| null, bodyData.file1_exp|| null,
                         bodyData.file2_exp|| null, bodyData.file3_exp|| null, bodyData.file4_exp|| null, bodyData.file5_exp|| null, bodyData.file6_exp|| null,
@@ -204,16 +205,18 @@ app.post('/api/savePdf', pdfUpload.any(), (req, res) => {
                         }
                         else {
                             db.execute(
-                                'UPDATE pif_products SET pif_status = ?, fda_license = ? , product_name = ?, cosmetic_name = ?, cosmetic_type = ?, create_date = ?, expire_date = ?, cosmetic_reason = ?, cosmetic_physical = ?, company_name = ?, company_eng_name = ?, more_info = ?, WHERE product_id = ?',
+                                'UPDATE pif_product SET pif_status = ?, fda_license = ? , product_name = ?, cosmetic_name = ?, cosmetic_type = ?, create_date = ?, expire_date = ?, cosmetic_reason = ?, cosmetic_physical = ?, company_name = ?, company_eng_name = ?, more_info = ? WHERE id = ?',
                                 [bodyData.pif_status, bodyData.fda_license, bodyData.product_name, bodyData.cosmetic_name, bodyData.cosmetic_type, bodyData.create_date, bodyData.expire_date, bodyData.cosmetic_reason, bodyData.cosmetic_physical, bodyData.company_name, bodyData.company_eng_name, bodyData.more_info, bodyData.product_id],
                                 (err, result) => {
                                     if(err) {
                                         res.status(500).send('Internal Server Error');
                                         console.log('err-3 ' + err);
+                                        console.log(bodyData.pif_status, bodyData.fda_license, bodyData.product_name, bodyData.cosmetic_name, bodyData.cosmetic_type, bodyData.create_date, bodyData.expire_date, bodyData.cosmetic_reason, bodyData.cosmetic_physical, bodyData.company_name, bodyData.company_eng_name, bodyData.more_info, bodyData.product_id)
                                         return;
                                     }
                                     else {
                                         console.log("THIS NEW LATEST")
+                                        res.status(200).send('latest_ok');
                                     }
                                 }
                             )
@@ -2174,7 +2177,33 @@ app.post('/api/pifProductRemoveById', jsonParser, (req, res) => {
                 return;
             }
             else {
-                res.json({status:'ok',message:result})
+               db.execute(
+                'SELECT product_id FROM pif WHERE product_id = ?',
+                [req.query.id],
+                (err, result) => {
+                    if(err) {
+                        res.json({status:'error',message:err});
+                        return;
+                    }
+                    if(result.length > 0) {
+                        db.execute(
+                            'DELETE FROM pif WHERE product_id = ?',
+                            [req.query.id, req.query.id],
+                            (err, result) => {
+                                if(err) {
+                                    res.json({status:'error',message:err});
+                                    return;
+                                }
+                                else {
+                                    res.json({status:'ok',message:result})
+                                }
+                            }
+                        )
+                    }
+                    else {
+                        res.json({status:'ok',message:result})
+                    }
+                })
             }
         })
 });
