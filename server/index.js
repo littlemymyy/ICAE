@@ -143,12 +143,9 @@ app.post('/api/savePdf', pdfUpload.any(), (req, res) => {
 
     //for file
     const files = req.files;
-    console.log(files)
     // const filesPath = req.files.map(file => file.path.toString());
     let pdfPath = [];
     console.log("\n\n")
-    console.log(files[0].fieldname.toString())
-    console.log(files[1].fieldname.toString())
 
     for (let i = 0; i < 14; i++) {
         files.forEach(file => {
@@ -157,33 +154,174 @@ app.post('/api/savePdf', pdfUpload.any(), (req, res) => {
         }});
 
         if (pdfPath[i] === undefined) {
-            pdfPath.push('-');
+            pdfPath.push(null);
         }
     }
 
+    let img_path = null;
+    let pdf_path = null;
+
+    files.forEach(file => {
+        if (file.fieldname.toString() === 'photo')
+            console.log("photo")
+            console.log(file.path.toString())
+            img_path = file.path.toString();
+    });
+
+    let bodyData = JSON.parse(req.body.data);
+
+    console.log("start execute")
+    db.execute(
+        'SELECT COUNT(*) FROM pif WHERE product_id = ?',
+        [bodyData.product_id],
+        (err, result) => {
+            if(err) {
+                res.status(500).send('Internal Server Error');
+                console.log('err-1' + err);
+                return;
+            }
+            if(result[0]['COUNT(*)'] === 0) {
+                console.log("RUN ON IT")
+                console.log (bodyData.product_id, bodyData.email,bodyData.file_name, img_path, pdf_path, bodyData.expdate, new Date())
+                db.execute(
+                    `INSERT INTO pif (product_id, email, file_name, img_path, pdf_path, expdate, create_when,
+                        file1_path, file2_path, file3_path, file4_path, file5_path, file6_path, file7_path, file8_path,
+                        file9_path, file10_path, file11_path, file12_path, file13_path, file14_path,file1_exp,
+                        file2_exp, file3_exp, file4_exp, file5_exp, file6_exp, file7_exp, file8_exp, file9_exp, file10_exp,
+                        file11_exp, file12_exp, file13_exp, file14_exp)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+                    , [bodyData.product_id, bodyData.email,bodyData.file_name, img_path, pdf_path, bodyData.expdate,  new Date(),
+                        pdfPath[0] || null, pdfPath[1]|| null, pdfPath[2]|| null, pdfPath[3]|| null, pdfPath[4]|| null, pdfPath[5]|| null, pdfPath[6]|| null, pdfPath[7]|| null,
+                        pdfPath[8]|| null, pdfPath[9]|| null, pdfPath[10]|| null, pdfPath[11]|| null, pdfPath[12]|| null, pdfPath[13]|| null, bodyData.file1_exp|| null,
+                        bodyData.file2_exp|| null, bodyData.file3_exp|| null, bodyData.file4_exp|| null, bodyData.file5_exp|| null, bodyData.file6_exp|| null,
+                        bodyData.file7_exp|| null, bodyData.file8_exp|| null, bodyData.file9_exp|| null, bodyData.file10_exp|| null, bodyData.file11_exp|| null,
+                        bodyData.file12_exp|| null, bodyData.file13_exp||null, bodyData.file14_exp|| null],
+                    (err, result) => {
+                        if(err) {
+                            console.log('err-2 ' + err);
+                            res.status(500).send('Internal Server Error');
+                            return;
+                        }
+                        else {
+                            db.execute(
+                                'UPDATE pif_products SET pif_status = ?, fda_license = ? , product_name = ?, cosmetic_name = ?, cosmetic_type = ?, create_date = ?, expire_date = ?, cosmetic_reason = ?, cosmetic_physical = ?, company_name = ?, company_eng_name = ?, more_info = ?, WHERE product_id = ?',
+                                [bodyData.pif_status, bodyData.fda_license, bodyData.product_name, bodyData.cosmetic_name, bodyData.cosmetic_type, bodyData.create_date, bodyData.expire_date, bodyData.cosmetic_reason, bodyData.cosmetic_physical, bodyData.company_name, bodyData.company_eng_name, bodyData.more_info, bodyData.product_id],
+                                (err, result) => {
+                                    if(err) {
+                                        res.status(500).send('Internal Server Error');
+                                        console.log('err-3 ' + err);
+                                        return;
+                                    }
+                                    else {
+                                        console.log("THIS NEW LATEST")
+                                    }
+                                }
+                            )
+                        }
+                    }
+                )
+            }
+            else {
+                //set new expdate
+                for (let i = 0; i < 14; i++) {
+                    if (bodyData[`file${i+1}_exp`] !== "") {
+                        db.execute(
+                            `UPDATE pif SET file${i+1}_exp = ? WHERE product_id = ?`,
+                            [bodyData[`file${i+1}_exp`], bodyData.product_id],
+                            (err, result) => {
+                                if(err) {
+                                    res.status(500).send('Internal Server Error');
+                                    console.log('err-4 ' + err);
+                                    return;
+                                }
+                            }
+                        )
+                    }
+                }
+                //remove old file
+                for (let i = 0; i < 14; i++) {
+                    if (bodyData[`pdfFile${i+1}`] === "") {
+                        db.execute(
+                            `UPDATE pif SET file${i+1}_path = null, file${i+1}_exp = null WHERE product_id = ?`,
+                            [bodyData.product_id],
+                            (err, result) => {
+                                if(err) {
+                                    res.status(500).send('Internal Server Error');
+                                    console.log('err-5 ' + err);
+                                    return;
+                                }
+                            }
+                        )
+                    }
+                }
+                //img_path
+                if (img_path !== null) {
+                    db.execute(
+                        'UPDATE pif SET img_path = ? WHERE product_id = ?',
+                        [img_path, bodyData.product_id],
+                        (err, result) => {
+                            if(err) {
+                                res.status(500).send('Internal Server Error');
+                                console.log('err-6 ' + err);
+                                return;
+                            }
+                            else{
+                                console.log("added img_path")
+                                console.log(img_path)
+                            }
+                        }
+                    )
+                }
+                db.execute(
+                    'UPDATE pif SET file_name = ?, expdate = ? WHERE product_id = ?',
+                    [bodyData.file_name, bodyData.expdate, bodyData.product_id],
+                    (err, result) => {
+                        if(err) {
+                            res.status(500).send('Internal Server Error');
+                            console.log('err-5 ' + err);
+                            return;
+                        } else{
+                            console.log("added img_path")
+                            console.log(img_path)
+                        }
+                    }
+                )
+                db.execute(
+                    'UPDATE pif_product SET pif_status = ?, fda_license = ? , product_name = ?, cosmetic_name = ?, cosmetic_type = ?, create_date = ?, expire_date = ?, cosmetic_reason = ?, cosmetic_physical = ?, company_name = ?, company_eng_name = ?, more_info = ? WHERE id = ?',
+                    [bodyData.pif_status, bodyData.fda_license, bodyData.product_name, bodyData.cosmetic_name, bodyData.cosmetic_type, bodyData.create_date, bodyData.expire_date, bodyData.cosmetic_reason, bodyData.cosmetic_physical, bodyData.company_name, bodyData.company_eng_name, bodyData.more_info, bodyData.product_id],
+                    (err, result) => {
+                        if(err) {
+                            res.status(500).send('Internal Server Error');
+                            console.log('err-6 ' + err);
+                            return;
+                        }
+                    }
+                )
+                files.forEach(file => {
+                    if (file.mimetype === 'application/pdf') {
+                        let fileExp = file.fieldname.toString() + '_exp';
+                        console.log(bodyData.expdate, new Date(), file.path.toString(),fileExp, bodyData.product_id)
+                        db.execute(
+                            `UPDATE pif SET ${file.fieldname.toString()}_path = '${file.path.toString()}' WHERE product_id = ?`,
+                            [bodyData.product_id],
+                            (err, result) => {
+                                if(err) {
+                                    res.status(500).send('Internal Server Error');
+                                    console.log('err-7 ' + err);
+                                    return;
+                                }
+                                else {
+                                    console.log("added pdf_path")
+                                }
+                            }
+                        )
+                    }
+                })
+                res.status(200).send('latest_ok');
+            }
+        });
+
     console.log(pdfPath);
-
-
-
-    // //for text data
-    // const data = JSON.parse(req.body.data);
-
-
-    // console.log(files);
-
-    // try {
-    //     (async () => {
-    //         for(let i = 0 ; i < files.length ; i++){
-    //             await merger.add(files[i].path);
-    //         }
-    //         await merger.save('uploads/mergedpdf.pdf').then((pdfBuffer) => {
-    //             res.send(pdfBuffer);
-    //             });
-    //     })()
-    // } catch (error) {
-    //     console.error('Error merging PDFs:', error);
-    //     res.status(500).send('Internal Server Error');
-    // }
 });
 
 app.post('/api/submitPif', pdfUpload.any(), (req, res) => {
@@ -652,10 +790,23 @@ app.post('/api/submitPifEdit', pdfUpload.any(), (req, res) => {
   })
 
 
-
-
-
-
+app.get('/api/getPifByID', jsonParser, (req, res) => {
+    db.execute(
+        'SELECT * FROM pif WHERE product_id = ?',
+        [req.query.product_id],
+        (err, result) => {
+            if(err) {
+                res.json({status:'error',message:err});
+                return;
+            }
+            if(result.length > 0) {
+                res.json({status:'ok',message:result})
+            }
+            else {
+                res.json({status:'error',message:'No data found'});
+            }
+        })
+})
 
 
 
@@ -1901,17 +2052,6 @@ app.post('/api/getuserDelete', (req, res) => {
         }
 
     })
-
-    // const sql1 = `UPDATE pif_storage SET organization_id = NULL WHERE no = ?`;
-    // db.query(sql1 , [no] , (err , result) => {
-    //     if(err){
-    //         console.log(err)
-    //     }
-    //     else {
-    //         console.log(result)
-    //         res.status(200).send('delete')
-    //     }
-    // })
 });
 
 app.post('/api/getuserDeleteAdmin', (req, res) => {
@@ -1931,17 +2071,6 @@ app.post('/api/getuserDeleteAdmin', (req, res) => {
         }
 
     })
-
-    // const sql1 = `UPDATE pif_storage SET organization_id = NULL WHERE no = ?`;
-    // db.query(sql1 , [no] , (err , result) => {
-    //     if(err){
-    //         console.log(err)
-    //     }
-    //     else {
-    //         console.log(result)
-    //         res.status(200).send('delete')
-    //     }
-    // })
 });
 
 app.post('/api/changeNameTeam' , (req , res) => {
@@ -1977,64 +2106,6 @@ app.post('/api/changeNameTeam' , (req , res) => {
 
 })
 
-const storage = multer.diskStorage({
-    destination:  (req, file, cb) => {
-      cb(null, 'uploads/'); // Destination folder for uploaded files
-    },
-    filename:  (req, file, cb) => {
-      // Use Date.now() to make sure the filename is unique
-
-      cb(null, file.originalname+path.extname(file.originalname));
-    },
-  });
-
-  const upload = multer({storage:storage})
-
-  app.post('/upload', upload.single('image'), (req, res) => {
-    res.send('File uploaded!');
-  });
-
-
-//Delete Product from Productlist
-app.post('/api/userDeleteProduct' , (req,res)=>{
-    console.log("No...")
-    const id = req.body.id
-    const no =req.body.data
-    const fda = req.body.fda_num
-    const status = req.body.status
-    console.log(req.body)
-
-    db.execute(
-        'DELETE FROM product WHERE no = ?',
-        [req.body.no],
-        (err, result) => {
-            if(err) {
-                res.json({status:'error',message:err});
-                return;
-            }
-            if(result.length > 0) {
-                res.json({status:'ok',message:result})
-            }
-            else {
-                res.json({status:'error',message:'No data found'});
-            }
-        })
-
-    if(status === "1"){
-        const sql1 = 'DELETE FROM pif WHERE fda_license = ?'
-        db.query(sql1,[fda] ,(error , result) =>{
-            if(error){
-                console.log(error)
-            }
-            else{
-                res.json({status:'ok',message:result})
-            }
-        } )
-
-    }
-
-
-})
 
 app.post('/api/insertPifProduct' , jsonParser , (req , res) => {
     console.log("insertPifProduct")
