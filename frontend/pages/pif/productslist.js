@@ -176,7 +176,7 @@ export default function productslist() {
     }
     else if ( pif_status === 1 ) {
       router.push({
-        pathname: "/pif/upload_edit",
+        pathname: "/pif/upload",
 
         query: {
           product_id : id ,
