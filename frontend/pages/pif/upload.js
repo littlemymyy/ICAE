@@ -275,76 +275,101 @@ export default function manage() {
       case 'file1':
         setPdfFile1(baseUrl+filePath);
         document.getElementById("del1").style.display = "block";
-        document.getElementById("file1_exp").value = convertDate(expDate)
+        if (expDate !== null){
+          document.getElementById("file1_exp").value = convertDate(expDate)
+        }
         console.log("expDate = " + expDate)
         break;
       case 'file2':
         setPdfFile2(baseUrl+filePath);
         document.getElementById("del2").style.display = "block";
+        if (expDate !== null){
         document.getElementById("file2_exp").value = convertDate(expDate)
+        }
         break;
       case 'file3':
         setPdfFile3(baseUrl+filePath);
         document.getElementById("del3").style.display = "block";
+        if (expDate !== null){
         document.getElementById("file3_exp").value = convertDate(expDate)
+        }
         break;
       case 'file4':
         setPdfFile4(baseUrl+filePath);
         document.getElementById("del4").style.display = "block";
+        if (expDate !== null){
         document.getElementById("file4_exp").value = convertDate(expDate)
+        }
         break;
       case 'file5':
         setPdfFile5(baseUrl+filePath);
         document.getElementById("del5").style.display = "block";
+        if (expDate !== null){
         document.getElementById("file5_exp").value = convertDate(expDate)
+        }
         break;
       case 'file6':
         setPdfFile6(baseUrl+filePath);
         document.getElementById("del6").style.display = "block";
+        if (expDate !== null){
         document.getElementById("file6_exp").value = convertDate(expDate)
+        }
         break;
       case 'file7':
         setPdfFile7(baseUrl+filePath);
         document.getElementById("del7").style.display = "block";
+        if (expDate !== null){
         document.getElementById("file7_exp").value = convertDate(expDate)
+        }
         break;
       case 'file8':
         setPdfFile8(baseUrl+filePath);
         document.getElementById("del8").style.display = "block";
+        if (expDate !== null){
         document.getElementById("file8_exp").value = convertDate(expDate)
+        }
         break;
       case 'file9':
         setPdfFile9(baseUrl+filePath);
         document.getElementById("del9").style.display = "block";
+        if (expDate !== null){
         document.getElementById("file9_exp").value = convertDate(expDate)
+        }
         break;
       case 'file10':
         setPdfFile10(baseUrl+filePath);
         document.getElementById("del10").style.display = "block";
+        if (expDate !== null){
         document.getElementById("file10_exp").value = convertDate(expDate)
+        }
         break;
       case 'file11':
         setPdfFile11(baseUrl+filePath);
         document.getElementById("del11").style.display = "block";
+        if (expDate !== null){
         document.getElementById("file11_exp").value = convertDate(expDate)
+        }
         break;
       case 'file12':
         setPdfFile12(baseUrl+filePath);
         document.getElementById("del12").style.display = "block";
+        if (expDate !== null){
         document.getElementById("file12_exp").value = convertDate(expDate)
+        }
         break;
       case 'file13':
         setPdfFile13(baseUrl+filePath);
         document.getElementById("del13").style.display = "block";
+        if (expDate !== null){
         document.getElementById("file13_exp").value = convertDate(expDate)
+        }
         break;
       case 'file14':
         setPdfFile14(baseUrl+filePath);
         document.getElementById("del14").style.display = "block";
+        if (expDate !== null){
         document.getElementById("file14_exp").value = convertDate(expDate)
-        break;
-      case 'photo':
-        setFilePhoto(file);
+        }
         break;
       // Add more cases for additional inputs
       default:
@@ -646,8 +671,13 @@ export default function manage() {
 
       })
     } catch (error) {
-      console.error('Error uploading files:', error);
-      router.push("/pif/productslist")
+      Swal.fire({
+        icon: 'error',
+        title: 'บันทึกข้อมูลไม่สำเร็จ',
+        text: 'บันทึกข้อมูลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง'
+      }).then(() => {
+        console.error('Error uploading files:', error);
+      })
     }
   };
 
@@ -799,7 +829,7 @@ export default function manage() {
               filename ?
                 <TextField label="ชื่อผลิตภัณฑ์" id='filename' InputLabelProps={{ shrink: true }} />
                 :
-                <TextField label="ชื่อผลิตภัณฑ์" id='filename' InputLabelProps={{ shrink: false }} />
+                <TextField label="ชื่อผลิตภัณฑ์" id='filename' onChange={(e) => {setFilename(e.target.value)}} InputLabelProps={{ shrink: false }} />
             }
           </Box>
 
@@ -906,12 +936,11 @@ export default function manage() {
               </Box>
 
               <Box >
-                <TextField id="dateS" label="วันที่แจ้งจดแจ้ง" style={{ width: "50%", marginTop: "10px" }} />
-
+                <TextField id="dateS" type="date" InputLabelProps={{ shrink: true }} label="วันที่แจ้งจดแจ้ง" style={{ width: "50%", marginTop: "10px" }} />
               </Box>
 
               <Box>
-                <TextField id="expDate" label="วันที่ใบอนุญาตหมดอายุ" style={{ width: "50%", marginTop: "10px" }}/>
+                <TextField id="expDate" type="date" InputLabelProps={{ shrink: true }} label="วันที่ใบอนุญาตหมดอายุ" style={{ width: "50%", marginTop: "10px" }}/>
 
               </Box>
               <Box >

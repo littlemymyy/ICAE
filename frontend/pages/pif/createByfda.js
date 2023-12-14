@@ -50,6 +50,20 @@ const createByfda = () => {
     setEmail(userData)
   }, [])
 
+  const reformatDate = (input) => {
+    let date = input.split("/")
+    let day = date[0]
+    let month = date[1]
+    let year = (date[2]*1) - 543
+    if (day.length == 1) {
+      day = "0" + day
+    }
+    if (month.length == 1) {
+      month = "0" + month
+    }
+    let newDate = year + "-" + month + "-" + day
+    return newDate
+  }
 
   //Get Data from Fda
   const fetchData = async (e) => {
@@ -104,10 +118,10 @@ const createByfda = () => {
           document.getElementById("typeGoods").value = res.data[9]
 
           document.getElementById("dateS-label").className = updatedLabel
-          document.getElementById("dateS").value = res.data[7]
+          document.getElementById("dateS").value = reformatDate(res.data[7])
 
           document.getElementById("expDate-label").className = updatedLabel
-          document.getElementById("expDate").value = res.data[8]
+          document.getElementById("expDate").value = reformatDate(res.data[8])
 
           document.getElementById("objGoods-label").className = updatedLabel
           document.getElementById("objGoods").value = res.data[11]
@@ -143,25 +157,6 @@ const createByfda = () => {
   const sendData = () => {
 
       try {
-        let create_date = document.getElementById("dateS").value
-        let expire_date = document.getElementById("expDate").value
-
-        var create_date_n = new Date(parseDateString(create_date)).toISOString().split('T')[0]
-        var expire_date_n = new Date(parseDateString(expire_date)).toISOString().split('T')[0]
-        console.log(new Date)
-        console.log(create_date_n)
-        console.log(expire_date_n)
-      } catch {
-        Swal.fire({
-          icon: 'error',
-          title: 'เกิดข้อผิดพลาด',
-          text: 'กรุณาตรวจสอบความถูกต้องของวันที่',
-        })
-      }
-
-
-
-      try {
         var pif_product_data = JSON.stringify({
           "organization_id": localStorage.getItem("orid"),
           "created_by": localStorage.getItem("uemail"),
@@ -171,8 +166,8 @@ const createByfda = () => {
           "product_name": document.getElementById("comName").value,
           "cosmetic_name": document.getElementById("cosName").value,
           "cosmetic_type": document.getElementById("typeGoods").value,
-          "create_date": create_date_n,
-          "expire_date": expire_date_n,
+          "create_date": document.getElementById("dateS").value,
+          "expire_date": document.getElementById("expDate").value,
           "cosmetic_reason": document.getElementById("objGoods").value,
           "cosmetic_physical": document.getElementById("py").value,
           "company_name": document.getElementById("entrepreneur").value,
@@ -254,12 +249,12 @@ const createByfda = () => {
           </Box>
 
           <Box >
-            <TextField id="dateS" label="วันที่แจ้งจดแจ้ง" style={{ width: "50%", margin: "10px 0 0 0"}} />
+            <TextField id="dateS" type="date" label="วันที่แจ้งจดแจ้ง" InputLabelProps={{ shrink: true }}  style={{ width: "50%", margin: "10px 0 0 0"}} />
 
           </Box>
 
           <Box>
-            <TextField id="expDate" label="วันที่ใบอนุญาตหมดอายุ" style={{ width: "50%", margin: "10px 0 0 0" }} />
+            <TextField id="expDate" type="date" InputLabelProps={{ shrink: true }} label="วันที่ใบอนุญาตหมดอายุ" style={{ width: "50%", margin: "10px 0 0 0" }} />
 
           </Box>
           <Box >

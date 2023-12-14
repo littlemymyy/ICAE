@@ -133,13 +133,13 @@ export default function productslist() {
           console.log(res.data.status)
 
           if (res.data.status === 'ok') {
-            removeList(e)
             Swal.fire({
               title: "สำเร็จ!",
               text: "นำสินค้าออกจากระบบเรียบร้อย!",
               icon: "success"
-            });
-            router.push("/pif/productslist")
+            }).then(()=>{
+              window.location.reload()
+            })
           }
           else {
           Swal.fire({
@@ -152,14 +152,10 @@ export default function productslist() {
     }catch {
         Swal.fire({
             title: "ผิดพลาด!",
-            text: "นำสินค้าออกจากระบบไม่สำเร็จ!asdasd",
+            text: "นำสินค้าออกจากระบบไม่สำเร็จ!",
             icon: "error"
           });
     }
-  }
-
-  const test = () => {
-    console.log(product_data);
   }
 
   const handleButtonClickEdit = (pif_status,id) => {
@@ -351,32 +347,6 @@ export default function productslist() {
             ทีมของคุณ
           </Button>
 
-
-                            <FormControl size="medium" sx={{ m: 1, minWidth: 150 }}  >
-                              <InputLabel id="demo-simple-select-label">
-                                การกรอกข้อมูล
-                              </InputLabel>
-                              <Select
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
-                                label="การกรอกข้อมูล"
-                                onChange={(e) => handleChange(e.target.value)}
-                              >
-                                <MenuItem value={ 1 }>
-                                  วันที่มากไปน้อย
-                                </MenuItem>
-                                <MenuItem value={  2 }>
-                                  วันที่น้อยไปมาก
-                                </MenuItem>
-                                <MenuItem value={ 3 }>
-                                ตามตัวอักษร ก-ฮ
-                                </MenuItem>
-                                <MenuItem value={ 4 }>
-                                ตามตัวอักษร ฮ-ก
-                                </MenuItem>
-                              </Select>
-                            </FormControl>
-
           </div >
       </Box>
 
@@ -414,7 +384,7 @@ export default function productslist() {
                         สร้าง PIF &nbsp;<FaEdit />
                         </button>
                         <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                        <button className="pl" onClick={() => handledelete(value.no, idx, value.status, value.fda_license)}>
+                        <button className="pl" onClick={() => handledelete(value.id)}>
                           ลบ &nbsp;
                         <MdDeleteForever />
                         </button>
@@ -440,8 +410,6 @@ export default function productslist() {
           </tbody>
         </table>
       </div>
-
-            <button onClick={test}>test</button>
 
       <Footer />
         </>
