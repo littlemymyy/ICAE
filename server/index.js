@@ -2188,7 +2188,7 @@ app.post('/api/pifProductRemoveById', jsonParser, (req, res) => {
                     if(result.length > 0) {
                         db.execute(
                             'DELETE FROM pif WHERE product_id = ?',
-                            [req.query.id, req.query.id],
+                            [req.query.id],
                             (err, result) => {
                                 if(err) {
                                     res.json({status:'error',message:err});

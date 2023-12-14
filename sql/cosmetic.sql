@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Nov 29, 2023 at 05:04 AM
+-- Host: localhost
+-- Generation Time: Dec 14, 2023 at 01:37 PM
 -- Server version: 10.4.28-MariaDB
--- PHP Version: 8.0.28
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,6 +20,25 @@ SET time_zone = "+00:00";
 --
 -- Database: `cosmetic`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `allexpdate`
+--
+
+CREATE TABLE `allexpdate` (
+  `no` int(11) NOT NULL,
+  `exp_authorization` date NOT NULL,
+  `exp_manufacture_doc` date NOT NULL,
+  `exp_gmp_iso` date NOT NULL,
+  `exp_eff_report` date NOT NULL,
+  `exp_efficient_report` date NOT NULL,
+  `exp_sds` date NOT NULL,
+  `exp_specification` date NOT NULL,
+  `exp_testing_doc` date NOT NULL,
+  `expdate` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -11302,30 +11321,19 @@ CREATE TABLE `chemicalgroup` (
   `per1` float NOT NULL,
   `uname` varchar(255) NOT NULL,
   `udate` varchar(255) NOT NULL,
-  `fillterg` text NOT NULL
+  `fillterg` text NOT NULL,
+  `email` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `chemicalgroup`
 --
 
-INSERT INTO `chemicalgroup` (`no`, `cas`, `cname`, `cmname`, `per`, `st`, `img`, `des`, `bodypart`, `color`, `groupname`, `per1`, `uname`, `udate`, `fillterg`) VALUES
-(2, '19381-50-1', 'Trisodium tris[5,6-dihydro-5-(hydroxyimino)-6-oxonaphthalene-2-sulphonato(2-)-N5,O6]ferrate(3-)', 'CI10020', 100, 4, '-', '-', 'All cosmetic products except those applied to mucous membranes', 'Green', 'aw01', 60, 'Testman01', '06-11-2023', 'skin,body,powder,hand'),
-(3, '7732-18-5', 'WATER', 'WATER', 100, 3, '-', '-', 'All product', '-', 'aw01', 40, 'Testman01', '06-11-2023', 'skin,body,powder,hand'),
-(5, '6486-23-3', '2-[(4-Chloro-2-nitrophenyl)azo]-N-(2-chlorophenyl)-3-oxobutyramide', 'CI11710', 100, 4, '-', '-', 'All cosmetic products except those applied to mucous membranes', 'Yellow', 'aw05', 100, 'Testman01', '06-11-2023', 'skin,body,powder,hand'),
-(7, '7732-18-5', 'WATER', 'WATER', 100, 3, '-', '-', 'All product', '-', 'aw06', 100, 'Testman01', '06-11-2023', 'skin,body,powder,hand'),
-(8, '7732-18-5', 'WATER', 'WATER', 100, 3, '-', '-', 'All product', '-', 'aw03', 100, 'Testman01', '06-11-2023', 'skin,body,powder,hand'),
-(10, '7732-18-5', 'WATER', 'Water', 100, 4, '-', '-', '-', '-', 'aw02', 10, 'Testman01', '07-11-2023', 'aaa'),
-(11, '19381-50-1', 'Trisodium tris[5,6-dihydro-5-(hydroxyimino)-6-oxonaphthalene-2-sulphonato(2-)-N5,O6]ferrate(3-)', 'CI10020', 100, 4, '-', '-', 'All cosmetic products except those applied to mucous membranes', 'Green', 'aw02', 90, 'Testman01', '07-11-2023', 'aaa'),
-(13, '7732-18-5', 'WATER', 'water', 100, 4, '-', '-', 'All product', '-', 'pppaa', 100, 'www aaaa', '15-11-2023', 'skin,face,body,powder,hand'),
-(14, '7732-18-5', 'WATER', 'water', 100, 4, '-', '-', 'All product', '-', 'an1', 50, 'www aaaa', '20-11-2023', ''),
-(15, '164288-50-0', 'HOUTTUYNIA CORDATA POWDER', 'HOUTTUYNIA CORDATA POWDER', 100, 0, '-', '-', '-', '-', 'an1', 50, 'www aaaa', '20-11-2023', ''),
-(16, '7732-18-5', 'WATER', 'water', 100, 4, '-', '-', 'All product', '-', 'an1', 50, 'www aaaa', '20-11-2023', ''),
-(17, '164288-50-0', 'HOUTTUYNIA CORDATA POWDER', 'HOUTTUYNIA CORDATA POWDER', 100, 0, '-', '-', '-', '-', 'an1', 50, 'www aaaa', '20-11-2023', ''),
-(18, '7732-18-5', 'WATER', 'water', 100, 4, '-', '-', 'All product', '-', 'anx3', 100, 'www aaaa', '20-11-2023', ''),
-(19, '7732-18-5', 'WATER', 'water', 100, 4, '-', '-', 'All product', '-', 'www', 50, 'www aaaa', '2023-11-24 18:36:31.560', 'skin,body,powder,hand'),
-(20, '90640-84-9', 'Creosote oil, acenaphthene fraction, wash oil', 'Creosote oil, acenaphthene fraction, wash oil', 0, 2, '-', '-', 'All cosmetic products', '-', 'www', 50, 'www aaaa', '2023-11-24 18:36:31.560', 'skin,body,powder,hand'),
-(21, '7732-18-5', 'WATER', 'water', 100, 4, '-', '-', 'All product', '-', 'dasdasd', 100, 'www aaaa', '2023-11-25 10:29:20.247', 'face');
+INSERT INTO `chemicalgroup` (`no`, `cas`, `cname`, `cmname`, `per`, `st`, `img`, `des`, `bodypart`, `color`, `groupname`, `per1`, `uname`, `udate`, `fillterg`, `email`) VALUES
+(32, '112281-77-3', '(+/-)-2-(2,4-Dichlorophenyl)-3-(1H-1,2,4-triazol-1-yl)propyl-1,1,2,2-Tetrafluoroethylether', '(+/-)-2-(2,4-Dichlorophenyl)-3-(1H-1,2,4-triazol-1-yl)propyl-1,1,2,2-Tetrafluoroethylether', 0, 2, '-', '-', 'All cosmetic products', '-', 'ยำยำ', 0, 'newone naja', '2023-12-12 00:08:38.259', 'cool,soap,soap,cool', 'test@gmail.com'),
+(33, '111-77-3', '2-(2-Methoxyethoxy)ethanol', '2-(2-Methoxyethoxy)ethanol', 0, 2, '-', '-', 'All cosmetic products', '-', 'ยำยำ', 0, 'newone naja', '2023-12-12 00:08:38.259', 'cool,soap,soap,cool', 'test@gmail.com'),
+(64, '3763-55-1', '(3R)-beta-4-Caroten-3-ol', 'CI75135', 100, 4, '-', '-', 'All cosmetic products', 'Yellow', 'ข้าวเหนียว ไก่ทอด', 20, 'test test2', '2023-12-13 04:07:21.579', '', 'testtest@gmail.com'),
+(65, '112281-77-3', '(+/-)-2-(2,4-Dichlorophenyl)-3-(1H-1,2,4-triazol-1-yl)propyl-1,1,2,2-Tetrafluoroethylether', '(+/-)-2-(2,4-Dichlorophenyl)-3-(1H-1,2,4-triazol-1-yl)propyl-1,1,2,2-Tetrafluoroethylether', 0, 2, '-', '-', 'All cosmetic products', '-', 'ข้าวเหนียว ไก่ทอด', 0, 'test test2', '2023-12-13 04:07:21.579', '', 'testtest@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -11352,7 +11360,7 @@ CREATE TABLE `employee` (
   `em_icon` varchar(255) NOT NULL,
   `em_pass` text NOT NULL,
   `status` varchar(3) NOT NULL,
-  `organization_id` varchar(255) NOT NULL
+  `organization_id` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
@@ -11368,250 +11376,113 @@ INSERT INTO `employee` (`no`, `em_email`, `em_fullname`, `em_icon`, `em_pass`, `
 (6, 'test07@gmail.com', 'test07', '/test07.png', '123456', 'U1', '0115556007101'),
 (9, 'sa@gmail.com', 'sa sa', '/test01.png', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'S', '123456'),
 (10, 'yo@gmail.com', 'yoyo yo', '/test01.png', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'A', '-'),
-(23, 'hechuan1949@gmail.com', 'andy hotman', '/pandaU.png', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'U', ''),
-(25, 'cohiy26840@dpsols.com', 'sun hotman', '/pandaU.png', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'U', '');
+(23, 'hechuan1949@gmail.com', 'andy hotman', '/pandaU.png', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'S', 'pop77999'),
+(26, 'testtest@gmail.com', 'test test2', '/pandaU.png', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 'S', 'pop77999'),
+(28, 'songlee@gmail.com', 'song lee', '/pandaU.png', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'U', ''),
+(29, 'joy01@gmail.com', 'joy 01', '/pandaU.png', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'U', NULL),
+(30, 'joy01@gmail.com', 'joy 01', '/pandaU.png', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'U', NULL),
+(31, 'pita@icae.com', 'pita lim', '/pandaU.png', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'S', 'orange'),
+(32, 'jucha@icae.com', 'prayu jucha', '/pandaU.png', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'S', 'aaaa'),
+(34, 'ann@icae.com', 'ann man', '/pandaU.png', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'U', '-'),
+(37, 'po@icae.com', 'po nisha', '/pandaU.png', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'S', 'pop77999'),
+(38, 'supertest@gmail.com', 'super test', '/pandaU.png', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'S', 'pop77999'),
+(39, 'fafa@gmail.com', 'di fafa', '/pandaU.png', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'S', 'pop77999'),
+(55, 'petchuser@outlook.com', 'Sorawit Namesstan', '/pandaU.png', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 'U', NULL),
+(56, 'test@gmail.com', 'newone naja', '/pandaU.png', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 'S', 'asd');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `pif_storage`
+-- Table structure for table `employee_add`
 --
 
-CREATE TABLE `pif_storage` (
+CREATE TABLE `employee_add` (
   `no` int(11) NOT NULL,
-  `fda_license` text NOT NULL,
-  `exter_doc` text NOT NULL,
-  `formula` text NOT NULL,
-  `mask` text NOT NULL,
-  `manufacture_doc` text NOT NULL,
-  `gmp_iso` text NOT NULL,
-  `eff_report` text NOT NULL,
-  `efficient_report` text NOT NULL,
-  `sds` text NOT NULL,
-  `masterformula` text NOT NULL,
-  `specification` text NOT NULL,
-  `testing` text NOT NULL,
-  `user` text NOT NULL,
-  `up_date` text NOT NULL,
-  `status` text NOT NULL,
-  `expdate` date NOT NULL,
-  `sdate` date NOT NULL,
-  `dobnum` text NOT NULL,
-  `report` text NOT NULL,
-  `reportdate` date NOT NULL,
+  `em_fullname` text NOT NULL,
   `em_email` text NOT NULL,
-  `part` text NOT NULL,
-  `alertdate` date DEFAULT NULL
+  `organization_id` text NOT NULL,
+  `status` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-
---
--- Dumping data for table `pif_storage`
---
-
-INSERT INTO `pif_storage` (`no`, `fda_license`, `exter_doc`, `formula`, `mask`, `manufacture_doc`, `gmp_iso`, `eff_report`, `efficient_report`, `sds`, `masterformula`, `specification`, `testing`, `user`, `up_date`, `status`, `expdate`, `sdate`, `dobnum`, `report`, `reportdate`, `em_email`, `part`, `alertdate`) VALUES
-(2, '123456789', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '2023-12-25', '2023-11-01', '-', '-', '2023-11-25', 'hechuan1949@gmail.com', '', NULL),
-(3, '1026300003493', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '2023-12-27', '2023-11-27', '-', '-', '2023-11-28', 'sa@gmail.com', '', NULL),
-(5, '1026600006445', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '2023-12-27', '2023-11-27', '-', '-', '2023-11-25', 'jexegip789@bustayes.com', '', NULL),
-(6, '1026600026568', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '2023-12-27', '2023-11-27', '-', '-', '2023-11-07', 'jexegip789@bustayes.com', '', NULL),
-(7, '1026400007462', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '2023-12-27', '2023-11-27', '-', '-', '2023-11-25', 'jexegip789@bustayes.com', '', NULL);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `testget`
+-- Table structure for table `pif`
 --
 
-CREATE TABLE `testget` (
-  `no` int(11) NOT NULL,
-  `cm_name` varchar(255) NOT NULL,
-  `cname` text NOT NULL,
-  `des` text NOT NULL,
-  `cas` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+CREATE TABLE `pif` (
+  `id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `file_name` varchar(100) NOT NULL,
+  `img_path` varchar(255) DEFAULT NULL,
+  `pdf_path` varchar(255) DEFAULT NULL,
+  `expdate` date NOT NULL,
+  `create_when` date NOT NULL,
+  `file1_path` varchar(255) DEFAULT NULL,
+  `file2_path` varchar(255) DEFAULT NULL,
+  `file3_path` varchar(255) DEFAULT NULL,
+  `file4_path` varchar(255) DEFAULT NULL,
+  `file5_path` varchar(255) DEFAULT NULL,
+  `file6_path` varchar(255) DEFAULT NULL,
+  `file7_path` varchar(255) DEFAULT NULL,
+  `file8_path` varchar(255) DEFAULT NULL,
+  `file9_path` varchar(255) DEFAULT NULL,
+  `file10_path` varchar(255) DEFAULT NULL,
+  `file11_path` varchar(255) DEFAULT NULL,
+  `file12_path` varchar(255) DEFAULT NULL,
+  `file13_path` varchar(255) DEFAULT NULL,
+  `file14_path` varchar(255) DEFAULT NULL,
+  `file1_exp` date DEFAULT NULL,
+  `file2_exp` date DEFAULT NULL,
+  `file3_exp` date DEFAULT NULL,
+  `file4_exp` date DEFAULT NULL,
+  `file5_exp` date DEFAULT NULL,
+  `file6_exp` date DEFAULT NULL,
+  `file7_exp` date DEFAULT NULL,
+  `file8_exp` date DEFAULT NULL,
+  `file9_exp` date DEFAULT NULL,
+  `file10_exp` date DEFAULT NULL,
+  `file11_exp` date DEFAULT NULL,
+  `file12_exp` date DEFAULT NULL,
+  `file13_exp` date DEFAULT NULL,
+  `file14_exp` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
 
 --
--- Dumping data for table `testget`
+-- Table structure for table `pif_product`
 --
 
-INSERT INTO `testget` (`no`, `cm_name`, `cname`, `des`, `cas`) VALUES
-(7513, 'BENZALKONIUM CHLORIDE / BENZALKONIUM BROMIDE / BENZALKONIUM SACCHARINATE', '(C12-C18)Alkyldimethylbenzylammonium saccharinate', '-', '68989-01-5'),
-(7514, 'AMMONIUM BENZOATE / BUTYL BENZOATE / CALCIUM BENZOATE / ETHYL BENZOATE / ISOBUTYL BENZOATE / ISOPROPYL BENZOATE / MAGNESIUM BENZOATE / MEA-BENZOATE / METHYL BENZOATE / PHENYL BENZOATE / POTASSIUM BENZOATE / PROPYL BENZOATE', '1,2,3-Propanetricarboxylic acid, 2-hydroxy-, monohydrate and 1,2,3-Propanetricarboxylic acid, 2-hydroxy-, silver(1+) salt, monohydrate', '-', '-'),
-(7515, 'AMMONIUM BENZOATE / BUTYL BENZOATE / CALCIUM BENZOATE / ETHYL BENZOATE / ISOBUTYL BENZOATE / ISOPROPYL BENZOATE / MAGNESIUM BENZOATE / MEA-BENZOATE / METHYL BENZOATE / PHENYL BENZOATE / POTASSIUM BENZOATE / PROPYL BENZOATE', '1,2,3-Propanetricarboxylic acid, 2-hydroxy-, monohydrate and 1,2,3-Propanetricarboxylic acid, 2-hydroxy-, silver(1+) salt, monohydrate', '-', '-'),
-(7516, 'DMDM HYDANTOIN', '1,3-Bis(hydroxymethyl)-5,5-dimethylimidazolidine-2,4-dione', '-', '6440-58-0'),
-(7517, 'CLIMBAZOLE', '1-(4-Chlorophenoxy)-1-(imidazol-1-yl)-3,3-dimethylbutan-2-one', '-', '38083-17-9'),
-(7518, 'CLIMBAZOLE', '1-(4-Chlorophenoxy)-1-(imidazol-1-yl)-3,3-dimethylbutan-2-one', '-', '38083-17-9'),
-(7519, 'CLIMBAZOLE', '1-(4-Chlorophenoxy)-1-(imidazol-1-yl)-3,3-dimethylbutan-2-one', '-', '38083-17-9'),
-(7520, 'CLIMBAZOLE', '1-(4-Chlorophenoxy)-1-(imidazol-1-yl)-3,3-dimethylbutan-2-one', '-', '38083-17-9'),
-(7521, 'TRICLOCARBAN', '1-(4-Chlorophenyl)-3-(3,4-dichlorophenyl) urea', '-', '101-20-2'),
-(7522, '1-Hydroxy-4-methyl-6-(2,4,4-trimethylpentyl)-2 pyridon, piroctone olamine', '1-Hydroxy-4-methyl-6-(2,4,4-trimethylpentyl) 2-pyridon', '-', '50650-76-5'),
-(7523, '1-Hydroxy-4-methyl-6-(2,4,4-trimethylpentyl)-2 pyridon, piroctone olamine', '1-Hydroxy-4-methyl-6-(2,4,4-trimethylpentyl) 2-pyridon', '-', '50650-76-5'),
-(7524, '1-Hydroxy-4-methyl-6-(2,4,4-trimethylpentyl)-2 pyridon, piroctone olamine', '1-Hydroxy-4-methyl-6-(2,4,4-trimethylpentyl) 2-pyridon, monoethanolamine salt', '-', '68890-66-4'),
-(7525, '1-Hydroxy-4-methyl-6-(2,4,4-trimethylpentyl)-2 pyridon, piroctone olamine', '1-Hydroxy-4-methyl-6-(2,4,4-trimethylpentyl) 2-pyridon, monoethanolamine salt', '-', '68890-66-4'),
-(7526, 'PHENOXYISOPROPANOL', '1-Phenoxypropan-2-ol', '-', '770-35-4'),
-(7527, 'UNDECYLENIC ACID / POTASSIUM UNDECYLENATE / SODIUM UNDECYLENATE / CALCIUM UNDECYLENATE / MEA-UNDECYLENATE / TEA-UNDECYLENATE', '10-Undecenoic acid, calcium salt', '-', '1322-14-1'),
-(7528, 'UNDECYLENIC ACID / POTASSIUM UNDECYLENATE / SODIUM UNDECYLENATE / CALCIUM UNDECYLENATE / MEA-UNDECYLENATE / TEA-UNDECYLENATE', '10-Undecenoic, sodium salt', '-', '3398-33-2'),
-(7529, 'BROMOCHLOROPHENE', '2,2\'-Methylenebis(6-bromo-4-chlorophenol)', '-', '15435-29-7'),
-(7530, 'DICHLOROBENZYL ALCOHOL', '2,4-Dichlorobenzyl alcohol', '-', '1777-82-8'),
-(7531, 'METHYLCHLOROISOTHIAZOLINONE AND METHYLISOTHIAZOLINONE', '2-Methyl-2H-isothiazol-3-one', '-', '2682-20-4'),
-(7532, 'PHENOXYETHANOL', '2-Phenoxyethanol', '-', '122-99-6'),
-(7533, '-', '3,3\'-Dibromo-4,4\'-hexamethylenedioxydi-benzamidine', '-', '93856-82-7'),
-(7534, 'Dibromohexamidine isethionate ', '3,3\'-Dibromo-4,4\'-hexamethylenedioxydi-benzamidine isethionate', '-', '93856-83-8'),
-(7535, 'chlorphenesin', '3-(p-Chlorophenoxy)-propane-1,2-diol', '-', '104-29-0'),
-(7536, 'Dehydroacetic acid / SODIUM DEHYDROACETATE ', '3-Acetyl-6-methylpyran-2,4(3H)-dione', '-', '520-45-6'),
-(7537, 'IODOPROPYNYL BUTYLCARBAMATE', '3-Iodo-2-propynylbutylcarbamate', '-', '55406-53-6'),
-(7538, 'IODOPROPYNYL BUTYLCARBAMATE', '3-Iodo-2-propynylbutylcarbamate', '-', '55406-53-6'),
-(7539, 'IODOPROPYNYL BUTYLCARBAMATE', '3-Iodo-2-propynylbutylcarbamate', '-', '55406-53-6'),
-(7540, 'DIMETHYL OXAZOLIDINE', '4,4-Dimethyl-1,3-oxazolidine', '-', '51200-87-4'),
-(7541, 'HYDROXYETHOXY­PHENYL BUTANONE, HEPB', '4-(3-Ethoxy-4-hydroxyphenyl)butan-2-one', '-', '569646-79-3'),
-(7542, '4-HYDROXYBENZOIC ACID / METHYLPARABEN /POTASSIUM ETHYLPARABEN /POTASSIUM PARABEN /SODIUM METHYLPARABEN /SODIUM ETHYLPARABEN /ETHYLPARABEN /SODIUM PARABEN / POTASSIUM METHYLPARABEN / CALCIUM PARABEN', '4-Hydroxybenzoic acid', '-', '99-96-7'),
-(7543, 'O-CYMEN-5-OL', '4-Isopropyl-m-cresol', '-', '3228-02-2'),
-(7544, '5-BROMO-5-NITRO-1,3-DIOXANE', '5-Bromo-5-nitro-1,3-dioxane', '-', '30007-47-7'),
-(7545, 'TRICLOSAN', '5-Chloro-2-(2,4-dichlorophenoxy) phenol', '-', '3380-34-5'),
-(7546, 'TRICLOSAN', '5-Chloro-2-(2,4-dichlorophenoxy) phenol', '-', '3380-34-5'),
-(7547, 'TRICLOSAN', '5-Chloro-2-(2,4-dichlorophenoxy) phenol', '-', '3380-34-5'),
-(7548, 'TRICLOSAN', '5-Chloro-2-(2,4-dichlorophenoxy) phenol', '-', '3380-34-5'),
-(7549, 'TRICLOSAN', '5-Chloro-2-(2,4-dichlorophenoxy) phenol', '-', '3380-34-5'),
-(7550, 'TRICLOSAN', '5-Chloro-2-(2,4-dichlorophenoxy) phenol', '-', '3380-34-5'),
-(7551, 'TRICLOSAN', '5-Chloro-2-(2,4-dichlorophenoxy) phenol', '-', '3380-34-5'),
-(7552, '7-ETHYLBICYCLOOXAZOLIDINE', '5-Ethyl-3,7-dioxa-1-azabicyclo [3.3.0] octane', '-', '7747-35-5'),
-(7553, 'Hexetidine ', '5-Pyrimidinamine, 1,3-bis (2-ethylhexyl) hexahydro-5-methyl-', '-', '141-94-6'),
-(7554, 'AMMONIUM BENZOATE / BUTYL BENZOATE / CALCIUM BENZOATE / ETHYL BENZOATE / ISOBUTYL BENZOATE / ISOPROPYL BENZOATE / MAGNESIUM BENZOATE / MEA-BENZOATE / METHYL BENZOATE / PHENYL BENZOATE / POTASSIUM BENZOATE / PROPYL BENZOATE', 'Alkyl (C 12-22) trimethyl ammonium bromide and chloride', '-', '-'),
-(7555, 'AMMONIUM BENZOATE / BUTYL BENZOATE / CALCIUM BENZOATE / ETHYL BENZOATE / ISOBUTYL BENZOATE / ISOPROPYL BENZOATE / MAGNESIUM BENZOATE / MEA-BENZOATE / METHYL BENZOATE / PHENYL BENZOATE / POTASSIUM BENZOATE / PROPYL BENZOATE', 'Ammonium benzoate', '-', '1863-63-4'),
-(7556, 'SODIUM SULFITE / AMMONIUM BISULFITE / AMMONIUM SULFITE / POTASSIUM SULFITE / POTASSIUM hydrogen SULFITE / SODIUM BISULFITE / SODIUM METABISULFITE / POTASSIUM METABISULFITE', 'Ammonium bisulfite', '-', '10192-30-0'),
-(7557, 'PROPIONIC ACID / AMMONIUM PROPIONATE / CALCIUM PROPIONATE / MAGNESIUM PROPIONATE / POTASSIUM PROPIONATE / SODIUM PROPIONATE', 'Ammonium propionate', '-', '17496-08-1'),
-(7558, 'SODIUM SULFITE / AMMONIUM BISULFITE / AMMONIUM SULFITE / POTASSIUM SULFITE / POTASSIUM hydrogen SULFITE / SODIUM BISULFITE / SODIUM METABISULFITE / POTASSIUM METABISULFITE', 'Ammonium sulfite', '-', '10196-04-0'),
-(7559, 'BEHENTRIMONIUM CHLORIDE (1) / CETRIMONIUM BROMIDE / CETRIMONIUM CHLORIDE (2)/ LAURTRIMONIUM BROMIDE / LAURTRIMONIUM CHLORIDE / STEARTRIMONIUM BROMIDE / STEARTRIMONIUM CHLORIDE (2) ', 'Behentrimonium chloride', '-', '17301-53-0'),
-(7560, 'BENZALKONIUM CHLORIDE / BENZALKONIUM BROMIDE / BENZALKONIUM SACCHARINATE', 'Benzalkonium bromide', '-', '91080-29-4'),
-(7561, 'BENZALKONIUM CHLORIDE / BENZALKONIUM BROMIDE / BENZALKONIUM SACCHARINATE', 'Benzalkonium chloride', '-', '8001-54-5'),
-(7562, 'HEXAMIDINE / HEXAMIDINE DIISETHIONATE / HEXAMIDINE DIPARABEN / HEXAMIDINE PARABEN', 'Benzenecarboximidamide, 4,4\'-(1,6-hexanediylbis (oxy))bis-', '-', '3811-75-4'),
-(7563, 'Benzethonium Chloride', 'Benzenemethanaminium, N,N-dimethyl-N-[2-[2-[4-(1,1,3,3-tetramethylbutyl)phenoxy]ethoxy]ethyl]-, chloride', '-', '121-54-0'),
-(7564, 'Benzethonium Chloride', 'Benzenemethanaminium, N,N-dimethyl-N-[2-[2-[4-(1,1,3,3-tetramethylbutyl)phenoxy]ethoxy]ethyl]-, chloride', '-', '121-54-0'),
-(7565, 'BENZOIC ACID; SODIUM BENZOATE', 'Benzoic acid', '-', '65-85-0'),
-(7566, 'BENZOIC ACID; SODIUM BENZOATE', 'Benzoic acid', '-', '65-85-0'),
-(7567, 'BENZOIC ACID; SODIUM BENZOATE', 'Benzoic acid', '-', '65-85-0'),
-(7568, 'BENZYL ALCOHOL', 'Benzyl alcohol', '-', '100-51-6'),
-(7569, 'O-PHENYLPHENOL', 'Biphenyl-2-ol', '-', '90-43-7'),
-(7570, 'O-PHENYLPHENOL', 'Biphenyl-2-ol', '-', '90-43-7'),
-(7571, '2-BROMO-2-NITROPROPANE-1,3-DIOL', 'Bronopol', '-', '52-51-7'),
-(7572, 'BUTYLPARABEN/PROPYLPARABEN/SODIUM PROPOYLPARABEN/SODIUM BUTYLPARABEN/POTASSIUM BUTYLPARABEN/POTASSIUM PROPYLPARABEN', 'Butyl 4-hydroxybenzoate', '-', '94-26-8'),
-(7573, 'BUTYLPARABEN/PROPYLPARABEN/SODIUM PROPOYLPARABEN/SODIUM BUTYLPARABEN/POTASSIUM BUTYLPARABEN/POTASSIUM PROPYLPARABEN', 'Butyl 4-hydroxybenzoate', '-', '94-26-8'),
-(7574, 'AMMONIUM BENZOATE / BUTYL BENZOATE / CALCIUM BENZOATE / ETHYL BENZOATE / ISOBUTYL BENZOATE / ISOPROPYL BENZOATE / MAGNESIUM BENZOATE / MEA-BENZOATE / METHYL BENZOATE / PHENYL BENZOATE / POTASSIUM BENZOATE / PROPYL BENZOATE', 'Butyl benzoate', '-', '136-60-7'),
-(7575, 'BENZALKONIUM CHLORIDE / BENZALKONIUM BROMIDE / BENZALKONIUM SACCHARINATE', 'C8-18-Alkydimethylbenzyl ammonium chlorides', '-', '63449-41-2'),
-(7576, 'AMMONIUM BENZOATE / BUTYL BENZOATE / CALCIUM BENZOATE / ETHYL BENZOATE / ISOBUTYL BENZOATE / ISOPROPYL BENZOATE / MAGNESIUM BENZOATE / MEA-BENZOATE / METHYL BENZOATE / PHENYL BENZOATE / POTASSIUM BENZOATE / PROPYL BENZOATE', 'Calcium benzoate', '-', '2090-05-3'),
-(7577, '4-HYDROXYBENZOIC ACID / METHYLPARABEN /POTASSIUM ETHYLPARABEN /POTASSIUM PARABEN /SODIUM METHYLPARABEN /SODIUM ETHYLPARABEN /ETHYLPARABEN /SODIUM PARABEN / POTASSIUM METHYLPARABEN / CALCIUM PARABEN', 'Calcium paraben', '-', '69959-44-0'),
-(7578, 'PROPIONIC ACID / AMMONIUM PROPIONATE / CALCIUM PROPIONATE / MAGNESIUM PROPIONATE / POTASSIUM PROPIONATE / SODIUM PROPIONATE', 'Calcium propionate', '-', '4075-81-4'),
-(7579, 'SALICYLIC ACID, CALCIUM SALICYLATE, MAGNESIUM SALICYLATE, MEA- SALICYLATE, SODIUM SALICYLATE, POTASSIUM SALICYLATE, TEA- SALICYLATE', 'Calcium salicylate', '-', '824-35-1'),
-(7580, 'SORBIC ACID / CALCIUM SORBATE / SODIUM SORBATE / POTASSIUM SORBATE', 'Calcium sorbate', '-', '7492-55-9'),
-(7581, 'BEHENTRIMONIUM CHLORIDE (1) / CETRIMONIUM BROMIDE / CETRIMONIUM CHLORIDE (2)/ LAURTRIMONIUM BROMIDE / LAURTRIMONIUM CHLORIDE / STEARTRIMONIUM BROMIDE / STEARTRIMONIUM CHLORIDE (2) ', 'Cetrimonium bromide', '-', '57-09-0'),
-(7582, 'BEHENTRIMONIUM CHLORIDE (1) / CETRIMONIUM BROMIDE / CETRIMONIUM CHLORIDE (2)/ LAURTRIMONIUM BROMIDE / LAURTRIMONIUM CHLORIDE / STEARTRIMONIUM BROMIDE / STEARTRIMONIUM CHLORIDE (2) ', 'Cetrimonium chloride', '-', '112-02-7'),
-(7583, 'CHLOROXYLENOL', 'Chloro-xylenol', '-', '88-04-0'),
-(7584, 'CHLOROBUTANOL', 'Chlorobutanol', '-', '57-15-8'),
-(7585, 'P-CHLORO-M-CRESOL', 'Chlorocresol', '-', '59-50-7'),
-(7586, 'Dehydroacetic acid / SODIUM DEHYDROACETATE ', 'Dehydroacetic acid', '-', '16807-48-0'),
-(7587, 'AMMONIUM BENZOATE / BUTYL BENZOATE / CALCIUM BENZOATE / ETHYL BENZOATE / ISOBUTYL BENZOATE / ISOPROPYL BENZOATE / MAGNESIUM BENZOATE / MEA-BENZOATE / METHYL BENZOATE / PHENYL BENZOATE / POTASSIUM BENZOATE / PROPYL BENZOATE', 'Esters of methyl, ethyl, propyl, isopropyl, butyl, isobutyl and phenyl of benzoic acid', '-', '-'),
-(7588, 'AMMONIUM BENZOATE / BUTYL BENZOATE / CALCIUM BENZOATE / ETHYL BENZOATE / ISOBUTYL BENZOATE / ISOPROPYL BENZOATE / MAGNESIUM BENZOATE / MEA-BENZOATE / METHYL BENZOATE / PHENYL BENZOATE / POTASSIUM BENZOATE / PROPYL BENZOATE', 'Ethyl benzoate', '-', '93-89-0'),
-(7589, '-', 'Ethyl-N-alpha-dodecanoyl-L-arginate hydrochloride', '-', '60372-77-2'),
-(7590, '-', 'Ethyl-N-alpha-dodecanoyl-L-arginate hydrochloride', '-', '60372-77-2'),
-(7591, '4-HYDROXYBENZOIC ACID / METHYLPARABEN /POTASSIUM ETHYLPARABEN /POTASSIUM PARABEN /SODIUM METHYLPARABEN /SODIUM ETHYLPARABEN /ETHYLPARABEN /SODIUM PARABEN / POTASSIUM METHYLPARABEN / CALCIUM PARABEN', 'Ethylparaben', '-', '120-47-8'),
-(7592, 'FORMIC ACID / SODIUM FORMATE', 'Formic acid', '-', '64-18-6'),
-(7593, 'GLUTARAL', 'Glutaraldehyde;Pentane-1,5-dial', '-', '111-30-8'),
-(7594, 'SORBIC ACID / CALCIUM SORBATE / SODIUM SORBATE / POTASSIUM SORBATE', 'Hexa-2,4-dienoic acid', '-', '110-44-1'),
-(7595, 'HEXAMIDINE / HEXAMIDINE DIISETHIONATE / HEXAMIDINE DIPARABEN / HEXAMIDINE PARABEN', 'Hexamidine diisethionate', '-', '659-40-5'),
-(7596, 'HEXAMIDINE / HEXAMIDINE DIISETHIONATE / HEXAMIDINE DIPARABEN / HEXAMIDINE PARABEN', 'Hexamidine paraben', '-', '93841-83-9'),
-(7597, 'AMMONIUM BENZOATE / BUTYL BENZOATE / CALCIUM BENZOATE / ETHYL BENZOATE / ISOBUTYL BENZOATE / ISOPROPYL BENZOATE / MAGNESIUM BENZOATE / MEA-BENZOATE / METHYL BENZOATE / PHENYL BENZOATE / POTASSIUM BENZOATE / PROPYL BENZOATE', 'Inorganic sulphites and hydrogen sulphites', '-', '-'),
-(7598, '-', 'Isobutyl benzoate', '-', '120-50-3'),
-(7599, 'AMMONIUM BENZOATE / BUTYL BENZOATE / CALCIUM BENZOATE / ETHYL BENZOATE / ISOBUTYL BENZOATE / ISOPROPYL BENZOATE / MAGNESIUM BENZOATE / MEA-BENZOATE / METHYL BENZOATE / PHENYL BENZOATE / POTASSIUM BENZOATE / PROPYL BENZOATE', 'Isopropyl benzoate', '-', '939-48-0'),
-(7600, 'BEHENTRIMONIUM CHLORIDE (1) / CETRIMONIUM BROMIDE / CETRIMONIUM CHLORIDE (2)/ LAURTRIMONIUM BROMIDE / LAURTRIMONIUM CHLORIDE / STEARTRIMONIUM BROMIDE / STEARTRIMONIUM CHLORIDE (2) ', 'Laurtrimonium bromide', '-', '1119-94-4'),
-(7601, 'BEHENTRIMONIUM CHLORIDE (1) / CETRIMONIUM BROMIDE / CETRIMONIUM CHLORIDE (2)/ LAURTRIMONIUM BROMIDE / LAURTRIMONIUM CHLORIDE / STEARTRIMONIUM BROMIDE / STEARTRIMONIUM CHLORIDE (2) ', 'Laurtrimonium chloride', '-', '112-00-5'),
-(7602, 'AMMONIUM BENZOATE / BUTYL BENZOATE / CALCIUM BENZOATE / ETHYL BENZOATE / ISOBUTYL BENZOATE / ISOPROPYL BENZOATE / MAGNESIUM BENZOATE / MEA-BENZOATE / METHYL BENZOATE / PHENYL BENZOATE / POTASSIUM BENZOATE / PROPYL BENZOATE', 'Magnesium benzoate', '-', '553-70-8'),
-(7603, 'PROPIONIC ACID / AMMONIUM PROPIONATE / CALCIUM PROPIONATE / MAGNESIUM PROPIONATE / POTASSIUM PROPIONATE / SODIUM PROPIONATE', 'Magnesium propionate', '-', '557-27-7'),
-(7604, 'SALICYLIC ACID, CALCIUM SALICYLATE, MAGNESIUM SALICYLATE, MEA- SALICYLATE, SODIUM SALICYLATE, POTASSIUM SALICYLATE, TEA- SALICYLATE', 'Magnesium salicylate', '-', '18917-89-0'),
-(7605, 'AMMONIUM BENZOATE / BUTYL BENZOATE / CALCIUM BENZOATE / ETHYL BENZOATE / ISOBUTYL BENZOATE / ISOPROPYL BENZOATE / MAGNESIUM BENZOATE / MEA-BENZOATE / METHYL BENZOATE / PHENYL BENZOATE / POTASSIUM BENZOATE / PROPYL BENZOATE', 'MEA-benzoate', '-', '4337-66-0'),
-(7606, 'SALICYLIC ACID, CALCIUM SALICYLATE, MAGNESIUM SALICYLATE, MEA- SALICYLATE, SODIUM SALICYLATE, POTASSIUM SALICYLATE, TEA- SALICYLATE', 'MEA-salicylate', '-', '59866-70-5'),
-(7607, 'BENZYLHEMIFORMAL', 'Methanol, (phenylmethoxy-)', '-', '14548-60-8'),
-(7608, 'METHENAMINE', 'Methenamine', '-', '100-97-0'),
-(7609, 'AMMONIUM BENZOATE / BUTYL BENZOATE / CALCIUM BENZOATE / ETHYL BENZOATE / ISOBUTYL BENZOATE / ISOPROPYL BENZOATE / MAGNESIUM BENZOATE / MEA-BENZOATE / METHYL BENZOATE / PHENYL BENZOATE / POTASSIUM BENZOATE / PROPYL BENZOATE', 'Methyl benzoate', '-', '93-58-3'),
-(7610, '4-HYDROXYBENZOIC ACID / METHYLPARABEN /POTASSIUM ETHYLPARABEN /POTASSIUM PARABEN /SODIUM METHYLPARABEN /SODIUM ETHYLPARABEN /ETHYLPARABEN /SODIUM PARABEN / POTASSIUM METHYLPARABEN / CALCIUM PARABEN', 'Methylparaben', '-', '99-76-3'),
-(7611, 'METHYLCHLOROISOTHIAZOLINONE AND METHYLISOTHIAZOLINONE', 'Mixture of 5-Chloro-2-methyl-isothiazol-3(2H)-one and 2-methylisothiazol-3(2H)-one', '-', '55965-84-9'),
-(7612, 'CHLORHEXIDINE / CHLORHEXIDINE DIACETATE / CHLORHEXIDINE DIGLUCONATE / CHLORHEXIDINE DIHYDROCHLORIDE', 'N,N\'\'-bis(4-Chlorophenyl)-3,12-diimino-2,4,11,13-tetraazatetradecanediamidine', '-', '55-56-1'),
-(7613, 'CHLORHEXIDINE / CHLORHEXIDINE DIACETATE / CHLORHEXIDINE DIGLUCONATE / CHLORHEXIDINE DIHYDROCHLORIDE', 'N,N\'\'-bis(4-Chlorophenyl)-3,12-diimino-2,4,11,13-tetraazatetradecanediamidine diacetate', '-', '56-95-1'),
-(7614, 'CHLORHEXIDINE / CHLORHEXIDINE DIACETATE / CHLORHEXIDINE DIGLUCONATE / CHLORHEXIDINE DIHYDROCHLORIDE', 'N,N\'\'-bis(4-Chlorophenyl)-3,12-diimino-2,4,11,13-tetraazatetradecanediamidine digluconate', '-', '18472-51-0'),
-(7615, 'CHLORHEXIDINE / CHLORHEXIDINE DIACETATE / CHLORHEXIDINE DIGLUCONATE / CHLORHEXIDINE DIHYDROCHLORIDE', 'N,N\'\'-bis(4-Chlorophenyl)-3,12-diimino-2,4,11,13-tetraazatetradecanediamidine dihydrochloride', '-', '3697-42-5'),
-(7616, 'IMIDAZOLIDINYL UREA', 'N,N\'\'-Methylenebis[N\'-[3-(hydroxymethyl)-2,5-dioxoimidazolidin-4-yl]urea]', '-', '39236-46-9'),
-(7617, 'DIAZOLIDINYL UREA', 'N-(Hydroxymethyl)-N-(dihydroxymethyl-1,3-dioxo-2,5-imidazolidinyl-4)-N\'-(hydroxymethyl) urea', '-', '78491-02-8'),
-(7618, 'BENZALKONIUM CHLORIDE / BENZALKONIUM BROMIDE / BENZALKONIUM SACCHARINATE', 'N-Alkyl dimethyl benzyl ammonium chloride (C12-C18)', '-', '68391-01-5'),
-(7619, 'AMMONIUM BENZOATE / BUTYL BENZOATE / CALCIUM BENZOATE / ETHYL BENZOATE / ISOBUTYL BENZOATE / ISOPROPYL BENZOATE / MAGNESIUM BENZOATE / MEA-BENZOATE / METHYL BENZOATE / PHENYL BENZOATE / POTASSIUM BENZOATE / PROPYL BENZOATE', 'Phenyl benzoate', '-', '93-99-2'),
-(7620, 'PHENYL MERCURIC ACETATE / PHENYL MERCURIC BENZOATE', 'Phenyl Mercuric Acetate', '-', '62-38-4'),
-(7621, 'PHENYL MERCURIC ACETATE / PHENYL MERCURIC BENZOATE', 'Phenyl Mercuric Benzoate', '-', '94-43-9'),
-(7622, 'AMMONIUM BENZOATE / BUTYL BENZOATE / CALCIUM BENZOATE / ETHYL BENZOATE / ISOBUTYL BENZOATE / ISOPROPYL BENZOATE / MAGNESIUM BENZOATE / MEA-BENZOATE / METHYL BENZOATE / PHENYL BENZOATE / POTASSIUM BENZOATE / PROPYL BENZOATE', 'Phenylmercuric salts (including borate)', '-', '-'),
-(7623, 'POLYAMINOPROPYL BIGUANIDE', 'PHMB;Poly(hexamethylenebicyanoguanide-hexamethylenediamine) Hydrochloride', '-', '27083-27-8'),
-(7624, 'POLYAMINOPROPYL BIGUANIDE', 'Polyaminopropyl biguanide', '-', '133029-32-0'),
-(7625, 'POLYAMINOPROPYL BIGUANIDE', 'Polyaminopropyl biguanide hydrochloride', '-', '32289-58-0'),
-(7626, 'POLYAMINOPROPYL BIGUANIDE', 'Polyhexamethylene biguanide', '-', '28757-47-3'),
-(7627, 'AMMONIUM BENZOATE / BUTYL BENZOATE / CALCIUM BENZOATE / ETHYL BENZOATE / ISOBUTYL BENZOATE / ISOPROPYL BENZOATE / MAGNESIUM BENZOATE / MEA-BENZOATE / METHYL BENZOATE / PHENYL BENZOATE / POTASSIUM BENZOATE / PROPYL BENZOATE', 'Potassium benzoate', '-', '582-25-2'),
-(7628, 'BUTYLPARABEN/PROPYLPARABEN/SODIUM PROPOYLPARABEN/SODIUM BUTYLPARABEN/POTASSIUM BUTYLPARABEN/POTASSIUM PROPYLPARABEN', 'Potassium butylparaben', '-', '38566-94-8'),
-(7629, '4-HYDROXYBENZOIC ACID / METHYLPARABEN /POTASSIUM ETHYLPARABEN /POTASSIUM PARABEN /SODIUM METHYLPARABEN /SODIUM ETHYLPARABEN /ETHYLPARABEN /SODIUM PARABEN / POTASSIUM METHYLPARABEN / CALCIUM PARABEN', 'Potassium ethylparaben', '-', '36457-19-9'),
-(7630, 'SODIUM SULFITE / AMMONIUM BISULFITE / AMMONIUM SULFITE / POTASSIUM SULFITE / POTASSIUM hydrogen SULFITE / SODIUM BISULFITE / SODIUM METABISULFITE / POTASSIUM METABISULFITE', 'Potassium hydrogen sulfite', '-', '7773-03-7'),
-(7631, 'SODIUM SULFITE / AMMONIUM BISULFITE / AMMONIUM SULFITE / POTASSIUM SULFITE / POTASSIUM hydrogen SULFITE / SODIUM BISULFITE / SODIUM METABISULFITE / POTASSIUM METABISULFITE', 'Potassium metabisulfite', '-', '16731-55-8'),
-(7632, '-', 'Potassium methylparaben', '-', '26112-07-2'),
-(7633, '4-HYDROXYBENZOIC ACID / METHYLPARABEN /POTASSIUM ETHYLPARABEN /POTASSIUM PARABEN /SODIUM METHYLPARABEN /SODIUM ETHYLPARABEN /ETHYLPARABEN /SODIUM PARABEN / POTASSIUM METHYLPARABEN / CALCIUM PARABEN', 'Potassium paraben', '-', '16782-08-4'),
-(7634, 'PROPIONIC ACID / AMMONIUM PROPIONATE / CALCIUM PROPIONATE / MAGNESIUM PROPIONATE / POTASSIUM PROPIONATE / SODIUM PROPIONATE', 'Potassium propionate', '-', '327-62-8'),
-(7635, 'BUTYLPARABEN/PROPYLPARABEN/SODIUM PROPOYLPARABEN/SODIUM BUTYLPARABEN/POTASSIUM BUTYLPARABEN/POTASSIUM PROPYLPARABEN', 'Potassium propylparaben', '-', '84930-16-5'),
-(7636, 'SALICYLIC ACID, CALCIUM SALICYLATE, MAGNESIUM SALICYLATE, MEA- SALICYLATE, SODIUM SALICYLATE, POTASSIUM SALICYLATE, TEA- SALICYLATE', 'Potassium salicylate', '-', '578-36-9'),
-(7637, 'SORBIC ACID / CALCIUM SORBATE / SODIUM SORBATE / POTASSIUM SORBATE', 'Potassium sorbate', '-', '24634-61-5'),
-(7638, 'SODIUM SULFITE / AMMONIUM BISULFITE / AMMONIUM SULFITE / POTASSIUM SULFITE / POTASSIUM hydrogen SULFITE / SODIUM BISULFITE / SODIUM METABISULFITE / POTASSIUM METABISULFITE', 'Potassium sulfite', '-', '10117-38-1'),
-(7639, 'UNDECYLENIC ACID / POTASSIUM UNDECYLENATE / SODIUM UNDECYLENATE / CALCIUM UNDECYLENATE / MEA-UNDECYLENATE / TEA-UNDECYLENATE', 'Potassium undecylenate', '-', '6159-41-7'),
-(7640, 'PROPIONIC ACID / AMMONIUM PROPIONATE / CALCIUM PROPIONATE / MAGNESIUM PROPIONATE / POTASSIUM PROPIONATE / SODIUM PROPIONATE', 'Propionic acid', '-', '79-09-4'),
-(7641, 'BUTYLPARABEN/PROPYLPARABEN/SODIUM PROPOYLPARABEN/SODIUM BUTYLPARABEN/POTASSIUM BUTYLPARABEN/POTASSIUM PROPYLPARABEN', 'Propyl 4-hydroxybenzoate', '-', '94-13-3'),
-(7642, 'BUTYLPARABEN/PROPYLPARABEN/SODIUM PROPOYLPARABEN/SODIUM BUTYLPARABEN/POTASSIUM BUTYLPARABEN/POTASSIUM PROPYLPARABEN', 'Propyl 4-hydroxybenzoate', '-', '94-13-3'),
-(7643, 'AMMONIUM BENZOATE / BUTYL BENZOATE / CALCIUM BENZOATE / ETHYL BENZOATE / ISOBUTYL BENZOATE / ISOPROPYL BENZOATE / MAGNESIUM BENZOATE / MEA-BENZOATE / METHYL BENZOATE / PHENYL BENZOATE / POTASSIUM BENZOATE / PROPYL BENZOATE', 'Propyl benzoate', '-', '2315-68-6'),
-(7644, 'BENZALKONIUM CHLORIDE / BENZALKONIUM BROMIDE / BENZALKONIUM SACCHARINATE', 'Quaternary ammonium compounds, benzyl-C12-14-alkyldimethyl, chlorides', '-', '85409-22-9'),
-(7645, 'BENZALKONIUM CHLORIDE / BENZALKONIUM BROMIDE / BENZALKONIUM SACCHARINATE', 'Quaternary ammonium compounds, benzyl-C12-16-alkyldimethyl, chlorides', '-', '68424-85-1'),
-(7646, 'BENZALKONIUM CHLORIDE / BENZALKONIUM BROMIDE / BENZALKONIUM SACCHARINATE', 'Quaternary ammonium compounds, benzylcoco alkyldimethyl, chlorides', '-', '61789-71-7'),
-(7647, 'SALICYLIC ACID, CALCIUM SALICYLATE, MAGNESIUM SALICYLATE, MEA- SALICYLATE, SODIUM SALICYLATE, POTASSIUM SALICYLATE, TEA- SALICYLATE', 'Salicylic acid', '-', '69-72-7'),
-(7648, 'AMMONIUM BENZOATE / BUTYL BENZOATE / CALCIUM BENZOATE / ETHYL BENZOATE / ISOBUTYL BENZOATE / ISOPROPYL BENZOATE / MAGNESIUM BENZOATE / MEA-BENZOATE / METHYL BENZOATE / PHENYL BENZOATE / POTASSIUM BENZOATE / PROPYL BENZOATE', 'Salts of chloride, bromide, sulphate, acetate of benzenecarboximidamide, 4,4\'-(1,6-hexanediylbis (oxy))bis- (including isethionate and p-hydroxybenzoate)', '-', '-'),
-(7649, 'AMMONIUM BENZOATE / BUTYL BENZOATE / CALCIUM BENZOATE / ETHYL BENZOATE / ISOBUTYL BENZOATE / ISOPROPYL BENZOATE / MAGNESIUM BENZOATE / MEA-BENZOATE / METHYL BENZOATE / PHENYL BENZOATE / POTASSIUM BENZOATE / PROPYL BENZOATE', 'Salts of potassium, calcium, magnesium, ammonium and ethanolamines of benzoic acid', '-', '-'),
-(7650, 'AMMONIUM BENZOATE / BUTYL BENZOATE / CALCIUM BENZOATE / ETHYL BENZOATE / ISOBUTYL BENZOATE / ISOPROPYL BENZOATE / MAGNESIUM BENZOATE / MEA-BENZOATE / METHYL BENZOATE / PHENYL BENZOATE / POTASSIUM BENZOATE / PROPYL BENZOATE', 'Salts of sodium, potassium, calcium, magnesium, ammonium and ethanolamines of 3,3\'-dibromo-4,4\'-hexamethylenedioxydi-benzamidine', '-', '-'),
-(7651, 'AMMONIUM BENZOATE / BUTYL BENZOATE / CALCIUM BENZOATE / ETHYL BENZOATE / ISOBUTYL BENZOATE / ISOPROPYL BENZOATE / MAGNESIUM BENZOATE / MEA-BENZOATE / METHYL BENZOATE / PHENYL BENZOATE / POTASSIUM BENZOATE / PROPYL BENZOATE', 'Salts of sodium, potassium, calcium, magnesium, ammonium and ethanolamines of 3-acetyl-6-methylpyran-2,4(3H)-dione', '-', '-'),
-(7652, 'AMMONIUM BENZOATE / BUTYL BENZOATE / CALCIUM BENZOATE / ETHYL BENZOATE / ISOBUTYL BENZOATE / ISOPROPYL BENZOATE / MAGNESIUM BENZOATE / MEA-BENZOATE / METHYL BENZOATE / PHENYL BENZOATE / POTASSIUM BENZOATE / PROPYL BENZOATE', 'Salts of sodium, potassium, calcium, magnesium, ammonium and ethanolamines of 4-hydroxybenzoic acid and of its methyl- and ethyl-esters', '-', '-'),
-(7653, 'AMMONIUM BENZOATE / BUTYL BENZOATE / CALCIUM BENZOATE / ETHYL BENZOATE / ISOBUTYL BENZOATE / ISOPROPYL BENZOATE / MAGNESIUM BENZOATE / MEA-BENZOATE / METHYL BENZOATE / PHENYL BENZOATE / POTASSIUM BENZOATE / PROPYL BENZOATE', 'Salts of sodium, potassium, calcium, magnesium, ammonium and ethanolamines of 4-hydroxybenzoic acid and of its methyl- and ethyl-esters', '-', '-'),
-(7654, 'AMMONIUM BENZOATE / BUTYL BENZOATE / CALCIUM BENZOATE / ETHYL BENZOATE / ISOBUTYL BENZOATE / ISOPROPYL BENZOATE / MAGNESIUM BENZOATE / MEA-BENZOATE / METHYL BENZOATE / PHENYL BENZOATE / POTASSIUM BENZOATE / PROPYL BENZOATE', 'Salts of sodium, potassium, calcium, magnesium, ammonium and ethanolamines of butyl 4-hydroxybenzoate', '-', '-'),
-(7655, 'AMMONIUM BENZOATE / BUTYL BENZOATE / CALCIUM BENZOATE / ETHYL BENZOATE / ISOBUTYL BENZOATE / ISOPROPYL BENZOATE / MAGNESIUM BENZOATE / MEA-BENZOATE / METHYL BENZOATE / PHENYL BENZOATE / POTASSIUM BENZOATE / PROPYL BENZOATE', 'Salts of sodium, potassium, calcium, magnesium, ammonium and ethanolamines of butyl 4-hydroxybenzoate', '-', '-'),
-(7656, 'AMMONIUM BENZOATE / BUTYL BENZOATE / CALCIUM BENZOATE / ETHYL BENZOATE / ISOBUTYL BENZOATE / ISOPROPYL BENZOATE / MAGNESIUM BENZOATE / MEA-BENZOATE / METHYL BENZOATE / PHENYL BENZOATE / POTASSIUM BENZOATE / PROPYL BENZOATE', 'Salts of sodium, potassium, calcium, magnesium, ammonium and ethanolamines of hexa-2,4-dienoic acid', '-', '-'),
-(7657, 'AMMONIUM BENZOATE / BUTYL BENZOATE / CALCIUM BENZOATE / ETHYL BENZOATE / ISOBUTYL BENZOATE / ISOPROPYL BENZOATE / MAGNESIUM BENZOATE / MEA-BENZOATE / METHYL BENZOATE / PHENYL BENZOATE / POTASSIUM BENZOATE / PROPYL BENZOATE', 'Salts of sodium, potassium, calcium, magnesium, ammonium and ethanolamines of propionic acid', '-', '-'),
-(7658, 'AMMONIUM BENZOATE / BUTYL BENZOATE / CALCIUM BENZOATE / ETHYL BENZOATE / ISOBUTYL BENZOATE / ISOPROPYL BENZOATE / MAGNESIUM BENZOATE / MEA-BENZOATE / METHYL BENZOATE / PHENYL BENZOATE / POTASSIUM BENZOATE / PROPYL BENZOATE', 'Salts of sodium, potassium, calcium, magnesium, ammonium and ethanolamines of propyl 4-hydroxybenzoate', '-', '-'),
-(7659, 'AMMONIUM BENZOATE / BUTYL BENZOATE / CALCIUM BENZOATE / ETHYL BENZOATE / ISOBUTYL BENZOATE / ISOPROPYL BENZOATE / MAGNESIUM BENZOATE / MEA-BENZOATE / METHYL BENZOATE / PHENYL BENZOATE / POTASSIUM BENZOATE / PROPYL BENZOATE', 'Salts of sodium, potassium, calcium, magnesium, ammonium and ethanolamines of propyl 4-hydroxybenzoate', '-', '-'),
-(7660, 'AMMONIUM BENZOATE / BUTYL BENZOATE / CALCIUM BENZOATE / ETHYL BENZOATE / ISOBUTYL BENZOATE / ISOPROPYL BENZOATE / MAGNESIUM BENZOATE / MEA-BENZOATE / METHYL BENZOATE / PHENYL BENZOATE / POTASSIUM BENZOATE / PROPYL BENZOATE', 'Salts of sodium, potassium, calcium, magnesium, ammonium and ethanolamines of salicylic acid', '-', '-'),
-(7661, 'AMMONIUM BENZOATE / BUTYL BENZOATE / CALCIUM BENZOATE / ETHYL BENZOATE / ISOBUTYL BENZOATE / ISOPROPYL BENZOATE / MAGNESIUM BENZOATE / MEA-BENZOATE / METHYL BENZOATE / PHENYL BENZOATE / POTASSIUM BENZOATE / PROPYL BENZOATE', 'Salts of sodium, potassium, calcium, magnesium, ammonium and ethanolamines of undec-10-enoic acid', '-', '-'),
-(7662, 'SILVER CHLORIDE', 'Silver chloride deposited on titanium dioxide', '-', '7783-90-6'),
-(7663, 'BENZOIC ACID; SODIUM BENZOATE', 'Sodium Benzoate', '-', '532-32-1'),
-(7664, 'BENZOIC ACID; SODIUM BENZOATE', 'Sodium Benzoate', '-', '532-32-1'),
-(7665, 'BENZOIC ACID; SODIUM BENZOATE', 'Sodium Benzoate', '-', '532-32-1'),
-(7666, 'SODIUM SULFITE / AMMONIUM BISULFITE / AMMONIUM SULFITE / POTASSIUM SULFITE / POTASSIUM hydrogen SULFITE / SODIUM BISULFITE / SODIUM METABISULFITE / POTASSIUM METABISULFITE', 'Sodium bisulfite', '-', '7631-90-5'),
-(7667, 'BUTYLPARABEN/PROPYLPARABEN/SODIUM PROPOYLPARABEN/SODIUM BUTYLPARABEN/POTASSIUM BUTYLPARABEN/POTASSIUM PROPYLPARABEN', 'Sodium butylparaben', '-', '36457-20-2'),
-(7668, 'Dehydroacetic acid / SODIUM DEHYDROACETATE ', 'Sodium dehydroacetate', '-', '4418-26-2'),
-(7669, '4-HYDROXYBENZOIC ACID / METHYLPARABEN /POTASSIUM ETHYLPARABEN /POTASSIUM PARABEN /SODIUM METHYLPARABEN /SODIUM ETHYLPARABEN /ETHYLPARABEN /SODIUM PARABEN / POTASSIUM METHYLPARABEN / CALCIUM PARABEN', 'Sodium ethylparaben', '-', '35285-68-8'),
-(7670, 'SODIUM SULFITE / AMMONIUM BISULFITE / AMMONIUM SULFITE / POTASSIUM SULFITE / POTASSIUM hydrogen SULFITE / SODIUM BISULFITE / SODIUM METABISULFITE / POTASSIUM METABISULFITE', 'Sodium metabisulfite', '-', '7681-57-4'),
-(7671, '4-HYDROXYBENZOIC ACID / METHYLPARABEN /POTASSIUM ETHYLPARABEN /POTASSIUM PARABEN /SODIUM METHYLPARABEN /SODIUM ETHYLPARABEN /ETHYLPARABEN /SODIUM PARABEN / POTASSIUM METHYLPARABEN / CALCIUM PARABEN', 'Sodium methylparaben', '-', '5026-62-0'),
-(7672, 'SODIUM HYDROXYMETHYLGLYCINATE', 'Sodium N-(hydroxymethyl)glycinate', '-', '70161-44-3'),
-(7673, '4-HYDROXYBENZOIC ACID / METHYLPARABEN /POTASSIUM ETHYLPARABEN /POTASSIUM PARABEN /SODIUM METHYLPARABEN /SODIUM ETHYLPARABEN /ETHYLPARABEN /SODIUM PARABEN / POTASSIUM METHYLPARABEN / CALCIUM PARABEN', 'Sodium paraben', '-', '114-63-6'),
-(7674, 'PROPIONIC ACID / AMMONIUM PROPIONATE / CALCIUM PROPIONATE / MAGNESIUM PROPIONATE / POTASSIUM PROPIONATE / SODIUM PROPIONATE', 'Sodium propionate', '-', '137-40-6'),
-(7675, 'BUTYLPARABEN/PROPYLPARABEN/SODIUM PROPOYLPARABEN/SODIUM BUTYLPARABEN/POTASSIUM BUTYLPARABEN/POTASSIUM PROPYLPARABEN', 'Sodium propylparaben', '-', '35285-69-9'),
-(7676, 'SALICYLIC ACID, CALCIUM SALICYLATE, MAGNESIUM SALICYLATE, MEA- SALICYLATE, SODIUM SALICYLATE, POTASSIUM SALICYLATE, TEA- SALICYLATE', 'Sodium salicylate', '-', '54-21-7'),
-(7677, 'FORMIC ACID / SODIUM FORMATE', 'Sodium salt of formic acid', '-', '141-53-7'),
-(7678, 'SORBIC ACID / CALCIUM SORBATE / SODIUM SORBATE / POTASSIUM SORBATE', 'Sodium sorbate', '-', '7757-81-5'),
-(7679, 'SODIUM SULFITE / AMMONIUM BISULFITE / AMMONIUM SULFITE / POTASSIUM SULFITE / POTASSIUM hydrogen SULFITE / SODIUM BISULFITE / SODIUM METABISULFITE / POTASSIUM METABISULFITE', 'Sodium sulfite', '-', '7757-83-7'),
-(7680, 'BEHENTRIMONIUM CHLORIDE (1) / CETRIMONIUM BROMIDE / CETRIMONIUM CHLORIDE (2)/ LAURTRIMONIUM BROMIDE / LAURTRIMONIUM CHLORIDE / STEARTRIMONIUM BROMIDE / STEARTRIMONIUM CHLORIDE (2) ', 'Steartrimonium bromide', '-', '1120-02-1'),
-(7681, 'BEHENTRIMONIUM CHLORIDE (1) / CETRIMONIUM BROMIDE / CETRIMONIUM CHLORIDE (2)/ LAURTRIMONIUM BROMIDE / LAURTRIMONIUM CHLORIDE / STEARTRIMONIUM BROMIDE / STEARTRIMONIUM CHLORIDE (2) ', 'Steartrimonium chloride', '-', '112-03-8'),
-(7682, 'SALICYLIC ACID, CALCIUM SALICYLATE, MAGNESIUM SALICYLATE, MEA- SALICYLATE, SODIUM SALICYLATE, POTASSIUM SALICYLATE, TEA- SALICYLATE', 'TEA-salicylate', '-', '2174-16-5'),
-(7683, 'UNDECYLENIC ACID / POTASSIUM UNDECYLENATE / SODIUM UNDECYLENATE / CALCIUM UNDECYLENATE / MEA-UNDECYLENATE / TEA-UNDECYLENATE', 'TEA-undecylenate', '-', '84471-25-0'),
-(7684, 'THIMEROSAL', 'Thiomersal', '-', '54-64-8'),
-(7685, 'UNDECYLENIC ACID / POTASSIUM UNDECYLENATE / SODIUM UNDECYLENATE / CALCIUM UNDECYLENATE / MEA-UNDECYLENATE / TEA-UNDECYLENATE', 'Undec-10-enoic acid', '-', '112-38-9'),
-(7686, 'UNDECYLENIC ACID / POTASSIUM UNDECYLENATE / SODIUM UNDECYLENATE / CALCIUM UNDECYLENATE / MEA-UNDECYLENATE / TEA-UNDECYLENATE', 'Undec-10-enoic acid, compound with 2-aminoethanol (1:1)', '-', '56532-40-2');
+CREATE TABLE `pif_product` (
+  `id` int(11) NOT NULL,
+  `organization_id` varchar(255) NOT NULL,
+  `created_by` varchar(255) NOT NULL,
+  `created_when` date NOT NULL,
+  `pif_status` smallint(6) NOT NULL,
+  `fda_license` varchar(100) NOT NULL,
+  `product_name` varchar(255) NOT NULL,
+  `cosmetic_name` varchar(255) NOT NULL,
+  `cosmetic_type` varchar(255) NOT NULL,
+  `create_date` date NOT NULL,
+  `expire_date` date NOT NULL,
+  `cosmetic_reason` varchar(255) NOT NULL,
+  `cosmetic_physical` varchar(255) NOT NULL,
+  `company_name` varchar(255) NOT NULL,
+  `company_eng_name` varchar(255) NOT NULL,
+  `more_info` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `allexpdate`
+--
+ALTER TABLE `allexpdate`
+  ADD PRIMARY KEY (`no`);
 
 --
 -- Indexes for table `chemical`
@@ -11638,20 +11509,33 @@ ALTER TABLE `employee`
   ADD PRIMARY KEY (`no`);
 
 --
--- Indexes for table `pif_storage`
+-- Indexes for table `employee_add`
 --
-ALTER TABLE `pif_storage`
+ALTER TABLE `employee_add`
   ADD PRIMARY KEY (`no`);
 
 --
--- Indexes for table `testget`
+-- Indexes for table `pif`
 --
-ALTER TABLE `testget`
-  ADD PRIMARY KEY (`no`);
+ALTER TABLE `pif`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `product_id` (`product_id`);
+
+--
+-- Indexes for table `pif_product`
+--
+ALTER TABLE `pif_product`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `allexpdate`
+--
+ALTER TABLE `allexpdate`
+  MODIFY `no` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `chemical`
@@ -11663,7 +11547,7 @@ ALTER TABLE `chemical`
 -- AUTO_INCREMENT for table `chemicalgroup`
 --
 ALTER TABLE `chemicalgroup`
-  MODIFY `no` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `no` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
 
 --
 -- AUTO_INCREMENT for table `companyinfo`
@@ -11675,19 +11559,25 @@ ALTER TABLE `companyinfo`
 -- AUTO_INCREMENT for table `employee`
 --
 ALTER TABLE `employee`
-  MODIFY `no` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `no` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
--- AUTO_INCREMENT for table `pif_storage`
+-- AUTO_INCREMENT for table `employee_add`
 --
-ALTER TABLE `pif_storage`
-  MODIFY `no` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+ALTER TABLE `employee_add`
+  MODIFY `no` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `testget`
+-- AUTO_INCREMENT for table `pif`
 --
-ALTER TABLE `testget`
-  MODIFY `no` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7687;
+ALTER TABLE `pif`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT for table `pif_product`
+--
+ALTER TABLE `pif_product`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
