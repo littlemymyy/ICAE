@@ -6,6 +6,15 @@ import { FaRegEdit , FaExchangeAlt } from 'react-icons/fa';
 import { useRouter } from 'next/router';
 import Footer from "@/components/Footer"
 import Popup from 'reactjs-popup';
+import Button from '@mui/material/Button';
+import DeleteIcon from '@mui/icons-material/Delete';
+import SendIcon from '@mui/icons-material/Send';
+import Stack from '@mui/material/Stack';
+import SkipNextIcon from '@mui/icons-material/SkipNext';
+import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
+import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
+import Swal from 'sweetalert2'
+
 
 const Showch = () => {
     const [data , setData] = useState([])
@@ -17,6 +26,7 @@ const Showch = () => {
     const router = useRouter();  
     const [arr , setArr] = useState([])
     const [numdata , setNumdata] = useState([])
+    const Swal = require('sweetalert2')
    
     useEffect(() => {
         Axios({
@@ -43,10 +53,13 @@ const Showch = () => {
     }
 
     const mutPage = () => {
-      page.current -= 1
-      setShow(data.slice((page.current - 1) * 50, page.current * 50))
-      // Scroll to the top of the page
-      window.scrollTo(0, 0);
+      if (page.current > 1) {
+        page.current -= 1;
+        setShow(data.slice((page.current - 1) * 50, page.current * 50));
+        // Scroll to the top of the page
+        window.scrollTo(0, 0);
+      }
+   
 
     }
 
@@ -103,42 +116,53 @@ const Showch = () => {
       // alert(cno + " "+ datano)
     }
 
-    const changeClick = () => {
-      let str =""
-      for(let i = 0 ; i < arr.length ; i++ ){
-        if(arr[i] === 1) {
-          if(str.length === 0){
-            str += data[i].no
-          }
-          else {
-            str += ","
-            str += data[i].no
-          }
+    
+    const check = () => {
+      for(let i = 0 ; i< arr.length ; i++) {
+        if(arr[i] !== 0 ){
+          return true
         }
       }
-    console.log(numdata)
-    router.push({
-      pathname : "/admin/Changegroup" ,
-      query : {
+    }
+    const changeClick = () => {
+      
+      if(check() === true){
+        let str =""
+        for(let i = 0 ; i < arr.length ; i++ ){
+          if(arr[i] === 1) {
+            if(str.length === 0){
+              str += data[i].no
+            }
+            else {
+              str += ","
+              str += data[i].no
+            }
+          }
+        }
+         console.log(numdata)
+          router.push({
+          pathname : "/admin/Changegroup" ,
+          query : {
         numdata : str 
+          }
+
+       })
       }
-
-    })
+      else {
+        Swal.fire("กรุณาเลือกสารเคมี");
+      }
+     
+   
 
     }
 
-    const popupUpdate = () => {
-
-    }
+   
 
   return (
     <div>
       
         <Navbar/>
-        <br/>
-        <button onClick={() => plusPage()}>Next</button>
-        <button onClick={() => mutPage()}>Black</button>
-        <button onClick={()=>changeClick()}><FaExchangeAlt />&nbsp;เปลี่ยนกลุ่ม</button>
+        
         <br/>
         <div className='C2_labal' >แก้ไขข้อมูลสารเคมี</div>
         <div className="logo1">
@@ -152,6 +176,28 @@ const Showch = () => {
           onChange={(e) => resultsearch(e.target.value)}
         />
         <br />
+        <br/>
+        
+        
+       
+        
+
+        <Stack direction="row" spacing={3} justifyContent="center">
+          <Button onClick={() => mutPage()} variant="outlined"  startIcon={<SkipPreviousIcon />}>
+             ย้อนกลับ
+        </Button>
+
+      <Button onClick={() => plusPage()} variant="outlined"  endIcon={<SkipNextIcon />}>
+      ถัดไป
+      </Button>
+
+      <Button onClick={()=>changeClick()} variant="outlined"  endIcon={<ChangeCircleIcon />}>
+        เปลี่ยนประเภทสารเคมี
+      </Button>
+
+    </Stack>
+
+        <br/>
         <div className='show'>
         {/* {
           showr.length ?
@@ -163,7 +209,7 @@ const Showch = () => {
             ))
             : null
         } */}
-
+       
       </div>
       </div>
       
@@ -182,13 +228,13 @@ const Showch = () => {
                   <th className='showch_th3'>ชื่อสารเคมี</th>
                   <th className='showch_th4'>ประเภท</th>
                   <th className='showch_th5'>ความสามารถ</th>
-                  <th>ตัวเลือก</th>
+                  <th className='showch_th6'>ตัวเลือก</th>
                 </tr>
               </thead>
               <tbody>
                 {
-                    showr.map((value, idx) => (
-                      <tr >
+                    show.map((value, idx) => (
+                      <tr key ={idx}>
                         <td className='showch_th1'> <div className='radioSelect'> 
                         {
                           
@@ -202,7 +248,7 @@ const Showch = () => {
              
                         </div>
                         </td>
-                        <td>{idx + 1}</td>
+                        <td>{(page.current - 1) * 50 + idx + 1}</td>
                         <td>{value.cas}</td>
                         {
                           value.cmname === '-' ?
@@ -229,7 +275,21 @@ const Showch = () => {
           </div>
         
 
-          
+          <Stack direction="row" spacing={3} justifyContent="center">
+          <Button onClick={() => mutPage()} variant="outlined"  startIcon={<SkipPreviousIcon />}>
+             ย้อนกลับ
+        </Button>
+
+      <Button onClick={() => plusPage()} variant="outlined"  endIcon={<SkipNextIcon />}>
+      ถัดไป
+      </Button>
+
+      <Button onClick={()=>changeClick()} variant="outlined"  endIcon={<SkipNextIcon />}>
+        เปลี่ยนประเภทสารเคมี
+      </Button>
+
+    </Stack>
+    <br/>
 
      
 
