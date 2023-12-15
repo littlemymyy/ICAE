@@ -17,12 +17,12 @@ export default function showpif(){
 
 
     useEffect(() => {
-      var userData = localStorage.getItem("uemail");
-      console.log(userData);
+      var orid = localStorage.getItem("orid");
+      console.log(orid);
         Axios.request(
             {
                 method: 'get',
-                url: `http://localhost:3001/api/pif?email=${userData}`,
+                url: `http://localhost:3001/api/pif?orid=${orid}`,
                 headers: { },
                 data : ''
             }
@@ -124,8 +124,12 @@ export default function showpif(){
               href={`http://localhost:3001/${item.pdf_path}`}
             >
                 <CardMedia sx={{textAlign:"center", marginTop:"20px"}}>
-                <img src={`http://localhost:3001/${item.img_path}`} style={{ width: "150px" , height:"150px",  objectFit: "cover" ,textAlign:"center"}}/>
-                {/* <p>{`http://localhost:3001/${item.img_path}`}</p> */}
+                  {
+                    item.img_path == null ?
+                    <img src={'https://cdn.discordapp.com/attachments/1172220503998595207/1184933121234321408/1665px-No-Image-Placeholder.png?ex=658dc5f7&is=657b50f7&hm=301c6afc15ae559ecd5cf54131f9b923799760230e1cdc08536bd99f9a1b9b13&'} style={{ width: "150px" , height:"150px",  objectFit: "cover" ,textAlign:"center"}}/>
+                    :
+                    <img src={`http://localhost:3001/${item.img_path}`} style={{ width: "150px" , height:"150px",  objectFit: "cover" ,textAlign:"center"}}/>
+                  }
                 </CardMedia>
               <CardContent sx={{ marginLeft:"50px", marginRight:"50px" }}>
                 <Typography gutterBottom variant="h6" textAlign="center" component="div">

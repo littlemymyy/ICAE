@@ -682,22 +682,72 @@ export default function manage() {
   };
 
   const generatePDF = async (e) => {
+    if (document.getElementById("filename").value === "") {
+      Swal.fire({
+        icon: 'error',
+        title: 'กรุณากรอกชื่อผลิตภัณฑ์',
+      })
+      return;
+    }else if(document.getElementById("expdate").value === ""){
+      Swal.fire({
+        icon: 'error',
+        title: 'กรุณากรอกวันหมดอายุของเอกสาร',
+      })
+      return;
+    }
+
     let data = JSON.stringify({
-      "inputregisNumber": document.getElementById("regitnumber").value,
-      "inputcomName": document.getElementById("comName").value,
-      "inputcosName": document.getElementById("cosName").value,
-      "inputtypeGoods": document.getElementById("typeGoods").value,
-      "inputdateS": document.getElementById("dateS").value,
-      "inputexpDate": document.getElementById("expDate").value,
-      "inputobjGoods": document.getElementById("objGoods").value,
-      "Inputpy": document.getElementById("py").value,
-      "inputentrepreneur": document.getElementById("entrepreneur").value,
-      "inputFentrepreneur": document.getElementById("fentrepreneur").value,
-      "setDes": document.getElementById("des").value,
-      "rec_create_when": new Date(),
+      "fda_license": document.getElementById("regitnumber").value,
+      "product_name": document.getElementById("comName").value,
+      "cosmetic_name": document.getElementById("cosName").value,
+      "cosmetic_type": document.getElementById("typeGoods").value,
+      "create_date": document.getElementById("dateS").value,
+      "expire_date": document.getElementById("expDate").value,
+      "cosmetic_reason": document.getElementById("objGoods").value,
+      "cosmetic_physical": document.getElementById("py").value,
+      "company_name": document.getElementById("entrepreneur").value,
+      "company_eng_name": document.getElementById("fentrepreneur").value,
+      "more_info": document.getElementById("des").value,
+
+      //generic data
       "expdate": document.getElementById("expdate").value,
-      "filename": document.getElementById("filename").value,
-      "email": sessionStorage.getItem("uemail")
+      "file_name": document.getElementById("filename").value,
+      "email": localStorage.getItem("uemail"),
+      "product_id": product_id,
+      "pif_status": 1,
+
+      //file_exp
+      "file1_exp" : document.getElementById("file1_exp").value,
+      "file2_exp" : document.getElementById("file2_exp").value,
+      "file3_exp" : document.getElementById("file3_exp").value,
+      "file4_exp" : document.getElementById("file4_exp").value,
+      "file5_exp" : document.getElementById("file5_exp").value,
+      "file6_exp" : document.getElementById("file6_exp").value,
+      "file7_exp" : document.getElementById("file7_exp").value,
+      "file8_exp" : document.getElementById("file8_exp").value,
+      "file9_exp" : document.getElementById("file9_exp").value,
+      "file10_exp" : document.getElementById("file10_exp").value,
+      "file11_exp" : document.getElementById("file11_exp").value,
+      "file12_exp" : document.getElementById("file12_exp").value,
+      "file13_exp" : document.getElementById("file13_exp").value,
+      "file14_exp" : document.getElementById("file14_exp").value,
+
+      //check old pdf has removed
+      "pdfFile1" : pdfFile1,
+      "pdfFile2" : pdfFile2,
+      "pdfFile3" : pdfFile3,
+      "pdfFile4" : pdfFile4,
+      "pdfFile5" : pdfFile5,
+      "pdfFile6" : pdfFile6,
+      "pdfFile7" : pdfFile7,
+      "pdfFile8" : pdfFile8,
+      "pdfFile9" : pdfFile9,
+      "pdfFile10" : pdfFile10,
+      "pdfFile11" : pdfFile11,
+      "pdfFile12" : pdfFile12,
+      "pdfFile13" : pdfFile13,
+      "pdfFile14" : pdfFile14,
+
     });
 
     //for upload file
@@ -721,6 +771,8 @@ export default function manage() {
     photo && formData.append('photo', photo);
     // file3 && formData.append('file3', file3);
 
+    console.log(data)
+
     try {
       const response = await Axios.post('http://localhost:3001/api/savePdf', formData, {
         headers: {
@@ -730,18 +782,52 @@ export default function manage() {
       })
       .then (res => {
         console.log(res);
-        if (res.data.status === "ok") {
-          alert("อัพโหลดเอกสารสำเร็จ")
-          //redirect to http://localhost:3000/pif/productslist
-          window.location.href = "/pif/showpif"
+        if (res.data === "latest_ok") {
+          //create pdf
+          Axios.request('http://localhost:3001/api/mergePdf', {
+            method: 'post',
+            data: {
+              "product_id": product_id,
+              "email": localStorage.getItem("uemail"),
+            }
+          }).then((response) => {
+            if (response.data === "createdOk"){
+              console.log("create pdf success")
+              Swal.fire({
+                icon: 'success',
+                title: 'บันทึกและสร้างไฟล์ข้อมูลสำเร็จ',
+              }).then(() => {
+                router.push("/pif/showpif")
+              })
+            }else{
+              console.log("create pdf fail")
+              Swal.fire({
+                icon: 'error',
+                title: 'บันทึกข้อมูลไม่สำเร็จ',
+                text: 'บันทึกข้อมูลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง'
+              })
+            }
+          })
+
+          //end
         }
         else {
-          alert("อัพโหลดเอกสารไม่สำเร็จ กรุณาลองใหม่อีกครั้ง")
+          Swal.fire({
+            icon: 'error',
+            title: 'บันทึกข้อมูลไม่สำเร็จ',
+            text: 'บันทึกข้อมูลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง'
+          })
         }
 
       })
     } catch (error) {
-      console.error('Error uploading files:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'บันทึกข้อมูลไม่สำเร็จ',
+        text: 'บันทึกข้อมูลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง'
+      }).then(() => {
+        console.error('Error uploading files:', error);
+      })
     }
   };
 

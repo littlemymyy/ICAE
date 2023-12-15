@@ -24,9 +24,6 @@ export default function Home() {
   const [data , setData] = useState([])
 
   useEffect(()=>{
-    // let sDate = localStorage.getItem("emaildate")
-    // const today = new Date()
-    // const thisDay = today.getDate() + '-' + today.getMonth() + '-' + today.getFullYear()
     const Swal = require('sweetalert2')
 
    // console.log(sDate + " " + thisDay)
@@ -39,29 +36,16 @@ export default function Home() {
 
 
     if(localStorage.getItem("uemail")){
-
       let email = localStorage.getItem("uemail")
       let id = localStorage.getItem("orid")
       console.log(email)
-      const feechData = async () => {
 
-        let load = {
+        Axios.get('http://localhost:3001/api/sendNotification?orid='+id)
+          .then((res)=>{
+            console.log(res.data)
+            setData(res.data)
 
-          orid :id,
-        };
-
-        try {
-        const res =  await Axios({
-            method : 'post' ,
-            url :'http://localhost:3001/api/sendNotification',
-            data : load
-          })
-          console.log("........")
-          console.log(res.data)
-          if(res.data){
-          setData(res.data)
-
-          let fdanum = ""
+            let fdanum = ""
 
           for(let i = 0 ; i < res.data.length ; i++){
             console.log(res.data[i].fda_license)
@@ -81,14 +65,19 @@ export default function Home() {
               confirmButtonText: 'ปิด'
             })
           }
-        }
 
-        }catch(error) {
-          console.log('Error fetching data : ', error)
-        }
+
+          }).catch((err)=>{
+            console.log("notification Error : "+err)
+          })
+
+        //   console.log("rest = " + res.data)
+
+        //   if(res.data){
+        //   setData(res.data)
+        // }
 
        }
-       feechData()
     }
 
 
@@ -97,8 +86,9 @@ export default function Home() {
     // console.log(data)
 
 
+  ,[])
 
-  },[])
+
   return (
     <>
       <Navbar />
