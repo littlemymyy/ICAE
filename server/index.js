@@ -17,6 +17,7 @@ const socketIo = require('socket.io');
 const {EMAIL , PASSWORD} = require('./env.js')
 const PDFMerger = require('pdf-merger-js');
 const jwt = require('jsonwebtoken');
+const cron = require('node-cron');
 
 const app = express();
 const server = http.createServer(app);
@@ -1365,31 +1366,32 @@ app.post('/api/getalldataAddminUpdateByType' , (req , res ) => {
 
 })
 
-// app.post('/api/getdatachangegroup' , (req , res) => {
-//     const no = req.body
+//change annex when admin chose
+app.post('/api/getdatachangegroup' , (req , res) => {
+    const no = req.body
 
-//     let num = ""
-//     let queryWord = "SELECT * FROM chemical WHERE "
+    let num = ""
+    let queryWord = "SELECT * FROM chemical WHERE "
 
 
-//     for(let i = 0 ; i<no.length ; i++){
-//        num = " no = " + no[i] + " "
-//         queryWord += num
-//         if(i < no.length - 1) {
-//             queryWord += " OR "
-//         }
-//         else {
-//             queryWord += ";";
-//         }
-//     }
-//     console.log(queryWord)
-//     const sql = queryWord
-//     db.query(sql , (err , result) => {
-//         console.log(result);
-//         res.send(result)
-//     })
+    for(let i = 0 ; i<no.length ; i++){
+       num = " no = " + no[i] + " "
+        queryWord += num
+        if(i < no.length - 1) {
+            queryWord += " OR "
+        }
+        else {
+            queryWord += ";";
+        }
+    }
+    console.log(queryWord)
+    const sql = queryWord
+    db.query(sql , (err , result) => {
+        console.log(result);
+        res.send(result)
+    })
 
-// })
+})
 
 //Admin chang annex
 app.post('/api/saveStfromchangegroup' , (req , res) => {
@@ -1405,6 +1407,7 @@ app.post('/api/saveStfromchangegroup' , (req , res) => {
         });
 
     }
+    res.json({status:'ok'})
 
 })
 
@@ -1727,7 +1730,7 @@ app.post('/api/pifDataEmail' , (req, res) => {
 //Add min call USER INFO
 app.get("/api/AddminManageUser" , (req , res) => {
 
-    const sql = 'SELECT em_fullname , 	organization_id	, status FROM employee  '
+    const sql = 'SELECT em_fullname ,em_email, 	organization_id	, status FROM employee  '
     db.query(sql , (err , result)=>{
         if(err){
             console.log(err)
@@ -1740,9 +1743,39 @@ app.get("/api/AddminManageUser" , (req , res) => {
 
 // Send Exp Date to user by Email
 const sendEmailNotifications=() => {
-    const sql = 'SELECT fda_license , email, expdate  FROM product WHERE expdate <= CURDATE() + INTERVAL 1 MONTH ';
+    const sql0 = 'SELECT organization_id FROM product WHERE expdate <= CURDATE() + INTERVAL 1 MONTH '
+    const sql = 'SELECT fda_license ,email, expdate  FROM pif_product WHERE expdate <= CURDATE() + INTERVAL 1 MONTH ';
+    const sql1 =  'SELECT  em_email FROM employee WHERE organization_id = ?';
 
-    db.query(sql , (err , result) => {
+    let organization_id = []
+    let email = []
+    db.query (sql0, (err, result) => {
+        if (err) {
+          console.log(err);
+        } else if (result.length > 0) {
+          console.log("Organization IDs =>", result);
+    
+          // Extract and store organization_ids
+          organization_id = result.map(row => row.organization_id);
+    
+          // Iterate through organization_ids and query emails
+          organization_id.forEach(orgId => {
+            db.query(sql1, [orgId], (err, emailResult) => {
+              if (err) {
+                console.log("Error", err);
+              } else if  (emailResult.length > 0) {
+                 email = emailResult.map(row => row.em_email);
+                console.log("Emails =>", email);
+               email.push(email);   
+              }
+            });
+          });
+        }
+      }); 
+    
+  console.log(email,"email")
+
+    db.query(sql, (err , result) => {
         if(err) {
             console.error("Error ", err)
            // res.status(500).send("SomeTingWorng")
@@ -1757,16 +1790,36 @@ const sendEmailNotifications=() => {
                 for(let i = 0 ; i<result.length ; i++){
                      let   message = {
                         from: EMAIL,
-                        to: result[i].em_email,
-                        subject: "ใบอนุญาต อย. ใกล้หมดอายุแล้ว",
+                        to: email[i],
+                        subject: "ใบอนุญาต อย. ใกล้หมดอายุแล้ว วันหมดอายุ คือ " + result[i].expdate ,
                         text: "วันหมดอายุ คือ " + result[i].expdate,
-                        html: "เรียนท่านผู้ใช้ขณะนี้ระบบได้ตรวจพบว่าเลขจดแจ้งที่ "+result[i].fda_license +" หมดอายุวันที่ " + result[i].expdate,
+                        html: `
+                        <body style="font-family: 'Arial', sans-serif; background-color: #f4f4f4; color: #333; text-align: center; padding: 20px;">
+                            <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                                <h1 style="color: #007bff;">ICAE Alert</h1>
+                                <p style="font-size: 16px;">เรียนท่านผู้ใช้ขณะนี้ระบบได้ตรวจพบว่าเลขจดแจ้งที่ ${result[i].fda_license} </p><br><br><br> 
+                               <p style="font-size: 16px;">จะหมดอายุภายในวันที่ ${result[i].expdate} </p><br>
+                               <a href="https://privus.fda.moph.go.th/" style="color: #007bff; text-decoration: none;">
+                               คลิกที่นี่เพิ่อไปยังเว็บ อย. เพื่อต่ออายุเครื่องสำอางของท่าน
+                             </a>
+                             <br/> 
+                             <a href="https://privus.fda.moph.go.th/" style="color: #007bff; text-decoration: none;">
+                             คลิกที่นี่เพิ่อไปยังเว็บ ICAE เพื่อจัดรายการเอกสาร PIF ของท่าน
+                           </a>
+                               <br><br>
+                               <p style="font-size: 14px; color: #555;">Regards,</p>
+                                <p style="font-size: 14px; color: #555;">ICAE Team</p>
+                            </div>
+                        </body>`
+                        
+                       // emailBody
+                        ,
                     };
+               
 
                  sendEmail(message)
                    console.log(message)
                 }
-
 
         }
         else {
@@ -1775,6 +1828,99 @@ const sendEmailNotifications=() => {
     })
 //})
 }
+
+
+
+
+
+const sendEmailNotificationsFile=() => {
+    const sql0 = 'SELECT organization_id FROM product WHERE expdate <= CURDATE() + INTERVAL 1 MONTH '
+    const sql = 'SELECT fda_license ,email, expdate  FROM pif WHERE file1_exp <= CURDATE() + INTERVAL 1 MONTH OR file2_exp <= CURDATE() + INTERVAL 1 MONTH OR file3_exp <= CURDATE() + INTERVAL 1 MONTH OR file4_exp <= CURDATE() + INTERVAL 1 MONTH OR file5_exp <= CURDATE() + INTERVAL 1 MONTH OR file6_exp <= CURDATE() + INTERVAL 1 MONTH OR file7_exp <= CURDATE() + INTERVAL 1 MONTH OR file8_exp OR file9_exp <= CURDATE() + INTERVAL 1 MONTH OR file10_exp <= CURDATE() + INTERVAL 1 MONTH OR file11_exp <= CURDATE() + INTERVAL 1 MONTH file12_exp <= CURDATE() + INTERVAL 1 MONTH OR file13_exp <= CURDATE() + INTERVAL 1 MONTH OR file14_exp <= CURDATE() + INTERVAL 1 MONTH  ';
+    const sql1 =  'SELECT  em_email FROM employee WHERE organization_id = ?';
+
+    let organization_id = []
+    let email = []
+    db.query (sql0, (err, result) => {
+        if (err) {
+          console.log(err);
+        } else if (result.length > 0) {
+          console.log("Organization IDs =>", result);
+    
+          // Extract and store organization_ids
+          organization_id = result.map(row => row.organization_id);
+    
+          // Iterate through organization_ids and query emails
+          organization_id.forEach(orgId => {
+            db.query(sql1, [orgId], (err, emailResult) => {
+              if (err) {
+                console.log("Error", err);
+              } else if  (emailResult.length > 0) {
+                 email = emailResult.map(row => row.em_email);
+                console.log("Emails =>", email);
+               email.push(email);   
+              }
+            });
+          });
+        }
+      }); 
+    
+  console.log(email,"email")
+
+    db.query(sql, (err , result) => {
+        if(err) {
+            console.error("Error ", err)
+           // res.status(500).send("SomeTingWorng")
+        }
+
+        else if (result.length > 0 ){
+            console.log('Result from database :', result);
+            console.log("Ok")
+
+                //console.log(result[0].em_email)
+                //console.log(result.length)
+                for(let i = 0 ; i<result.length ; i++){
+                     let   message = {
+                        from: EMAIL,
+                        to: email[i],
+                        subject: "เอกสารบางอย่างใน PIF จะหมดอายุวันหมดอายุในอีก 30 วัน "  ,
+                        text: "โปรตรวจสอบเอกสาร PIF ของคุณ",
+                        html: `
+                        <body style="font-family: 'Arial', sans-serif; background-color: #f4f4f4; color: #333; text-align: center; padding: 20px;">
+                            <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                                <h1 style="color: #007bff;">ICAE Alert</h1>
+                                <p style="font-size: 16px;">เรียนท่านผู้ใช้ขณะนี้ระบบได้ตรวจพบว่ามีเอกสารหมดอายุขอให้ท่านไปแก้ไขเอกสารด้วยค่ะ  </p><br><br><br> 
+                               
+                             <br/> 
+                             <a href="https://privus.fda.moph.go.th/" style="color: #007bff; text-decoration: none;">
+                             คลิกที่นี่เพิ่อไปยังเว็บ ICAE เพื่อจัดรายการเอกสาร PIF ของท่าน
+                           </a>
+                               <br><br>
+                               <p style="font-size: 14px; color: #555;">Regards,</p>
+                                <p style="font-size: 14px; color: #555;">ICAE Team</p>
+                            </div>
+                        </body>`
+                        
+                       // emailBody
+                        ,
+                    };
+               
+
+                 sendEmail(message)
+                   console.log(message)
+                }
+
+        }
+        else {
+            console.log("No expDate")
+        }
+    })
+//})
+}
+
+
+
+
+
 
 const sendEmail = (message) => {
 
@@ -1802,18 +1948,19 @@ const sendEmail = (message) => {
                     });
 }
 
- //sendEmailNotifications()
+//sendEmailNotifications()  
 
-// cron.schedule(' 20 9 * * *' , () => {
-//     console.log("IS RUN CRON")
-//     try {
+ cron.schedule(' 20 9 * * *' , () => {
+// //     console.log("IS RUN CRON")
+    try {
 
-//         sendEmailNotifications()
+         sendEmailNotifications()
+         sendEmailNotificationsFile()
 
-//         console.log('Email sent successfully');
-//     } catch (error) {
-//         console.error('Error:', error);
-//     }
+//     console.log('Email sent successfully');
+     } catch (error) {
+         console.error('Error:', error);
+      }
 
 //     console.log('Cron job executed at:', new Date());
 //     axios.get('http://localhost:3001/api/sendNotification')
@@ -1822,7 +1969,7 @@ const sendEmail = (message) => {
 //     }).catch((error) => {
 //         console.error(error)
 //     })
-// })
+ })
 
 
 
@@ -1842,6 +1989,11 @@ app.post("/api/pifInfo" , (req , res) => {
      })
  })
 
+ app.post("/getnotficationPIF" , (req , res)=>{
+    const sql = 'SELECT fda_license ,email, expdate  FROM product WHERE file1_exp <= CURDATE() + INTERVAL 1 MONTH OR file2_exp <= CURDATE() + INTERVAL 1 MONTH OR file3_exp <= CURDATE() + INTERVAL 1 MONTH OR file4_exp <= CURDATE() + INTERVAL 1 MONTH OR file5_exp <= CURDATE() + INTERVAL 1 MONTH OR file6_exp <= CURDATE() + INTERVAL 1 MONTH OR file7_exp <= CURDATE() + INTERVAL 1 MONTH OR file8_exp OR file9_exp <= CURDATE() + INTERVAL 1 MONTH OR file10_exp <= CURDATE() + INTERVAL 1 MONTH OR file11_exp <= CURDATE() + INTERVAL 1 MONTH file12_exp <= CURDATE() + INTERVAL 1 MONTH OR file13_exp <= CURDATE() + INTERVAL 1 MONTH OR file14_exp <= CURDATE() + INTERVAL 1 MONTH  ';
+
+
+ })
 
 
 // const storage = multer.diskStorage({

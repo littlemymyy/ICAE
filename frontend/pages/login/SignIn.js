@@ -26,6 +26,7 @@ import "swiper/css/pagination";
 
 // import required modules
 import { Pagination } from "swiper/modules";
+import e from 'cors';
 
 function Copyright(props) {
 
@@ -48,7 +49,10 @@ const defaultTheme = createTheme();
 
 export default function SignIn() {
   React.useEffect(() => {
-    if (localStorage.getItem("uemail") !== null) {
+    if(localStorage.getItem("uemail") === null){
+
+    }
+    else if (localStorage.getItem("uemail") !== null) {
       router.push("/");
     }
   }, []);

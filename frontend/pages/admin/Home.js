@@ -80,7 +80,7 @@ const Home = () => {
 
         
 
-          console.log("AUNX2 "+a+" " + b +" "+ c)
+          console.log(" "+a+" " + b +" "+ c)
 
           console.log(CanAll)
           console.log(sum)
