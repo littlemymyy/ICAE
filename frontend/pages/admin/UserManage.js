@@ -314,7 +314,7 @@ fetchData0();
                   <thead>
                     <tr>
                       <th className="C2EM_th1">#</th>
-                      <th className="C2EM_th2">Name</th>
+                      <th className="C2EM_th2">Email</th>
                       <th className="C2EM_th3">Role</th>
                       <th className="C2EM_th4">Status</th>
                       <th className="C2EM_th4">TEAM</th>
@@ -325,7 +325,7 @@ fetchData0();
                     {show.map((value, idx) => (
                       <tr key={idx}>
                         <td className="C2EM_th1">{idx + 1}</td>
-                        <td className="C2EM_th2">{value.em_fullname}</td>
+                        <td className="C2EM_th2">{value.em_email}</td>
                         <td className="C2EM_th3">
                         {
                         value.status === "S" ?

@@ -17,6 +17,7 @@ export default function Edit_Admin() {
     const [per , setPer] = useState("")
     const [cmname1 , setCmname1] = useState("")
     const [des , setDes] = useState("")
+    const [showdata,setShowdata] = useState(["","","","","","","","","",""])
     
 
     useEffect(() => {
@@ -34,23 +35,33 @@ export default function Edit_Admin() {
             method : 'post',
             data : load,
         }).then((response)=>{
-            console.log(response.data[0])
+            console.log("repones.data",response.data)
+            console.log("[0]",response.data[0])
             setData(response.data[0])
+            showdata[0] = response.data[0].cmname
+            showdata[1] = response.data[0].per
+            showdata[2] = response.data[0].des
+
+            setShowdata([...showdata])
             cmname.current = response.data[0].cmname
         })
         
     },[])
 
- 
+    const setNewData = (idx, e) => {
+        showdata[idx] = e;
+        setShowdata([... showdata]);
+      };
+    
 
     const save = () => {
        let load = {
         no : num1,
         cas : data.cas ,
-        cmname : cmname1 ,
-        per : per ,
+        cmname : showdata[0] ,
+        per : showdata[1] ,
         st : st ,
-        des : des 
+        des :showdata[2]
        }
 
        Axios({
@@ -65,12 +76,15 @@ export default function Edit_Admin() {
        })
 
     }
+
+
+
    
     return(
        <>
          <Navbar />
          <Fragment>
-            <Box sx={{textAlign:"-webkit-center"}}>
+            <Box sx={{ textAlign: "-webkit-center" }}>
                 <Box borderRadius={'5px'}
                     display={'flex'}
                     justifyContent={'center'}
@@ -85,8 +99,7 @@ export default function Edit_Admin() {
                 
                 >
 
-                
-                
+             
 
                     <BuildIcon sx={{ color: "black"}}></BuildIcon>
                     <Typography variant="h7" sx={{ color: "black"}}>แก้ไขสารเคมี</Typography>
@@ -159,21 +172,21 @@ export default function Edit_Admin() {
                         </RadioGroup>
                     </FormControl>
                     <Typography variant="h7">ชื่อสารเคมี</Typography>
-                    <TextField  variant="outlined" ref={cmname} onChange={(e)=> setCmname1(e.target.value)} />
+                    <TextField  variant="outlined" value={showdata[0]}  onChange={(e) => setNewData(0, e.target.value)}/>
                     <Typography variant="h7">รหัส CAS NO</Typography>
                     <TextField  variant="outlined" value = {data.cas} />
                     
                     <Typography variant="h7">คำอธิบาย</Typography>
                     <TextField
                         id="outlined-multiline-static"
-                        value={data.des}
-                        onChange={(e) => setDes(e.target.value) }
+                        value={showdata[2]}
+                        onChange={(e) => setNewData(2, e.target.value)}
                         multiline
                         rows={4}
                     />
 
                         <Typography variant="h7">ปริมาณสาร</Typography>
-                        <TextField  defaultValue={data.per} variant="outlined" onChange={(e) => setPer(e.target.value)} />
+                        <TextField  value={showdata[1]} variant="outlined" onChange={(e) => setNewData(1, e.target.value)} />
 
                     
                 </Box>
@@ -192,28 +205,31 @@ export default function Edit_Admin() {
 
 
                 
-                >
+                >  <Box 
+                border={'2px dashed grey'}
+                textAlign={'center'}
+                min-height={'100vh'}
+                gap={'30px'}
+                justifyContent={'center'}
+                height={'450px'}
+                width={'700px'}
+
+            >
+              
+                <img src="/edit.png"></img>
+                
+            </Box>  
          
-                    
 
-                    <Box sx={{textAlign:'center', marginTop:'20px'}}>
-                        <button onClick={() => save()} color="yellow">บันทึก</button>
-                    </Box>
-                        
-                    
-
-                    
-                   
-                    
-                                    
-                    
-                    
 
                 </Box>
+               
             
             </Box>
 
-
+            <Box sx={{textAlign:'center', marginTop:'20px'}}>
+                        <button onClick={() => save()} color="yellow">บันทึก</button>
+                    </Box>
 
 
 
