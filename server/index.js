@@ -34,9 +34,9 @@ app.use('/uploads', express.static('uploads'));
 
 // create PDF FOR PIF
 const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
+    host: 'icae_mysql',
+    user: 'icae_user',
+    password: 'Icae11235813re',
     database: 'cosmetic'
 });
 
@@ -674,6 +674,9 @@ app.post('/api/setsignUp' , jsonParser, async (req , res ) => {
        if(err) {
         console.error(err)
         return res.status(500).json({error: "have someing worng"})
+       }
+       else {
+        return res.status(200).json({message: "signIn OK"})
        }
     })
     let config = {
