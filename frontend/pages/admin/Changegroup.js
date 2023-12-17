@@ -1,14 +1,25 @@
+import Footer from "@/components/Footer";
+import Navbar from "@/components/layout/Navbar";
 import Axios from "axios";
 import React, { useEffect, useState } from 'react'
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import { useRouter } from 'next/router';
+import Swal from 'sweetalert2'
 
 const Changegroup = () => {
     const [st , setSt] = useState(0)
     const [data , setData] = useState([])
     const [num , setNum] = useState([])
+    const router = useRouter();
+
     useEffect(() => {
         const queryString = window.location.search
         const searchParams = new URLSearchParams(queryString)
         const mydata = searchParams.get("numdata").split(",").map(String)
+        const Swal = require('sweetalert2')
         
         setNum(mydata)
 
@@ -32,19 +43,44 @@ const Changegroup = () => {
                 st : st ,
                 num : num
             }
+            const fetchData = async () =>{
+              try{
+                const res = await Axios.post("http://localhost:3001/api/saveStfromchangegroup",load)
+                if(res.data.status === "ok"){
+                  Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: "สำเร็จเปลี่ยนสถานะสารเคมีเรียบร้อย",
+                    showConfirmButton: false,
+                    timer: 1500
+                  });
+
+                  router.push("/admin/Showch")
+                }
+
+              }catch(error){
+                console.log(error)
+              }
+
+            }
             
-            Axios({
-                url : "http://localhost:3001/api/saveStfromchangegroup",
-                method : "post" ,
-                data : load,
-            })
+           fetchData()
             
         }
        
     }
   return (
     <div>
-        <p>Please select your favorite Web language:</p>
+      <Navbar/>
+      <br/>
+      <Box sx={{ width: '100%', maxWidth: 500, margin: 'auto', textAlign: 'center' }}>
+      <Typography variant="h5" gutterBottom>
+       กรุณาประเภทสารเคมีที่คุณต้องการเปลี่ยน
+      </Typography>
+
+      </Box>
+     
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         {
             st === 2 ? 
             <input type="radio"  checked/>
@@ -85,6 +121,7 @@ const Changegroup = () => {
             <input type="radio" onChange={() => setSt(6)} />
         }
         <label >6</label>
+</Box>
 
         <table className="showch_styled-table">
               <thead >
@@ -95,8 +132,8 @@ const Changegroup = () => {
                
               </div>
               </th>
-                  <th className='showch_th1'>ลำดับ</th>
-                  <th className='showch_th2'>CAS NO</th>
+                  <th className='showch_th1'>CAS NO</th>
+                  <th className='showch_th2'>ชื่อ</th>
                   <th className='showch_th3'>ประเภท</th>
                  
                 </tr>
@@ -125,7 +162,15 @@ const Changegroup = () => {
               </tbody>
             </table>
 
-        <button onClick={() => savedata()}>save</button>
+            <Stack direction="row" spacing={1} justifyContent="center">
+                <Button variant="contained" color="success" onClick={() => savedata()} >
+                    บันทึก
+                </Button>
+           </Stack>
+
+       
+
+        <Footer/>
     </div>
   )
 }

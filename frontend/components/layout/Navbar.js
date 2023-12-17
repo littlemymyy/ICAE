@@ -122,6 +122,7 @@ function Navbar() {
         }
     };
     const handleOpenSignIn = () => {
+        //localStorage.clear();
         router.push('/login/SignIn');
     }
 
@@ -137,6 +138,9 @@ function Navbar() {
 
         }
         else if(selectName === settings[2]) {
+            localStorage.removeItem("uemail")
+            localStorage.removeItem("uicon")
+            localStorage.removeItem("status")
             console.log('OK');
             localStorage.clear();
             setUname("");
