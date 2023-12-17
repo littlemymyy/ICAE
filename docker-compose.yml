@@ -1,0 +1,52 @@
+version: '3'
+services:
+  icae_frontend:
+    image: node:21.3.0
+    restart: unless-stopped
+    ports: 
+      - 4000:3000
+    volumes:
+      - ./frontend:/usr/src/app
+    working_dir: /usr/src/app
+    command: >
+      bash -c "npm install && npm run dev"
+    depends_on:
+      - icae_mysql
+      - icae_backend
+
+  icae_backend:
+    image: node:21.3.0
+    restart: unless-stopped
+    ports: 
+      - 3001:3001
+    volumes:
+      - ./server:/usr/src/app
+    working_dir: /usr/src/app
+    command: >
+      bash -c "npm install && npm start"
+    depends_on:
+      - icae_mysql
+  
+  icae_mysql:
+    image: mysql:8.2.0
+    restart: unless-stopped
+    environment:
+      - MYSQL_USER=icae_user
+      - MYSQL_PASSWORD=Icae11235813re
+      - MYSQL_DATABASE=cosmetic
+      - MYSQL_ROOT_PASSWORD=Icae11235813re
+    ports: 
+      - 3306:3306
+    volumes:
+      - ./data:/var/lib/mysql
+
+  icae_phpmyadmin:
+    image: phpmyadmin:5.2.1
+    restart: unless-stopped
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOST=icae_mysql
+    ports: 
+      - 8081:80
+    depends_on:
+      - icae_mysql
