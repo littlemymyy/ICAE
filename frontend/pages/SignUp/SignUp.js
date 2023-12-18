@@ -71,8 +71,9 @@ export default function SignUp() {
             icon: "error",
             title: "พบข้อผิดพลาด",
             text: "มีการใช้อีเมล์นี้แล้ว กรุณาเปลี่ยนอีเมล์!",
+          }).then(function (result) {
+              window.location.reload();
           });
-          window.location.reload()
         }
         else {
           setEmail(event.target.value);
