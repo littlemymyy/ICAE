@@ -322,6 +322,56 @@ const manage = () => {
     })
   }
 
+  const handleDeleteTeam = () => {
+    Swal.fire({
+      title: "คุณต้องการลบทีมนี้หรือไม่?",
+      text: "ข้อมูลทั้งหมดของทีมนี้จะถูกลบอย่างถาวร!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "ใช่",
+      cancelButtonText: "ไม่",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteTeamCheck();
+      }
+    });
+  }
+
+  const deleteTeamCheck = (e) => {
+    let load = {
+      data : id
+    }
+    console.log("load from delete")
+    console.log(load)
+    Axios.post("http://localhost:3001/api/deleteTeam", load)
+    .then(response => {
+      if (response.data.status === "ok") {
+        Swal.fire({
+            title: "สำเร็จ!",
+            text: "ลบทีมเรียบร้อย!",
+            icon: "success"
+          }).then((result) => {
+              localStorage.setItem("orid","null")
+              router.push("/team/team")
+          });
+      }
+      else {
+        Swal.fire({
+            title: "ไม่สำเร็จ!",
+            text: "ลบทีมไม่สำเร็จ กรุณาลองใหม่อีกครั้ง!",
+            icon: "error"
+          });
+      }
+    })
+    .catch(error => {
+      console.error("Error:", error);
+      Swal.fire({
+        title: "ไม่สำเร็จ!",
+        text: "ลบทีมไม่สำเร็จ กรุณาลองใหม่อีกครั้ง!",
+        icon: "error"
+      });
+    });
+  }
   const deleteMember = (e) => {
     console.log("deleted no = "+ e.no);
     let load = {
@@ -362,6 +412,14 @@ const manage = () => {
     console.log("That chamgename big")
     console.log(id)
     console.log(teamName);
+    if (teamName === "" || teamName === null || teamName === undefined || teamName === "null" || teamName === "undefined") {
+        Swal.fire({
+            title: "ชื่อทีมไม่ถูกต้อง!",
+            text: "กรุณากรอกชื่อทีมใหม่!",
+            icon: "error",
+        });
+        return;
+    }
     let load = {
         data: teamName,
         id: id,
@@ -456,6 +514,12 @@ const handleChickAdd = () => {
 
                         <div className="btn">
                           <Button variant="contained" color="error" onClick={() => handleDelete({no: userID})}>ออกจากทีม</Button>
+                        </div>
+                        <div className="btn">
+                          <p></p>
+                        </div>
+                        <div className="btn">
+                          <Button variant="contained" color="error" onClick={() => handleDeleteTeam({no: userID})}>ลบทีม</Button>
                         </div>
                         <div className="btn" onClick={()=>handleChickAdd()}>
                           <Button variant="contained" onClick={() => handleChickAdd()}>เพิ่มสมาชิก</Button>
