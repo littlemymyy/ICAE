@@ -96,8 +96,12 @@ export default function SignIn() {
             router.push("/");
           }
         }
-        else if(response.data.length <=0 ) {
-          Swal.fire("โปรดลองอีกครั้ง");
+        else{
+          Swal.fire({
+            icon: 'error',
+            title: 'เข้าสู่ระบบไม่สำเร็จ',
+            text: 'กรุณาตรวจสอบอีเมล์หรือรหัสผ่านอีกครั้ง',
+          })
         }
       })
       .catch(function (error) {
