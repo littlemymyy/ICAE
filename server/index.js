@@ -12,27 +12,20 @@ const pdfMake = require('pdfmake/build/pdfmake');
 const vfsFonts = require('pdfmake/build/vfs_fonts');
 const path = require('path');
 const nodemailer = require("nodemailer");
-const http = require('http');
-const socketIo = require('socket.io');
 const {EMAIL , PASSWORD} = require('./env.js')
 const PDFMerger = require('pdf-merger-js');
 const jwt = require('jsonwebtoken');
 const cron = require('node-cron');
 
 const app = express();
-const server = http.createServer(app);
 const secret = 'sirirat';
 
 app.use(bodyParser.json({limit: '35mb'}));
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended: true , limit : "35mb" , parameterLimit : 50000 }));
-
-
-
 app.use('/uploads', express.static('uploads'));
 
-// create PDF FOR PIF
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
@@ -51,7 +44,7 @@ const pdfStorage = multer.diskStorage({
 
 const pdfUpload = multer({ storage: pdfStorage });
 
-//not use
+//unused
 app.post('/generate-pdf', pdfUpload.single('file'), (req, res) => {
     const content = req.body.text;
     console.log(content)
@@ -117,7 +110,7 @@ app.post('/generate-pdf', pdfUpload.single('file'), (req, res) => {
     }
 });
 
-//not use
+//unused
 app.post('/api/mergePdf_old', pdfUpload.any(), (req, res) => {
     const merger = new PDFMerger();
     const files = req.files;
@@ -514,7 +507,6 @@ app.get('/api/pif', jsonParser, (req, res) => {
         })
 })
 
-
 // Admin upload data to database
 app.post('/api/uploadCsv/', (req, res) => {
     const data = req.body.dd
@@ -534,10 +526,6 @@ app.post('/api/uploadCsv/', (req, res) => {
     }
     res.send('OK');
 })
-
-
-/////////////////////////////////////////////////////////////////
-// ADMIN / USER LOGING
 
 app.post('/api/authen', jsonParser , function (req, res, next) {
     try {
@@ -606,9 +594,6 @@ app.post('/api/getUser/', jsonParser, (req, res) => {
 
     })
 })
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 
 app.post('/api/AddminAdd' , (req, res) => {
     const data = req.body
@@ -622,8 +607,6 @@ app.post('/api/AddminAdd' , (req, res) => {
     res.send('OK');
 
 })
-
-
 
 // Addmin upload data to database by hand
 app.post('/api/setdata' , (req , res) => {
@@ -652,7 +635,6 @@ app.post('/api/setdata' , (req , res) => {
     console.log(count)
     res.send('OK');
 })
-
 
 // user singUp
 app.post('/api/setsignUp' , jsonParser, async (req , res ) => {
@@ -709,7 +691,6 @@ app.post('/api/setsignUp' , jsonParser, async (req , res ) => {
        }
     })
 })
-
 
 //Check sign up Email dupicate
 app.post('/api/checkMail',(req,res)=>{
@@ -831,38 +812,6 @@ app.post('/api/searchBybodypart', (req,res) => {
     console.log(queryWord)
 })
 
-//Show data by fillter data
-app.post('/api/searchBybodypartEdit', (req,res) => {
-    //SELECT * FROM chemical WHERE
-    //bodypart LIKE '%skin%'
-    //OR bodypart LIKE '%face%' OR bodypart LIKE '%body%' OR bodypart LIKE '%powder%' OR bodypart LIKE '%hand%';
-    const dd = req.body.fillterg
-    console.log("........")
-    console.log(dd)
-    let bodypart = ""
-    let queryWord = "SELECT * FROM chemical WHERE "
-    for(let i = 0 ; i< dd.length; i++) {
-        bodypart = "bodypart LIKE '%" + dd[i] + "%'"
-        queryWord += bodypart
-        if(i < dd.length - 1) {
-            queryWord += " OR "
-        }
-        else {
-            queryWord += " OR bodypart LIKE 'all%'"
-            queryWord += ";";
-        }
-    }
-    console.log(queryWord)
-    //
-    const sql = queryWord
-    db.query(sql, (err , result) => {
-        console.log(result);
-        res.send(result)
-    })
-    console.log(queryWord)
-})
-
-
 app.get('/api/get_history', jsonParser, (req, res) => {
     db.execute(
         'SELECT * FROM chemicalgroup WHERE groupname = ? AND email = ?',
@@ -906,22 +855,37 @@ app.post('/api/savefile' , (req , res) => {
 
     console.log(newstr)
 
-
-    const sql =  'DELETE FROM chemicalgroup WHERE groupname =  "' + gname + '"'
-    db.query(sql,(err, result)=>{
-        if(err)
-            console.log(result)
+    db.execute(
+        `DELETE FROM chemicalgroup WHERE groupname = ?`,
+        [gname],
+        (err, result) => {
+            if(err) {
+                res.json({status:'error',message:err});
+                return;
+            }
+            else {
+                console.log("delete")
+                for( let i = 0 ; i < dd.length ; i++ ){
+                    console.log("DATA")
+                    console.log (dd[i].cas , dd[i].cname , dd[i].cmname , dd[i].per , dd[i].st , "-" , "-" , dd[i].bodypart , dd[i].color , gname , dd[i].per1 , uname , date , newstr , email)
+                    db.execute(
+                        `INSERT INTO chemicalgroup (cas , cname , cmname , per , st , img , des, bodypart , color , groupname , per1 , uname , udate , fillterg , email) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`
+                        , [dd[i].cas , dd[i].cname , dd[i].cmname , dd[i].per , dd[i].st , "-" , "-" , dd[i].bodypart , dd[i].color , gname , dd[i].per1 , uname , date , newstr , email],
+                        (err, result) => {
+                            if(err) {
+                                res.json({status:'error',message:err});
+                                return;
+                            }
+                            else {
+                                console.log("inserted : " + dd[i].cas)
+                            }
+                        }
+                    )
+                }
+                res.json({status:'ok',message:'inserted'});
+            }
     })
-    for( let i = 0 ; i < dd.length ; i++ ){
-        const sql1 = 'INSERT INTO chemicalgroup (cas , cname , cmname , per , st , img , des, bodypart , color , groupname , per1 , uname , udate , fillterg , email) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); '
-        db.query(sql1,[dd[i].cas , dd[i].cname , dd[i].cmname , dd[i].per , dd[i].st , "-" , "-" , dd[i].bodypart , dd[i].color , gname , dd[i].per1 , uname , date , newstr , email ] , (err, result)=>{
-           console.log(result)
-        })
-    }
-    res.send("Ok")
-
 })
-
 
 // get user file name
 app.post('/api/getGroupName',(req,res)=>{
@@ -938,19 +902,6 @@ app.post('/api/getGroupName',(req,res)=>{
       console.log(result);
     });
 })
-
-// get user file name Where File name
-app.post('/api/getGroupNamebyname' , (req,res) => {
-    // console.log(req.body)
-    const gname = req.body.gname
-    const sql = 'SELECT * FROM chemicalgroup WHERE groupname = "' + gname + '"';
-    db.query(sql,(err, result) =>{
-        console.log(result);
-        res.send(result)
-    })
-
-})
-
 
 // get data annex
 app.get('/api/annex', jsonParser, (req, res) => {
@@ -970,7 +921,6 @@ app.get('/api/annex', jsonParser, (req, res) => {
             }
         })
 })
-
 
 // get all data (chemical)
 app.get('/api/getalldata' , (req , res ) => {
@@ -992,7 +942,6 @@ app.post('/api/getalldataAddminEdit' , (req , res ) => {
     })
 
 })
-
 
 //all data for admin update by type of data
 app.post('/api/getalldataAddminUpdateByType' , (req , res ) => {
@@ -1060,7 +1009,6 @@ app.post('/api/saveStfromchangegroup' , (req , res) => {
     res.json({status:'ok'})
 
 })
-
 
 // show annex
 app.get('/api/showdataUV' , (req , res) => {
@@ -1132,19 +1080,13 @@ app.get('/api/annex/search', jsonParser, (req, res) => {
         })
 })
 
-
 // Get data from FDA
 app.get('/api/fetchData', async (req, res) => {
-
     const fda = req.query.data;
-    //console.log("is Fda")
- //   console.log(fda)
 
     try {
       const response = await fetch('http://pertento.fda.moph.go.th/FDA_SEARCH_CENTER/PRODUCT/export_cmt_detail.aspx?regnos='+fda);
       const data = await response.text();
-      //  console.log(data)
-      //console.log(data)
       const $ = cheerio.load(data);
 
         const  dataAll =[]
@@ -1169,46 +1111,12 @@ app.get('/api/fetchData', async (req, res) => {
        }
     }
     console.log(dataAll)
-res.send(dataAll);
-} catch (error) {
-  console.error('Error fetching data:', error);
-  res.status(500).json({ error: 'Internal Server Error' });
-}
+    res.send(dataAll);
+    } catch (error) {
+    console.error('Error fetching data:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+    }
 });
-
-
-
-app.post('/api/setsignUpA' , jsonParser, (req , res ) => {
-    console.log(req.body)
-    const fullname = req.body.em_fullname
-    const email = req.body.em_email
-    const st = req.body.status
-    const oid = req.body.ongranization_id
-    const password = crypto.createHash("sha1").update(req.body.em_pass).digest("hex")
-
-
-
-    console.log(fullname + " " + email + " " + password +" " +" "+st +" "+ oid)
-
-    const sql = `INSERT INTO  employee(em_email , em_fullname , em_icon , em_pass , status , organization_id) VALUES(?,?,?,?,?,?);  `
-    db.query(sql,[email , fullname ,"/pandaA.png" , password , st , oid ] , (err, result) => {
-        res.send('OK')
-    })
-    //res.send("ok")
-
-})
-
-
-// get user Team ID
-app.post('/api/getorId/', (req, res) => {
-    const orid = req.body.data
-    console.log(orid)
-    const sql = `SELECT * FROM employee WHERE organization_id	= ${orid}  `
-    db.query(sql,(err, result) =>{
-        console.log(result)
-        res.send(result)
-    })
-})
 
 // get user Admin or S
 app.get('/api/getuserAs/', (req, res) => {
@@ -1230,21 +1138,6 @@ app.post('/api/deluserAS' , (req , res) => {
         console.log(result)
         res.send(result)
     })
-})
-
-
-app.post('/api/searchAll', (req,res) => {
-    //SELECT * FROM chemical WHERE
-    //bodypart LIKE '%skin%'
-    //OR bodypart LIKE '%face%' OR bodypart LIKE '%body%' OR bodypart LIKE '%powder%' OR bodypart LIKE '%hand%';
-    console.log("........")
-    let bodypart = ""
-    let sql = "SELECT * FROM chemical  "
-    db.query(sql, (err , result) => {
-        console.log(result);
-        res.send(result)
-    })
-
 })
 
 //send Notification Index Page
@@ -1274,107 +1167,6 @@ app.get('/api/sendNotification' , (req,res) => {
 
 }
 )
-
-
-
-const chcekFdaExp = async (e) => {
-    let num = []
-
-
-    try {
-        const response = await fetch('http://pertento.fda.moph.go.th/FDA_SEARCH_CENTER/PRODUCT/export_cmt_detail.aspx?regnos='+fda);
-        const data = await response.text();
-          console.log(data)
-        //console.log(data)
-        const $ = cheerio.load(data);
-
-          const  dataAll =[]
-
-
-      //dd is list of strings from data response
-      const dd = ["ContentPlaceHolder1_lb_status",'ContentPlaceHolder1_lb_status_lct',"ContentPlaceHolder1_lb_no_regnos","ContentPlaceHolder1_lb_type" , "ContentPlaceHolder1_lb_format_regnos" ,"ContentPlaceHolder1_lb_trade_Tpop",
-          "ContentPlaceHolder1_lb_cosnm_Tpop","ContentPlaceHolder1_lb_appdate" ,"ContentPlaceHolder1_lb_expdate" , "ContentPlaceHolder1_lb_mode","ContentPlaceHolder1_lb_applicability_name" , "ContentPlaceHolder1_lb_application_name",
-      "ContentPlaceHolder1_lb_condition" ,"ContentPlaceHolder1_lb_usernm_pop" , "ContentPlaceHolder1_lb_fac_pop"]
-      for(let i =0 ; i<dd.length ;i++){
-         let  txt = dd[i]
-         let st = data.indexOf(txt)
-         if(st > -1){
-          let a = data.substring(st+1)
-          let st2 = a.indexOf('</span>')
-         let c = data.substring(st+txt.length+2 , st2+st+1).replace("<br />", ' ')
-         let b = c.replace("<br/>"," ")
-         dataAll.push(b)
-         }
-         else {
-          dataAll.push("N/A")
-         }
-      }
-      console.log(dataAll)
-  res.send(dataAll);
-  } catch (error) {
-    console.error('Error fetching data:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-
-
-
-}
-
-
-
-
-// getproduct Info by Team id
-app.post('/api/productData' , (req, res) => {
-    console.log("PifData")
-    console.log(req.body.data)
-    const id = req.body.data.trim()
-
-    if(id){
-        const sql = 'SELECT no,fda_license, cosnameC , cosname , expdate , img_path ,status FROM product WHERE organization_id = ?';
-
-        db.query(sql, [id], (err, result) => {
-            if (err) {
-                console.log(err);
-                res.status(500).json({ error: 'Internal Server Error' });
-            } else {
-                console.log('Query Result:', result);
-                res.send(result)
-            }
-        });
-    }
-   else {
-    res.send(0)
-   }
-
-
-})
-
-// upload and set id === organization_id  if not set organization_id  = en_email
-app.post('/api/pifDataEmail' , (req, res) => {
-    console.log("PifData")
-    console.log(req.body.data)
-    const id = req.body.data.trim()
-
-    if(id){
-        const sql = 'SELECT reportname, fda_license, reportdate FROM pif_storage WHERE organization_id = ?';
-
-        db.query(sql, [id], (err, result) => {
-            if (err) {
-                console.log(err);
-                res.status(500).json({ error: 'Internal Server Error' });
-            } else {
-                console.log('Query Result:', result);
-                res.send(result)
-            }
-        });
-    }
-   else {
-    res.sendStatus(0)
-   }
-
-
-})
-
 
 //Add min call USER INFO
 app.get("/api/AddminManageUser" , (req , res) => {
@@ -1478,10 +1270,6 @@ const sendEmailNotifications=() => {
 //})
 }
 
-
-
-
-
 const sendEmailNotificationsFile=() => {
     const sql0 = 'SELECT organization_id FROM product WHERE expdate <= CURDATE() + INTERVAL 1 MONTH '
     const sql = 'SELECT fda_license ,email, expdate  FROM pif WHERE file1_exp <= CURDATE() + INTERVAL 1 MONTH OR file2_exp <= CURDATE() + INTERVAL 1 MONTH OR file3_exp <= CURDATE() + INTERVAL 1 MONTH OR file4_exp <= CURDATE() + INTERVAL 1 MONTH OR file5_exp <= CURDATE() + INTERVAL 1 MONTH OR file6_exp <= CURDATE() + INTERVAL 1 MONTH OR file7_exp <= CURDATE() + INTERVAL 1 MONTH OR file8_exp OR file9_exp <= CURDATE() + INTERVAL 1 MONTH OR file10_exp <= CURDATE() + INTERVAL 1 MONTH OR file11_exp <= CURDATE() + INTERVAL 1 MONTH file12_exp <= CURDATE() + INTERVAL 1 MONTH OR file13_exp <= CURDATE() + INTERVAL 1 MONTH OR file14_exp <= CURDATE() + INTERVAL 1 MONTH  ';
@@ -1566,11 +1354,6 @@ const sendEmailNotificationsFile=() => {
 //})
 }
 
-
-
-
-
-
 const sendEmail = (message) => {
 
     let config = {
@@ -1598,116 +1381,32 @@ const sendEmail = (message) => {
 }
 
 //sendEmailNotifications()
-
  cron.schedule(' 20 9 * * *' , () => {
-// //     console.log("IS RUN CRON")
     try {
-
          sendEmailNotifications()
          sendEmailNotificationsFile()
 
-//     console.log('Email sent successfully');
      } catch (error) {
          console.error('Error:', error);
       }
-
-//     console.log('Cron job executed at:', new Date());
-//     axios.get('http://localhost:3001/api/sendNotification')
-//     .then((response)=>{
-//         console.log("is server say :" + response.data)
-//     }).catch((error) => {
-//         console.error(error)
-//     })
  })
 
-
-
-
-app.post("/api/pifInfo" , (req , res) => {
-    const email = req.body.email
-    //console.log("pifInfo =>")
-     //console.log(req.body.email)
-     const sql = 'SELECT em_email FROM pif_storage WHERE em_email = ?'
-     db.query(sql ,[email], (err , result) => {
-         if(err){
-             console.log(err)
-         }
-         else {
-             res.send(result)
-         }
-     })
- })
-
- app.post("/getnotficationPIF" , (req , res)=>{
-    const sql = 'SELECT fda_license ,email, expdate  FROM product WHERE file1_exp <= CURDATE() + INTERVAL 1 MONTH OR file2_exp <= CURDATE() + INTERVAL 1 MONTH OR file3_exp <= CURDATE() + INTERVAL 1 MONTH OR file4_exp <= CURDATE() + INTERVAL 1 MONTH OR file5_exp <= CURDATE() + INTERVAL 1 MONTH OR file6_exp <= CURDATE() + INTERVAL 1 MONTH OR file7_exp <= CURDATE() + INTERVAL 1 MONTH OR file8_exp OR file9_exp <= CURDATE() + INTERVAL 1 MONTH OR file10_exp <= CURDATE() + INTERVAL 1 MONTH OR file11_exp <= CURDATE() + INTERVAL 1 MONTH file12_exp <= CURDATE() + INTERVAL 1 MONTH OR file13_exp <= CURDATE() + INTERVAL 1 MONTH OR file14_exp <= CURDATE() + INTERVAL 1 MONTH  ';
-
-
- })
-
-
-app.get('/api/getTeam/', (req, res) => {
-    try{
-        const sql = `SELECT DISTINCT organization_id FROM employee WHERE organization_id != ''`
-        db.query(sql,(err, result) =>{
-            //console.log(result)
-            res.send(result)
-        })
-    }
-    catch(err){
-        console.log(err)
-    }
-})
-
-
-//update S and team
-app.post('/api/updateteam', (req, res) => {
-    const team = req.body.data;
-    const email = req.body.email;
-
-    console.log(team);
-    console.log(email)
-
-const sql = 'UPDATE employee SET organization_id = ?, status = ? WHERE em_email = ?';
-db.query(sql, [team, "S", email], (err, result) => {
-    if (err) {
-        console.log(err);
-        res.status(500).send('Internal Server Error');
-    } else {
-        console.log(result);
-        res.send(result);
-    }
-});
-
-});
-
-app.post('/api/updateStutus', (req, res) => {
+app.post('/api/createTeam', jsonParser, (req, res) => {
     console.log(req.body)
 
-    const st = req.body.st
-    const no = req.body.no
-    const team = req.body.team
-
-    for(let i = 0 ; i< no.length ; i++){
-        const sql = 'UPDATE employee SET organization_id = ? , status = ? WHERE no = ?';
-        db.query(sql, [team,st[i] , no[i]], (err, result) => {
-                if (err) {
-                    console.log(err);
-                    res.status(500).send('Internal Server Error');
-                } else {
-                    res.send(result);
-                }
-             });
-    }
-    // console.log(team);
-    // const sql = 'UPDATE employee SET organization_id = ? WHERE em_email = ?';
-    // db.query(sql, [team, email], (err, result) => {
-    //     if (err) {
-    //         console.log(err);
-    //         res.status(500).send('Internal Server Error');
-    //     } else {
-    //         res.send(result);
-    //     }
-    // });
+    db.execute(
+        `UPDATE employee SET organization_id = ?, status = 'S' WHERE no = ?`,
+        [req.body.team, req.body.userID],
+        (err, result) => {
+            if(err) {
+                console.log(err);
+                res.json({status:'error',message:err});
+            }
+            else {
+                res.json({status:'ok',message:result})
+            }
+        }
+    )
 });
 
 
@@ -1817,6 +1516,21 @@ app.get('/api/getCountOwner', (req, res) => {
     )
 });
 
+app.get('/api/getCountTeam', jsonParser, (req, res) => {
+    db.execute(
+        `SELECT COUNT(*) as num FROM employee WHERE organization_id = ?`,
+        [req.query.team],
+        (err, result) => {
+            if(err) {
+                console.log(err);
+                res.json({status:'error',message: err});
+            }
+            else {
+                res.json({status:'ok',message: result})
+            }
+        }
+    )
+});
 
 app.get('/api/getuserTeamMangeByemail', (req, res) => {
    db.execute(
@@ -1866,9 +1580,6 @@ app.post('/api/addUserToTeam', (req, res) => {
     )}
 );
 
-
-
-//Manage User for Delete from user group and Pif
 app.post('/api/getuserDelete', (req, res) => {
     console.log("A getTeammanageDeltete")
     const id = req.body.id
@@ -1886,6 +1597,34 @@ app.post('/api/getuserDelete', (req, res) => {
         }
 
     })
+});
+
+app.post('/api/deleteTeam', jsonParser, (req, res) => {
+    db.execute(
+        `UPDATE employee SET organization_id  = NULL , status = 'U'  WHERE organization_id = ?`,
+        [req.body.data],
+        (err, result) => {
+            if(err) {
+                console.log(err);
+                res.json({status:'error',message: err});
+            }
+            else {
+                db.execute(
+                    `DELETE FROM pif_product WHERE organization_id = ?`,
+                    [req.body.data],
+                    (err, result) => {
+                        if(err) {
+                            console.log(err);
+                            res.json({status:'error',message: err});
+                        }
+                        else {
+                            res.json({status:'ok',message: result})
+                        }
+                    }
+                )
+            }
+        }
+    )
 });
 
 app.post('/api/getuserDeleteAdmin', (req, res) => {
@@ -1906,10 +1645,6 @@ app.post('/api/getuserDeleteAdmin', (req, res) => {
 });
 
 app.post('/api/changeNameTeam', jsonParser , (req , res) => {
-    console.log("changeNaem na Ja")
-
-    const new_team = req.body.data
-    const old_team = req.body.id
     console.log ("team =>" + new_team)
     console.log ("id =>" + old_team)
     db.execute(
@@ -1957,7 +1692,6 @@ app.post('/api/changeNameTeam', jsonParser , (req , res) => {
 
     )
 })
-
 
 app.post('/api/insertPifProduct' , jsonParser , (req , res) => {
     console.log("insertPifProduct")
@@ -2072,67 +1806,6 @@ app.post('/api/DeleteGroupName', (req, res) => {
         }
     });
 });
-
-app.post('/api/sort', (req , res) => {
-    const id = req.body.id
-    const con = req.body.con
-
-    if(con === "1"){
-        const sql = 'SELECT * FROM product WHERE organization_id = ? ORDER BY expdate DESC'
-        db.query(sql , [id], (err , result) => {
-            if (err){
-                console.log("Error " , err)
-            }
-            else {
-                console.log(result)
-                res.send(result)
-            }
-        })
-    }
-
-    if(con === "2"){
-        const sql = 'SELECT * FROM product WHERE organization_id = ? ORDER BY expdate ASC'
-        db.query(sql , [id], (err , result) => {
-            if (err){
-                console.log("Error " , err)
-            }
-            else {
-                console.log(result)
-                res.send(result)
-            }
-        })
-    }
-
-    if(con === "3"){
-        const sql = 'SELECT * FROM product WHERE organization_id = ? ORDER BY cosname ASC'
-        db.query(sql , [id], (err , result) => {
-            if (err){
-                console.log("Error " , err)
-            }
-            else {
-                console.log(result)
-                res.send(result)
-            }
-        })
-    }
-
-    if(con === "4"){
-        const sql = 'SELECT * FROM product WHERE organization_id = ? ORDER BY cosname DESC'
-        db.query(sql , [id], (err , result) => {
-            if (err){
-                console.log("Error " , err)
-            }
-            else {
-                console.log(result)
-                res.send(result)
-            }
-        })
-    }
-
-
-
-})
-
 
 app.listen(3001, () => {
     console.log('Running node at port 3001');

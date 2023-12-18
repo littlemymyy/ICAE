@@ -28,12 +28,6 @@ const c2A = () => {
 
     // Retrieve other data from localStorage
 
-
-
-
-
-
-
     const filltergB = filltergA ? JSON.parse(filltergA) : [];
     const parsedArray = dataArray ? JSON.parse(dataArray) : [];
     //const parsedArray =
@@ -225,25 +219,22 @@ const c2A = () => {
 
     const preSaveFile = () => {
       const axios = require('axios');
-      let data = JSON.stringify({
-        "firstName": "TestFirstname1",
-        "lastName": "PetchLastname"
-      });
-
+      console.log('groupname = ' + groupName)
+      console.log('email = ' + localStorage.getItem("uemail"))
       let config = {
         method: 'get',
         maxBodyLength: Infinity,
-        url: `http://localhost:3001/api/get_history?groupname=${groupName}&email=${localStorage.getItem("uname")}`,
+        url: `http://localhost:3001/api/get_history?groupname=${groupName}&email=${localStorage.getItem("uemail")}`,
         headers: {
           'Content-Type': 'application/json'
         },
-        data : data
       };
 
       axios.request(config)
       .then((response) => {
         let data = JSON.parse(JSON.stringify(response.data));
-        console.log(data)
+        console.log(data.message)
+        console.log("HAS DATA")
         if (data.message === 'haveData') {
           Swal.fire({
             icon: "info",
@@ -295,7 +286,14 @@ const c2A = () => {
         method : "post" ,
         data : load ,
       }).then((response) => {
-        alert("เพิ่มรายเรียบร้อย")
+        Swal.fire({
+          title: 'สำเร็จ!',
+          text: 'บันทึกข้อมูลเรียบร้อย',
+          icon: 'success',
+          confirmButtonText: 'ปิด'
+        }).then(()=>{
+          router.push("/examine/record")
+        })
         router.push("/examine/record")
       })
     }
@@ -362,7 +360,7 @@ const c2A = () => {
                             <td>{value.cmname}</td>
                         }
                         <td>
-                          <input type="number" min="0" defaultValue={value.per1 ? value.per1 : 1} onChange={(e) => percentChange(idx, e.target.value)} />
+                          <input type="number" defaultValue={value.per1 ? value.per1 : 0} onChange={(e) => percentChange(idx, e.target.value)} />
                         </td>
                         <td>-</td>
                         <td><AiOutlineDelete onClick={() => clickDelete(idx)} /></td>
@@ -406,7 +404,7 @@ const c2A = () => {
                             <td>{value.cmname}</td>
                         }
                         <td>
-                          <input type="number" min="0" defaultValue={value.per1 ? value.per1 : 1} onChange={(e) => percentChange2(idx, e.target.value)} />
+                          <input type="number" defaultValue={value.per1 ? value.per1 : 0} onChange={(e) => percentChange2(idx, e.target.value)} />
                         </td>
                         <td>ปริมาณสารที่ใช้ได้คือ {value.per }</td>
                         <td><AiOutlineDelete onClick={() => clickDelete2(idx)} /></td>
@@ -449,7 +447,7 @@ const c2A = () => {
                             <td>{value.cmname}</td>
                         }
                         <td>
-                          <input type="number" min="0" disabled defaultValue={value.per1 ? value.per1 : 1} onChange={(e) => percentChange(idx, e.target.value)} />
+                          <input type="number" disabled defaultValue={value.per1 ? value.per1 : 0} onChange={(e) => percentChange(idx, e.target.value)} />
                         </td>
                         <td>-</td>
                         <td><AiOutlineDelete onClick={() => clickDelete3(idx)} /></td>
