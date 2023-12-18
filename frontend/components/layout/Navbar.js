@@ -81,11 +81,7 @@ function Navbar() {
                 router.push("/login/SignIn");
             }
             else if(selectName === "การจัดการpif"){
-
-                if(localStorage.getItem("uemail") === ""){
-                    router.push("/login/SignIn");
-                }
-
+                router.push("/login/SignIn");
             }
             else if(selectName === pages[3]){
                 router.push("/login/SignIn");
@@ -131,13 +127,7 @@ function Navbar() {
         const selectName = ev.nativeEvent.target.outerText;
         console.log(selectName);
         // 0 : Profile, 1 : Account, 2 : Dashboard, 3 : Logout
-        if(selectName === settings[0]){
-
-        }
-        else if(selectName === settings[1]){
-
-        }
-        else if(selectName === settings[2]) {
+        if(selectName === settings[0]) {
             localStorage.removeItem("uemail")
             localStorage.removeItem("uicon")
             localStorage.removeItem("status")

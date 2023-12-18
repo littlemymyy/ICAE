@@ -34,6 +34,25 @@ export default function Home() {
     console.log(localStorage)
     console.log("mail "+ localStorage.getItem("uemail"))
 
+    if(localStorage.getItem("token")){
+        Axios.request(
+            {
+                method: 'post',
+                url: 'http://localhost:3001/api/authen',
+                headers: { 'Authorization': 'Bearer '+ localStorage.getItem('token') },
+            }
+            ).then((response) => {
+            if(response.data.status === 'ok'){
+                console.log('ok')
+            }else{
+                console.log('not ok')
+                localStorage.clear();
+                window.location.reload();
+            }
+        }).catch((error) => {
+            console.log(error)
+        });
+    }
 
     if(localStorage.getItem("uemail")){
       let email = localStorage.getItem("uemail")
@@ -70,13 +89,6 @@ export default function Home() {
           }).catch((err)=>{
             console.log("notification Error : "+err)
           })
-
-        //   console.log("rest = " + res.data)
-
-        //   if(res.data){
-        //   setData(res.data)
-        // }
-
        }
     }
 
