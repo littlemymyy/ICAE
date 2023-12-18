@@ -18,6 +18,7 @@ const {EMAIL , PASSWORD} = require('./env.js')
 const PDFMerger = require('pdf-merger-js');
 const jwt = require('jsonwebtoken');
 const cron = require('node-cron');
+const { error } = require('console');
 
 const app = express();
 const server = http.createServer(app);
@@ -33,10 +34,16 @@ app.use(bodyParser.urlencoded({extended: true , limit : "35mb" , parameterLimit 
 app.use('/uploads', express.static('uploads'));
 
 // create PDF FOR PIF
+// const db = mysql.createConnection({
+//     host: 'icae_mysql',
+//     user: 'icae_user',
+//     password: 'Icae11235813re',
+//     database: 'cosmetic'
+// });
 const db = mysql.createConnection({
-    host: 'icae_mysql',
-    user: 'icae_user',
-    password: 'Icae11235813re',
+    host: 'localhost',
+    user: 'root',
+    password: '',
     database: 'cosmetic'
 });
 
@@ -119,7 +126,7 @@ app.post('/generate-pdf', pdfUpload.single('file'), (req, res) => {
 });
 
 //not use
-app.post('/api/mergePdf_old', pdfUpload.any(), (req, res) => {
+app.post('/api/mergePdf', pdfUpload.any(), (req, res) => {
     const merger = new PDFMerger();
     const files = req.files;
     console.log(files);
@@ -328,147 +335,471 @@ app.post('/api/savePdf', pdfUpload.any(), (req, res) => {
     console.log(pdfPath);
 });
 
-app.post('/api/mergePdf', pdfUpload.any(), (req, res) => {
-    db.execute(
-        'SELECT * FROM pif_product WHERE id = ?',
-        [req.body.product_id],
-        (err, result) => {
-            if(err) {
-                res.status(500).send('Internal Server Error');
-                console.log('mergeError1' + err);
-                return;
-            }
-            else{
-                //create pdf
-                let resultData = result[0];
-                console.log(resultData)
+app.post('/api/submitPif', pdfUpload.any(), (req, res) => {
+    try {
+        let img_path = '';
+        let pdf_path = '';
 
-                //create pdf
-                try{
-                    (async () => {
-
-                            pdfMake.fonts = {
-                                THSarabunNew: {
-                                    normal: 'THSarabun.ttf',
-                                    bold: 'THSarabun-Bold.ttf',
-                                    italics: 'THSarabun-Italic.ttf',
-                                    bolditalics: 'THSarabun-BoldItalic.ttf'
-                                }
-                            }
-
-
-                    pdfMake.vfs = vfsFonts.pdfMake.vfs;
-
-                    const docDefinition = {
-                            content: [
-                                { text:'ข้อมูลเกี่ยวกับเครื่องสำอาง (PRODUCTS INFORMATION FILE : PIF)', style: 'header' },
-                                {text:`เลขที่จดแจ้ง: ${resultData.fda_license}` },
-                                {text:`ชื่อทางการค้าเครื่องสำอาง: ${resultData.product_name}` },
-                                {text:`ชื่อเครื่องสำอาง: ${resultData.cosmetic_name}`},
-                                {text:`ประเภทของเครื่องสำอาง: ${resultData.cosmetic_type}`},
-                                {text:`วันที่จดแจ้ง: ${resultData.create_date}`},
-                                {text:`วันที่ใบอนุญาตหมดอายุ:${resultData.expire_date}`},
-                                {text:`จุดประสงค์การใช้: ${resultData.cosmetic_reason}`},
-                                {text:`ลักษณะทางกายภาพ: ${resultData.cosmetic_physical}`},
-                                {text:`ชื่อผู้ผลิต: ${resultData.company_name}`},
-                                {text:`ชื่อผู้ผลิตต่างประเทศ: ${resultData.company_eng_name}`},
-                                {text:`รายละเอียดเพิ่มเติม: ${resultData.more_info}`}
-
-
-                            ],
-                            styles: {
-                                header: {
-                                    fontSize: 18,
-                                    bold: true,
-                                    alignment: 'center',
-                                    margin: [10, 10, 10, 10]
-                                }
-                            },
-                            defaultStyle: {
-                                font: 'THSarabunNew'
-                            }
-                        };
-
-                        const pdfDoc = pdfMake.createPdf(docDefinition);
-                        const fileName = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + '-' + Date.now();
-                        const pdfPath = path.join(__dirname, 'uploads', `${fileName}.pdf`);
-
-                        const buffer = await new Promise((resolve, reject) => {
-                            pdfDoc.getBuffer((buffer) => {
-                                resolve(buffer);
-                            });
-                        });
-
-                        await fs.writeFile(pdfPath, buffer);
-
-                        const firstPath = path.join('./uploads', `${fileName}.pdf`);
-                        console.log(firstPath)
-
-                        //merge pdf
-                        db.execute(
-                            'SELECT * FROM pif WHERE product_id = ?',
-                            [req.body.product_id],
-                            (err, result) => {
-                                if(err) {
-                                    res.status(500).send('Internal Server Error');
-                                    console.log('mergeError2' + err);
-                                    return;
-                                }
-                                else{
-                                    try{
-                                        (async () => {
-                                            const merger = new PDFMerger();
-
-                                            await merger.add(firstPath);
-                                            for(let i = 0 ; i < 14 ; i++){
-                                                console.log("file_path")
-                                                console.log(result[0][`file${i+1}_path`])
-                                                if (result[0][`file${i+1}_path`] !== null) {
-                                                    await merger.add(result[0][`file${i+1}_path`]);
-                                                }
-                                            }
-                                            let pdfFileName = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + '-' + Date.now();
-                                            await merger.save(`uploads/${pdfFileName}.pdf`).then((pdfBuffer) => {
-                                                console.log(pdfBuffer);
-                                            });
-
-                                            console.log(pdfFileName)
-                                            let pdf_path = path.join('./uploads', `${pdfFileName}.pdf`);
-                                            console.log('pdf_path :' + pdf_path)
-
-                                            db.execute(
-                                                'UPDATE pif SET pdf_path = ? WHERE product_id = ?',
-                                                [pdf_path, req.body.product_id],
-                                                (err, result) => {
-                                                    if(err) {
-                                                        res.status(500).send('Internal Server Error');
-                                                        console.log('mergeError3' + err);
-                                                        return;
-                                                    }
-                                                    else{
-                                                        res.status(200).send('createdOk');
-                                                        return;
-                                                    }
-                                                }
-                                            )
-                                        })()
-
-                                    } catch (error) {
-                                        console.error('Error merging PDFs:', error);
-                                        res.status(500).send('Internal Server Error');
-                                    }
-                                }
-                            }
-                        )
-                    })()
-                } catch (error) {
-                    console.error(error);
-                    res.status(500).send('Internal Server Error');
+        (async () => {
+            console.log(JSON.parse(req.body.data))
+            const data = JSON.parse(req.body.data);
+            // console.log(req.files.data)
+            pdfMake.fonts = {
+                THSarabunNew: {
+                    normal: 'THSarabun.ttf',
+                    bold: 'THSarabun-Bold.ttf',
+                    italics: 'THSarabun-Italic.ttf',
+                    bolditalics: 'THSarabun-BoldItalic.ttf'
                 }
             }
+
+            pdfMake.vfs = vfsFonts.pdfMake.vfs;
+
+            const docDefinition = {
+                    content: [
+                        { text:'ข้อมูลเกี่ยวกับเครื่องสำอาง (PRODUCTS INFORMATION FILE : PIF)', style: 'header' },
+                        {text:`เลขที่จดแจ้ง: ${data.inputregisNumber}` },
+                        {text:`ชื่อทางการค้าเครื่องสำอาง: ${data.inputcomName}` },
+                        {text:`ชื่อเครื่องสำอาง: ${data.inputcosName}`},
+                        {text:`ประเภทของเครื่องสำอาง: ${data.inputtypeGoods}`},
+                        {text:`วันที่จดแจ้ง: ${data.inputdateS}`},
+                        {text:`วันที่ใบอนุญาตหมดอายุ:${data.inputexpDate}`},
+                        {text:`จุดประสงค์การใช้: ${data.inputobjGoods}`},
+                        {text:`ลักษณะทางกายภาพ: ${data.Inputpy}`},
+                        {text:`ชื่อผู้ผลิต: ${data.inputentrepreneur}`},
+                        {text:`ชื่อผู้ผลิตต่างประเทศ: ${data.inputFentrepreneur}`},
+                        {text:`รายละเอียดเพิ่มเติม: ${data.setDes}`}
+
+
+                    ],
+                    styles: {
+                        header: {
+                            fontSize: 18,
+                            bold: true,
+                            alignment: 'center',
+                            margin: [10, 10, 10, 10]
+                        }
+                    },
+                    defaultStyle: {
+                        font: 'THSarabunNew'
+                    }
+                };
+
+            const pdfDoc = pdfMake.createPdf(docDefinition);
+            const fileName = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + '-' + Date.now();
+            const pdfPath = path.join(__dirname, 'uploads', `${fileName}.pdf`);
+
+            const buffer = await new Promise((resolve, reject) => {
+                pdfDoc.getBuffer((buffer) => {
+                    resolve(buffer);
+                });
+            });
+
+            await fs.writeFile(pdfPath, buffer);
+
+            const firstPath = path.join('./uploads', `${fileName}.pdf`);
+            console.log(firstPath)
+
+            //merge pdf
+            const merger = new PDFMerger();
+            const files = req.files;
+            console.log(files);
+
+            await merger.add(firstPath);
+            try{
+                for(let i = 0 ; i < files.length ; i++){
+                    if (files[i].mimetype === 'application/pdf')
+                        await merger.add(files[i].path);
+                    if (files[i].mimetype === 'image/jpeg' || files[i].mimetype === 'image/png')
+                        img_path = files[i].path;
+                }
+            }catch(err){
+                console.log("no any file upload")
+                console.log(err)
+            }
+
+            let pdfFileName = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + '-' + Date.now();
+            await merger.save(`uploads/${pdfFileName}.pdf`).then((pdfBuffer) => {
+                console.log(pdfBuffer);
+            });
+
+            console.log(pdfFileName)
+            pdf_path = path.join('./uploads', `${pdfFileName}.pdf`);
+
+
+            db.query('INSERT INTO pif (email, file_name, img_path, pdf_path, expdate, rec_create_when) VALUES (?,?,?,?,?,?)',
+                [data.email, data.filename, img_path, pdf_path, data.expdate, new Date()],
+                (err, result) => {
+                if(err) {
+                    console.log(err)
+                    res.json({status: "error", message: err});
+                    return;
+                }
+                else {
+                    res.json({status: "ok", pdf_path: pdf_path, img_path: img_path});
+                }
+            })
+        })()
+    } catch (error) {
+        console.error('Error merging PDFs:', error);
+        res.status(500).send('Internal Server Error');
+    }
+})
+
+
+//// for now i not have Edit that this /api/submitPifEdit
+app.post('/api/submitPifEdit', pdfUpload.any(), (req, res) => {
+    //     console.log("submit")
+     //console.log(req.files)
+     const file = req.files
+   //  console.log("...................")
+     const files = req.body.data;
+     const filePaths = req.files.map(file => file.path.toString());
+    // console.log(files)
+
+   //  console.log(filePaths);
+
+     const filea = filePaths[0] || "-";//fda => fdadoc
+     const fileb = filePaths[1] || "-";//Autorization  => letter_authorization
+     const filec = filePaths[2] || "-";//formu  => formula_doc
+     const filed = filePaths[3] || "-";//label =>label_doc
+     const filee = filePaths[4] || "-";//manufu => 	manufacture_doc
+     const filef = filePaths[5] || "-";//Gmp => gmp_iso
+     const fileg = filePaths[6] || "-";//eff => eff_report
+     const fileh = filePaths[7] || "-";//efficent => efficient_report
+     const filei = filePaths[8] || "-";//spec => spec
+     const filej = filePaths[9] || "-";//Coa => coa_doc
+     const filek = filePaths[10] || "-";//sds => 	sds
+     const filel = filePaths[11] || "-";//master formula => masterformula
+     const filem = filePaths[12] || "-";//Specification of cosmetic finished product)=>specification
+     const filen = filePaths[13] || "-";//Testing =>testing_doc
+
+
+    // get file
+     let update = [filePaths[0] , filePaths[1] , filePaths[2] , filePaths[3] , filePaths[4] , filePaths[5] ,filePaths[6] ,filePaths[7] ,filePaths[8] ,filePaths[9] ,filePaths[10] ,filePaths[11] ,filePaths[12] ,filePaths[13]]
+     let update1 = ["filea", "fileb" , "filec" , "filed" , "filee" , "filef" ,"fileg" ,"fileh" ,"filei" ,"filej" ,"filek" ,"filel" , "filem" , "filen"]
+     let fname = [",fdadoc = ?" , ",letter_authorization = ? " ,",formula_doc = ? " , ",label_doc = ? " , ",manufacture_doc = ?", ",gmp_iso = ?" , ",eff_report = ? " ,",efficient_report = ?" ,", spec = ?" ,",coa_doc = ?" , " ,sds = ?"," ,masterformula = ?" ," ,specification = ?" ,",testing_doc = ? "]
+     let sqlobj = []
+     let update2 = []
+     console.log("update")
+     console.log(update)
+
+     for(let i = 0 ; i < update.length ;i++){
+        console.log("for loop")
+        console.log(update[i])
+        if(update[i] !== undefined ){
+            console.log(i+"foorloop")
+          update2.push(update1[i])
+          sqlobj.push(fname[i])
+
         }
-    )
-});
+     }
+
+     let columname = ""
+     for(let i = 0 ; i < sqlobj.length ;i++){
+        columname += sqlobj[i] +" ,"
+     }
+     let sqlcut = ""
+     sqlcut += columname.substring(0,columname.length-1)
+
+     console.log(sqlcut)
+     console.log("update2")
+     console.log(update2)
+
+     console.log(columname)
+
+      try {
+          let img_path = '';
+          let pdf_path = '';
+
+          (async () => {
+             console.log(JSON.parse(req.body.data))
+              const data = JSON.parse(req.body.data);
+              console.log(data)
+
+              pdfMake.fonts = {
+                  THSarabunNew: {
+                      normal: 'THSarabun.ttf',
+                      bold: 'THSarabun-Bold.ttf',
+                      italics: 'THSarabun-Italic.ttf',
+                      bolditalics: 'THSarabun-BoldItalic.ttf'
+                  }
+              }
+
+              pdfMake.vfs = vfsFonts.pdfMake.vfs;
+
+              const docDefinition = {
+                      content: [
+                          { text:'ข้อมูลเกี่ยวกับเครื่องสำอาง (PRODUCTS INFORMATION FILE : PIF)', style: 'header' },
+                          {text:`เลขที่จดแจ้ง: ${data.inputregisNumber}` },
+                          {text:`ชื่อทางการค้าเครื่องสำอาง: ${data.inputcomName}` },
+                          {text:`ชื่อเครื่องสำอาง: ${data.inputcosName}`},
+                          {text:`ประเภทของเครื่องสำอาง: ${data.inputtypeGoods}`},
+                          {text:`วันที่จดแจ้ง: ${data.inputdateS}`},
+                          {text:`วันที่ใบอนุญาตหมดอายุ:${data.inputexpDate}`},
+                          {text:`จุดประสงค์การใช้: ${data.inputobjGoods}`},
+                          {text:`ลักษณะทางกายภาพ: ${data.Inputpy}`},
+                          {text:`ชื่อผู้ผลิต: ${data.inputentrepreneur}`},
+                          {text:`ชื่อผู้ผลิตต่างประเทศ: ${data.inputFentrepreneur}`},
+                          {text:`รายละเอียดเพิ่มเติม: ${data.setDes}`}
+
+
+                      ],
+                      styles: {
+                          header: {
+                              fontSize: 18,
+                              bold: true,
+                              alignment: 'center',
+                              margin: [10, 10, 10, 10]
+                          }
+                      },
+                      defaultStyle: {
+                          font: 'THSarabunNew'
+                      }
+                  };
+
+              const pdfDoc = pdfMake.createPdf(docDefinition);
+              const fileName = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + '-' + Date.now();
+              const pdfPath = path.join(__dirname, 'uploads', `${fileName}.pdf`);
+
+              const buffer = await new Promise((resolve, reject) => {
+                  pdfDoc.getBuffer((buffer) => {
+                      resolve(buffer);
+                  });
+              });
+
+              await fs.writeFile(pdfPath, buffer);
+
+              const firstPath = path.join('./uploads', `${fileName}.pdf`);
+              console.log(firstPath)
+
+              //merge pdf
+              const merger = new PDFMerger();
+            const files = req.files;
+            console.log(files);
+
+              await merger.add(firstPath);
+              try{
+                  for(let i = 0 ; i < files.length ; i++){
+                      if (files[i].mimetype === 'application/pdf')
+                          await merger.add(files[i].path);
+                      if (files[i].mimetype === 'image/jpeg' || files[i].mimetype === 'image/png')
+                          img_path = files[i].path;
+                  }
+              }catch(err){
+                  console.log("no any file upload")
+                  console.log(err)
+              }
+
+              let pdfFileName = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + '-' + Date.now();
+              await merger.save(`uploads/${pdfFileName}.pdf`).then((pdfBuffer) => {
+                  console.log(pdfBuffer);
+              });
+
+              console.log(pdfFileName)
+              pdf_path = path.join('./uploads', `${pdfFileName}.pdf`);
+
+
+
+             for(let i = 0 ; i< sqlobj.length; i++){
+                console.log(sqlobj[i])
+                console.log(update2[i])
+                const sql = "UPDATE pif  SET email = ? , img_path = ? , expdate = ? , rec_create_when = ? ,status = ? , fdadoc_date = ? , letter_authorization_date = ? , formula_doc_date = ? , label_doc_date = ? , manufacture_doc_date = ? , gmp_iso_date =? , eff_report_date = ? , efficient_report_date = ? ,sds_date = ? , masterformula_date = ? , specification_date =?, testing_doc_date =? , coa_date = ?" + sqlobj[i] + "WHERE organization_id = ? AND fda_license = ?"
+                db.query(sql ,[data.email , img_path ,data.expdate , new Date() ,"3" ,  data.fdadoc_date , data.letter_authorization_date , data.formula_doc_date , data.label_doc_date , data.manufacture_doc_date , data.gmp_iso_date , data.eff_report_date , data.efficient_report_date, data.sds_date , data.masterformula_date , data.specification_date , data.testing_doc_date , data.coa , update2[i] ,data.id , data.inputregisNumber] , (error , result) => {
+                    if(error){
+                        console.log(error)
+                    }
+                    else {
+                        res.send("Comple")
+                    }
+                })
+             }
+
+    })()
+  } catch (error) {
+    console.error('Error merging PDFs:', error);
+    res.status(500).send('Internal Server Error');
+  }
+  })
+
+
+
+  app.post('/api/submitPifEditToGetPifReport', pdfUpload.any(), (req, res) => {
+    //     console.log("submit")
+     //console.log(req.files)
+     const file = req.files
+   //  console.log("...................")
+     const files = req.body.data;
+     const filePaths = req.files.map(file => file.path.toString());
+    // console.log(files)
+
+   //  console.log(filePaths);
+
+     const filea = filePaths[0] || "-";//fda => fdadoc
+     const fileb = filePaths[1] || "-";//Autorization  => letter_authorization
+     const filec = filePaths[2] || "-";//formu  => formula_doc
+     const filed = filePaths[3] || "-";//label =>label_doc
+     const filee = filePaths[4] || "-";//manufu => 	manufacture_doc
+     const filef = filePaths[5] || "-";//Gmp => gmp_iso
+     const fileg = filePaths[6] || "-";//eff => eff_report
+     const fileh = filePaths[7] || "-";//efficent => efficient_report
+     const filei = filePaths[8] || "-";//spec => spec
+     const filej = filePaths[9] || "-";//Coa => coa_doc
+     const filek = filePaths[10] || "-";//sds => 	sds
+     const filel = filePaths[11] || "-";//master formula => masterformula
+     const filem = filePaths[12] || "-";//Specification of cosmetic finished product)=>specification
+     const filen = filePaths[13] || "-";//Testing =>testing_doc
+
+
+    // get file
+     let update = [filePaths[0] , filePaths[1] , filePaths[2] , filePaths[3] , filePaths[4] , filePaths[5] ,filePaths[6] ,filePaths[7] ,filePaths[8] ,filePaths[9] ,filePaths[10] ,filePaths[11] ,filePaths[12] ,filePaths[13]]
+     let update1 = ["filea", "fileb" , "filec" , "filed" , "filee" , "filef" ,"fileg" ,"fileh" ,"filei" ,"filej" ,"filek" ,"filel" , "filem" , "filen"]
+     let fname = [",fdadoc = ?" , ",letter_authorization = ? " ,",formula_doc = ? " , ",label_doc = ? " , ",manufacture_doc = ?", ",gmp_iso = ?" , ",eff_report = ? " ,",efficient_report = ?" ,", spec = ?" ,",coa_doc = ?" , " ,sds = ?"," ,masterformula = ?" ," ,specification = ?" ,",testing_doc = ? "]
+     let sqlobj = []
+     let update2 = []
+     console.log("update")
+     console.log(update)
+
+     for(let i = 0 ; i < update.length ;i++){
+        console.log("for loop")
+        console.log(update[i])
+        if(update[i] !== undefined ){
+            console.log(i+"foorloop")
+          update2.push(update1[i])
+          sqlobj.push(fname[i])
+
+        }
+     }
+
+     let columname = ""
+     for(let i = 0 ; i < sqlobj.length ;i++){
+        columname += sqlobj[i] +" ,"
+     }
+     let sqlcut = ""
+     sqlcut += columname.substring(0,columname.length-1)
+
+     console.log(sqlcut)
+     console.log("update2")
+     console.log(update2)
+
+     console.log(columname)
+
+      try {
+          let img_path = '';
+          let pdf_path = '';
+
+          (async () => {
+             console.log(JSON.parse(req.body.data))
+              const data = JSON.parse(req.body.data);
+              console.log(data)
+
+              pdfMake.fonts = {
+                  THSarabunNew: {
+                      normal: 'THSarabun.ttf',
+                      bold: 'THSarabun-Bold.ttf',
+                      italics: 'THSarabun-Italic.ttf',
+                      bolditalics: 'THSarabun-BoldItalic.ttf'
+                  }
+              }
+
+              pdfMake.vfs = vfsFonts.pdfMake.vfs;
+
+              const docDefinition = {
+                      content: [
+                          { text:'ข้อมูลเกี่ยวกับเครื่องสำอาง (PRODUCTS INFORMATION FILE : PIF)', style: 'header' },
+                          {text:`เลขที่จดแจ้ง: ${data.inputregisNumber}` },
+                          {text:`ชื่อทางการค้าเครื่องสำอาง: ${data.inputcomName}` },
+                          {text:`ชื่อเครื่องสำอาง: ${data.inputcosName}`},
+                          {text:`ประเภทของเครื่องสำอาง: ${data.inputtypeGoods}`},
+                          {text:`วันที่จดแจ้ง: ${data.inputdateS}`},
+                          {text:`วันที่ใบอนุญาตหมดอายุ:${data.inputexpDate}`},
+                          {text:`จุดประสงค์การใช้: ${data.inputobjGoods}`},
+                          {text:`ลักษณะทางกายภาพ: ${data.Inputpy}`},
+                          {text:`ชื่อผู้ผลิต: ${data.inputentrepreneur}`},
+                          {text:`ชื่อผู้ผลิตต่างประเทศ: ${data.inputFentrepreneur}`},
+                          {text:`รายละเอียดเพิ่มเติม: ${data.setDes}`}
+
+
+                      ],
+                      styles: {
+                          header: {
+                              fontSize: 18,
+                              bold: true,
+                              alignment: 'center',
+                              margin: [10, 10, 10, 10]
+                          }
+                      },
+                      defaultStyle: {
+                          font: 'THSarabunNew'
+                      }
+                  };
+
+              const pdfDoc = pdfMake.createPdf(docDefinition);
+              const fileName = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + '-' + Date.now();
+              const pdfPath = path.join(__dirname, 'uploads', `${fileName}.pdf`);
+
+              const buffer = await new Promise((resolve, reject) => {
+                  pdfDoc.getBuffer((buffer) => {
+                      resolve(buffer);
+                  });
+              });
+
+              await fs.writeFile(pdfPath, buffer);
+
+              const firstPath = path.join('./uploads', `${fileName}.pdf`);
+              console.log(firstPath)
+
+              //merge pdf
+              const merger = new PDFMerger();
+            const files = req.files;
+            console.log(files);
+
+              await merger.add(firstPath);
+              try{
+                  for(let i = 0 ; i < files.length ; i++){
+                      if (files[i].mimetype === 'application/pdf')
+                          await merger.add(files[i].path);
+                      if (files[i].mimetype === 'image/jpeg' || files[i].mimetype === 'image/png')
+                          img_path = files[i].path;
+                  }
+              }catch(err){
+                  console.log("no any file upload")
+                  console.log(err)
+              }
+
+              let pdfFileName = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + '-' + Date.now();
+              await merger.save(`uploads/${pdfFileName}.pdf`).then((pdfBuffer) => {
+                  console.log(pdfBuffer);
+              });
+
+              console.log(pdfFileName)
+              pdf_path = path.join('./uploads', `${pdfFileName}.pdf`);
+
+
+
+             for(let i = 0 ; i< sqlobj.length; i++){
+                console.log(sqlobj[i])
+                console.log(update2[i])
+                const sql = "UPDATE pif  SET email = ? , img_path = ? , expdate = ? , rec_create_when = ? ,status = ? , fdadoc_date = ? , letter_authorization_date = ? , formula_doc_date = ? , label_doc_date = ? , manufacture_doc_date = ? , gmp_iso_date =? , eff_report_date = ? , efficient_report_date = ? ,sds_date = ? , masterformula_date = ? , specification_date =?, testing_doc_date =? , coa_date = ?" + sqlobj[i] + "WHERE organization_id = ? AND fda_license = ?"
+                db.query(sql ,[data.email , img_path ,data.expdate , new Date() ,"3" ,  data.fdadoc_date , data.letter_authorization_date , data.formula_doc_date , data.label_doc_date , data.manufacture_doc_date , data.gmp_iso_date , data.eff_report_date , data.efficient_report_date, data.sds_date , data.masterformula_date , data.specification_date , data.testing_doc_date , data.coa , update2[i] ,data.id , data.inputregisNumber] , (error , result) => {
+                    if(error){
+                        console.log(error)
+                    }
+                    else {
+                        res.send("Comple")
+                    }
+                })
+             }
+
+    })()
+  } catch (error) {
+    console.error('Error merging PDFs:', error);
+    res.status(500).send('Internal Server Error');
+  }
+
+
+  })
+
 
 app.get('/api/getPifByID', jsonParser, (req, res) => {
     db.execute(
@@ -488,19 +819,33 @@ app.get('/api/getPifByID', jsonParser, (req, res) => {
         })
 })
 
+
+
+
+
+
+
+app.post('/api/pifData', (req, res) => {
+
+    const id = req.body.id
+    const fda = req.body.fda
+    const sql = 'SELECT * FROM pif WHERE organization_id = ? AND fda_license = ?';
+    const values = [id, fda];
+
+    db.query(sql, values, (err, result) => {
+        if (err) {
+            console.error(err);
+            res.status(500).send('Internal Server Error');
+        } else {
+            res.send(result);
+        }
+    });
+});
+
 app.get('/api/pif', jsonParser, (req, res) => {
     db.execute(
-        `
-        SELECT
-            p.*,
-            po.organization_id,
-            po.pif_status
-        FROM pif p
-        LEFT JOIN pif_product po ON p.product_id = po.id
-        WHERE po.organization_id = ? AND po.pif_status = 1;
-
-        `,
-        [req.query.orid],
+        'SELECT * FROM pif WHERE email = ?',
+        [req.query.email],
         (err, result) => {
             if(err) {
                 res.json({status:'error',message:err});
@@ -535,6 +880,12 @@ app.post('/api/uploadCsv/', (req, res) => {
     }
     res.send('OK');
 })
+
+
+
+
+
+
 
 
 /////////////////////////////////////////////////////////////////
@@ -1257,16 +1608,17 @@ app.post('/api/searchAll', (req,res) => {
 })
 
 //send Notification Index Page
-app.get('/api/sendNotification' , (req,res) => {
+app.post('/api/sendNotification' , (req,res) => {
     console.log("send Notification")
 
-   const orid = req.query.orid
+   console.log(req.body)
+   const orid = req.body.orid
    if(orid === "-"){
     res.status(200).send('Notthing' );
    }
    else {
     console.log("that else")
-   const sql = 'SELECT created_by, expire_date, organization_id, fda_license FROM pif_product WHERE expire_date <= CURDATE() + INTERVAL 1 MONTH AND organization_id = ?';
+   const sql = 'SELECT email , fda_license,expdate FROM product WHERE expdate <= CURDATE() + INTERVAL 1 MONTH AND organization_id = ?';
 
     db.query(sql , [orid], (err , result) => {
         if (err){
@@ -1324,8 +1676,6 @@ const chcekFdaExp = async (e) => {
     console.error('Error fetching data:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
-
-
 
 }
 
@@ -1688,7 +2038,7 @@ app.post("/api/pifInfo" , (req , res) => {
 app.get('/api/getuserTeam/', (req, res) => {
 
     try{
-        const sql = `SELECT * FROM employee WHERE status = "U"  && organization_id = "-" `
+        const sql = `SELECT em_email FROM employee WHERE status = "U"  && organization_id = "-" `
         db.query(sql,(err, result) => {
             console.log(result)
             res.send(result)
@@ -1698,12 +2048,21 @@ app.get('/api/getuserTeam/', (req, res) => {
     }
 })
 
-app.get('/api/getTeam/', (req, res) => {
+//get check teamName
+app.post('/api/getTeam/', (req, res) => {
+    const team = req.body.team
+    //console.log("getTeam=>",req.body)
     try{
-        const sql = `SELECT DISTINCT organization_id FROM employee WHERE organization_id != ''`
-        db.query(sql,(err, result) =>{
-            //console.log(result)
-            res.send(result)
+        const sql = `SELECT  organization_id  FROM employee WHERE organization_id = ? `
+        db.query(sql,[team],(err, result) =>{
+            if(result.length === 0 ){
+                res.send("nothave")
+                console.log("nothave")
+            }
+            else{
+                res.send("HaveTeam")
+                console.log(err)
+            }
         })
     }
     catch(err){
@@ -1822,7 +2181,7 @@ app.post('/api/getuserTeamManage', (req, res) => {
     console.log("is a New ida : "+ida)
 
   console.log(id)
-    const sql = `SELECT em_fullname , no ,status FROM employee WHERE  organization_id = ? `
+    const sql = `SELECT em_email , no ,status FROM employee WHERE  organization_id = ? `
     db.query(sql,[ida],(err, result) =>{
       //  console.log(id)
         //console.log(result)
@@ -2092,6 +2451,21 @@ app.post('/api/sort', (req , res) => {
 
 
 
+})
+
+app.post('/api/updateDelete' , (req , res) => {
+    const email = req.body.email
+
+    const sql = "UPDATE employee set organization_id = ? , status= ? WHERE em_email = ?"
+    db.query(sql,["-","U",email],(err,result)=>{
+        if(err){
+            console.log(err)
+        }
+        else {
+            console.log("resut Delete+=>2456" , result)
+            res.status(200).send("Remove_organization_id");
+        }
+    })
 })
 
 

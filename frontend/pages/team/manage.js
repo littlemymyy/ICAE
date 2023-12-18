@@ -28,6 +28,9 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { TiUserDelete } from "react-icons/ti";
 import { FaUserPlus } from "react-icons/fa";
 import { FcOk } from "react-icons/fc";
+import { IoIosExit } from "react-icons/io";
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges';
 
 
 const manage = () => {
@@ -69,12 +72,12 @@ const manage = () => {
     const feactData0 = async () => {
         try {
             const res = await Axios.get("http://localhost:3001/api/getuserTeam/");
-            const res1 = await Axios.get("http://localhost:3001/api/getuserTeamName/")
+            //const res1 = await Axios.get("http://localhost:3001/api/getuserTeamName/")
             console.log("AAA")
             console.log(res.data)
-          //  console.log(res1.data)
-            setData1(res.data)
-            setTeamdata(res1.data)
+          //  console.log("res => " , res1.data)
+            await setData1(res.data)
+           // setTeamdata(res1.data)
 
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -154,11 +157,10 @@ const manage = () => {
 
   }, []);
 
-  const checkdb = async (e) => {
-    const res = await Axios.post('')
-  }
+
 
   const resultsearch = (e) => {
+    console.log("Result e=>",e)
     if (e.length === 0) {
         setShow([]);
         setSearch_input("");
@@ -168,8 +170,8 @@ const manage = () => {
             return (
               e &&
               w &&
-              (w.em_fullname.toLowerCase().includes(e) ||
-                w.em_fullname.toUpperCase().includes(e))
+              (w.em_email.toLowerCase().includes(e) ||
+                w.em_email.toUpperCase().includes(e))
             );
           });
           setShow(results1);
@@ -181,8 +183,8 @@ const checkG = (e) => {
     for (let i = 0; i < data.length; i++) {
       console.log("CheckG")
       console.log(e)
-      console.log(data[i].em_fullname)
-      if (e === data[i].em_fullname) {
+      console.log(data[i].em_email)
+      if (e === data[i].em_email) {
         console.log("1 that is if")
         return true;
       }
@@ -328,75 +330,126 @@ const checkG = (e) => {
   }
 
   const changeName = async () => {
-    console.log("That chamgename big")
-    console.log(id)
-    console.log(teamName);
-    let load = {
-        data: teamName,
-        id: id,
-    };
-
-    try {
-        const res = await Axios.post("http://localhost:3001/api/changeNameTeam", load);
-        console.log("changeName")
-        console.log(res.data)
-        if (res.data) {
-            Swal.fire({
-                title: "สำเร็จ!",
-                text: "เปลี่ยนชื่อ เรียบร้อย!",
-                icon: "success",
-            });
-            localStorage.setItem("orid",teamName)
-            window.location.reload();
+    const feactData = async () => {
+      try{
+        let load = {
+          team : teamName 
         }
-    } catch (error) {
-        console.error("Error changing name:", error);
-        // Handle the error, show an error message, etc.
-    }
+        const res = await Axios.post("http://localhost:3001/api/getTeam/",load)
+        if(res.data === "HaveTeam"){
+           Swal.fire({
+                    icon: "error",
+                    title: "พบข้อผิดพลาด",
+                    text: "มีคนใช้ชื่อนี้แล้ว! กรุณาเลือกชื่อทีมใหม่",
+                  });
+          window.location.reload()
+        }
+        else {
+          console.log("That chamgename big")
+          console.log(id)
+          console.log(teamName);
+          let load = {
+              data: teamName,
+              id: id,
+          };
+      
+          
+              const res = await Axios.post("http://localhost:3001/api/changeNameTeam", load);
+              console.log("changeName")
+              console.log(res.data)
+              if (res.data) {
+                  Swal.fire({
+                      title: "สำเร็จ!",
+                      text: "เปลี่ยนชื่อ เรียบร้อย!",
+                      icon: "success",
+                  });
+                  localStorage.setItem("orid",teamName)
+                  window.location.reload();
+              }
+          
+              console.error("Error changing name:", error);
+              // Handle the error, show an error message, etc.
+         
+        }
+      }catch(error){
+        console.log(error)
+      }  
+   
 };
 
 const handleChickAdd = () => {
     setTap(1)
 }
 
-// const sendData = () => {
-//     console.log("SendData")
-//     console.log(status)
-//     console.log(no)
+const sendData = () => {
+    console.log("SendData")
+    console.log(status)
+    console.log(no)
 
-//     let load = {
-//         st : status,
-//         no : no ,
-//         team : teamName
-//     }
-//         const send = async () => {
-//             try{
-//                 const res = await Axios({
-//                     url : "http://localhost:3001/api/updateStutus",
-//                     method : "post",
-//                     data : load
-//                 })
+    let load = {
+        st : status,
+        no : no ,
+        team : teamName
+    }
+        const send = async () => {
+            try{
+                const res = await Axios({
+                    url : "http://localhost:3001/api/updateStutus",
+                    method : "post",
+                    data : load
+                })
 
-//                 Swal.fire({
-//                     position: "center",
-//                     icon: "success",
-//                     title: "เพิ่มสถานะสำเร็จ",
-//                     showConfirmButton: false,
-//                     timer: 1500
-//                   });
-//                   router.push("/team/manage");
-//                    // pathname: '/team/manage',
-//                     // query: { team: team },
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: "เพิ่มสถานะสำเร็จ",
+                    showConfirmButton: false,
+                    timer: 1500
+                  });
+                  window.location.reload()
+                  //router.push("/team/manage");
+                   // pathname: '/team/manage',
+                    // query: { team: team },
 
 
-//             }  catch (error) {
-//                 console.error(error);
+            }  catch (error) {
+                console.error(error);
 
-//             }
-//         }
-//         send()
-//    }
+            }
+        }
+        send()
+   }
 
+   const handleExit = () => {
+    let load = {
+      email : localStorage.getItem("uemail")
+    }
+      const send = async () => {
+        try{
+
+          const res = await Axios.post("http://localhost:3001/api/updateDelete",load)
+
+          if(res.data === "Remove_organization_id"){
+            localStorage.setItem("status" , "U");
+            localStorage.setItem('orid', "-")
+            Swal.fire({
+              position: "center",
+              icon: "success",
+              title: "ออกจากทีมสำเร็จ",
+              showConfirmButton: false,
+              timer: 1500
+            });
+            router.push("/")
+          }
+
+
+        } catch(error){
+          console.log(error)
+        }
+        
+      }
+      send()
+   }
 
   return (
     <div>
@@ -420,10 +473,18 @@ const handleChickAdd = () => {
                     </div>
                     <div className="col-sm-10">
                       <h2>
-                        การจัดการ <b>สมาชิค ของ <input defaultValue={id} onChange={(e)=>setTeamName(e.target.value)}/>  <Button variant="contained" color="success" onClick={()=>changeName()}>
-                        <FcOk />เปลี่ยนชื่อทีม </Button> </b>
+                        การจัดการ <b>สมาชิค ของ <input defaultValue={id} onChange={(e)=>setTeamName(e.target.value)}/>  
+                      <b> &nbsp;
+                        <Button variant="contained" endIcon={<PublishedWithChangesIcon/>} color="success" onClick={()=>changeName()} >
+                        เปลี่ยนชื่อทีม </Button> </b>
+                        </b> <b> 
+                          <Button variant="contained" color="error" endIcon={<ExitToAppIcon />} onClick={()=>handleExit()}>
+                                ออกจากทีม
+                              </Button>
+                           </b> 
                       </h2>
                     </div>
+
                   </div>
                 </div>
                 <br />
@@ -448,7 +509,7 @@ const handleChickAdd = () => {
 
                 <p onClick={() => add(value.no)} key={value.idx}>
 
-                  {value.em_fullname}
+                  {value.em_email}
                 </p>
 
                           )
@@ -472,7 +533,7 @@ const handleChickAdd = () => {
                     {data.map((value, idx) => (
                       <tr key={idx}>
                         <td className="C2EM_th1">{idx + 1}</td>
-                        <td className="C2EM_th2">{value.em_fullname}</td>
+                        <td className="C2EM_th2">{value.em_email}</td>
                         <td className="C2EM_th3">
                         {
                         value.status === "S" ?
@@ -570,7 +631,7 @@ const handleChickAdd = () => {
                    {data.map((value, idx) => (
                      <tr key={idx}>
                        <td className="C2EM_th1">{idx + 1}</td>
-                       <td className="C2EM_th2">{value.em_fullname}</td>
+                       <td className="C2EM_th2">{value.em_email}</td>
                        <td className="C2EM_th3">
                        {
                        value.status === "S" ?
@@ -639,13 +700,7 @@ const handleChickAdd = () => {
         <Button onClick={() => sendData()}  variant="contained" color="success" style={{ marginLeft: 'auto', marginRight: 'auto', display: 'block' }}>
         บันทึก
          </Button>
-         ) : null}
-             */}
-
-
-
-
-
+         ) : null} */}
 
       <Footer></Footer>
     </div>

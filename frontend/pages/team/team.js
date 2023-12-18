@@ -46,11 +46,11 @@ const team = () => {
         const feactData = async () => {
             try {
                 const res = await Axios.get("http://localhost:3001/api/getuserTeam/");
-                const alreadyTeam = await Axios.get("http://localhost:3001/api/getTeam/")
+                //const alreadyTeam = await Axios.get("http://localhost:3001/api/getTeam/")
                 console.log(res.data)
-                console.log(alreadyTeam.data)
+               // console.log(alreadyTeam.data)
                 setData(res.data)
-                setAlreadyHaveTeam(alreadyTeam.data)
+                //setAlreadyHaveTeam(alreadyTeam.data)
 
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -60,6 +60,7 @@ const team = () => {
 
         feactData();
     }, []);
+
 
     const resultsearch = (e) => {
         if (e.length === 0) {
@@ -79,31 +80,46 @@ const team = () => {
           }
     }
 
-    const checkG = (team) => {
-      let found = 0;
+  //   const checkG = (team) => {
+  //     let found = 0;
 
-      alreadyHaveTeam.forEach(element => {
-          if (element.organization_id === team) {
-              console.log('found');
-              found = 1;
-          }
-          console.log(element);
-      });
+  //     alreadyHaveTeam.forEach(element => {
+  //         if (element.organization_id === team) {
+  //             console.log('found');
+  //             found = 1;
+  //         }
+  //         console.log(element);
+  //     });
 
-      return found;
-  };
+  //     return found;
+  // };
 
     const handleChick = async() => {
-      console.log(checkG(team))
-        if(checkG(team) === 1){
-            Swal.fire({
-                icon: "error",
-                title: "พบข้อผิดพลาด",
-                text: "มีคนใช้ชื่อนี้แล้ว! กรุณาเลือกชื่อทีมใหม่",
-              });
-        }
-        else  {
-            setSt(1)
+    //  console.log(checkG(team))
+        // if(checkG(team) === 1){
+        //     Swal.fire({
+        //         icon: "error",
+        //         title: "พบข้อผิดพลาด",
+        //         text: "มีคนใช้ชื่อนี้แล้ว! กรุณาเลือกชื่อทีมใหม่",
+        //       });
+        // }
+      console.log(team)
+        const feactData = async () => {
+          try{
+            let load = {
+              team : team 
+            }
+            const res = await Axios.post("http://localhost:3001/api/getTeam/",load)
+            if(res.data === "HaveTeam"){
+               Swal.fire({
+                        icon: "error",
+                        title: "พบข้อผิดพลาด",
+                        text: "มีคนใช้ชื่อนี้แล้ว! กรุณาเลือกชื่อทีมใหม่",
+                      });
+              window.location.reload()
+            }
+            else {
+                  // setSt(1)
             console.log( localStorage.getItem("uemail"))
             let email =  localStorage.getItem("uemail")
             let load = {
@@ -119,6 +135,7 @@ const team = () => {
                   });
                   console.log(res.data)
                   localStorage.setItem("orid" , team)
+                  localStorage.setItem("status" , "S")
                   router.push("/pif/productslist")
 
 
@@ -126,113 +143,150 @@ const team = () => {
                 console.error(error);
 
             }
-        }
-
-    }
-
-
-
-    const add = (e) => {
-        no.push(e)
-        setNo([...no])
-
-          const result = data.find(({ no }) => no === e);
-          console.log("...........");
-          console.log(result);
-          setList([...list, result]);
-          setShow([]);
-          setSearch_input("");
-
-          console.log(list);
-
-      };
-
-
-
-    const  handleChange = (e) => {
-        console.log("handeChang")
-        console.log(e)
-        if(e.type === 1){
-            status.push("S")
-            setStatus([...status])
-        }
-        else if(e.type === 2) {
-            status.push("U1")
-            setStatus([...status])
-        }
-        else if(e.type === 3) {
-            status.push("U2")
-            setStatus([...status])
-        }
-        else if(e.type === 4){
-          removelist(e.idx)
-          removeNo(e.no)
-
-        }
-    }
-
-    const removelist = (e) => {
-      list.splice(e,1)
-      setList([...list])
-      console.log(list)
-    }
-
-    const removeNo = (e) => {
-      let remove = e
-
-      let index = no.indexOf(remove)
-
-      if(index !== -1){
-        no.splice(index ,1)
-        status.splice(index , 1)
-      }
-      console.log(no)
-      console.log(status)
-    }
-
-   const sendData = () => {
-    console.log("SendData")
-    console.log(status)
-    console.log(no)
-    console.log(team)
-
-    if(checkG(team) === 1 ){
-      alert("มีคนใช้ชื่อทีมนี้ช่ำแล้วกรุณาเปลี่ยนชื่อ")
-      window.location.reload()
-    }
-
-    let load = {
-        st : status,
-        no : no ,
-        team : team
-    }
-        const send = async () => {
-            try{
-                const res = await Axios({
-                    url : "http://localhost:3001/api/updateStutus",
-                    method : "post",
-                    data : load
-                })
-
-                Swal.fire({
-                    position: "center",
-                    icon: "success",
-                    title: "เพิ่มสถานะสำเร็จ",
-                    showConfirmButton: false,
-                    timer: 1500
-                  });
-                  router.push("/team/manage");
-                   // pathname: '/team/manage',
-                    // query: { team: team },
-
-
-            }  catch (error) {
-                console.error(error);
 
             }
+          } catch(error){
+            console.log("handleTeam =>" , error)
+          }
+          
         }
-        send()
-   }
+
+        feactData()
+
+
+
+
+      
+            // setSt(1)
+            // console.log( localStorage.getItem("uemail"))
+            // let email =  localStorage.getItem("uemail")
+            // let load = {
+            //     email : email ,
+            //     data : team ,
+            // }
+            // try {
+            // const res =  await Axios.post("http://localhost:3001/api/updateteam", load);
+            //     Swal.fire({
+            //         title: "สำเร็จ",
+            //         text: "เพื่มชื่อทีมหรือชื่อบริษัทสำเร็จ",
+            //         icon: "success"
+            //       });
+            //       console.log(res.data)
+            //       localStorage.setItem("orid" , team)
+            //       router.push("/pif/productslist")
+
+
+            // } catch (error) {
+            //     console.error(error);
+
+            // }
+       
+
+    }
+
+
+
+    // const add = (e) => {
+    //     no.push(e)
+    //     setNo([...no])
+
+    //       const result = data.find(({ no }) => no === e);
+    //       console.log("...........");
+    //       console.log(result);
+    //       setList([...list, result]);
+    //       setShow([]);
+    //       setSearch_input("");
+
+    //       console.log(list);
+
+    //   };
+
+
+
+    // const  handleChange = (e) => {
+    //     console.log("handeChang")
+    //     console.log(e)
+    //     if(e.type === 1){
+    //         status.push("S")
+    //         setStatus([...status])
+    //     }
+    //     else if(e.type === 2) {
+    //         status.push("U1")
+    //         setStatus([...status])
+    //     }
+    //     else if(e.type === 3) {
+    //         status.push("U2")
+    //         setStatus([...status])
+    //     }
+    //     else if(e.type === 4){
+    //       removelist(e.idx)
+    //       removeNo(e.no)
+
+    //     }
+    // }
+
+    // const removelist = (e) => {
+    //   list.splice(e,1)
+    //   setList([...list])
+    //   console.log(list)
+    // }
+
+    // const removeNo = (e) => {
+    //   let remove = e
+
+    //   let index = no.indexOf(remove)
+
+    //   if(index !== -1){
+    //     no.splice(index ,1)
+    //     status.splice(index , 1)
+    //   }
+    //   console.log(no)
+    //   console.log(status)
+    // }
+
+  //  const sendData = () => {
+  //   console.log("SendData")
+  //   console.log(status)
+  //   console.log(no)
+  //   console.log(team)
+
+  //   if(checkG(team) === 1 ){
+  //     alert("มีคนใช้ชื่อทีมนี้ช่ำแล้วกรุณาเปลี่ยนชื่อ")
+  //     window.location.reload()
+  //   }
+
+  //   let load = {
+  //       st : status,
+  //       no : no ,
+  //       team : team
+  //   }
+  //       const send = async () => {
+  //           try{
+  //               const res = await Axios({
+  //                   url : "http://localhost:3001/api/updateStutus",
+  //                   method : "post",
+  //                   data : load
+  //               })
+
+  //               Swal.fire({
+  //                   position: "center",
+  //                   icon: "success",
+  //                   title: "เพิ่มสถานะสำเร็จ",
+  //                   showConfirmButton: false,
+  //                   timer: 1500
+  //                 });
+  //                 router.push("/team/manage");
+  //                  // pathname: '/team/manage',
+  //                   // query: { team: team },
+
+
+  //           }  catch (error) {
+  //               console.error(error);
+
+  //           }
+  //       }
+  //       send()
+  //  }
 
 
   return (

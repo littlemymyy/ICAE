@@ -42,7 +42,7 @@ export default function productslist() {
     const fetchData = async () => {
     //  console.log("kkk")
      console.log(ida)
-      if (ida === 'null') {
+      if (ida === 'null'|| ida === "-") {
         router.push("/team/team")
       }
       else  {
