@@ -9,6 +9,7 @@ import SendIcon from '@mui/icons-material/Send';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import EditNoteIcon from '@mui/icons-material/EditNote';
+import Swal from 'sweetalert2';
 
 const record = () => {
   const [gname , setGname] = useState([])
@@ -84,6 +85,28 @@ const record = () => {
   }
 
   const clickDelete = (idx , groupName) => {
+    Swal.fire({
+      title: 'คุณต้องการลบข้อมูลใช่หรือไม่?',
+      text: "ข้อมูลทั้งหมดในไฟล์นี้จะถูกลบอย่างถาวร!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#ff0000',
+      confirmButtonText: 'ใช่',
+      cancelButtonText: 'ยกเลิก'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        clickDeleted(idx , groupName)
+        Swal.fire(
+          'ลบข้อมูลสำเร็จ!',
+          'ข้อมูลของคุณถูกลบเรียบร้อยแล้ว',
+          'success'
+        )
+      }
+    })
+  }
+
+  const clickDeleted = (idx , groupName) => {
     show.splice(idx,1);
     setShow([...show])
     let load = {

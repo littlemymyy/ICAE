@@ -80,39 +80,45 @@ const history = () => {
     }
 
     const addData = (e) => {
-      Axios  ({
-        url: "http://localhost:3001/api/getChemicalByCas?cas=" + e,
-        method: "get"
-      }).then ((response) => {
-        if (response.data.status === "ok") {
-          let resData = JSON.parse(JSON.stringify(response.data.message))
-          add(resData[0])
-        }else{
-          console.log(response.data)
-        }
+      // Axios  ({
+      //   url: "http://localhost:3001/api/getChemicalByCas?cas=" + e,
+      //   method: "get"
+      // }).then ((response) => {
+      //   if (response.data.status === "ok") {
+      //     let resData = JSON.parse(JSON.stringify(response.data.message))
+      //     add(resData[0])
+      //   }else{
+      //     console.log(response.data)
+      //   }
 
-      }).catch(error => {
-        router.push("/")
-      });
+      // }).catch(error => {
+      //   router.push("/")
+      // });
+      const result = chemical.find(({ cas }) => cas === e)
+      result['per1'] = "0"
+      result['']
+      add(result)
     }
-      const add = (e) => {
-        let result = e
-        if (result.st === 2) {
-          unlist.push(result)
-          setUnlist([...unlist])
-        }
-        else if (e.per1 > e.per) {
-          list2.push(result)
-          setList([...list])
-          setSum(sum + parseFloat(result.per1))
-        }
-        else {
-          list.push(result)
-          setList([...list])
-          setSum(sum + parseFloat(result.per1))
-        }
-        console.log(result)
+
+
+    const add = (e) => {
+      let result = e
+      if (result.st === 2) {
+        unlist.push(result)
+        setUnlist([...unlist])
       }
+      else if (e.per1 > e.per) {
+        list2.push(result)
+        setList([...list])
+        setSum(sum + parseFloat(result.per1))
+      }
+      else {
+        list.push(result)
+        setList([...list])
+        setSum(sum + parseFloat(result.per1))
+      }
+      console.log(result)
+    }
 
       const percentChange = (idx, e) => {
         console.log(list[idx])
@@ -160,12 +166,13 @@ const history = () => {
       }
 
       const clickDelete_unlist = (e) => {
+        console.log("unlist e: ", e)
         unlist.splice(e, 1)
-        setUnlist([...list])
+        setUnlist([...unlist])
       }
       const clickDelete_list2 = (e) => {
         list2.splice(e, 1)
-        setList2([...list])
+        setList2([...list2])
       }
 
       const SaveFile = () => {
@@ -188,15 +195,21 @@ const history = () => {
           gname : groupName,
           fillterg : '',
           dd : dataList,
-          email : dataList[0].email
+          email : localStorage.getItem("uemail")
         }
         Axios({
           url : "http://localhost:3001/api/savefile",
           method : "post" ,
           data : load ,
         }).then((response) => {
-          alert("เพิ่มรายเรียบร้อย")
-          router.push("/examine/record")
+          Swal.fire({
+            title: 'สำเร็จ!',
+            text: 'บันทึกข้อมูลเรียบร้อย',
+            icon: 'success',
+            confirmButtonText: 'ปิด'
+          }).then(()=>{
+            router.push("/examine/record")
+          })
         }).catch(error => {
           console.error(error);
          // return res.status(500).json({ error: "Error sending email" });
@@ -222,11 +235,11 @@ const history = () => {
       <div className='show'>
         {
           show.length ?
-            show.map((value) => (
+            show.map((value, idx) => (
               value.cmname === "-" ?
-                <p onClick={() => addData(value.cas)} key={value.cas}>  {value.cname}</p>
+                <p onClick={() => addData(value.cas)} key={value.idx}>  {value.cname}</p>
                 :
-                <p onClick={() => addData(value.cas)} key={value.cas}> {value.cmname}</p>
+                <p onClick={() => addData(value.cas)} key={value.idx}> {value.cmname}</p>
             ))
             : null
         }
@@ -263,7 +276,7 @@ const history = () => {
                             <td>{value.cmname}</td>
                         }
                         <td>
-                          <input type="number" min="0" defaultValue={value.per1 ? value.per1 : 1} onChange={(e) => percentChange(idx, e.target.value)} />
+                          <input type="number" defaultValue={value.per1 ? value.per1 : 1} onChange={(e) => percentChange(idx, e.target.value)} />
                         </td>
                         <td>-</td>
                         <td><AiOutlineDelete onClick={() => clickDelete(idx)} /></td>
@@ -310,7 +323,7 @@ const history = () => {
                         <td>{value.cmname}</td>
                     }
                     <td>
-                      <input type="number" min="0" value={value.per1 ? value.per1 : 1}  onChange={(e) => percentChange2(idx, e.target.value)} />
+                      <input type="number" value={value.per1 ? value.per1 : 0}  onChange={(e) => percentChange2(idx, e.target.value)} />
                     </td>
                     <td>ปริมาณสารที่ใช้ได้คือ {value.per }</td>
                     <th><AiOutlineDelete onClick={() => clickDelete_list2(idx)} /></th>
@@ -355,7 +368,7 @@ const history = () => {
                             <td>{value.cmname}</td>
                         }
                         <td>
-                          <input type="number" min="0" disabled value={value.per1 ? value.per1 : 1} onChange={(e) => percentChange(idx, e.target.value)} />
+                          <input type="number" disabled value={value.per1 ? value.per1 : 0} onChange={(e) => percentChange(idx, e.target.value)} />
                         </td>
                         <td>-</td>
                         <th><AiOutlineDelete onClick={() => clickDelete_unlist(idx)} /></th>
