@@ -24,6 +24,7 @@ export default function Home() {
   const [data , setData] = useState([])
 
   useEffect(()=>{
+    console.log('Test12');
     const Swal = require('sweetalert2')
 
    // console.log(sDate + " " + thisDay)
@@ -32,7 +33,7 @@ export default function Home() {
     //   localStorage.setItem("emaildate" , thisDay);
     // }
     console.log(localStorage)
-    console.log("mail "+ localStorage.getItem("uemail"))
+    console.log("mail111 "+ localStorage.getItem("uemail"))
 
 
     if(localStorage.getItem("uemail")){
@@ -40,7 +41,7 @@ export default function Home() {
       let id = localStorage.getItem("orid")
       console.log(email)
 
-        Axios.get('http://localhost:3001/api/sendNotification?orid='+id)
+        Axios.get(process.env.API_BASE_URL+'/sendNotification?orid='+id)
           .then((res)=>{
             console.log(res.data)
             setData(res.data)

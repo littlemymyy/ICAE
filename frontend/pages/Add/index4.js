@@ -21,7 +21,7 @@ const index4 = () => {
     const handleFileSubmit = (e) => {
         e.preventDefault();
         if(xml !== null) {
-            Axios.get(`http://localhost:3001/api/getXML/${xml}`).then((response) => {
+            Axios.get(process.env.API_BASE_URL+'/getXML/${xml}`').then((response) => {
                 let res = response.data;
                 setAlldata(response.data);
                 console.log(response.data);

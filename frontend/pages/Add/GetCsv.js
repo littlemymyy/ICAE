@@ -32,7 +32,7 @@ const GetCsv = () => {
             dd : data
         }
         Axios({
-            url : 'http://localhost:3001/api/uploadCsv',
+            url : process.env.API_BASE_URL+'/uploadCsv',
             method : 'post' ,
             data : load
         }) 

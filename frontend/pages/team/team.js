@@ -109,7 +109,7 @@ const team = () => {
             let load = {
               team : team 
             }
-            const res = await Axios.post("http://localhost:3001/api/getTeam/",load)
+            const res = await Axios.post(process.env.API_BASE_URL+"/getTeam/",load)
             if(res.data === "HaveTeam"){
                Swal.fire({
                         icon: "error",

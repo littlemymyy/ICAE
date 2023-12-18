@@ -374,7 +374,8 @@ const checkG = (e) => {
       }catch(error){
         console.log(error)
       }  
-   
+    }
+    feactData()
 };
 
 const handleChickAdd = () => {

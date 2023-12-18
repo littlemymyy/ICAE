@@ -33,19 +33,19 @@ app.use(bodyParser.urlencoded({extended: true , limit : "35mb" , parameterLimit 
 
 app.use('/uploads', express.static('uploads'));
 
-// create PDF FOR PIF
-// const db = mysql.createConnection({
-//     host: 'icae_mysql',
-//     user: 'icae_user',
-//     password: 'Icae11235813re',
-//     database: 'cosmetic'
-// });
+//create PDF FOR PIF
 const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
+    host: 'icae_mysql',
+    user: 'icae_user',
+    password: 'Icae11235813re',
     database: 'cosmetic'
 });
+// const db = mysql.createConnection({
+//     host: 'localhost',
+//     user: 'root',
+//     password: '',
+//     database: 'cosmetic'
+// });
 
 const pdfStorage = multer.diskStorage({
     destination: (req, file, cb) => {

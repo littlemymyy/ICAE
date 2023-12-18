@@ -81,7 +81,7 @@ const AdddataAn2 = () => {
                 st: st1,
               };
               Axios({
-                url: "http://localhost:3001/api/setdata",
+                url: process.env.API_BASE_URL/api/+"setdata",
                 method: "post",
                 data: load,
               })

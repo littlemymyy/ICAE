@@ -40,7 +40,7 @@ const index2 = () => {
             dd : data
         }
         Axios({
-            url : 'http://localhost:3001/api/uploadCsv',
+            url : process.env.API_BASE_URL+'/api/uploadCsv',
             method : 'post' ,
             data : load
         }) 

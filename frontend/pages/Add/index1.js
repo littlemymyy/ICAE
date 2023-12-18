@@ -41,7 +41,7 @@ const index1 = () => {
     };
 
     Axios({
-      url: "http://localhost:3001/api/AddminAdd",
+      url: process.env.API_BASE_URL+'/AddminAdd',
       method: "post",
       data: load,
     }).then( function(res){
