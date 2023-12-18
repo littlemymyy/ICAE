@@ -34,9 +34,8 @@ app.use('/uploads', express.static('uploads'));
 
 // create PDF FOR PIF
 const db = mysql.createConnection({
-    host: 'icae_mysql',
-    user: 'icae_user',
-    password: 'Icae11235813re',
+    host: 'localhost',
+    user: 'root',
     database: 'cosmetic'
 });
 
@@ -676,47 +675,39 @@ app.post('/api/setsignUp' , jsonParser, async (req , res ) => {
         return res.status(500).json({error: "have someing worng"})
        }
        else {
-        return res.status(200).json({message: "signIn OK"})
+        let config = {
+            host: 'smtp.gmail.com',
+            port: 587 ,
+            secure: false ,
+            auth: {
+                user: EMAIL,
+                pass: PASSWORD
+            }
+        };
+
+        let transporter = nodemailer.createTransport(config);
+
+        let message = {
+            from: EMAIL,
+            to: email,
+            subject: "Welcome to ICAE",
+            text: "Welcome to ICAE,\n\n Thank you for registering with us.",
+            html: `
+            <body style="font-family: 'Arial', sans-serif; background-color: #f4f4f4; color: #333; text-align: center; padding: 20px;">
+                <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                    <h1 style="color: #007bff;">Welcome to ICAE</h1>
+                    <p style="font-size: 16px;">Thank you for registering with us.</p><br><br><br>
+                    <p style="font-size: 14px; color: #555;">Regards,</p>
+                    <p style="font-size: 14px; color: #555;">ICAE Team</p>
+                </div>
+            </body>
+            `,
+        };
+
+        transporter.sendMail(message)
+         res.status(200).json({message: "signIn OK"})
        }
     })
-    let config = {
-        host: 'smtp.gmail.com',
-        port: 587 ,
-        secure: false ,
-        auth: {
-            user: EMAIL,
-            pass: PASSWORD
-        }
-    };
-
-    let transporter = nodemailer.createTransport(config);
-
-    let message = {
-        from: EMAIL,
-        to: email,
-        subject: "Welcome to ICAE",
-        text: "Welcome to ICAE,\n\n Thank you for registering with us.",
-        html: `
-        <body style="font-family: 'Arial', sans-serif; background-color: #f4f4f4; color: #333; text-align: center; padding: 20px;">
-            <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-                <h1 style="color: #007bff;">Welcome to ICAE</h1>
-                <p style="font-size: 16px;">Thank you for registering with us.</p><br><br><br>
-                <p style="font-size: 14px; color: #555;">Regards,</p>
-                <p style="font-size: 14px; color: #555;">ICAE Team</p>
-            </div>
-        </body>
-        `,
-    };
-
-    transporter.sendMail(message)
-        .then(() => {
-            // Sending response after email is sent
-            return res.status(201).json({ msg: "Email has been sent, and signup was successful" });
-        })
-        .catch(error => {
-            console.error(error);
-            return res.status(500).json({ error: "Error sending email" });
-        });
 })
 
 
@@ -1412,10 +1403,10 @@ const sendEmailNotifications=() => {
           console.log(err);
         } else if (result.length > 0) {
           console.log("Organization IDs =>", result);
-    
+
           // Extract and store organization_ids
           organization_id = result.map(row => row.organization_id);
-    
+
           // Iterate through organization_ids and query emails
           organization_id.forEach(orgId => {
             db.query(sql1, [orgId], (err, emailResult) => {
@@ -1424,13 +1415,13 @@ const sendEmailNotifications=() => {
               } else if  (emailResult.length > 0) {
                  email = emailResult.map(row => row.em_email);
                 console.log("Emails =>", email);
-               email.push(email);   
+               email.push(email);
               }
             });
           });
         }
-      }); 
-    
+      });
+
   console.log(email,"email")
 
     db.query(sql, (err , result) => {
@@ -1455,12 +1446,12 @@ const sendEmailNotifications=() => {
                         <body style="font-family: 'Arial', sans-serif; background-color: #f4f4f4; color: #333; text-align: center; padding: 20px;">
                             <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
                                 <h1 style="color: #007bff;">ICAE Alert</h1>
-                                <p style="font-size: 16px;">เรียนท่านผู้ใช้ขณะนี้ระบบได้ตรวจพบว่าเลขจดแจ้งที่ ${result[i].fda_license} </p><br><br><br> 
+                                <p style="font-size: 16px;">เรียนท่านผู้ใช้ขณะนี้ระบบได้ตรวจพบว่าเลขจดแจ้งที่ ${result[i].fda_license} </p><br><br><br>
                                <p style="font-size: 16px;">จะหมดอายุภายในวันที่ ${result[i].expdate} </p><br>
                                <a href="https://privus.fda.moph.go.th/" style="color: #007bff; text-decoration: none;">
                                คลิกที่นี่เพิ่อไปยังเว็บ อย. เพื่อต่ออายุเครื่องสำอางของท่าน
                              </a>
-                             <br/> 
+                             <br/>
                              <a href="https://privus.fda.moph.go.th/" style="color: #007bff; text-decoration: none;">
                              คลิกที่นี่เพิ่อไปยังเว็บ ICAE เพื่อจัดรายการเอกสาร PIF ของท่าน
                            </a>
@@ -1469,11 +1460,11 @@ const sendEmailNotifications=() => {
                                 <p style="font-size: 14px; color: #555;">ICAE Team</p>
                             </div>
                         </body>`
-                        
+
                        // emailBody
                         ,
                     };
-               
+
 
                  sendEmail(message)
                    console.log(message)
@@ -1503,10 +1494,10 @@ const sendEmailNotificationsFile=() => {
           console.log(err);
         } else if (result.length > 0) {
           console.log("Organization IDs =>", result);
-    
+
           // Extract and store organization_ids
           organization_id = result.map(row => row.organization_id);
-    
+
           // Iterate through organization_ids and query emails
           organization_id.forEach(orgId => {
             db.query(sql1, [orgId], (err, emailResult) => {
@@ -1515,13 +1506,13 @@ const sendEmailNotificationsFile=() => {
               } else if  (emailResult.length > 0) {
                  email = emailResult.map(row => row.em_email);
                 console.log("Emails =>", email);
-               email.push(email);   
+               email.push(email);
               }
             });
           });
         }
-      }); 
-    
+      });
+
   console.log(email,"email")
 
     db.query(sql, (err , result) => {
@@ -1546,9 +1537,9 @@ const sendEmailNotificationsFile=() => {
                         <body style="font-family: 'Arial', sans-serif; background-color: #f4f4f4; color: #333; text-align: center; padding: 20px;">
                             <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
                                 <h1 style="color: #007bff;">ICAE Alert</h1>
-                                <p style="font-size: 16px;">เรียนท่านผู้ใช้ขณะนี้ระบบได้ตรวจพบว่ามีเอกสารหมดอายุขอให้ท่านไปแก้ไขเอกสารด้วยค่ะ  </p><br><br><br> 
-                               
-                             <br/> 
+                                <p style="font-size: 16px;">เรียนท่านผู้ใช้ขณะนี้ระบบได้ตรวจพบว่ามีเอกสารหมดอายุขอให้ท่านไปแก้ไขเอกสารด้วยค่ะ  </p><br><br><br>
+
+                             <br/>
                              <a href="https://privus.fda.moph.go.th/" style="color: #007bff; text-decoration: none;">
                              คลิกที่นี่เพิ่อไปยังเว็บ ICAE เพื่อจัดรายการเอกสาร PIF ของท่าน
                            </a>
@@ -1557,11 +1548,11 @@ const sendEmailNotificationsFile=() => {
                                 <p style="font-size: 14px; color: #555;">ICAE Team</p>
                             </div>
                         </body>`
-                        
+
                        // emailBody
                         ,
                     };
-               
+
 
                  sendEmail(message)
                    console.log(message)
@@ -1606,7 +1597,7 @@ const sendEmail = (message) => {
                     });
 }
 
-//sendEmailNotifications()  
+//sendEmailNotifications()
 
  cron.schedule(' 20 9 * * *' , () => {
 // //     console.log("IS RUN CRON")
@@ -1653,50 +1644,6 @@ app.post("/api/pifInfo" , (req , res) => {
 
  })
 
-
-// const storage = multer.diskStorage({
-//     destination: function (req, file, cb) {
-//       cb(null, 'uploads/');
-//     }, filename: function (req, file, cb) {
-//         cb(null, file.originalname);
-//       },
-//     });
-//     const upload = multer({ storage: storage });
-
-// app.post('/api/upload-pdf' , (req , res) => {
-//     const file = req.body
-//     console.log(file)
-// })
-
-
-
-// io.on('connection', (socket) => {
-//     console.log('User connected:', socket.id);
-
-//     socket.on('mousemove', (data) => {
-//       // Broadcast the cursor position to all connected clients
-//       socket.broadcast.emit('mousemove', data);
-//     });
-
-//     socket.on('disconnect', () => {
-//       console.log('User disconnected:', socket.id);
-//     });
-//   });
-
-
-// get user Admin or S
-app.get('/api/getuserTeam/', (req, res) => {
-
-    try{
-        const sql = `SELECT * FROM employee WHERE status = "U"  && organization_id = "-" `
-        db.query(sql,(err, result) => {
-            console.log(result)
-            res.send(result)
-        })
-    }catch(err){
-        console.log(err)
-    }
-})
 
 app.get('/api/getTeam/', (req, res) => {
     try{
@@ -1806,44 +1753,118 @@ app.post('/api/updateManageUserAdmin', (req, res) => {
 
 });
 
+app.get('/api/getStatusByEmail', (req, res) => {
+    db.execute(
+        `SELECT no, status FROM employee WHERE em_email = ?`,
+        [req.query.email],
+        (err, result) => {
+            if(err) {
+                console.log(err);
+                res.json({status:'error',message: err});
+            }
+            else {
+                res.json({status:'ok',message: result})
+            }
+        }
+    )
+});
 
+app.get('/api/getStatusByNo', (req, res) => {
+    db.execute(
+        `SELECT status FROM employee WHERE no = ?`,
+        [req.query.no],
+        (err, result) => {
+            if(err) {
+                console.log(err);
+                res.json({status:'error',message: err});
+            }
+            else {
+                res.json({status:'ok',message: result})
+            }
+        }
+    )
+});
 
+app.get('/api/getuserTeamManage', (req, res) => {
+    db.execute(
+        `SELECT em_fullname , no ,status FROM employee WHERE  organization_id = ?`,
+        [req.query.id],
+        (err, result) => {
+            if(err) {
+                console.log(err);
+                res.json({status:'error',message: err});
+            }
+            else {
+                res.json({status:'ok',message: result})
+            }
+        }
+    )
+});
 
-
-app.post('/api/getuserTeamManage', (req, res) => {
-    console.log("A getTeammanage")
-    //console.log(req.body.data)
-    const id = req.body.data
-    let ida = ""
-
-       // console.log("is "+id[i])
-        ida += id[0].organization_id
-
-    console.log("is a New ida : "+ida)
-
-  console.log(id)
-    const sql = `SELECT em_fullname , no ,status FROM employee WHERE  organization_id = ? `
-    db.query(sql,[ida],(err, result) =>{
-      //  console.log(id)
-        //console.log(result)
-        res.send(result)
-    })
+app.get('/api/getCountOwner', (req, res) => {
+    db.execute(
+        `SELECT COUNT(*) as num FROM employee WHERE status = 'S' AND organization_id = ?`,
+        [req.query.id],
+        (err, result) => {
+            if(err) {
+                console.log(err);
+                res.json({status:'error',message: err});
+            }
+            else {
+                res.json({status:'ok',message: result})
+            }
+        }
+    )
 });
 
 
-
-app.post('/api/getuserTeamMangeByemail', (req, res) => {
-   // console.log("A Email getTeammanage")
-    const email = req.body.data
-   // console.log(email)
-    const sql = `SELECT  organization_id  FROM employee WHERE  em_email = ? `
-    db.query(sql,[email],(err, result) =>{
-       // console.log(result)
-        res.send(result)
-    })
+app.get('/api/getuserTeamMangeByemail', (req, res) => {
+   db.execute(
+    `SELECT  organization_id FROM employee WHERE em_email = ?`,
+    [req.query.email],
+    (err, result) => {
+        if(err) {
+            console.log(err);
+            res.json({status:'error',message: err});
+        }
+        else {
+            res.json({status:'ok',message: result})
+        }
+    }
+   )
 });
 
+app.get('/api/getUserNoTeam', (req, res) => {
+    db.execute(
+        `SELECT em_fullname , no ,status FROM employee WHERE  organization_id IS NULL`,
+        (err, result) => {
+            if(err) {
+                console.log(err);
+                res.json({status:'error',message: err});
+            }
+            else {
+                res.json({status:'ok',message: result})
+            }
+        }
+    )
+});
 
+app.post('/api/addUserToTeam', (req, res) => {
+    console.log(req.body)
+    db.execute(
+        `UPDATE employee SET organization_id = ?, status = 'U' WHERE no = ?`,
+        [req.body.team, req.body.no],
+        (err, result) => {
+            if(err) {
+                console.log(err);
+                res.json({status:'error',message: err});
+            }
+            else {
+                res.json({status:'ok',message: result})
+            }
+        }
+    )}
+);
 
 
 
@@ -1868,55 +1889,73 @@ app.post('/api/getuserDelete', (req, res) => {
 });
 
 app.post('/api/getuserDeleteAdmin', (req, res) => {
-    console.log("A getTeammanageDelteteAdmin")
-    const id = req.body.id
-    const no = req.body.data
     console.log(req.body.data)
-   console.log(id)
-   const sql = `DELETE FROM employee WHERE no = ?`;
-    db.query(sql , [no ] ,(err , result) => {
-        if(err){
-            console.log(err)
+    db.execute(
+        `UPDATE employee SET organization_id  = null , status = 'U'  WHERE no = ?`,
+        [req.body.data],
+        (err, result) => {
+            if(err) {
+                console.log(err);
+                res.json({status:'error',message: err});
+            }
+            else {
+                res.json({status:'ok',message: result})
+            }
         }
-        else {
-            console.log(result)
-            res.status(200).send('delete')
-        }
-
-    })
+    );
 });
 
-app.post('/api/changeNameTeam' , (req , res) => {
+app.post('/api/changeNameTeam', jsonParser , (req , res) => {
     console.log("changeNaem na Ja")
-  //  const teamS = req.session.orid = req.body.data;
-    const team = req.body.data
-    const id = req.body.id
 
-    const sql = `UPDATE employee SET organization_id = ? WHERE organization_id = ?`;
-    db.query(sql , [team , id ] ,  (err , result) => {
-        if(err){
-            console.log(err)
+    const new_team = req.body.data
+    const old_team = req.body.id
+    console.log ("team =>" + new_team)
+    console.log ("id =>" + old_team)
+    db.execute(
+        `SELECT organization_id FROM employee WHERE organization_id = ?`,
+        [new_team],
+        (err, result) => {
+            if(err) {
+                console.log(err);
+                res.json({status:'error',message: err});
+            }
+            else {
+                console.log('Query Result:', result);
+                if(result.length > 0) {
+                    res.json({status:'error',message: 'Duplicate Team Name'});
+                }
+                else {
+                    db.execute(
+                        `UPDATE employee SET organization_id = ? WHERE organization_id = ?`,
+                        [new_team , old_team],
+                        (err, result) => {
+                            if(err) {
+                                console.log(err);
+                                res.json({status:'error',message: err});
+                            }
+                            else {
+                                db.execute(
+                                    `UPDATE pif_product SET organization_id = ? WHERE organization_id = ?`,
+                                    [new_team , old_team],
+                                    (err, result) => {
+                                        if(err) {
+                                            console.log(err);
+                                            res.json({status:'error',message: err});
+                                        }
+                                        else {
+                                            res.json({status:'ok',message: result})
+                                        }
+                                    }
+                                )
+                            }
+                        }
+                    );
+                }
+            }
         }
-        else {
-            res.status(200).send('update')
-        }
 
-    })
-
-    const sql1 = `UPDATE pif SET organization_id = ? WHERE organization_id = ?`;
-    db.query(sql1 , [team , id ] ,  (err , result) => {
-        if(err){
-            console.log(err)
-        }
-    })
-
-    const sql2 = `UPDATE product SET organization_id = ? WHERE organization_id = ?`;
-    db.query(sql2 , [team , id ] ,  (err , result) => {
-        if(err){
-            console.log(err)
-        }
-    })
-
+    )
 })
 
 
