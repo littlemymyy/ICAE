@@ -2263,6 +2263,11 @@ dompurify@^2.2.0:
   resolved "https://registry.npmjs.org/dompurify/-/dompurify-2.4.7.tgz"
   integrity sha512-kxxKlPEDa6Nc5WJi+qRgPbOAbgTpSULL+vI3NUXsZMlkJxTqYI9wg5ZTay2sFrdZRWHPWNi+EdAhcJf81WtoMQ==
 
+dotenv@^16.3.1:
+  version "16.3.1"
+  resolved "https://registry.npmjs.org/dotenv/-/dotenv-16.3.1.tgz"
+  integrity sha512-IPzF4w4/Rd94bA9imS68tZBaYyBWSCE47V1RGuMrB94iyTOIEwRmVL2x/4An+6mETpLrKJ5hQkB8W4kFAadeIQ==
+
 duplexer2@~0.1.4:
   version "0.1.4"
   resolved "https://registry.npmjs.org/duplexer2/-/duplexer2-0.1.4.tgz"

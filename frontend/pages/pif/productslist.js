@@ -50,14 +50,14 @@ export default function productslist() {
           const res = await Axios({
             url: "http://localhost:3001/api/getPifProductByOrganiztion?organization_id=" + ida,
             method: "get",
-          }).then((res) => {
+          })
             if (res.data.status === "error") {
               router.push("/pif/createByfda")
             }
             else{
               setProductData(res.data.message)
             }
-          })
+          
         } catch (error) {
           console.error("Error fetching data:", error);
         }
@@ -67,6 +67,13 @@ export default function productslist() {
     };
 
     fetchData(); // Call function here
+
+    //call Notification
+
+    const NotificationFile = () => {
+      
+
+    }
 
   }, []);
 

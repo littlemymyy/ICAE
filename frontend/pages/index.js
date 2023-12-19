@@ -8,6 +8,7 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import React, { useRef, useState } from "react";
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
+import { useRouter } from 'next/router';
 
 // Import Swiper styles
 import "swiper/css";
@@ -22,6 +23,7 @@ import Swal from 'sweetalert2'
 export default function Home() {
   const [icon, setIcon] = useState('/news1.jpeg')
   const [data , setData] = useState([])
+  const router = useRouter()
 
   useEffect(()=>{
     console.log('Test12');
@@ -59,8 +61,11 @@ export default function Home() {
       let email = localStorage.getItem("uemail")
       let id = localStorage.getItem("orid")
       console.log(email)
+      let load = {
+        orid : id
+      }
 
-        Axios.get(process.env.API_BASE_URL+'/sendNotification?orid='+id)
+        Axios.post('http://localhost:3001/api/sendNotification',load)
           .then((res)=>{
             console.log(res.data)
             setData(res.data)
@@ -75,14 +80,21 @@ export default function Home() {
           let newfdanum = ""
           newfdanum += fdanum.substring(0 , fdanum.lengt -1)
           console.log(newfdanum)
-         console.log(res.data)
-          if(res.data.length && res.data !== "Notthing"){
+          console.log(res.data)
+          if(res.data.length > 0 && res.data !== "Notthing"){
             Swal.fire({
               title: 'ใบอนุญาตจดแจ้งใกล้หมดอายุ',
-              text: 'เลขที่ : '+ fdanum
+              text: `เลขที่ : ${fdanum}`
               ,
-              icon: 'warning',
-              confirmButtonText: 'ปิด'
+              cancelButtonText: 'ปิด',
+              showCancelButton: true,
+              
+              confirmButtonText: 'ดูรายละเอียด',
+              preConfirm: () => {
+                // Handle the redirection manually
+               // window.open( '/pif/productslist');
+                router.push("/pif/productslist")
+              }
             })
           }
 

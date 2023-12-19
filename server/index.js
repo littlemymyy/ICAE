@@ -1496,12 +1496,12 @@ app.post('/api/sendNotification' , (req,res) => {
 
    console.log(req.body)
    const orid = req.body.orid
-   if(orid === "-"){
+   if(orid === "-" || orid === null){
     res.status(200).send('Notthing' );
    }
    else {
     console.log("that else")
-   const sql = 'SELECT email , fda_license,expdate FROM product WHERE expdate <= CURDATE() + INTERVAL 1 MONTH AND organization_id = ?';
+   const sql = 'SELECT  fda_license, expire_date FROM pif_product WHERE expire_date <= CURDATE() + INTERVAL 1 MONTH AND organization_id = ?';
 
     db.query(sql , [orid], (err , result) => {
         if (err){
