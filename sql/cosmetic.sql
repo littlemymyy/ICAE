@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Dec 14, 2023 at 01:37 PM
+-- Generation Time: Dec 19, 2023 at 04:52 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -20,25 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `cosmetic`
 --
-
--- --------------------------------------------------------
-
---
--- Table structure for table `allexpdate`
---
-
-CREATE TABLE `allexpdate` (
-  `no` int(11) NOT NULL,
-  `exp_authorization` date NOT NULL,
-  `exp_manufacture_doc` date NOT NULL,
-  `exp_gmp_iso` date NOT NULL,
-  `exp_eff_report` date NOT NULL,
-  `exp_efficient_report` date NOT NULL,
-  `exp_sds` date NOT NULL,
-  `exp_specification` date NOT NULL,
-  `exp_testing_doc` date NOT NULL,
-  `expdate` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -11325,28 +11306,6 @@ CREATE TABLE `chemicalgroup` (
   `email` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
---
--- Dumping data for table `chemicalgroup`
---
-
-INSERT INTO `chemicalgroup` (`no`, `cas`, `cname`, `cmname`, `per`, `st`, `img`, `des`, `bodypart`, `color`, `groupname`, `per1`, `uname`, `udate`, `fillterg`, `email`) VALUES
-(32, '112281-77-3', '(+/-)-2-(2,4-Dichlorophenyl)-3-(1H-1,2,4-triazol-1-yl)propyl-1,1,2,2-Tetrafluoroethylether', '(+/-)-2-(2,4-Dichlorophenyl)-3-(1H-1,2,4-triazol-1-yl)propyl-1,1,2,2-Tetrafluoroethylether', 0, 2, '-', '-', 'All cosmetic products', '-', 'ยำยำ', 0, 'newone naja', '2023-12-12 00:08:38.259', 'cool,soap,soap,cool', 'test@gmail.com'),
-(33, '111-77-3', '2-(2-Methoxyethoxy)ethanol', '2-(2-Methoxyethoxy)ethanol', 0, 2, '-', '-', 'All cosmetic products', '-', 'ยำยำ', 0, 'newone naja', '2023-12-12 00:08:38.259', 'cool,soap,soap,cool', 'test@gmail.com'),
-(64, '3763-55-1', '(3R)-beta-4-Caroten-3-ol', 'CI75135', 100, 4, '-', '-', 'All cosmetic products', 'Yellow', 'ข้าวเหนียว ไก่ทอด', 20, 'test test2', '2023-12-13 04:07:21.579', '', 'testtest@gmail.com'),
-(65, '112281-77-3', '(+/-)-2-(2,4-Dichlorophenyl)-3-(1H-1,2,4-triazol-1-yl)propyl-1,1,2,2-Tetrafluoroethylether', '(+/-)-2-(2,4-Dichlorophenyl)-3-(1H-1,2,4-triazol-1-yl)propyl-1,1,2,2-Tetrafluoroethylether', 0, 2, '-', '-', 'All cosmetic products', '-', 'ข้าวเหนียว ไก่ทอด', 0, 'test test2', '2023-12-13 04:07:21.579', '', 'testtest@gmail.com');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `companyinfo`
---
-
-CREATE TABLE `companyinfo` (
-  `no` int(11) NOT NULL,
-  `id` text NOT NULL,
-  `expdate` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-
 -- --------------------------------------------------------
 
 --
@@ -11375,34 +11334,19 @@ INSERT INTO `employee` (`no`, `em_email`, `em_fullname`, `em_icon`, `em_pass`, `
 (5, 'test06@gmail.com', 'testA06', '/test01.png', '123456', 'S', '0115556007101'),
 (6, 'test07@gmail.com', 'test07', '/test07.png', '123456', 'U1', '0115556007101'),
 (9, 'sa@gmail.com', 'sa sa', '/test01.png', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'S', '123456'),
-(10, 'yo@gmail.com', 'yoyo yo', '/test01.png', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'A', '-'),
+(10, 'yo@gmail.com', 'yoyo yo', '/test01.png', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'A', NULL),
 (23, 'hechuan1949@gmail.com', 'andy hotman', '/pandaU.png', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'S', 'pop77999'),
-(26, 'testtest@gmail.com', 'test test2', '/pandaU.png', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 'S', 'pop77999'),
+(26, 'testtest@gmail.com', 'test test2', '/pandaU.png', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 'U', NULL),
 (28, 'songlee@gmail.com', 'song lee', '/pandaU.png', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'U', ''),
-(29, 'joy01@gmail.com', 'joy 01', '/pandaU.png', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'U', NULL),
-(30, 'joy01@gmail.com', 'joy 01', '/pandaU.png', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'U', NULL),
+(29, 'joy01@gmail.com', 'joy 01', '/pandaU.png', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'U', ''),
 (31, 'pita@icae.com', 'pita lim', '/pandaU.png', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'S', 'orange'),
-(32, 'jucha@icae.com', 'prayu jucha', '/pandaU.png', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'S', 'aaaa'),
-(34, 'ann@icae.com', 'ann man', '/pandaU.png', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'U', '-'),
+(32, 'jucha@icae.com', 'prayu jucha', '/pandaU.png', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'S', 'zz'),
+(34, 'ann@icae.com', 'ann man', '/pandaU.png', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'U', NULL),
 (37, 'po@icae.com', 'po nisha', '/pandaU.png', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'S', 'pop77999'),
 (38, 'supertest@gmail.com', 'super test', '/pandaU.png', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'S', 'pop77999'),
 (39, 'fafa@gmail.com', 'di fafa', '/pandaU.png', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'S', 'pop77999'),
-(55, 'petchuser@outlook.com', 'Sorawit Namesstan', '/pandaU.png', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 'U', NULL),
-(56, 'test@gmail.com', 'newone naja', '/pandaU.png', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 'S', 'asd');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `employee_add`
---
-
-CREATE TABLE `employee_add` (
-  `no` int(11) NOT NULL,
-  `em_fullname` text NOT NULL,
-  `em_email` text NOT NULL,
-  `organization_id` text NOT NULL,
-  `status` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+(56, 'test@gmail.com', 'newone naja', '/pandaU.png', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 'U', NULL),
+(59, 'kaka@gmail.com', 'basba asd', '/pandaU.png', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 'U', NULL);
 
 -- --------------------------------------------------------
 
@@ -11479,12 +11423,6 @@ CREATE TABLE `pif_product` (
 --
 
 --
--- Indexes for table `allexpdate`
---
-ALTER TABLE `allexpdate`
-  ADD PRIMARY KEY (`no`);
-
---
 -- Indexes for table `chemical`
 --
 ALTER TABLE `chemical`
@@ -11497,21 +11435,9 @@ ALTER TABLE `chemicalgroup`
   ADD PRIMARY KEY (`no`);
 
 --
--- Indexes for table `companyinfo`
---
-ALTER TABLE `companyinfo`
-  ADD PRIMARY KEY (`no`);
-
---
 -- Indexes for table `employee`
 --
 ALTER TABLE `employee`
-  ADD PRIMARY KEY (`no`);
-
---
--- Indexes for table `employee_add`
---
-ALTER TABLE `employee_add`
   ADD PRIMARY KEY (`no`);
 
 --
@@ -11532,12 +11458,6 @@ ALTER TABLE `pif_product`
 --
 
 --
--- AUTO_INCREMENT for table `allexpdate`
---
-ALTER TABLE `allexpdate`
-  MODIFY `no` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `chemical`
 --
 ALTER TABLE `chemical`
@@ -11547,37 +11467,25 @@ ALTER TABLE `chemical`
 -- AUTO_INCREMENT for table `chemicalgroup`
 --
 ALTER TABLE `chemicalgroup`
-  MODIFY `no` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
-
---
--- AUTO_INCREMENT for table `companyinfo`
---
-ALTER TABLE `companyinfo`
-  MODIFY `no` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `no` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=153;
 
 --
 -- AUTO_INCREMENT for table `employee`
 --
 ALTER TABLE `employee`
-  MODIFY `no` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
-
---
--- AUTO_INCREMENT for table `employee_add`
---
-ALTER TABLE `employee_add`
-  MODIFY `no` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `no` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
 
 --
 -- AUTO_INCREMENT for table `pif`
 --
 ALTER TABLE `pif`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `pif_product`
 --
 ALTER TABLE `pif_product`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
