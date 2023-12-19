@@ -552,7 +552,43 @@ export default function manage() {
           break;
     }
   }
+
   const saveOnly = async (e) => {
+    console.log("SAVE ONLY")
+    Axios.get('http://localhost:3001/api/getStatusByEmail?email=' + localStorage.getItem("uemail"))
+    .then((response) => {
+      if (response.data.status === "ok"){
+        console.log(response.data.message[0].status)
+        if (response.data.message[0].status === "U2" || response.data.message[0].status === "U"){
+          Swal.fire({
+            icon: 'error',
+            title: 'ไม่สามารถบันทึกข้อมูลได้',
+            text: 'ผู้ใช้งานไม่มีสิทธิ์ในการบันทึกข้อมูล'
+          })
+        }
+        else{
+          saveOnlyBatch(e);
+        }
+      }
+      else{
+        console.log("error")
+        Swal.fire({
+          icon: 'error',
+          title: 'ไม่สามารถบันทึกข้อมูลได้',
+          text: 'เกิดข้อผิดพลาดในการบันทึกข้อมูล'
+        })
+      }
+    }).catch((error) => {
+      console.log(error);
+      Swal.fire({
+        icon: 'error',
+        title: 'ไม่สามารถบันทึกข้อมูลได้',
+        text: 'เกิดข้อผิดพลาดในการบันทึกข้อมูล'
+      })
+    })
+  }
+
+  const saveOnlyBatch = async (e) => {
     if (document.getElementById("filename").value === "") {
       Swal.fire({
         icon: 'error',
@@ -682,6 +718,40 @@ export default function manage() {
   };
 
   const generatePDF = async (e) => {
+    Axios.get('http://localhost:3001/api/getStatusByEmail?email=' + localStorage.getItem("uemail"))
+    .then((response) => {
+      if (response.data.status === "ok"){
+        if (response.data.message[0].status === "U2" || response.data.message[0].status === "U"){
+          Swal.fire({
+            icon: 'error',
+            title: 'ไม่สามารถบันทึกข้อมูลได้',
+            text: 'ผู้ใช้งานไม่มีสิทธิ์ในการบันทึกข้อมูล'
+          })
+        }
+        else {
+          generatePDFBatch(e);
+        }
+      }
+      else{
+        console.log("error")
+        Swal.fire({
+          icon: 'error',
+          title: 'ไม่สามารถบันทึกข้อมูลได้',
+          text: 'เกิดข้อผิดพลาดในการบันทึกข้อมูล'
+        })
+      }
+    }).catch((error) => {
+      console.log(error);
+      Swal.fire({
+        icon: 'error',
+        title: 'ไม่สามารถบันทึกข้อมูลได้',
+        text: 'เกิดข้อผิดพลาดในการบันทึกข้อมูล'
+      })
+    })
+  }
+
+
+  const generatePDFBatch = async (e) => {
     if (document.getElementById("filename").value === "") {
       Swal.fire({
         icon: 'error',

@@ -2098,7 +2098,7 @@ app.get('/api/getUserNoTeam', (req, res) => {
 app.post('/api/addUserToTeam', (req, res) => {
     console.log(req.body)
     db.execute(
-        `UPDATE employee SET organization_id = ?, status = 'U' WHERE no = ?`,
+        `UPDATE employee SET organization_id = ?, status = 'U2' WHERE no = ?`,
         [req.body.team, req.body.no],
         (err, result) => {
             if(err) {
