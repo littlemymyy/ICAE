@@ -37,7 +37,7 @@ export default function Home(){
             }
 
             console.log(data)
-        }).catch((error) => {   
+        }).catch((error) => {
             console.log(error);
         }
         )
@@ -109,8 +109,8 @@ export default function Home(){
                 {data.map((item, index) => (
                     <TableRow key={index} style={index % 2 === 0 ? evenRowStyle : null} >
                         <TableCell align="left">{item.cas}</TableCell>
-                        <TableCell align="left">{item.name}</TableCell>
-                        <TableCell align="left">{item.maxt}</TableCell>
+                        <TableCell align="left">{item.cname}</TableCell>
+                        <TableCell align="left">{item.per}</TableCell>
 
                     </TableRow>
                 ))}

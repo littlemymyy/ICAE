@@ -158,10 +158,6 @@ export default function SignIn() {
               id="password"
               autoComplete="current-password"
             />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="จำฉัน"
-            />
             <Button
               type="submit"
               fullWidth
@@ -180,9 +176,6 @@ export default function SignIn() {
 />; */}
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
-                  ลืมรหัสผ่าน?
-                </Link>
               </Grid>
               <Grid item>
               <Link href="/SignUp/SignUp" variant="body2">
