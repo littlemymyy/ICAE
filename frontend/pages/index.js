@@ -41,7 +41,7 @@ export default function Home() {
         Axios.request(
             {
                 method: 'post',
-                url: 'http://localhost:3001/api/authen',
+                url: process.env.NEXT_PUBLIC_API_BASE_URL+'/authen',
                 headers: { 'Authorization': 'Bearer '+ localStorage.getItem('token') },
             }
             ).then((response) => {
@@ -65,7 +65,7 @@ export default function Home() {
         orid : id
       }
 
-        Axios.post('http://localhost:3001/api/sendNotification',load)
+        Axios.post(process.env.NEXT_PUBLIC_API_BASE_URL+'/sendNotification',load)
           .then((res)=>{
             console.log(res.data)
             setData(res.data)
@@ -133,7 +133,7 @@ export default function Home() {
               pagination={{
                 clickable: true,
               }}
-              Autoplay={true}
+              autoPlay={true}
               modules={[Pagination]}
               className="mySwiper"
             >

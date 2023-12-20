@@ -10,7 +10,7 @@ const groupname = () => {
     const router = useRouter();
 
     useEffect(() => {
-        Axios.get(`http://localhost:3001/api/getGroupName`).then((response) => {
+        Axios.get(process.env.NEXT_PUBLIC_API_BASE_URL+`/getGroupName`).then((response) => {
             setGname(response.data);
             setShow(response.data)
             console.log(response.data);

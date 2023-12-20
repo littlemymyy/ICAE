@@ -5,7 +5,7 @@ import Axios from 'axios'
 const ReadCSVToMysql = () => {
     const [fileName,setFileName] = useState("A3.csv");
     const action1 = () => {
-        Axios.get(`http://localhost:3001/api/getWithWord/${fileName}`).then((response) => {
+        Axios.get(process.env.NEXT_PUBLIC_API_BASE_URL+`/getWithWord/${fileName}`).then((response) => {
             // const dd = response.data;
             // setDataWithWord(dd);
             console.log(response)

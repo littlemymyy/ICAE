@@ -30,7 +30,7 @@ const Showch = () => {
    
     useEffect(() => {
         Axios({
-            url : `http://localhost:3001/api/getalldata` ,
+            url : process.env.NEXT_PUBLIC_API_BASE_URL+`/getalldata` ,
             method : 'get'
         }).then((response) => {
             setData(response.data)

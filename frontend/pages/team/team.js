@@ -41,8 +41,8 @@ const team = () => {
     useEffect(() => {
         const feactData = async () => {
             try {
-                const res = await Axios.get("http://localhost:3001/api/getuserTeam/");
-                const alreadyTeam = await Axios.get("http://localhost:3001/api/getTeam/")
+                const res = await Axios.get(process.env.NEXT_PUBLIC_API_BASE_URL+"/getuserTeam/");
+                const alreadyTeam = await Axios.get(process.env.NEXT_PUBLIC_API_BASE_URL+"/getTeam/")
                 console.log(res.data)
                 console.log(alreadyTeam.data)
                 setData(res.data)
@@ -108,7 +108,7 @@ const team = () => {
                 data : team ,
             }
             try {
-            const res =  await Axios.post("http://localhost:3001/api/updateteam", load);
+            const res =  await Axios.post(process.env.NEXT_PUBLIC_API_BASE_URL+"/updateteam", load);
                 Swal.fire({
                     title: "สำเร็จ",
                     text: "เพื่มชื่อทีมหรือชื่อบริษัทสำเร็จ",
@@ -206,7 +206,7 @@ const team = () => {
         const send = async () => {
             try{
                 const res = await Axios({
-                    url : "http://localhost:3001/api/updateStutus",
+                    url : process.env.NEXT_PUBLIC_API_BASE_URL+"/updateStutus",
                     method : "post",
                     data : load
                 })

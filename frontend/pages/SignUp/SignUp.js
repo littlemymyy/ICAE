@@ -63,7 +63,7 @@ export default function SignUp() {
         let load = {
           email : event.target.value,
         }
-        const res = await Axios.post("http://localhost:3001/api/checkMail",load)
+        const res = await Axios.post(process.env.NEXT_PUBLIC_API_BASE_URL+"/checkMail",load)
         console.log(res.data)
 
         if(res.data === "Dupicate"){
@@ -129,7 +129,7 @@ export default function SignUp() {
     else {
       console.log(data1)
       Axios({
-        url: "http://localhost:3001/api/setsignUp",
+        url: process.env.NEXT_PUBLIC_API_BASE_URL+"/setsignUp",
         method: "post",
         headers: {
           'Content-Type': 'application/json'

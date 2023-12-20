@@ -36,7 +36,7 @@ function Navbar() {
             Axios.request(
                 {
                     method: 'post',
-                    url: 'http://API_BASE_URL:3001/api/authen',
+                    url: process.env.NEXT_PUBLIC_API_BASE_URL+'/authen',
                     headers: { 'Authorization': 'Bearer '+ localStorage.getItem('token') },
                 }
                 ).then((response) => {

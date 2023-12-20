@@ -58,7 +58,7 @@ const manage = () => {
     }
     let id = localStorage.getItem("orid");
     let email = localStorage.getItem("uemail")
-    Axios.get("http://localhost:3001/api/getStatusByEmail?email="+email)
+    Axios.get(process.env.NEXT_PUBLIC_API_BASE_URL+"/getStatusByEmail?email="+email)
     .then((res) => {
         console.log(res.data.message[0].status)
         setStatusU(res.data.message[0].status)
@@ -73,7 +73,7 @@ const manage = () => {
       router.push("team/team");
     }
 
-    Axios.get("http://localhost:3001/api/getUserNoTeam")
+    Axios.get(process.env.NEXT_PUBLIC_API_BASE_URL+"/getUserNoTeam")
       .then((res) => {
         console.log("Data")
         console.log(res.data.message)
@@ -94,7 +94,7 @@ const manage = () => {
 
     const feactData1 = async () => {
           let ida = ""
-          Axios.get("http://localhost:3001/api/getuserTeamMangeByemail?email="+email)
+          Axios.get(process.env.NEXT_PUBLIC_API_BASE_URL+"/getuserTeamMangeByemail?email="+email)
           .then((res) => {
               console.log("Data")
               console.log(res.data.message[0].organization_id)
@@ -107,7 +107,7 @@ const manage = () => {
                   localStorage.setItem("orid", ida)
                   console.log("ida = ", ida)
 
-                  Axios.get("http://localhost:3001/api/getuserTeamManage?id="+ida)
+                  Axios.get(process.env.NEXT_PUBLIC_API_BASE_URL+"/getuserTeamManage?id="+ida)
                   .then((res) => {
                       console.log("Data")
                       console.log(res.data.message)
@@ -165,7 +165,7 @@ const manage = () => {
       setNo([...no])
       console.log("ADDED")
 
-      Axios.post("http://localhost:3001/api/addUserToTeam",
+      Axios.post(process.env.NEXT_PUBLIC_API_BASE_URL+"/addUserToTeam",
       {
         team: id,
         no: e,
@@ -206,12 +206,12 @@ const manage = () => {
   const handleChange = (e) => {
     let e1 = parseInt(e.type)
 
-    Axios.get("http://localhost:3001/api/getCountOwner?id="+id)
+    Axios.get(process.env.NEXT_PUBLIC_API_BASE_URL+"/getCountOwner?id="+id)
     .then((res) => {
         console.log(res.data.message[0].num)
         let s_count = res.data.message[0].num
         if (s_count <= 1) {
-          Axios.get("http://localhost:3001/api/getStatusByNo?no="+e.no)
+          Axios.get(process.env.NEXT_PUBLIC_API_BASE_URL+"/getStatusByNo?no="+e.no)
           .then((res) => {
               console.log(res.data.message[0].status)
               let s_status = res.data.message[0].status
@@ -266,7 +266,7 @@ const manage = () => {
     }
     console.log( "is load from handlechange")
         console.log(dataChangeStatus)
-        Axios.post("http://localhost:3001/api/updateManageUser", dataChangeStatus)
+        Axios.post(process.env.NEXT_PUBLIC_API_BASE_URL+"/updateManageUser", dataChangeStatus)
         .then(response => {
     // Handle the response data here
         if(response.data){
@@ -287,12 +287,12 @@ const manage = () => {
   }
 
   const handleDelete = async (e) => {
-    Axios.get("http://localhost:3001/api/getCountOwner?id="+id)
+    Axios.get(process.env.NEXT_PUBLIC_API_BASE_URL+"/getCountOwner?id="+id)
     .then((res) => {
         console.log(res.data.message[0].num)
         let s_count = res.data.message[0].num
         if (s_count <= 1) {
-          Axios.get("http://localhost:3001/api/getStatusByNo?no="+e.no)
+          Axios.get(process.env.NEXT_PUBLIC_API_BASE_URL+"/getStatusByNo?no="+e.no)
           .then((res) => {
               console.log(res.data.message[0].status)
               let s_status = res.data.message[0].status
@@ -343,7 +343,7 @@ const manage = () => {
     }
     console.log("load from delete")
     console.log(load)
-    Axios.post("http://localhost:3001/api/deleteTeam", load)
+    Axios.post(process.env.NEXT_PUBLIC_API_BASE_URL+"/deleteTeam", load)
     .then(response => {
       if (response.data.status === "ok") {
         Swal.fire({
@@ -379,7 +379,7 @@ const manage = () => {
     }
     console.log("load from delete")
     console.log(load)
-    Axios.post("http://localhost:3001/api/getuserDeleteAdmin", load)
+    Axios.post(process.env.NEXT_PUBLIC_API_BASE_URL+"/getuserDeleteAdmin", load)
     .then(response => {
       if (response.data.status === "ok") {
         Swal.fire({
@@ -426,7 +426,7 @@ const manage = () => {
     };
 
     try {
-        const res = await Axios.post("http://localhost:3001/api/changeNameTeam", load);
+        const res = await Axios.post(process.env.NEXT_PUBLIC_API_BASE_URL+"/changeNameTeam", load);
         console.log("changeName")
         console.log(res.data)
         if (res.data.status === "ok") {
@@ -476,7 +476,7 @@ const handleChickAdd = () => {
       const send = async () => {
         try{
 
-          const res = await Axios.post("http://localhost:3001/api/updateDelete",load)
+          const res = await Axios.post(process.env.NEXT_PUBLIC_API_BASE_URL+"/updateDelete",load)
 
           if(res.data === "Remove_organization_id"){
             localStorage.setItem("status" , "U");

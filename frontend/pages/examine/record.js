@@ -25,7 +25,7 @@ const record = () => {
     console.log(email)
     const fetchdata = async () =>{
       try{
-        const gn = await Axios.post(`http://localhost:3001/api/getGroupName`,load);
+        const gn = await Axios.post(process.env.NEXT_PUBLIC_API_BASE_URL+`/getGroupName`,load);
         console.log(gn.data)
         setGname(gn.data)
         setShow(gn.data)
@@ -35,7 +35,7 @@ const record = () => {
         //     data : gn.data[i].groupname
         //   }
           // const d = await Axios({
-          //   // url : `http://localhost:3001/api/getGroupNameSt`,
+          //   // url : process.env.NEXT_PUBLIC_API_BASE_URL+`/getGroupNameSt`,
           //   // method : 'post',
           //   // data :  load  ,
           // })
@@ -113,7 +113,7 @@ const record = () => {
       email : localStorage.getItem("uemail") ,
       groupName : groupName
     }
-    Axios.post("http://localhost:3001/api/DeleteGroupName" ,load)
+    Axios.post(process.env.NEXT_PUBLIC_API_BASE_URL+"/DeleteGroupName" ,load)
   }
   return (
     <div>
