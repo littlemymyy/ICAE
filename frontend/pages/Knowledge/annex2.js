@@ -21,7 +21,7 @@ export default function Home(){
         Axios.request(
             {
                 method: 'get',
-                url: 'http://localhost:3001/api/annex?st=2',
+                url: NEXT_PUBLIC_API_BASE_URL + '/api/annex?st=2',
                 headers: { },
                 data : ''
             }
@@ -86,7 +86,7 @@ export default function Home(){
                 <TableRow>
                     <TableCell sx={{width:200}}align="left">CAS NO</TableCell>
                     <TableCell align="left">ชื่อสารเคมี</TableCell>
-                    
+
 
                 </TableRow>
                 </TableBody>
@@ -100,8 +100,8 @@ export default function Home(){
                             <TableCell align="left">{item.cname}</TableCell>
                             : <TableCell align="left">{item.cmname}</TableCell>
                         }
-                       
-                        
+
+
 
                     </TableRow>
                 ))}

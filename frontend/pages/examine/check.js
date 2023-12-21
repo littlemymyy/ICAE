@@ -61,7 +61,7 @@ const check = () => {
     console.log("is fillterg :");
     console.log(fillterg);
     Axios({
-      url: "http://localhost:3001/api/searchBybodypart",
+      url: NEXT_PUBLIC_API_BASE_URL + "/api/searchBybodypart",
       method: "post",
       data: fillterg,
     })
@@ -172,7 +172,7 @@ const check = () => {
   //     dd : list
   //   }
   //   Axios({
-  //     url : "http://localhost:3001/api/savefile",
+  //     url : NEXT_PUBLIC_API_BASE_URL + "/api/savefile",
   //     method : "post" ,
   //     data : load ,
   //   }).then((response) => {

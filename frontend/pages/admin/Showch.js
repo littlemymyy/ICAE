@@ -23,14 +23,14 @@ const Showch = () => {
     const [search_input, setSearch_input] = useState("");
     const page = useRef(1)
     const pager = useRef(1)
-    const router = useRouter();  
+    const router = useRouter();
     const [arr , setArr] = useState([])
     const [numdata , setNumdata] = useState([])
     const Swal = require('sweetalert2')
-   
+
     useEffect(() => {
         Axios({
-            url : `http://localhost:3001/api/getalldata` ,
+            url : NEXT_PUBLIC_API_BASE_URL + `/api/getalldata` ,
             method : 'get'
         }).then((response) => {
             setData(response.data)
@@ -59,7 +59,7 @@ const Showch = () => {
         // Scroll to the top of the page
         window.scrollTo(0, 0);
       }
-   
+
 
     }
 
@@ -75,11 +75,11 @@ const Showch = () => {
           );
         });
         setShowr(results1)
-        pager.current = 1 
+        pager.current = 1
 
         console.log(results1)
       }
-    } 
+    }
     const add = (e) => {
       const result = data.find(({ cas }) => cas === e)
       alert(result.cas)
@@ -87,7 +87,7 @@ const Showch = () => {
     }
     const clickEdit = (no)  => {
       router.push({
-        pathname : '/admin/Edit' , 
+        pathname : '/admin/Edit' ,
         query : {
           no : no ,
         }
@@ -112,11 +112,11 @@ const Showch = () => {
         arr[datano] = 0
         setArr([...arr])
       }
-      
+
       // alert(cno + " "+ datano)
     }
 
-    
+
     const check = () => {
       for(let i = 0 ; i< arr.length ; i++) {
         if(arr[i] !== 0 ){
@@ -125,7 +125,7 @@ const Showch = () => {
       }
     }
     const changeClick = () => {
-      
+
       if(check() === true){
         let str =""
         for(let i = 0 ; i < arr.length ; i++ ){
@@ -143,7 +143,7 @@ const Showch = () => {
           router.push({
           pathname : "/admin/Changegroup" ,
           query : {
-        numdata : str 
+        numdata : str
           }
 
        })
@@ -151,18 +151,18 @@ const Showch = () => {
       else {
         Swal.fire("กรุณาเลือกสารเคมี");
       }
-     
-   
+
+
 
     }
 
-   
+
 
   return (
     <div>
-      
+
         <Navbar/>
-        
+
         <br/>
         <div className='C2_labal' >แก้ไขข้อมูลสารเคมี</div>
         <div className="logo1">
@@ -177,10 +177,10 @@ const Showch = () => {
         />
         <br />
         <br/>
-        
-        
-       
-        
+
+
+
+
 
         <Stack direction="row" spacing={3} justifyContent="center">
           <Button onClick={() => mutPage()} variant="outlined"  startIcon={<SkipPreviousIcon />}>
@@ -209,18 +209,18 @@ const Showch = () => {
             ))
             : null
         } */}
-       
+
       </div>
       </div>
-      
+
           <div>
             <table className="showch_styled-table">
               <thead >
                 <tr >
-                 <th className='showch_th1'> <div className='radioSelect'> 
-              
-                
-               
+                 <th className='showch_th1'> <div className='radioSelect'>
+
+
+
               </div>
               </th>
                   <th className='showch_th1'>ลำดับ</th>
@@ -235,9 +235,9 @@ const Showch = () => {
                 {
                     show.map((value, idx) => (
                       <tr key ={idx}>
-                        <td className='showch_th1'> <div className='radioSelect'> 
+                        <td className='showch_th1'> <div className='radioSelect'>
                         {
-                          
+
                           arr[(page.current - 1) * 50 + idx] === 0 ?
                               <input type="checkbox" className="form-check-input"  value="option1"   onChange={() => getType(value.no)}/>
                               :
@@ -245,7 +245,7 @@ const Showch = () => {
 
                         }
                           {/* <input type="checkbox" className="form-check-input"  value="option1"   /> */}
-             
+
                         </div>
                         </td>
                         <td>{(page.current - 1) * 50 + idx + 1}</td>
@@ -260,20 +260,20 @@ const Showch = () => {
                           {value.st}
                         </td>
                         <td>{value.des}</td>
-                        <td> 
+                        <td>
                           <FaRegEdit className='icon_showch' onClick={() => clickEdit(value.no)} />
                           &nbsp;&nbsp;&nbsp;
                           <AiOutlineDelete className='icon_showch' onClick={() => clickDelete(idx)} />
                           </td>
-                         
+
                       </tr>
                     ))
-                    
+
                 }
               </tbody>
             </table>
           </div>
-        
+
 
           <Stack direction="row" spacing={3} justifyContent="center">
           <Button onClick={() => mutPage()} variant="outlined"  startIcon={<SkipPreviousIcon />}>
@@ -291,9 +291,9 @@ const Showch = () => {
     </Stack>
     <br/>
 
-     
 
-          <Footer />  
+
+          <Footer />
     </div>
   )
 }
