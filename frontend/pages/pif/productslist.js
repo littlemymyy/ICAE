@@ -400,7 +400,13 @@ export default function productslist() {
   return (
     <>
       <Navbar />
-   
+      <div className="input-icons">
+          <i className="fa fa-search icon"></i>
+          <input placeholder='ค้นหาผลิตภัณฑ์ของคุณ '
+            className="in"
+            value={search_input}
+            onChange={(e) => resultsearch(e.target.value)}
+          /></div >
       <Box className="pif"
         sx={{
           backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
@@ -412,13 +418,7 @@ export default function productslist() {
         }}
 
       >
-           <div className="input-icons">
-          <i className="fa fa-search icon"></i>
-          <input placeholder='ค้นหาผลิตภัณฑ์ของคุณ '
-            className="in"
-            value={search_input}
-            onChange={(e) => resultsearch(e.target.value)}
-          /></div >
+          
         <Box className="pif_left"
           sx={{
 
@@ -457,52 +457,54 @@ export default function productslist() {
             <Typography variant='h5'>รายการผลิตภัณฑ์ ของ {id}</Typography>
 
       </Box>
-      <Box display="flex" alignItems="center">
-
-
+      <Box display="flex" alignItems="center" justifyContent="center">
       <Stack direction="row" spacing={2}>
-       
-          <Button variant="contained" size="medium" sx={{ ml: 2 }} style={buttonStyle} onClick={() => handleButtonClick(4)}
+        <Button
+          variant="contained"
+          size="medium"
+          sx={{ ml: 2 }}
+          style={buttonStyle}
+          onClick={() => handleButtonClick(4)}
+        >
+          สร้างผลิตภัณฑ์
+        </Button>
+
+        <Button
+          variant="contained"
+          size="medium"
+          sx={{ ml: 2 }}
+          style={buttonStyle}
+          onClick={() => handleButtonClick(2)}
+        >
+          จัดการ PIF
+        </Button>
+
+        <Button
+          variant="contained"
+          size="medium"
+          sx={{ ml: 2 }}
+          style={buttonStyle}
+          onClick={() => handleButtonClick(3)}
+        >
+          ทีมของคุณ
+        </Button>
+
+        <FormControl size="medium" sx={{ m: 1, minWidth: 150 }}>
+          <InputLabel id="demo-simple-select-label">การกรอกข้อมูล</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            label="การกรอกข้อมูล"
+            onChange={(e) => handleChange(e.target.value)}
           >
-            สร้างผลิตภัณฑ์
-          </Button>
-
-          <Button variant="contained" size="medium" sx={{ ml: 2 }} style={buttonStyle} onClick={() => handleButtonClick(2)}>
-            จัดการ PIF
-          </Button>
-
-          <Button variant="contained" size="medium" sx={{ ml: 2 }} style={buttonStyle} onClick={() => handleButtonClick(3)}>
-            ทีมของคุณ
-          </Button>
-
-          <FormControl size="medium" sx={{ m: 1, minWidth: 150 }}  >
-                              <InputLabel id="demo-simple-select-label">
-                                การกรอกข้อมูล
-                              </InputLabel>
-                              <Select
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
-                                label="การกรอกข้อมูล"
-                                onChange={(e) => handleChange(e.target.value)}
-                              >
-                                <MenuItem value={ 1 }>
-                                  วันที่มากไปน้อย
-                                </MenuItem>
-                                <MenuItem value={  2 }>
-                                  วันที่น้อยไปมาก
-                                </MenuItem>
-                                <MenuItem value={ 3 }>
-                                ตามตัวอักษร ก-ฮ
-                                </MenuItem>
-                                <MenuItem value={ 4 }>
-                                ตามตัวอักษร ฮ-ก
-                                </MenuItem>
-                              </Select>
-                            </FormControl>
+            <MenuItem value={1}>วันที่มากไปน้อย</MenuItem>
+            <MenuItem value={2}>วันที่น้อยไปมาก</MenuItem>
+            <MenuItem value={3}>ตามตัวอักษร ก-ฮ</MenuItem>
+            <MenuItem value={4}>ตามตัวอักษร ฮ-ก</MenuItem>
+          </Select>
+        </FormControl>
       </Stack>
-          
-      </Box>
-
+    </Box>
 
       <br />
       <div className="bodyTproductlist">
