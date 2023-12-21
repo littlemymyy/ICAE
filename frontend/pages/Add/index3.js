@@ -85,7 +85,7 @@ const index3 = () => {
           st: st,
         };
         Axios({
-          url: NEXT_PUBLIC_API_BASE_URL + "/api/setdata",
+          url: process.env.NEXT_PUBLIC_API_BASE_URL + "/api/setdata",
           method: "post",
           data: load,
         })

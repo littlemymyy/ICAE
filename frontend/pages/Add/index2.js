@@ -40,7 +40,7 @@ const index2 = () => {
             dd : data
         }
         Axios({
-            url : NEXT_PUBLIC_API_BASE_URL + '/api/uploadCsv',
+            url : process.env.NEXT_PUBLIC_API_BASE_URL + '/api/uploadCsv',
             method : 'post' ,
             data : load
         })

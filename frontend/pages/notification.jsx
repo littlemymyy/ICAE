@@ -20,7 +20,7 @@ const notification = () => {
 
     const feact = async () => {
       try{
-        const res = await Axios.post(NEXT_PUBLIC_API_BASE_URL + "/api/getnotficationPIF",load)
+        const res = await Axios.post(process.env.NEXT_PUBLIC_API_BASE_URL + "/api/getnotficationPIF",load)
         console.log(res.data)
 
 

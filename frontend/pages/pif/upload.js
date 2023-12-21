@@ -64,7 +64,7 @@ export default function manage() {
       Axios.request(
           {
               method: 'get',
-              url: NEXT_PUBLIC_API_BASE_URL + '/api/getPifProductByID?id=' + product_id,
+              url: process.env.NEXT_PUBLIC_API_BASE_URL + '/api/getPifProductByID?id=' + product_id,
               headers: { },
               data : ''
           }
@@ -88,7 +88,7 @@ export default function manage() {
       Axios.request(
         {
             method: 'get',
-            url: NEXT_PUBLIC_API_BASE_URL + '/api/getPifByID?product_id=' + product_id,
+            url: process.env.NEXT_PUBLIC_API_BASE_URL + '/api/getPifByID?product_id=' + product_id,
             headers: { },
             data : ''
         }
@@ -104,7 +104,7 @@ export default function manage() {
           document.getElementById("filename").value = resData.file_name
 
           if (resData.img_path !== null){
-            setImgPath(NEXT_PUBLIC_API_BASE_URL + "/" + resData.img_path)
+            setImgPath(process.env.NEXT_PUBLIC_API_BASE_URL + "/" + resData.img_path)
             document.getElementById("photo").innerHTML = fullFilePath(resData.img_path)
           }
 
@@ -166,7 +166,7 @@ export default function manage() {
   const fetchData = async (e) => {
     console.log("e = " + e);
     const res = await Axios({
-      url: NEXT_PUBLIC_API_BASE_URL + "/api/fetchData",
+      url: process.env.NEXT_PUBLIC_API_BASE_URL + "/api/fetchData",
       method: "get",
       params: {
         data: e.target.value,
@@ -266,7 +266,7 @@ export default function manage() {
   }
 
   const displayOldFile = (inputName, filePath, expDate) => {
-    let baseUrl = NEXT_PUBLIC_API_BASE_URL + "/"
+    let baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL + "/"
     console.log(inputName);
 
     document.getElementById(inputName).innerHTML = fullFilePath(filePath)
@@ -555,7 +555,7 @@ export default function manage() {
 
   const saveOnly = async (e) => {
     console.log("SAVE ONLY")
-    Axios.get(NEXT_PUBLIC_API_BASE_URL + '/api/getStatusByEmail?email=' + localStorage.getItem("uemail"))
+    Axios.get(process.env.NEXT_PUBLIC_API_BASE_URL + '/api/getStatusByEmail?email=' + localStorage.getItem("uemail"))
     .then((response) => {
       if (response.data.status === "ok"){
         console.log(response.data.message[0].status)
@@ -681,7 +681,7 @@ export default function manage() {
     console.log(data)
 
     try {
-      const response = await Axios.post(NEXT_PUBLIC_API_BASE_URL + '/api/savePdf', formData, {
+      const response = await Axios.post(process.env.NEXT_PUBLIC_API_BASE_URL + '/api/savePdf', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -718,7 +718,7 @@ export default function manage() {
   };
 
   const generatePDF = async (e) => {
-    Axios.get(NEXT_PUBLIC_API_BASE_URL + '/api/getStatusByEmail?email=' + localStorage.getItem("uemail"))
+    Axios.get(process.env.NEXT_PUBLIC_API_BASE_URL + '/api/getStatusByEmail?email=' + localStorage.getItem("uemail"))
     .then((response) => {
       if (response.data.status === "ok"){
         if (response.data.message[0].status === "U2" || response.data.message[0].status === "U"){
@@ -844,7 +844,7 @@ export default function manage() {
     console.log(data)
 
     try {
-      const response = await Axios.post(NEXT_PUBLIC_API_BASE_URL + '/api/savePdf', formData, {
+      const response = await Axios.post(process.env.NEXT_PUBLIC_API_BASE_URL + '/api/savePdf', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -854,7 +854,7 @@ export default function manage() {
         console.log(res);
         if (res.data === "latest_ok") {
           //create pdf
-          Axios.request(NEXT_PUBLIC_API_BASE_URL + '/api/mergePdf', {
+          Axios.request(process.env.NEXT_PUBLIC_API_BASE_URL + '/api/mergePdf', {
             method: 'post',
             data: {
               "product_id": product_id,

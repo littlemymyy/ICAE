@@ -12,7 +12,7 @@ const userinfo = () => {
 
     useEffect(()=> {
         Axios({
-            url : NEXT_PUBLIC_API_BASE_URL + "/api/getuserAs/" ,
+            url : process.env.NEXT_PUBLIC_API_BASE_URL + "/api/getuserAs/" ,
             method: "get",
         }).then((response)=>{
             console.log(response.data)
@@ -45,7 +45,7 @@ const userinfo = () => {
             data : value
         }
         Axios({
-            url : NEXT_PUBLIC_API_BASE_URL + "/api/deluserAS" ,
+            url : process.env.NEXT_PUBLIC_API_BASE_URL + "/api/deluserAS" ,
             method : "post" ,
             data : load
         }).then((response) => {

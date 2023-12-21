@@ -31,7 +31,7 @@ export default function Edit_Admin() {
             no : no
         }
         Axios({
-            url : NEXT_PUBLIC_API_BASE_URL + "/api/getalldataAddminEdit" ,
+            url : process.env.NEXT_PUBLIC_API_BASE_URL + "/api/getalldataAddminEdit" ,
             method : 'post',
             data : load,
         }).then((response)=>{
@@ -65,7 +65,7 @@ export default function Edit_Admin() {
        }
 
        Axios({
-         url : NEXT_PUBLIC_API_BASE_URL + "/api/getalldataAddminUpdateByType",
+         url : process.env.NEXT_PUBLIC_API_BASE_URL + "/api/getalldataAddminUpdateByType",
          method : 'post' ,
          data : load ,
 

@@ -106,7 +106,7 @@ const Adddata = () => {
         //     st: st1,
         //   };
         //   Axios({
-        //     url: NEXT_PUBLIC_API_BASE_URL + "/api/setdata",
+        //     url: process.env.NEXT_PUBLIC_API_BASE_URL + "/api/setdata",
         //     method: "post",
         //     data: load,
         //   })
@@ -131,7 +131,7 @@ const Adddata = () => {
         //     st: st1,
         //   };
         //   Axios({
-        //     url: NEXT_PUBLIC_API_BASE_URL + "/api/setdata",
+        //     url: process.env.NEXT_PUBLIC_API_BASE_URL + "/api/setdata",
         //     method: "post",
         //     data: load,
         //   })
@@ -297,7 +297,7 @@ const Adddata = () => {
             st: st1,
           };
           Axios({
-            url: NEXT_PUBLIC_API_BASE_URL + "/api/setdata",
+            url: process.env.NEXT_PUBLIC_API_BASE_URL + "/api/setdata",
             method: "post",
             data: load,
           })
