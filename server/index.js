@@ -1143,17 +1143,19 @@ app.post('/api/deluserAS' , (req , res) => {
     })
 })
 
+
 //send Notification Index Page
-app.get('/api/sendNotification' , (req,res) => {
+app.post('/api/sendNotification' , (req,res) => {
     console.log("send Notification")
 
-   const orid = req.query.orid
-   if(orid === "-"){
+   console.log(req.body)
+   const orid = req.body.orid
+   if(orid === "-" || orid === null){
     res.status(200).send('Notthing' );
    }
    else {
     console.log("that else")
-   const sql = 'SELECT created_by, expire_date, organization_id, fda_license FROM pif_product WHERE expire_date <= CURDATE() + INTERVAL 1 MONTH AND organization_id = ?';
+   const sql = 'SELECT  fda_license, expire_date FROM pif_product WHERE expire_date <= CURDATE() + INTERVAL 1 MONTH AND organization_id = ?';
 
     db.query(sql , [orid], (err , result) => {
         if (err){
@@ -1572,6 +1574,28 @@ app.post('/api/addUserToTeam', (req, res) => {
     )}
 );
 
+
+app.post('/api/getTeam/', (req, res) => {
+    const team = req.body.team
+    //console.log("getTeam=>",req.body)
+    try{
+        const sql = `SELECT  organization_id  FROM employee WHERE organization_id = ? `
+        db.query(sql,[team],(err, result) =>{
+            if(result.length === 0 ){
+                res.send("nothave")
+                console.log("nothave")
+            }
+            else{
+                res.send("HaveTeam")
+                console.log(err)
+            }
+        })
+    }
+    catch(err){
+        console.log(err)
+    }
+})
+
 app.post('/api/getuserDelete', (req, res) => {
     console.log("A getTeammanageDeltete")
     const id = req.body.id
@@ -1637,6 +1661,8 @@ app.post('/api/getuserDeleteAdmin', (req, res) => {
 });
 
 app.post('/api/changeNameTeam', jsonParser , (req , res) => {
+    const new_team = req.body.teamName
+    const old_team = req.body.id
     console.log ("team =>" + new_team)
     console.log ("id =>" + old_team)
     db.execute(
@@ -1798,6 +1824,48 @@ app.post('/api/DeleteGroupName', (req, res) => {
         }
     });
 });
+
+
+app.post('/api/getNoficationFile', (req, res) => {
+    const orid = req.body.organization_id;
+
+    const sql = "SELECT id FROM pif_product WHERE organization_id = ?";
+    const sql1 = "SELECT product_id FROM pif WHERE product_id = ? AND (expdate <= CURDATE() + INTERVAL 1 MONTH OR file1_exp <= CURDATE() + INTERVAL 1 MONTH OR file2_exp <= CURDATE() + INTERVAL 1 MONTH OR file3_exp <= CURDATE() + INTERVAL 1 MONTH OR file4_exp <= CURDATE() + INTERVAL 1 MONTH OR file5_exp <= CURDATE() + INTERVAL 1 MONTH OR file6_exp <= CURDATE() + INTERVAL 1 MONTH OR file7_exp <= CURDATE() + INTERVAL 1 MONTH OR file8_exp <= CURDATE() + INTERVAL 1 MONTH OR file9_exp <= CURDATE() + INTERVAL 1 MONTH OR file10_exp <= CURDATE() + INTERVAL 1 MONTH OR file11_exp <= CURDATE() + INTERVAL 1 MONTH OR file12_exp <= CURDATE() + INTERVAL 1 MONTH OR file13_exp <= CURDATE() + INTERVAL 1 MONTH OR file14_exp <= CURDATE() + INTERVAL 1 MONTH);";
+
+    db.query(sql, [orid], (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).send("Internal Server Error");
+        }
+
+        if (result.length > 0) {
+            const resultsArray = [];
+
+            for (let i = 0; i < result.length; i++) {
+                console.log(result[i].id);
+                db.query(sql1, [result[i].id], (err, result1) => {
+                    if (err) {
+                        console.error(err);
+                        return res.status(500).send("Internal Server Error");
+                    }
+
+                    if (result1.length > 0) {
+                        resultsArray.push(result1);
+                        console.log("exo", result1);
+                    }
+
+                    // Check if this is the last iteration before sending the response
+                    if (i === result.length - 1) {
+                        res.status(200).send(resultsArray);
+                    }
+                });
+            }
+        } else {
+            res.status(200).send([]); // Send an empty array if no results
+        }
+    });
+});
+
 
 app.listen(3001, () => {
     console.log('Running node at port 3001');
