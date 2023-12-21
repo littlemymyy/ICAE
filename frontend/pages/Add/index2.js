@@ -40,10 +40,10 @@ const index2 = () => {
             dd : data
         }
         Axios({
-            url : 'http://localhost:3001/api/uploadCsv',
+            url : process.env.NEXT_PUBLIC_API_BASE_URL + '/api/uploadCsv',
             method : 'post' ,
             data : load
-        }) 
+        })
         .then(function (response) {
             if(response.data === "OK"){
                 alert("uploaded")
@@ -69,12 +69,12 @@ const index2 = () => {
                     width={'150px'}
                     padding={'5px'}
                     marginTop={'30px'}
-                    
-                
+
+
                 >
 
-                
-                
+
+
 
                     <AddCircle sx={{ color: "white"}}></AddCircle>
                     <Typography variant="h7" sx={{ color: "white"}}>เพิ่มสารเคมี</Typography>
@@ -82,19 +82,19 @@ const index2 = () => {
 
                 </Box>
             </Box>
-            
+
             <Box sx={{
-               
+
                 backgroundColor: {xs:'' , md:'#F8F8F8 '},
                 borderRadius: {xs:'' , md:'25px'},
                 margin: {xs:'' , md:'40px 60px 40px 60px'},
                 padding: {xs:'60px 60px 60px 60px' , md:'40px 40px 40px 40px'},
-                
-                
-    
+
+
+
 
             }}
-            
+
             >
                 <Typography
                     sx={{
@@ -103,13 +103,13 @@ const index2 = () => {
                     }}
                      variant="h7">เพิ่มสารเคมี</Typography>
                 <Box>
-                    
+
                     <FormControl>
-                        
+
                         <RadioGroup sx={{
 
                         }}
-                        
+
                             row
                             aria-labelledby="demo-row-radio-buttons-group-label"
                             name="row-radio-buttons-group"
@@ -118,8 +118,8 @@ const index2 = () => {
                             <FormControlLabel value="Annex III" control={<Radio />} label="Annex III" />
                             <FormControlLabel value="Annex IV" control={<Radio />} label="Annex IV" />
                             <FormControlLabel value="Annex V" control={<Radio />} label="Annex V" />
-                           
-                            
+
+
                         </RadioGroup>
                     </FormControl>
                     <Box sx={{
@@ -132,19 +132,19 @@ const index2 = () => {
                             onChange={handleFileChange}
                         />
                         <img src="/csvfile.png" style={{ maxWidth: 0 + "300px", textAlign:"center", margin:"20px" }}/>
-                        
+
                     </Box>
                     <Typography sx={{
                         margin: {xs:'20px 0px 20px 0px' , md:'20px 0px 20px 0px'},
                     }}>
                         อัพโหลดไฟล์ csv สำหรับการเพิ่มสารเคมี
                     </Typography>
-                    
+
                     <button onClick={handleClick}>Upload</button>
 
                 </Box>
 
-            
+
 
             </Box>
             </Fragment>
@@ -156,15 +156,15 @@ const index2 = () => {
           textAlign="center"
           variant="contained"
           color="success"
-         
+
           sx={{ mt: 0, mb: 3 }}
         >
           ยืนยัน
         </Button>
       </Box>
-               
-          
-          
+
+
+
             {data.length ? (
                 <table>
                     <thead>
@@ -190,7 +190,7 @@ const index2 = () => {
                 </table>
             ) : null}
 
-            
+
         </div>
     );
 }

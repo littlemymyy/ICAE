@@ -38,7 +38,7 @@ export default function Home() {
         Axios.request(
             {
                 method: 'post',
-                url: 'http://localhost:3001/api/authen',
+                url: process.env.NEXT_PUBLIC_API_BASE_URL + '/api/authen',
                 headers: { 'Authorization': 'Bearer '+ localStorage.getItem('token') },
             }
             ).then((response) => {
@@ -59,7 +59,7 @@ export default function Home() {
       let id = localStorage.getItem("orid")
       console.log(email)
 
-        Axios.get('http://localhost:3001/api/sendNotification?orid='+id)
+        Axios.get(process.env.NEXT_PUBLIC_API_BASE_URL + '/api/sendNotification?orid='+id)
           .then((res)=>{
             console.log(res.data)
             setData(res.data)

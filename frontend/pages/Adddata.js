@@ -9,7 +9,7 @@ const Adddata = () => {
     const [data2,setData2] = useState([])
     const [st1,setSt1] = useState(0)
     const [st2,setSt2] = useState(0)
-    
+
 
     const handleFile = (e) => {
         let fileTypes = ['application/vnd.ms-excel','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','text/csv'];
@@ -62,7 +62,7 @@ const Adddata = () => {
             if(com[2] !== com[5] ){
                 // console.log(com[2]+" "+com[5])
             }
-            
+
               const data3 = Object.values(data[i]);
               let max = 0 , min = 0 ;
               if(data3[9].length > 0 ){
@@ -73,7 +73,7 @@ const Adddata = () => {
               if(data3[9].length === 0 ) {
                 max = 100;
               }
-  
+
             //   if(data3[10].length > 0 ){
             //     let mins = data3[10].substring(0,data3[10].length-2);
             //     min = parseFloat(mins);
@@ -83,7 +83,7 @@ const Adddata = () => {
                 data1.push(data4);
                 setData1([...data1]);
               }
-          } 
+          }
         }
       }
       const countCas = (dd) => {
@@ -106,7 +106,7 @@ const Adddata = () => {
         //     st: st1,
         //   };
         //   Axios({
-        //     url: "http://localhost:3001/api/setdata",
+        //     url: process.env.NEXT_PUBLIC_API_BASE_URL + "/api/setdata",
         //     method: "post",
         //     data: load,
         //   })
@@ -119,7 +119,7 @@ const Adddata = () => {
         //       console.log(error);
         //     });
         // }
-              
+
       }
 
       const handleFileSubmit2 = () => {
@@ -131,7 +131,7 @@ const Adddata = () => {
         //     st: st1,
         //   };
         //   Axios({
-        //     url: "http://localhost:3001/api/setdata",
+        //     url: process.env.NEXT_PUBLIC_API_BASE_URL + "/api/setdata",
         //     method: "post",
         //     data: load,
         //   })
@@ -144,7 +144,7 @@ const Adddata = () => {
         //       console.log(error);
         //     });
         // }
-              
+
       }
 
       const readData2 = (e) => {
@@ -176,7 +176,7 @@ const Adddata = () => {
           else if(st2.includes("Annex VI ")){
             setSt2(6)
           }
-          
+
           // console.log(data.length);
           const head = Object.values(data[3]);
           //console.log(head);
@@ -237,9 +237,9 @@ const Adddata = () => {
             //         data2.push(data4);
             //     }
             //   setData2([...data2]);
-  
-           
-          } 
+
+
+          }
           //console.log(data2)
         }
       }
@@ -268,7 +268,7 @@ const Adddata = () => {
         let d3 = [];
         for(let i = 0; i < data1.length; i++) {
             if(data1[i].cas !== '-') {
-                 
+
                     const searchDD = serachCas(data1[i].cas)
                     // console.log(searchDD)
                     let dd3 = data1[i]
@@ -286,8 +286,8 @@ const Adddata = () => {
                         }
                         d3.push(dd3)
                     }
-                    
-                
+
+
             }
         }
          console.log(d3.length)
@@ -297,7 +297,7 @@ const Adddata = () => {
             st: st1,
           };
           Axios({
-            url: "http://localhost:3001/api/setdata",
+            url: process.env.NEXT_PUBLIC_API_BASE_URL + "/api/setdata",
             method: "post",
             data: load,
           })
@@ -328,7 +328,7 @@ const Adddata = () => {
     <>
     <div className='App'>
         <h1>Upload Data 2 3 5 6</h1>
-        
+
         <div className='Add_data1'>
             <h3>Upload & view excel sheet</h3>
             {/* <form onSubmit={() => handleFileSubmit()}> */}
@@ -340,7 +340,7 @@ const Adddata = () => {
             }
             <br/><br/>
             {
-                data1.length ? 
+                data1.length ?
                     data1.map((values, idx) => (
                         <p key={idx}>{idx} {values.maxT} {values.minT}</p>
                     ))
@@ -360,7 +360,7 @@ const Adddata = () => {
             }
             <br/><br/>
             {
-                data1.length ? 
+                data1.length ?
                     data1.map((values, idx) => (
                         <p key={idx}>{idx} {values.maxT} {values.minT} </p>
                     ))
@@ -373,10 +373,10 @@ const Adddata = () => {
         {
             data1.length && data2.length && st1 !== 4 && st2 !== 4?
             <button className='Add_insert' onClick={handleFile3}>Insert</button>
-            : 
+            :
             <button className='Add_insert' disabled>Insert</button>
         }
-        
+
     </div>
     </>
   )

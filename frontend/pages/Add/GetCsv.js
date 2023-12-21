@@ -32,10 +32,10 @@ const GetCsv = () => {
             dd : data
         }
         Axios({
-            url : 'http://localhost:3001/api/uploadCsv',
+            url : process.env.NEXT_PUBLIC_API_BASE_URL + '/api/uploadCsv',
             method : 'post' ,
             data : load
-        }) 
+        })
         .then(function (response) {
             if(response.data === "OK"){
                 alert("uploaded")
@@ -61,13 +61,13 @@ const GetCsv = () => {
                 </button>
             </div>
             {
-                data.length ? 
+                data.length ?
                 <button onClick={UploadClick}>upload</button>
-                : 
+                :
                 <button disabled>upload</button>
 
             }
-           
+
             <br />
             <br />
             {data.length ? (
@@ -95,7 +95,7 @@ const GetCsv = () => {
                 </table>
             ) : null}
 
-            
+
         </div>
     );
 }

@@ -8,11 +8,11 @@ import { useRouter } from 'next/router';
 const userinfo = () => {
     const [user , setUser] = useState([])
     const [edit , setEdit] = useState([])
-    const router = useRouter();  
-   
+    const router = useRouter();
+
     useEffect(()=> {
         Axios({
-            url : "http://localhost:3001/api/getuserAs/" ,
+            url : process.env.NEXT_PUBLIC_API_BASE_URL + "/api/getuserAs/" ,
             method: "get",
         }).then((response)=>{
             console.log(response.data)
@@ -25,11 +25,11 @@ const userinfo = () => {
         const result = user.find(({ no }) => no === e)
         edit.push(result)
         setEdit([...edit])
-        
+
     }
 
     const clickDelete = (value ) => {
-        let index 
+        let index
         for(let i = 0 ; i < user.length ; i++ ){
             if(value === user[i].no){
                 index = i;
@@ -39,14 +39,14 @@ const userinfo = () => {
         user.splice(index , 1)
 
         // console.log("user : " + user)
-        
+
        // console.log(user)
         let load = {
             data : value
         }
         Axios({
-            url : "http://localhost:3001/api/deluserAS" ,
-            method : "post" , 
+            url : process.env.NEXT_PUBLIC_API_BASE_URL + "/api/deluserAS" ,
+            method : "post" ,
             data : load
         }).then((response) => {
             location.reload()
@@ -72,7 +72,7 @@ const userinfo = () => {
                         <td onClick={()=>editU(value.no)}>{idx + 1}</td>
                         <td onClick={()=>editU(value.no)}>{value.em_fullname}</td>
                         <td onClick={()=>editU(value.no)}>{value.em_email}</td>
-                        <th><AiOutlineDelete onClick={() => clickDelete(value.no )} /> 
+                        <th><AiOutlineDelete onClick={() => clickDelete(value.no )} />
                         </th>
                       </tr>
                     ))
@@ -80,12 +80,12 @@ const userinfo = () => {
                 }
               </tbody>
             </table>
-            
+
              {/* {
              edit.map((value,idx) => (
                 <p key={idx}>{value.em_fullname}</p>
              ))
-             
+
              } */}
              <div> <button onClick={()=> router.push("/SignUpA")}>ADD USER <IoMdPersonAdd /></button></div>
     </div>

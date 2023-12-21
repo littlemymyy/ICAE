@@ -21,7 +21,7 @@ export default function Home(){
         Axios.request(
             {
                 method: 'get',
-                url: 'http://localhost:3001/api/annex?st=5',
+                url: process.env.NEXT_PUBLIC_API_BASE_URL + '/api/annex?st=5',
                 headers: { },
                 data : ''
             }
@@ -104,7 +104,7 @@ export default function Home(){
 
                     </TableRow>
                 ))}
-                
+
                 </TableBody>
 
             </Table>

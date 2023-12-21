@@ -71,7 +71,7 @@ export default function SignIn() {
       password: password,
     };
     Axios({
-      url: "http://localhost:3001/api/getUser",
+      url: process.env.NEXT_PUBLIC_API_BASE_URL + "/api/getUser",
       method: "post",
       data: load,
     })

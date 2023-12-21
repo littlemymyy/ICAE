@@ -20,12 +20,12 @@ const Changegroup = () => {
         const searchParams = new URLSearchParams(queryString)
         const mydata = searchParams.get("numdata").split(",").map(String)
         const Swal = require('sweetalert2')
-        
+
         setNum(mydata)
 
 
         Axios({
-            url : "http://localhost:3001/api/getdatachangegroup",
+            url : process.env.NEXT_PUBLIC_API_BASE_URL + "/api/getdatachangegroup",
             method: "post",
             data : mydata ,
         }).then((response) => {
@@ -45,7 +45,7 @@ const Changegroup = () => {
             }
             const fetchData = async () =>{
               try{
-                const res = await Axios.post("http://localhost:3001/api/saveStfromchangegroup",load)
+                const res = await Axios.post(process.env.NEXT_PUBLIC_API_BASE_URL + "/api/saveStfromchangegroup",load)
                 if(res.data.status === "ok"){
                   Swal.fire({
                     position: "center",
@@ -63,11 +63,11 @@ const Changegroup = () => {
               }
 
             }
-            
+
            fetchData()
-            
+
         }
-       
+
     }
   return (
     <div>
@@ -79,27 +79,27 @@ const Changegroup = () => {
       </Typography>
 
       </Box>
-     
+
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         {
-            st === 2 ? 
+            st === 2 ?
             <input type="radio"  checked/>
             :
             <input type="radio" onChange={() => setSt(2)} />
         }
-        
+
         <label >2</label>
 
         {
-            st === 3 ? 
+            st === 3 ?
             <input type="radio"  checked/>
             :
             <input type="radio" onChange={() => setSt(3)} />
         }
-        
+
         <label >3</label>
         {
-            st === 4 ? 
+            st === 4 ?
             <input type="radio"  checked/>
             :
             <input type="radio" onChange={() => setSt(4)} />
@@ -107,7 +107,7 @@ const Changegroup = () => {
         <label >4</label>
 
         {
-            st === 5 ? 
+            st === 5 ?
             <input type="radio"  checked/>
             :
             <input type="radio" onChange={() => setSt(5)} />
@@ -115,7 +115,7 @@ const Changegroup = () => {
         <label >5</label>
 
         {
-            st === 6 ? 
+            st === 6 ?
             <input type="radio"  checked/>
             :
             <input type="radio" onChange={() => setSt(6)} />
@@ -126,16 +126,16 @@ const Changegroup = () => {
         <table className="showch_styled-table">
               <thead >
                 <tr >
-                 <th className='showch_th1'> <div className='radioSelect'> 
-              
-                
-               
+                 <th className='showch_th1'> <div className='radioSelect'>
+
+
+
               </div>
               </th>
                   <th className='showch_th1'>CAS NO</th>
                   <th className='showch_th2'>ชื่อ</th>
                   <th className='showch_th3'>ประเภท</th>
-                 
+
                 </tr>
               </thead>
               <tbody>
@@ -153,11 +153,11 @@ const Changegroup = () => {
                         <td>
                           {value.st}
                         </td>
-                        
-                         
+
+
                       </tr>
                     ))
-                    
+
                 }
               </tbody>
             </table>
@@ -168,7 +168,7 @@ const Changegroup = () => {
                 </Button>
            </Stack>
 
-       
+
 
         <Footer/>
     </div>

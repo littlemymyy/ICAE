@@ -31,39 +31,39 @@ const Home = () => {
     useEffect(() => {
       const feechData = async () => {
         try {
-          const res1 = await 
-            Axios.get('http://localhost:3001/api/showdataUV');
+          const res1 = await
+            Axios.get(process.env.NEXT_PUBLIC_API_BASE_URL + '/api/showdataUV');
           setUv(res1.data[0].num);
           console.log(res1.data[0].num)
 
-          const res2 = await Axios.get('http://localhost:3001/api/showdataAn2')
+          const res2 = await Axios.get(process.env.NEXT_PUBLIC_API_BASE_URL + '/api/showdataAn2')
           setAn2(res2.data[0].num);
           console.log(res2.data[0].num)
 
-          const res3 = await Axios.get('http://localhost:3001/api/showdataST0')
+          const res3 = await Axios.get(process.env.NEXT_PUBLIC_API_BASE_URL + '/api/showdataST0')
           setSt0(res3.data[0].num);
           console.log(res3.data[0].num)
 
-          const res4 = await Axios.get('http://localhost:3001/api/showdataAn4')
+          const res4 = await Axios.get(process.env.NEXT_PUBLIC_API_BASE_URL + '/api/showdataAn4')
           setColor(res4.data[0].num);
           console.log(res4.data[0].num)
 
-          const res5 = await Axios.get('http://localhost:3001/api/showdataAn5')
+          const res5 = await Axios.get(process.env.NEXT_PUBLIC_API_BASE_URL + '/api/showdataAn5')
           setAn5(res5.data[0].num);
           console.log(res5.data[0].num)
 
-          const res6 = await Axios.get('http://localhost:3001/api/showdataAn0')
+          const res6 = await Axios.get(process.env.NEXT_PUBLIC_API_BASE_URL + '/api/showdataAn0')
           setAllow(res6.data[0].num);
           console.log(res6.data[0].num)
 
-          // const res7 = await Axios.get('http://localhost:3001/api/showdataAn0_perfume')
+          // const res7 = await Axios.get(process.env.NEXT_PUBLIC_API_BASE_URL + '/api/showdataAn0_perfume')
           // setPerfume(res7.data[0].num);
           // console.log(res7.data[0].num)
 
           sum += parseInt(uv+st0+color+an5+allow+an2)
-          
 
-          
+
+
           a+= 81-((parseInt(an2)/sum)*100)
           b+= (parseInt(CanAll)/sum)*100
           c+= (parseInt(allow)/sum)*100
@@ -78,7 +78,7 @@ const Home = () => {
                   c *= factor;
           }
 
-        
+
 
           console.log(" "+a+" " + b +" "+ c)
 
@@ -153,58 +153,58 @@ const Home = () => {
             </div>
               </div>
 
-              <div className='btn_showAdd'> 
+              <div className='btn_showAdd'>
             <button className='showBtn_add' disabled><label>รายการสารกันแดด</label>
               <br/>
               {uv}
             </button>
         </div>
 
-        <div className='btn_showAdd'> 
+        <div className='btn_showAdd'>
             <button className='showBtn_add' disabled><label>รายการสารกันเสีย</label>
               <br/>
               {an5}
             </button>
         </div>
 
-        <div className='btn_showAdd'> 
+        <div className='btn_showAdd'>
             <button className='showBtn_add' disabled><label>รายการสารต้องห้าม</label>
               <br/>
               {an2}
             </button>
         </div>
-        
-        <div className='btn_showAdd'> 
+
+        <div className='btn_showAdd'>
             <button className='showBtn_add' disabled ><label>รายการสารสี</label>
               <br/>
               {color}
             </button>
 
-            
+
         </div>
 
-        <div className='btn_showAdd'> 
+        <div className='btn_showAdd'>
             <button className='showBtn_add' disabled ><label>รายการสารที่ใช้ได้</label>
               <br/>
-              {CanAll} 
+              {CanAll}
             </button>
 
-            
+
         </div>
 
-        <div className='btn_showAdd'> 
+        <div className='btn_showAdd'>
             <button className='showBtn_add' disabled ><label>รายการน้ำหอม</label>
               <br/>
               {perfume}
             </button>
 
-            
+
         </div>
 
-        
+
             </div>
 
-       
+
       {/* <div className="input-icons">
         <i className="fa fa-search icon"></i>
         <input className="in" value={input1} onChange={(e) => action1(e.target.value)} />
@@ -241,11 +241,11 @@ const Home = () => {
         </button>
       </div>
      </div>
-      
 
-     <Footer />  
+
+     <Footer />
     </div>
-    
+
   )
 }
 

@@ -18,7 +18,7 @@ export default function Edit_Admin() {
     const [cmname1 , setCmname1] = useState("")
     const [des , setDes] = useState("")
     const [showdata,setShowdata] = useState(["","","","","","","","","",""])
-    
+
 
     useEffect(() => {
         const queryString = window.location.search
@@ -31,7 +31,7 @@ export default function Edit_Admin() {
             no : no
         }
         Axios({
-            url : "http://localhost:3001/api/getalldataAddminEdit" ,
+            url : process.env.NEXT_PUBLIC_API_BASE_URL + "/api/getalldataAddminEdit" ,
             method : 'post',
             data : load,
         }).then((response)=>{
@@ -45,14 +45,14 @@ export default function Edit_Admin() {
             setShowdata([...showdata])
             cmname.current = response.data[0].cmname
         })
-        
+
     },[])
 
     const setNewData = (idx, e) => {
         showdata[idx] = e;
         setShowdata([... showdata]);
       };
-    
+
 
     const save = () => {
        let load = {
@@ -65,10 +65,10 @@ export default function Edit_Admin() {
        }
 
        Axios({
-         url : "http://localhost:3001/api/getalldataAddminUpdateByType",
-         method : 'post' , 
+         url : process.env.NEXT_PUBLIC_API_BASE_URL + "/api/getalldataAddminUpdateByType",
+         method : 'post' ,
          data : load ,
-         
+
        }).then((response) => {
 
             alert("สำเร็จ")
@@ -79,7 +79,7 @@ export default function Edit_Admin() {
 
 
 
-   
+
     return(
        <>
          <Navbar />
@@ -95,11 +95,11 @@ export default function Edit_Admin() {
                     width={'150px'}
                     padding={'5px'}
                     margin={'10px'}
-                    
-                
+
+
                 >
 
-             
+
 
                     <BuildIcon sx={{ color: "black"}}></BuildIcon>
                     <Typography variant="h7" sx={{ color: "black"}}>แก้ไขสารเคมี</Typography>
@@ -115,26 +115,26 @@ export default function Edit_Admin() {
                 padding: {xs:'10px 60px 10px 60px' , md:'10px 40px 10px 40px'},
                 justifyContent: {xs:'' , md:'space-between'},
                 gap: {xs:'' , md:'50px'}
-                
-    
+
+
 
             }}
-            
+
             >
                 <Box display={'grid'} gap={'10px'}>
                     <Typography variant="h7">เพิ่มสารเคมี</Typography>
                     <FormControl>
-                        
+
                         <RadioGroup
-                        
+
                             row
                             aria-labelledby="demo-row-radio-buttons-group-label"
                             name="row-radio-buttons-group"
-                        >   
+                        >
                             {
                                 data.st === 2 ?
                                 <FormControlLabel checked value="Annex II" control={<Radio />} label="Annex II" />
-                                : 
+                                :
                                 <FormControlLabel value="Annex II" control={<Radio />} label="Annex II" onClick={()=>setSt(2)}/>
                             }
 
@@ -153,29 +153,29 @@ export default function Edit_Admin() {
                             }
 
                             {
-                                data.st === 5 ? 
+                                data.st === 5 ?
                                 <FormControlLabel checked value="Annex V" control={<Radio />} label="Annex V" />
                                 :
                                 <FormControlLabel value="Annex V" control={<Radio />} label="Annex V" onClick={()=>setSt(5)} />
                             }
 
                             {
-                                data.st === 6 ? 
+                                data.st === 6 ?
                                 <FormControlLabel checked value="Annex VI" control={<Radio />} label="Annex VI" />
                                 :
                                 <FormControlLabel value="Annex VI" control={<Radio />} label="Annex VI" onClick={()=>setSt(6)} />
                             }
-                            
-                            
-                           
-                            
+
+
+
+
                         </RadioGroup>
                     </FormControl>
                     <Typography variant="h7">ชื่อสารเคมี</Typography>
                     <TextField  variant="outlined" value={showdata[0]}  onChange={(e) => setNewData(0, e.target.value)}/>
                     <Typography variant="h7">รหัส CAS NO</Typography>
                     <TextField  variant="outlined" value = {data.cas} />
-                    
+
                     <Typography variant="h7">คำอธิบาย</Typography>
                     <TextField
                         id="outlined-multiline-static"
@@ -188,11 +188,11 @@ export default function Edit_Admin() {
                         <Typography variant="h7">ปริมาณสาร</Typography>
                         <TextField  value={showdata[1]} variant="outlined" onChange={(e) => setNewData(1, e.target.value)} />
 
-                    
+
                 </Box>
-            
-               
-                <Box 
+
+
+                <Box
                     gap={'10px'}
                     height={'500px'}
                     width={'700px'}
@@ -200,12 +200,12 @@ export default function Edit_Admin() {
                     borderRadius={'5px'}
                     alignItems={'center'}
                     justifyContent={'center'}
-                    
 
 
 
-                
-                >  <Box 
+
+
+                >  <Box
                 border={'2px dashed grey'}
                 textAlign={'center'}
                 min-height={'100vh'}
@@ -215,16 +215,16 @@ export default function Edit_Admin() {
                 width={'700px'}
 
             >
-              
+
                 <img src="/edit.png"></img>
-                
-            </Box>  
-         
+
+            </Box>
+
 
 
                 </Box>
-               
-            
+
+
             </Box>
 
             <Box sx={{textAlign:'center', marginTop:'20px'}}>
@@ -237,7 +237,7 @@ export default function Edit_Admin() {
 
          </Fragment>
          <Footer />
-       
+
        </>
     )
 
