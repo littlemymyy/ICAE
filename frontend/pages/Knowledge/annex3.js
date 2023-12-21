@@ -21,7 +21,7 @@ export default function Home(){
         Axios.request(
             {
                 method: 'get',
-                url: NEXT_PUBLIC_API_BASE_URL + '/api/annex?st=3',
+                url: process.env.NEXT_PUBLIC_API_BASE_URL + '/api/annex?st=3',
                 headers: { },
                 data : ''
             }

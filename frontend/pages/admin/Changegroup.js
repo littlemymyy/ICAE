@@ -25,7 +25,7 @@ const Changegroup = () => {
 
 
         Axios({
-            url : NEXT_PUBLIC_API_BASE_URL + "/api/getdatachangegroup",
+            url : process.env.NEXT_PUBLIC_API_BASE_URL + "/api/getdatachangegroup",
             method: "post",
             data : mydata ,
         }).then((response) => {
@@ -45,7 +45,7 @@ const Changegroup = () => {
             }
             const fetchData = async () =>{
               try{
-                const res = await Axios.post(NEXT_PUBLIC_API_BASE_URL + "/api/saveStfromchangegroup",load)
+                const res = await Axios.post(process.env.NEXT_PUBLIC_API_BASE_URL + "/api/saveStfromchangegroup",load)
                 if(res.data.status === "ok"){
                   Swal.fire({
                     position: "center",

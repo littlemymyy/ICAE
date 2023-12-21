@@ -41,7 +41,7 @@ const index1 = () => {
     };
 
     Axios({
-      url: NEXT_PUBLIC_API_BASE_URL + "/api/AddminAdd",
+      url: process.env.NEXT_PUBLIC_API_BASE_URL + "/api/AddminAdd",
       method: "post",
       data: load,
     }).then( function(res){

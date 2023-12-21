@@ -22,7 +22,7 @@ export default function showpif(){
         Axios.request(
             {
                 method: 'get',
-                url: NEXT_PUBLIC_API_BASE_URL + `/api/pif?orid=${orid}`,
+                url: process.env.NEXT_PUBLIC_API_BASE_URL + `/api/pif?orid=${orid}`,
                 headers: { },
                 data : ''
             }
@@ -121,14 +121,14 @@ export default function showpif(){
           <Grid item sx={{margin:'auto', textAlign:'center', marginTop:'20px', marginButtom:'20px'}}>
           <Card sx={{ width: '250px '}}>
             <CardActionArea
-              href={NEXT_PUBLIC_API_BASE_URL + `/${item.pdf_path}`}
+              href={process.env.NEXT_PUBLIC_API_BASE_URL + `/${item.pdf_path}`}
             >
                 <CardMedia sx={{textAlign:"center", marginTop:"20px"}}>
                   {
                     item.img_path == null ?
                     <img src={'https://cdn.discordapp.com/attachments/1172220503998595207/1184933121234321408/1665px-No-Image-Placeholder.png?ex=658dc5f7&is=657b50f7&hm=301c6afc15ae559ecd5cf54131f9b923799760230e1cdc08536bd99f9a1b9b13&'} style={{ width: "150px" , height:"150px",  objectFit: "cover" ,textAlign:"center"}}/>
                     :
-                    <img src={NEXT_PUBLIC_API_BASE_URL + `/${item.img_path}`} style={{ width: "150px" , height:"150px",  objectFit: "cover" ,textAlign:"center"}}/>
+                    <img src={process.env.NEXT_PUBLIC_API_BASE_URL + `/${item.img_path}`} style={{ width: "150px" , height:"150px",  objectFit: "cover" ,textAlign:"center"}}/>
                   }
                 </CardMedia>
               <CardContent sx={{ marginLeft:"50px", marginRight:"50px" }}>

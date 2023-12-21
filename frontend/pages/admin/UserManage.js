@@ -48,7 +48,7 @@ const UserManage = () => {
         //FetchData From Employee
         const fetchData0 = async () => {
          try {
-        const res0 = await Axios.get(NEXT_PUBLIC_API_BASE_URL + "/api/AddminManageUser");
+        const res0 = await Axios.get(process.env.NEXT_PUBLIC_API_BASE_URL + "/api/AddminManageUser");
         // Handle the response data as needed
         console.log("Response:", res0.data);
         setShow(res0.data)
@@ -119,7 +119,7 @@ fetchData0();
             }
             console.log( "is load from handlechange")
             console.log(load)
-            Axios.post(NEXT_PUBLIC_API_BASE_URL + "/api/updateManageUser", load)
+            Axios.post(process.env.NEXT_PUBLIC_API_BASE_URL + "/api/updateManageUser", load)
             .then(response => {
         // Handle the response data here
             if(response.data){
@@ -146,7 +146,7 @@ fetchData0();
             }
             console.log( "is load from handlechange")
             console.log(load)
-            Axios.post(NEXT_PUBLIC_API_BASE_URL + "/api/updateManageUser", load)
+            Axios.post(process.env.NEXT_PUBLIC_API_BASE_URL + "/api/updateManageUser", load)
             .then(response => {
         // Handle the response data here
             if(response.data){
@@ -173,7 +173,7 @@ fetchData0();
             }
             console.log( "is load from handlechange")
             console.log(load)
-            Axios.post(NEXT_PUBLIC_API_BASE_URL + "/api/updateManageUser", load)
+            Axios.post(process.env.NEXT_PUBLIC_API_BASE_URL + "/api/updateManageUser", load)
             .then(response => {
         // Handle the response data here
             if(response.data){
@@ -201,7 +201,7 @@ fetchData0();
             }
             console.log( "is load from handlechange")
             console.log(load)
-            Axios.post(NEXT_PUBLIC_API_BASE_URL + "/api/updateManageUser", load)
+            Axios.post(process.env.NEXT_PUBLIC_API_BASE_URL + "/api/updateManageUser", load)
             .then(response => {
         // Handle the response data here
             if(response.data){
@@ -229,7 +229,7 @@ fetchData0();
             }
             console.log( "is load from handlechange")
             console.log(load)
-            Axios.post(NEXT_PUBLIC_API_BASE_URL + "/api/updateManageUserAdmin", load)
+            Axios.post(process.env.NEXT_PUBLIC_API_BASE_URL + "/api/updateManageUserAdmin", load)
             .then(response => {
         // Handle the response data here
             if(response.data){

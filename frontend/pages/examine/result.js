@@ -50,7 +50,7 @@ const c2A = () => {
         setGroupName(gname);
       }
         Axios({
-          url: NEXT_PUBLIC_API_BASE_URL + "/api/searchBybodypart",
+          url: process.env.NEXT_PUBLIC_API_BASE_URL + "/api/searchBybodypart",
           method: "post",
           data : filltergB
           })
@@ -224,7 +224,7 @@ const c2A = () => {
       let config = {
         method: 'get',
         maxBodyLength: Infinity,
-        url: NEXT_PUBLIC_API_BASE_URL + `/api/get_history?groupname=${groupName}&email=${localStorage.getItem("uemail")}`,
+        url: process.env.NEXT_PUBLIC_API_BASE_URL + `/api/get_history?groupname=${groupName}&email=${localStorage.getItem("uemail")}`,
         headers: {
           'Content-Type': 'application/json'
         },
@@ -282,7 +282,7 @@ const c2A = () => {
 
       }
       Axios({
-        url : NEXT_PUBLIC_API_BASE_URL + "/api/savefile",
+        url : process.env.NEXT_PUBLIC_API_BASE_URL + "/api/savefile",
         method : "post" ,
         data : load ,
       }).then((response) => {
