@@ -1115,8 +1115,6 @@ export default function manage() {
 
               }}>
                 <TextField
-
-                  marginTop="10px"
                   id="entrepreneur"
                   label="ชื่อผู้ผลิต"
                   variant="outlined"
@@ -1174,7 +1172,6 @@ export default function manage() {
                   width="100%"
                   variant="contained"
                   component="label"
-                  marginTop="10px"
                 >
                   <input
                     id="filename1"
@@ -1850,7 +1847,6 @@ export default function manage() {
       }}>
         <Button
           type="submit"
-          textAlign="center"
           variant="contained"
           color="success"
           onClick={(e) => { saveOnly(e) }}
@@ -1866,7 +1862,6 @@ export default function manage() {
       }}>
         <Button
           type="submit"
-          textAlign="center"
           variant="contained"
           color="success"
           onClick={(e) => { generatePDF(e) }}

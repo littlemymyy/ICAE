@@ -274,7 +274,7 @@ const createByfda = () => {
           }}>
             <TextField
 
-              marginTop="10px"
+              margintop="10px"
               id="entrepreneur"
               label="ชื่อผู้ผลิต"
               variant="outlined"
@@ -310,10 +310,7 @@ const createByfda = () => {
           textAlign: { xs: "center", md: "center" },
 
         }}>
-        <Button  type="submit"
-          textAlign="center"
-
-        onClick={() => sendData()} variant="contained" color="success">
+        <Button type="submit" onClick={() => sendData()} variant="contained" color="success">
           บันทึก
         </Button>
         </Box>

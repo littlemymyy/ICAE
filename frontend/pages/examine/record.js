@@ -152,7 +152,7 @@ const record = () => {
                 {
                   show.length ?
                     show.map((value, idx) => (
-                      <tr>
+                      <tr key={value.groupname}>
                         <td>{idx + 1}</td>
                         <td>{value.udate}</td>
                         <td>{value.groupname}</td>

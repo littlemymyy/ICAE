@@ -57,7 +57,7 @@ export default function Home() {
         });
     }
 
-    if(localStorage.getItem("uemail").length > 0){
+    if(localStorage.getItem("uemail")){
       let email = localStorage.getItem("uemail")
       let id = localStorage.getItem("orid")
       //console.log(email)

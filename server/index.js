@@ -140,6 +140,153 @@ app.post('/api/mergePdf_old', pdfUpload.any(), (req, res) => {
     }
 });
 
+
+app.post('/api/mergePdf', pdfUpload.any(), (req, res) => {
+    db.execute(
+        'SELECT * FROM pif_product WHERE id = ?',
+        [req.body.product_id],
+        (err, result) => {
+            if(err) {
+                res.status(500).send('Internal Server Error');
+                console.log('mergeError1' + err);
+                return;
+            }
+            else{
+                //create pdf
+                let resultData = result[0];
+                console.log(resultData)
+
+                //create pdf
+                try{
+                    (async () => {
+
+                            pdfMake.fonts = {
+                                THSarabunNew: {
+                                    normal: 'THSarabun.ttf',
+                                    bold: 'THSarabun-Bold.ttf',
+                                    italics: 'THSarabun-Italic.ttf',
+                                    bolditalics: 'THSarabun-BoldItalic.ttf'
+                                }
+                            }
+
+
+                    pdfMake.vfs = vfsFonts.pdfMake.vfs;
+
+                    const docDefinition = {
+                            content: [
+                                { text:'ข้อมูลเกี่ยวกับเครื่องสำอาง (PRODUCTS INFORMATION FILE : PIF)', style: 'header' },
+                                {text:`เลขที่จดแจ้ง: ${resultData.fda_license}` },
+                                {text:`ชื่อทางการค้าเครื่องสำอาง: ${resultData.product_name}` },
+                                {text:`ชื่อเครื่องสำอาง: ${resultData.cosmetic_name}`},
+                                {text:`ประเภทของเครื่องสำอาง: ${resultData.cosmetic_type}`},
+                                {text:`วันที่จดแจ้ง: ${resultData.create_date}`},
+                                {text:`วันที่ใบอนุญาตหมดอายุ:${resultData.expire_date}`},
+                                {text:`จุดประสงค์การใช้: ${resultData.cosmetic_reason}`},
+                                {text:`ลักษณะทางกายภาพ: ${resultData.cosmetic_physical}`},
+                                {text:`ชื่อผู้ผลิต: ${resultData.company_name}`},
+                                {text:`ชื่อผู้ผลิตต่างประเทศ: ${resultData.company_eng_name}`},
+                                {text:`รายละเอียดเพิ่มเติม: ${resultData.more_info}`}
+
+
+                            ],
+                            styles: {
+                                header: {
+                                    fontSize: 18,
+                                    bold: true,
+                                    alignment: 'center',
+                                    margin: [10, 10, 10, 10]
+                                }
+                            },
+                            defaultStyle: {
+                                font: 'THSarabunNew'
+                            }
+                        };
+
+                        const pdfDoc = pdfMake.createPdf(docDefinition);
+                        const fileName = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + '-' + Date.now();
+                        const pdfPath = path.join(__dirname, 'uploads', `${fileName}.pdf`);
+
+                        const buffer = await new Promise((resolve, reject) => {
+                            pdfDoc.getBuffer((buffer) => {
+                                resolve(buffer);
+                            });
+                        });
+
+                        await fs.writeFile(pdfPath, buffer);
+
+                        const firstPath = path.join('./uploads', `${fileName}.pdf`);
+                        console.log(firstPath)
+
+                        //merge pdf
+                        db.execute(
+                            'SELECT * FROM pif WHERE product_id = ?',
+                            [req.body.product_id],
+                            (err, result) => {
+                                if(err) {
+                                    res.status(500).send('Internal Server Error');
+                                    console.log('mergeError2' + err);
+                                    return;
+                                }
+                                else{
+                                    try{
+                                        (async () => {
+                                            const merger = new PDFMerger();
+
+                                            await merger.add(firstPath);
+                                            for(let i = 0 ; i < 14 ; i++){
+                                                console.log("file_path")
+                                                console.log(result[0][`file${i+1}_path`])
+                                                if (result[0][`file${i+1}_path`] !== null) {
+                                                    await merger.add(result[0][`file${i+1}_path`]);
+                                                }
+                                            }
+                                            let pdfFileName = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + '-' + Date.now();
+                                            await merger.save(`uploads/${pdfFileName}.pdf`).then((pdfBuffer) => {
+                                                console.log(pdfBuffer);
+                                            });
+
+                                            console.log(pdfFileName)
+                                            let pdf_path = path.join('./uploads', `${pdfFileName}.pdf`);
+                                            console.log('pdf_path :' + pdf_path)
+
+                                            db.execute(
+                                                'UPDATE pif SET pdf_path = ? WHERE product_id = ?',
+                                                [pdf_path, req.body.product_id],
+                                                (err, result) => {
+                                                    if(err) {
+                                                        res.status(500).send('Internal Server Error');
+                                                        console.log('mergeError3' + err);
+                                                        return;
+                                                    }
+                                                    else{
+                                                        res.status(200).send('createdOk');
+                                                        return;
+                                                    }
+                                                }
+                                            )
+                                        })()
+
+                                    } catch (error) {
+                                        console.error('Error merging PDFs:', error);
+                                        res.status(500).send('Internal Server Error');
+                                    }
+                                }
+                            }
+                        )
+                    })()
+                } catch (error) {
+                    console.error(error);
+                    res.status(500).send('Internal Server Error');
+                }
+            }
+        }
+    )
+});
+
+
+
+
+
 app.post('/api/savePdf', pdfUpload.any(), (req, res) => {
     const merger = new PDFMerger();
 
@@ -1244,7 +1391,7 @@ app.post('/api/savefile' , (req , res) => {
 app.post('/api/getGroupName',(req,res)=>{
     console.log(req.body)
     const email = req.body.email
-    const sql = 'SELECT DISTINCT groupname, udate FROM chemicalgroup WHERE email = ? ORDER BY udate ASC';
+    const sql = 'SELECT DISTINCT groupname, udate  FROM chemicalgroup WHERE email = ? ORDER BY udate ASC';
     // Assuming you're using a database library with support for parameterized queries
     db.query(sql, [email], (err, result) => {
       if (err) throw err;
@@ -2458,7 +2605,6 @@ app.post('/api/getNoficationFile', (req, res) => {
     const sql = "SELECT id FROM pif_product WHERE organization_id = ?";
     const sql1 = "SELECT product_id FROM pif WHERE product_id = ? AND (expdate <= CURDATE() + INTERVAL 1 MONTH OR file1_exp <= CURDATE() + INTERVAL 1 MONTH OR file2_exp <= CURDATE() + INTERVAL 1 MONTH OR file3_exp <= CURDATE() + INTERVAL 1 MONTH OR file4_exp <= CURDATE() + INTERVAL 1 MONTH OR file5_exp <= CURDATE() + INTERVAL 1 MONTH OR file6_exp <= CURDATE() + INTERVAL 1 MONTH OR file7_exp <= CURDATE() + INTERVAL 1 MONTH OR file8_exp <= CURDATE() + INTERVAL 1 MONTH OR file9_exp <= CURDATE() + INTERVAL 1 MONTH OR file10_exp <= CURDATE() + INTERVAL 1 MONTH OR file11_exp <= CURDATE() + INTERVAL 1 MONTH OR file12_exp <= CURDATE() + INTERVAL 1 MONTH OR file13_exp <= CURDATE() + INTERVAL 1 MONTH OR file14_exp <= CURDATE() + INTERVAL 1 MONTH);";
 
-
     db.query(sql, [orid], (err, result) => {
         if (err) {
             console.error(err);
@@ -2466,9 +2612,10 @@ app.post('/api/getNoficationFile', (req, res) => {
         }
 
         if (result.length > 0) {
-           
+            const resultsArray = [];
+
             for (let i = 0; i < result.length; i++) {
-                console.log(result[i].id)
+                console.log(result[i].id);
                 db.query(sql1, [result[i].id], (err, result1) => {
                     if (err) {
                         console.error(err);
@@ -2476,11 +2623,18 @@ app.post('/api/getNoficationFile', (req, res) => {
                     }
 
                     if (result1.length > 0) {
-                        res.status(200).send(result1)
+                        resultsArray.push(result1);
                         console.log("exo", result1);
+                    }
+
+                    // Check if this is the last iteration before sending the response
+                    if (i === result.length - 1) {
+                        res.status(200).send(resultsArray);
                     }
                 });
             }
+        } else {
+            res.status(200).send([]); // Send an empty array if no results
         }
     });
 });

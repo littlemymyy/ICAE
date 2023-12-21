@@ -1038,12 +1038,13 @@ export default function manage() {
                 </Box>
               ) : change[0] === 0 ? (
                 <embed
-                  src={process.env.NEXT_PUBLIC_API_BASE_URL+`${pdfFile1}`}
+                src={process.env.NEXT_PUBLIC_API_BASE_URL1+`/${pdfFile1}`}
                   width="300px"
                   height="450px"
                 />
               ) : (
                 <embed src={pdfFile1} width="300px" height="450px" />
+                //<embed src={`/uploads/${pdfFile1}`} width="300px" height="450px" />
               )}
               {/* previewpdf */}
               {/* label for info of file */}

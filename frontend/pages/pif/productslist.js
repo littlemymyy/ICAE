@@ -16,6 +16,8 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormHelperText from '@mui/material/FormHelperText';
 import FormControl from '@mui/material/FormControl';
+import ReportIcon from '@mui/icons-material/Report';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 
 
@@ -55,6 +57,7 @@ export default function productslist() {
             else{
               setProductData(res.data.message)
               setShow(res.data.message)
+              console.log("show =>" , res.data.message)
             }
           
         } catch (error) {
@@ -75,11 +78,25 @@ export default function productslist() {
       }
       try{
         const res = await Axios.post(process.env.NEXT_PUBLIC_API_BASE_URL+"/getNoficationFile",load)
+        console.log("notificationFile : ",res.data)
 
-       for(let i = 0 ; i<res.data.length ; i++){
-        noti.push(res.data[i].product_id)
-        setNoti([...noti])
-       }
+        for (let i = 0; i < res.data.length; i++) {
+          // Iterate through the inner array
+          for (let j = 0; j < res.data[i].length; j++) {
+            // Push each product_id into the noti array
+            noti.push(res.data[i][j].product_id);
+          }
+        }
+        const uniqueNoti = Array.from(new Set(noti));
+
+        // Set the state with the unique product_id values
+        setNoti(uniqueNoti);
+       
+
+      // const notiArray = res.data.map(item => item.product_id);
+      // setNoti(notiArray);
+      //  const notiArray = res.data.map(item => item.product_id);
+      //  setNoti(notiArray);
         
 
       } catch(error){
@@ -94,14 +111,17 @@ export default function productslist() {
   }, []);
 
   const checkFilePIF = (product_id) => {
-    for(let i = 0 ; i < noti.length ; i++ ){
-      if(product_id === noti[i]){
-        return true
-      }
-      else {
-        return false
-      }
-    }
+    console.log("product_id =>", product_id)
+    console.log("notiArray naja =>",noti)
+    // for(let i = 0 ; i < noti.length ; i++ ){
+    //   if(product_id === noti[i]){
+    //     return 3
+    //   }
+    //   else if(product_id !== noti[i]) {
+    //     return 4
+    //   }
+    // }
+    return noti.includes(product_id) ? 3 : 4;
   }
 
   const resultsearch = (e) => {
@@ -307,6 +327,8 @@ export default function productslist() {
           <tbody>
           {
              show.map((value , idx)=>(
+              
+
                 <tr className="trplc" key={idx}>
                   <td className="plac" >{idx+1}</td>
                   <td className="plac">{value.fda_license}</td>
@@ -315,14 +337,32 @@ export default function productslist() {
                   <td className="plac">{new Date(value.expire_date).toISOString().split('T')[0]}</td>
                   {
   value.pif_status === 0 ? (
-    <td className="plac">ไม่มี</td>
+    
+    
+    <td className="plac">
+      <Button variant="contained" endIcon={<ReportIcon />}>
+        ยังไม่ได้มีดำเนินการสร้างไฟล์ PIF
+      </Button>
+    </td>
   ) : (
-    value.pif_status === 1 && checkFilePIF(value.product_id) === true ? (
-      <td className="plac">มี xaay</td>
+    value.pif_status === 1 && checkFilePIF(value.id) === 3 ? (
+      <td className="plac">
+        <Button variant="contained" color="error" endIcon={<ReportIcon />}>
+          มีไฟล์ใกล้หมดอายุหรือมีไฟล์ที่หมดอายุแล้ว
+        </Button>
+      </td>
     ) : (
-      value.pif_status === 1 && checkFilePIF(value.product_id) === false ? (
-        <td className="plac">มี</td>
-      ) : null
+      value.pif_status === 1 && checkFilePIF(value.id) === 4 ? (
+        <td className="plac">
+          <Button variant="contained" color="success" endIcon={<CheckCircleIcon />}>
+            ปกติ
+          </Button>
+        </td>
+      ) : <td className="plac">
+      <Button variant="contained" endIcon={<ReportIcon />}>
+        ยังไม่ได้มีดำเนินการสร้างไฟล์ PIF
+      </Button>
+    </td>
     )
   )
 }
