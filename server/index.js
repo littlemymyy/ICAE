@@ -16,6 +16,7 @@ const {EMAIL , PASSWORD} = require('./env.js')
 const PDFMerger = require('pdf-merger-js');
 const jwt = require('jsonwebtoken');
 const cron = require('node-cron');
+const { error } = require('console');
 
 const app = express();
 const secret = 'sirirat';
@@ -1901,6 +1902,39 @@ app.post('/api/sort', (req , res) => {
     }
 })
 
+app.post('/api/checkFdaDate',(req,res)=>{
+    const id = req.body.id
+    console.log("id > " , id ,"id")
+
+    const sql = 'SELECT id FROM pif_product WHERE expire_date <= CURDATE() + INTERVAL 1 MONTH '
+    db.query(sql,[id],(error,result)=>{
+        if(error){
+            console.log(error)
+        }
+        else if(result.length > 0){
+            console.log("date is =>", result)
+            res.status(200).send(result)
+
+        }
+    })
+
+})
+
+
+app.post("/api/editFdaDate",(req,res)=>{
+    const date = req.body.date
+    const id = req.body.id
+    const sql = 'UPDATE pif_product SET expire_date = ? WHERE id = ?'
+
+    db.query(sql,[date,id],(error,result)=>{
+        if(error){
+            console.log(error)
+        }else {
+            res.status(200).send("OK")
+
+        }
+    })
+})
 
 
 app.listen(3001, () => {
