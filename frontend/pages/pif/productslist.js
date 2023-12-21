@@ -19,7 +19,8 @@ import FormControl from '@mui/material/FormControl';
 import ReportIcon from '@mui/icons-material/Report';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import Stack from '@mui/material/Stack';
-
+import RestoreIcon from '@mui/icons-material/Restore';
+import Swal from 'sweetalert2'
 
 
 export default function productslist() {
@@ -32,43 +33,69 @@ export default function productslist() {
   const Swal = require('sweetalert2')
   const [age, setAge] = useState('');
   const [noti , setNoti] = useState([])
+  const [fdaIdexp , setFdaIdexp] = useState([])
+ 
   let see = 0 ;
 
   useEffect(() => {
-    let name = localStorage.getItem("uname")
-    setUname(name)
-    let ida = localStorage.getItem("orid");
-
-
     const fetchData = async () => {
-      if (ida === 'null'|| ida === "-") {
-        router.push("/team/team")
-      }
-      else  {
-        setId(ida)
+      let name = localStorage.getItem('uname');
+      setUname(name);
+
+      let ida = localStorage.getItem('orid');
+      setId(ida);
+
+      if (ida === 'null' || ida === '-') {
+        router.push('/team/team');
+      } else {
         try {
           const res = await Axios({
-            url: process.env.NEXT_PUBLIC_API_BASE_URL+'/api/getPifProductByOrganiztion?organization_id=' + ida,
-            method: "get",
-          })
-            if (res.data.status === "error") {
-              router.push("/pif/createByfda")
-            }
-            else{
-              setProductData(res.data.message)
-              setShow(res.data.message)
-              console.log("show =>" , res.data.message)
-            }
-          
+            url: `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/getPifProductByOrganiztion?organization_id=${ida}`,
+            method: 'get',
+          });
+
+          if (res.data.status === 'error') {
+            router.push('/pif/createByfda');
+          } else {
+            setProductData(res.data.message);
+            setShow(res.data.message);
+            console.log('show =>', res.data.message);
+
+            const notificationExpFda = async () => {
+              for (let i = 0; i < res.data.message.length; i++) {
+                let load = {
+                  id: res.data.message[i].id,
+                };
+  
+                try {
+                  const res = await Axios.post(
+                    process.env.NEXT_PUBLIC_API_BASE_URL+`/api/checkFdaDate`,
+                    load
+                  )
+                  //console.log("date",res.data)
+                  for(let i = 0 ; i< res.data.length;i++){
+                    fdaIdexp.push(res.data[i].id)
+                    
+                  }
+                  const uniquefda = Array.from(new Set(fdaIdexp));
+                  setFdaIdexp(uniquefda)
+                  // Handle response if needed
+                  console.log('NotificationExpFda response:',res.data);
+                } catch (error) {
+                  console.error('Error in NotificationExpFda:', error);
+                }
+              }
+            };
+  
+            notificationExpFda();
+          }
         } catch (error) {
-          console.error("Error fetching data:", error);
+          console.error('Error fetching data:', error);
         }
       }
+    }
 
-
-    };
-
-    fetchData(); // Call function here
+    fetchData();
 
     //call Notification
 
@@ -106,9 +133,17 @@ export default function productslist() {
 
     }
     NotificationFile()
-  
+
+   
     
   }, []);
+
+  const checkFdadateA = (product_id) =>{
+    console.log(fdaIdexp)
+    console.log("aun",product_id)
+      return fdaIdexp.includes(product_id) ? 0 : 1;
+
+  }
 
   const checkFilePIF = (product_id) => {
     console.log("product_id =>", product_id)
@@ -316,6 +351,51 @@ export default function productslist() {
 
   }
 
+  const editfdadate = async (id) =>{
+    const { value: date } = await Swal.fire({
+      title: "เลือกวันที่ใหม่",
+      input: "date",
+      didOpen: () => {
+        const today = (new Date()).toISOString();
+        Swal.getInput().min = today.split("T")[0];
+      }
+    });
+    let date1 = new Date(date)
+    console.log(date1)
+    if (date1) {
+      let load = {
+        date : date1,
+        id : id
+      }
+      const feactData = async () => {
+        const res = await   Axios.post(process.env.NEXT_PUBLIC_API_BASE_URL+"/api/editFdaDate",load)
+          if(res.data === "OK"){
+            Swal.fire({
+              position: "center",
+              icon: "success",
+              title: "เปลี่ยนวันที่สำเร็จ",
+              showConfirmButton: false,
+              timer: 1500
+            });
+            window.location.reload()
+          }
+          else {
+            Swal.fire({
+              position: "center",
+              icon: "error",
+              title: "เปลี่ยนวันที่ไม่สำเร็จ",
+              showConfirmButton: false,
+              timer: 1500
+            });
+            window.location.reload()
+          }
+        
+      }
+      feactData()
+    
+    }
+  }
+
 
   return (
     <>
@@ -449,7 +529,12 @@ export default function productslist() {
                   <td className="plac">{value.fda_license}</td>
                   <td className="plac">{value.product_name}</td>
                   <td className="plac">{value.cosmetic_name}</td>
-                  <td className="plac">{new Date(value.expire_date).toISOString().split('T')[0]}</td>
+                  {
+                     checkFdadateA(value.id) === 0 ?
+                     <td className="plac">{new Date(value.expire_date).toISOString().split('T')[0]} <p onClick={()=>editfdadate(value.id)}>แก้ไขวันที่<RestoreIcon/></p> </td>
+                    :<td className="plac">{new Date(value.expire_date).toISOString().split('T')[0]}</td>
+                  }
+                 
                   {
   value.pif_status === 0 ? (
     
