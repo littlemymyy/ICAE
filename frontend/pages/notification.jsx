@@ -17,10 +17,10 @@ const notification = () => {
       email : email,
       id : id ,
     }
-    
+
     const feact = async () => {
       try{
-        const res = await Axios.post("http://localhost:3001/api/getnotficationPIF",load)
+        const res = await Axios.post(NEXT_PUBLIC_API_BASE_URL + "/api/getnotficationPIF",load)
         console.log(res.data)
 
 

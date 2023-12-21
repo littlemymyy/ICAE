@@ -73,7 +73,7 @@ const index3 = () => {
               console.log(data2)
               console.log(st);
             }
-        } 
+        }
       }
     }
     const handleFileSubmit = () => {
@@ -85,7 +85,7 @@ const index3 = () => {
           st: st,
         };
         Axios({
-          url: "http://localhost:3001/api/setdata",
+          url: NEXT_PUBLIC_API_BASE_URL + "/api/setdata",
           method: "post",
           data: load,
         })
@@ -98,9 +98,9 @@ const index3 = () => {
             console.log(error);
           });
       }
-            
+
     }
-  
+
 
   return (
     <div>
@@ -114,14 +114,14 @@ const index3 = () => {
       }
       <br/><br/>
       {
-        alldata.length ? 
+        alldata.length ?
             alldata.map((values, idx) => (
                 <p key={idx}>{idx} {values.maxT} {values.minT}</p>
             ))
         : null
       }
       <br/>
-     
+
     </div>
   )
 }

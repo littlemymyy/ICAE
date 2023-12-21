@@ -23,7 +23,7 @@ export default function Home(){
         Axios.request(
             {
                 method: 'get',
-                url: `http://localhost:3001/api/annex/search?name=${name[1]}`,
+                url: NEXT_PUBLIC_API_BASE_URL + `/api/annex/search?name=${name[1]}`,
                 headers: { },
                 data : ''
             }

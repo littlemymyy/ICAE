@@ -16,7 +16,7 @@ const Info = () => {
     }
     console.log(gn);
     gn = gn[0];
-    Axios.get(`http://localhost:3001/api/getWithWord/${gn}`).then((response) => {
+    Axios.get(NEXT_PUBLIC_API_BASE_URL + `/api/getWithWord/${gn}`).then((response) => {
         setGname(response.data);
         console.log(response.data);
     })
@@ -59,8 +59,8 @@ const Info = () => {
                   <p>Description / รายละเอียด</p>
                   <p>null</p>
               </div>
-              
-              : 
+
+              :
               <div>
                 <p className='infolabal'>สารที่สามารถใช้ได้</p>
                 <h3>{gname[0].cname}</h3>
@@ -75,7 +75,7 @@ const Info = () => {
         }
       </div>
       </div>
-     
+
       <br/>
       <Footer/>
     </div>

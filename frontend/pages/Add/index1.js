@@ -6,7 +6,7 @@ import { Fragment, useState } from "react";
 import {
   FormControl,
   FormControlLabel,
- 
+
   Radio,
   RadioGroup,
 } from "@mui/material";
@@ -26,8 +26,8 @@ const index1 = () => {
   const [save , setSave] = useState(false);
 
   const actionclick = () =>{
-    
-  
+
+
     console.log(st + " " + cname +" "+ cas +" " + info + " "+eff +" "+ per  );
 
     let load = {
@@ -41,7 +41,7 @@ const index1 = () => {
     };
 
     Axios({
-      url: "http://localhost:3001/api/AddminAdd",
+      url: NEXT_PUBLIC_API_BASE_URL + "/api/AddminAdd",
       method: "post",
       data: load,
     }).then( function(res){
@@ -52,8 +52,8 @@ const index1 = () => {
       setEff("")
       setInfo("")
       setPer(0)
-      
-    } 
+
+    }
     )
 
 
@@ -103,7 +103,7 @@ const index1 = () => {
                 aria-labelledby="demo-row-radio-buttons-group-label"
                 name="row-radio-buttons-group"
               >
-                <FormControlLabel 
+                <FormControlLabel
                   onClick={() => setSt(2)}
                   value="Annex II"
                   control={<Radio />}

@@ -21,7 +21,7 @@ export default function Home(){
         Axios.request(
             {
                 method: 'get',
-                url: 'http://localhost:3001/api/annex?st=6',
+                url: NEXT_PUBLIC_API_BASE_URL + '/api/annex?st=6',
                 headers: { },
                 data : ''
             }
