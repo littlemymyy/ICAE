@@ -60,33 +60,40 @@ export default function Home() {
       console.log(email)
 
         Axios.get(process.env.NEXT_PUBLIC_API_BASE_URL + '/api/sendNotification?orid='+id)
-          .then((res)=>{
-            console.log(res.data)
-            setData(res.data)
+        .then((res)=>{
+          //console.log(res.data)
+          setData(res.data)
 
-            let fdanum = ""
+          let fdanum = ""
 
-          for(let i = 0 ; i < res.data.length ; i++){
-            console.log(res.data[i].fda_license)
-            fdanum += res.data[i].fda_license + "   " + ","
-          }
+        for(let i = 0 ; i < res.data.length ; i++){
+         // console.log(res.data[i].fda_license)
+          fdanum += res.data[i].fda_license + "   " + ","
+        }
 
-          let newfdanum = ""
-          newfdanum += fdanum.substring(0 , fdanum.lengt -1)
-          console.log(newfdanum)
-         console.log(res.data)
-          if(res.data.length && res.data !== "Notthing"){
-            Swal.fire({
-              title: 'ใบอนุญาตจดแจ้งใกล้หมดอายุ',
-              text: 'เลขที่ : '+ fdanum
-              ,
-              icon: 'warning',
-              confirmButtonText: 'ปิด'
-            })
-          }
+        let newfdanum = ""
+        newfdanum += fdanum.substring(0 , fdanum.lengt -1)
+        //console.log(newfdanum)
+        //console.log(res.data)
+        if(res.data.length > 0 && res.data !== "Notthing"){
+          Swal.fire({
+            title: 'ใบอนุญาตจดแจ้งใกล้หมดอายุ',
+            text: `เลขที่ : ${fdanum}`
+            ,
+            cancelButtonText: 'ปิด',
+            showCancelButton: true,
+            
+            confirmButtonText: 'ดูรายละเอียด',
+            preConfirm: () => {
+              // Handle the redirection manually
+             // window.open( '/pif/productslist');
+              router.push("/pif/productslist")
+            }
+          })
+        }
 
 
-          }).catch((err)=>{
+        }).catch((err)=>{
             console.log("notification Error : "+err)
           })
        }
