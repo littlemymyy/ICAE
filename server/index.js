@@ -1143,17 +1143,19 @@ app.post('/api/deluserAS' , (req , res) => {
     })
 })
 
+
 //send Notification Index Page
-app.get('/api/sendNotification' , (req,res) => {
+app.post('/api/sendNotification' , (req,res) => {
     console.log("send Notification")
 
-   const orid = req.query.orid
-   if(orid === "-"){
+   console.log(req.body)
+   const orid = req.body.orid
+   if(orid === "-" || orid === null){
     res.status(200).send('Notthing' );
    }
    else {
     console.log("that else")
-   const sql = 'SELECT created_by, expire_date, organization_id, fda_license FROM pif_product WHERE expire_date <= CURDATE() + INTERVAL 1 MONTH AND organization_id = ?';
+   const sql = 'SELECT  fda_license, expire_date FROM pif_product WHERE expire_date <= CURDATE() + INTERVAL 1 MONTH AND organization_id = ?';
 
     db.query(sql , [orid], (err , result) => {
         if (err){
