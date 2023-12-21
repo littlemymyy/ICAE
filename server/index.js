@@ -1637,8 +1637,10 @@ app.post('/api/getuserDeleteAdmin', (req, res) => {
 });
 
 app.post('/api/changeNameTeam', jsonParser , (req , res) => {
-    console.log ("team =>" + new_team)
-    console.log ("id =>" + old_team)
+    // console.log ("team =>" + new_team)
+    // console.log ("id =>" + old_team)
+    const new_team = req.body.team
+    const old_team = req.body.id
     db.execute(
         `SELECT organization_id FROM employee WHERE organization_id = ?`,
         [new_team],
