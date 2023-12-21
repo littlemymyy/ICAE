@@ -489,7 +489,7 @@ app.get('/api/pif', jsonParser, (req, res) => {
             po.pif_status
         FROM pif p
         LEFT JOIN pif_product po ON p.product_id = po.id
-        WHERE po.organization_id = ? AND po.pif_status = 1;
+        WHERE po.organization_id = ? AND po.pif_status = 1 AND p.pdf_path IS NOT NULL;
 
         `,
         [req.query.orid],
@@ -1217,11 +1217,11 @@ const sendEmailNotifications=() => {
                             console.error("Error ", err)
                            // res.status(500).send("SomeTingWorng")
                         }
-                
+
                         else if (result.length > 0 ){
                             console.log('Result from database :', result);
                             console.log("Ok")
-                
+
                                 //console.log(result[0].em_email)
                                 //console.log(result.length)
                                 for(let i = 0 ; i<result.length ; i++){
@@ -1248,15 +1248,15 @@ const sendEmailNotifications=() => {
                                                 <p style="font-size: 14px; color: #555;">ICAE Team</p>
                                             </div>
                                         </body>`
-    
+
                                         ,
                                     };
-                
-                
+
+
                                  sendEmail(message)
                                    console.log(message)
                                 }
-                
+
                         }
                         else {
                             console.log("No expDate")
@@ -1273,7 +1273,7 @@ const sendEmailNotifications=() => {
 
   console.log(email,"email")
 
-  
+
 }
 
 const convertDate = (input) => {
@@ -1303,7 +1303,7 @@ const sendEmailNotificationsFile=() => {
 
         else if (result.length > 0 ){
             console.log('Result from database :', result);
-            console.log("Ok") 
+            console.log("Ok")
 
                 //console.log(result[0].em_email)
                 //console.log(result.length)
