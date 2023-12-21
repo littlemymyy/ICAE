@@ -48,7 +48,7 @@ export default function productslist() {
       else  {
         try {
           const res = await Axios({
-            url: "http://localhost:3001/api/getPifProductByOrganiztion?organization_id=" + ida,
+            url: process.env.NEXT_PUBLIC_API_BASE_URL + "/api/getPifProductByOrganiztion?organization_id=" + ida,
             method: "get",
           }).then((res) => {
             if (res.data.status === "error") {
@@ -127,7 +127,7 @@ export default function productslist() {
   const handledelete = (e) => {
     console.log(e)
     try {
-      Axios.post("http://localhost:3001/api/pifProductRemoveById?id=" + e)
+      Axios.post(process.env.NEXT_PUBLIC_API_BASE_URL + "/api/pifProductRemoveById?id=" + e)
       .then((res) => {
           console.log(res.data)
           console.log(res.data.status)

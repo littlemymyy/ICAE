@@ -71,7 +71,7 @@ const createByfda = () => {
     console.log( e);
     let num = e.target.value
     const res = await Axios({
-      url: "http://localhost:3001/api/fetchData",
+      url: process.env.NEXT_PUBLIC_API_BASE_URL + "/api/fetchData",
       method: "get",
       params: {
         data: e.target.value,
@@ -186,7 +186,7 @@ const createByfda = () => {
       let config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: 'http://localhost:3001/api/insertPifProduct',
+        url: process.env.NEXT_PUBLIC_API_BASE_URL + '/api/insertPifProduct',
         headers: {
           'Content-Type': 'application/json'
         },

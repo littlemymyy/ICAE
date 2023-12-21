@@ -59,14 +59,14 @@ const AdddataAn4 = () => {
             if(com.length !== 16 ){
                 // console.log(i)
             }
-            
+
               const data3 = Object.values(data[i]);
-             
-  
+
+
               const data4 = {name : data3[4] , cas : data3[2] , cmname : "CI"+data3[7]  , parts : data3[10] , per : 100 , color : data3[8]}
               data1.push(data4);
               setData1([...data1]);
-          } 
+          }
         }
       }
 
@@ -79,7 +79,7 @@ const AdddataAn4 = () => {
             st: st1,
           };
           Axios({
-            url: "http://localhost:3001/api/setdata",
+            url: process.env.NEXT_PUBLIC_API_BASE_URL + "/api/setdata",
             method: "post",
             data: load,
           })
@@ -92,7 +92,7 @@ const AdddataAn4 = () => {
               console.log(error);
             });
        // }
-              
+
       }
 
   return (
@@ -109,7 +109,7 @@ const AdddataAn4 = () => {
             }
             <br/><br/>
             {
-                data1.length ? 
+                data1.length ?
                     data1.map((values, idx) => (
                         <p key={idx}>{idx} {values.maxT} {values.minT}</p>
                     ))
@@ -118,7 +118,7 @@ const AdddataAn4 = () => {
             <br/>
         </div>
 
-       
+
     </div>
   )
 }

@@ -49,7 +49,7 @@ const team = () => {
       let id = localStorage.getItem("orid");
       let email = localStorage.getItem("uemail")
 
-      Axios.get("http://localhost:3001/api/getStatusByEmail?email="+email)
+      Axios.get(process.env.NEXT_PUBLIC_API_BASE_URL + "/api/getStatusByEmail?email="+email)
       .then((res) => {
           console.log(res.data.message[0].status)
           setStatusU(res.data.message[0].status)
@@ -63,12 +63,12 @@ const team = () => {
 
 
     const handleChick = async() => {
-      Axios.get("http://localhost:3001/api/getCountTeam?team="+team)
+      Axios.get(process.env.NEXT_PUBLIC_API_BASE_URL + "/api/getCountTeam?team="+team)
       .then((res) => {
         console.log(res.data)
           if (res.data.status === "ok") {
             if (res.data.message[0].num === 0) {
-              Axios.post("http://localhost:3001/api/createTeam", {
+              Axios.post(process.env.NEXT_PUBLIC_API_BASE_URL + "/api/createTeam", {
                 team: team,
                 userID: userID,
               }).then((res) => {

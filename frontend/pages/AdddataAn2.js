@@ -8,7 +8,7 @@ const AdddataAn2 = () => {
         const [excel1 , setExcel1]  = useState(null);
         const [data1,setData1] = useState([])
         const [st1,setSt1] = useState(0)
-    
+
         const handleFile = (e) => {
             let fileTypes = ['application/vnd.ms-excel','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','text/csv'];
             let selectFile = e.target.files[0];
@@ -23,10 +23,10 @@ const AdddataAn2 = () => {
                 }
             }
             else {
-    
+
             }
         }
-    
+
         const readData = (e) => {
             if(e !== null) {
               const workbook = XLSX.read(e , {type : "buffer"});
@@ -61,17 +61,17 @@ const AdddataAn2 = () => {
                 if(com.length !== 16 ){
                     // console.log(com)
                 }
-                
+
                   const data3 = Object.values(data[i]);
-                 
-      
+
+
                   const data4 = {name : data3[4] , cas : data3[2] , cmname : data3[4]  , parts : data3[9] , per : 0 , color : "-"}
                   data1.push(data4);
                   setData1([...data1]);
-              } 
+              }
             }
           }
-    
+
           const handleFileSubmit = () => {
             console.log(data1)
             console.log(st1);
@@ -81,7 +81,7 @@ const AdddataAn2 = () => {
                 st: st1,
               };
               Axios({
-                url: "http://localhost:3001/api/setdata",
+                url: process.env.NEXT_PUBLIC_API_BASE_URL + "/api/setdata",
                 method: "post",
                 data: load,
               })
@@ -94,9 +94,9 @@ const AdddataAn2 = () => {
                   console.log(error);
                 });
            // }
-                  
+
           }
-    
+
 
 
     return (
@@ -113,7 +113,7 @@ const AdddataAn2 = () => {
                 }
                 <br/><br/>
                 {
-                    data1.length ? 
+                    data1.length ?
                         data1.map((values, idx) => (
                             <p key={idx}>{idx} {values.maxT} {values.minT}</p>
                         ))
@@ -121,10 +121,10 @@ const AdddataAn2 = () => {
                 }
                 <br/>
             </div>
-    
-           
+
+
         </div>
       )
 }
 
-export default AdddataAn2 
+export default AdddataAn2

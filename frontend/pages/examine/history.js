@@ -28,7 +28,7 @@ const history = () => {
         setGroupName(gname)
 
         Axios  ({
-            url: "http://localhost:3001/api/getChemicalByGroup?groupname=" + gname,
+            url: process.env.NEXT_PUBLIC_API_BASE_URL + "/api/getChemicalByGroup?groupname=" + gname,
             method: "get"
           }).then ((response) => {
             console.log(response.data)
@@ -47,7 +47,7 @@ const history = () => {
           });
 
           Axios  ({
-            url: "http://localhost:3001/api/getAllChemical",
+            url: process.env.NEXT_PUBLIC_API_BASE_URL + "/api/getAllChemical",
             method: "get"
           }).then ((response) => {
             if (response.data.status === "ok") {
@@ -81,7 +81,7 @@ const history = () => {
 
     const addData = (e) => {
       // Axios  ({
-      //   url: "http://localhost:3001/api/getChemicalByCas?cas=" + e,
+      //   url: process.env.NEXT_PUBLIC_API_BASE_URL + "/api/getChemicalByCas?cas=" + e,
       //   method: "get"
       // }).then ((response) => {
       //   if (response.data.status === "ok") {
@@ -198,7 +198,7 @@ const history = () => {
           email : localStorage.getItem("uemail")
         }
         Axios({
-          url : "http://localhost:3001/api/savefile",
+          url : process.env.NEXT_PUBLIC_API_BASE_URL + "/api/savefile",
           method : "post" ,
           data : load ,
         }).then((response) => {

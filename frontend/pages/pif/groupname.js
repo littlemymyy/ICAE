@@ -10,17 +10,17 @@ const groupname = () => {
     const router = useRouter();
 
     useEffect(() => {
-        Axios.get(`http://localhost:3001/api/getGroupName`).then((response) => {
+        Axios.get(process.env.NEXT_PUBLIC_API_BASE_URL + `/api/getGroupName`).then((response) => {
             setGname(response.data);
             setShow(response.data)
             console.log(response.data);
           });
-      
+
     },[])
 
     const sendgroupname = (groupname) => {
         router.push({
-            pathname : 'pif/upload' , 
+            pathname : 'pif/upload' ,
             query : {
               gname: groupname,
             }
@@ -30,11 +30,11 @@ const groupname = () => {
   return (
     <div>
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet"></link>
-       
+
       <div className='C2_labal'>
           ประวัติการตรวจสอบสูตรเครื่องสำอาง
       </div>
-      
+
       <br />
     <div className="input-icons">
       <i className="fa fa-search icon"></i>
@@ -45,7 +45,7 @@ const groupname = () => {
       />
       <br />
       <div>
-   
+
     </div>
 
     </div>
@@ -56,7 +56,7 @@ const groupname = () => {
                 <th className='C1A_th1'>ลำดับ</th>
                 <th className='C1A_th2'>วันที่</th>
                 <th className='C1A_th3'>ชื่อไฟล์</th>
-                
+
               </tr>
             </thead>
             <tbody>
@@ -67,9 +67,9 @@ const groupname = () => {
                       <td>{idx + 1}</td>
                       <td>{value.udate}</td>
                       <td>{value.groupname}</td>
-                      
-                     
-                      
+
+
+
                     </tr>
                   ))
                   : null
