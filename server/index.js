@@ -1171,6 +1171,49 @@ app.get('/api/sendNotification' , (req,res) => {
 }
 )
 
+
+app.post('/api/getNoficationFile', (req, res) => {
+    const orid = req.body.organization_id;
+
+    const sql = "SELECT id FROM pif_product WHERE organization_id = ?";
+    const sql1 = "SELECT product_id FROM pif WHERE product_id = ? AND (expdate <= CURDATE() + INTERVAL 1 MONTH OR file1_exp <= CURDATE() + INTERVAL 1 MONTH OR file2_exp <= CURDATE() + INTERVAL 1 MONTH OR file3_exp <= CURDATE() + INTERVAL 1 MONTH OR file4_exp <= CURDATE() + INTERVAL 1 MONTH OR file5_exp <= CURDATE() + INTERVAL 1 MONTH OR file6_exp <= CURDATE() + INTERVAL 1 MONTH OR file7_exp <= CURDATE() + INTERVAL 1 MONTH OR file8_exp <= CURDATE() + INTERVAL 1 MONTH OR file9_exp <= CURDATE() + INTERVAL 1 MONTH OR file10_exp <= CURDATE() + INTERVAL 1 MONTH OR file11_exp <= CURDATE() + INTERVAL 1 MONTH OR file12_exp <= CURDATE() + INTERVAL 1 MONTH OR file13_exp <= CURDATE() + INTERVAL 1 MONTH OR file14_exp <= CURDATE() + INTERVAL 1 MONTH);";
+
+    db.query(sql, [orid], (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).send("Internal Server Error");
+        }
+
+        if (result.length > 0) {
+            const resultsArray = [];
+
+            for (let i = 0; i < result.length; i++) {
+                console.log(result[i].id);
+                db.query(sql1, [result[i].id], (err, result1) => {
+                    if (err) {
+                        console.error(err);
+                        return res.status(500).send("Internal Server Error");
+                    }
+
+                    if (result1.length > 0) {
+                        resultsArray.push(result1);
+                        console.log("exo", result1);
+                    }
+
+                    // Check if this is the last iteration before sending the response
+                    if (i === result.length - 1) {
+                        res.status(200).send(resultsArray);
+                    }
+                });
+            }
+        } else {
+            res.status(200).send([]); // Send an empty array if no results
+        }
+    });
+});
+
+
+
 //Add min call USER INFO
 app.get("/api/AddminManageUser" , (req , res) => {
 
@@ -1637,10 +1680,10 @@ app.post('/api/getuserDeleteAdmin', (req, res) => {
 });
 
 app.post('/api/changeNameTeam', jsonParser , (req , res) => {
-    // console.log ("team =>" + new_team)
-    // console.log ("id =>" + old_team)
-    const new_team = req.body.team
+    const new_team = req.body.teamName
     const old_team = req.body.id
+    console.log ("team =>" + new_team)
+    console.log ("id =>" + old_team)
     db.execute(
         `SELECT organization_id FROM employee WHERE organization_id = ?`,
         [new_team],
@@ -1800,6 +1843,65 @@ app.post('/api/DeleteGroupName', (req, res) => {
         }
     });
 });
+
+app.post('/api/sort', (req , res) => {
+    const id = req.body.id
+    const con = req.body.con
+
+    if(con === "1"){
+        const sql = 'SELECT * FROM pif_product WHERE organization_id = ? ORDER BY expire_date DESC'
+        db.query(sql , [id], (err , result) => {
+            if (err){
+                //console.log("Error " , err)
+            }
+            else {
+                //console.log(result)
+                res.send(result)
+            }
+        })
+    }
+
+    if(con === "2"){
+        const sql = 'SELECT * FROM pif_product WHERE organization_id = ? ORDER BY expire_date ASC'
+        db.query(sql , [id], (err , result) => {
+            if (err){
+                //console.log("Error " , err)
+            }
+            else {
+                //console.log(result)
+                res.send(result)
+            }
+        })
+    }
+
+    if(con === "3"){
+        const sql = 'SELECT * FROM pif_product WHERE organization_id = ? ORDER BY cosmetic_name ASC'
+        db.query(sql , [id], (err , result) => {
+            if (err){
+              //console.log("Error " , err)
+            }
+            else {
+                //console.log(result)
+                res.send(result)
+            }
+        })
+    }
+
+    if(con === "4"){
+        const sql = 'SELECT * FROM pif_product WHERE organization_id = ? ORDER BY cosmetic_name DESC'
+        db.query(sql , [id], (err , result) => {
+            if (err){
+                //console.log("Error " , err)
+            }
+            else {
+               // console.log(result)
+                res.send(result)
+            }
+        })
+    }
+})
+
+
 
 app.listen(3001, () => {
     console.log('Running node at port 3001');
