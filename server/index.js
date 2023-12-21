@@ -1371,7 +1371,7 @@ const sendEmail = (message) => {
                        // return res.status(500).json({ error: "Error sending email" });
                     });
 }
-sendEmailNotificationsFile()
+//sendEmailNotificationsFile()
 //sendEmailNotifications()
  cron.schedule(' 20 9 * * *' , () => {
     try {
