@@ -728,7 +728,9 @@ app.get('/api/getChemicalByGroup', jsonParser, (req, res) => {
         C.*
         from
             chemicalgroup G
-        LEFT JOIN chemical C ON G.cname = C.cname AND G.cmname = C.cmname
+        LEFT JOIN chemical C ON
+        convert(G.cname using latin1) =  convert(G.cname using latin1) AND
+        convert(G.cmname using latin1) collate latin1_general_cs =  convert(C.cmname using latin1) collate latin1_general_cs
         WHERE G.groupname = ?`,
         [req.query.groupname], (err, result) => {
             if(err) {
