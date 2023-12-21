@@ -16,8 +16,6 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormHelperText from '@mui/material/FormHelperText';
 import FormControl from '@mui/material/FormControl';
-import ReportIcon from '@mui/icons-material/Report';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 
 
@@ -26,40 +24,40 @@ export default function productslist() {
   const router = useRouter()
   const [search_input, setSearch_input] = useState("");
   const [product_data, setProductData] = useState([])
-  const [show , setShow] = useState([])
   const [id, setId] = useState("")
   const [uName, setUname] = useState("")
   const Swal = require('sweetalert2')
   const [age, setAge] = useState('');
-  const [noti , setNoti] = useState([])
   let see = 0 ;
+
+
 
   useEffect(() => {
     let name = localStorage.getItem("uname")
     setUname(name)
+    console.log(localStorage.getItem("orid"));
     let ida = localStorage.getItem("orid");
 
 
     const fetchData = async () => {
-      if (ida === 'null'|| ida === "-") {
+    //  console.log("kkk")
+     console.log(ida)
+      if (ida === 'null') {
         router.push("/team/team")
       }
       else  {
-        setId(ida)
         try {
           const res = await Axios({
-            url: process.env.NEXT_PUBLIC_API_BASE_URL+'/getPifProductByOrganiztion?organization_id=' + ida,
+            url: "http://localhost:3001/api/getPifProductByOrganiztion?organization_id=" + ida,
             method: "get",
-          })
+          }).then((res) => {
             if (res.data.status === "error") {
               router.push("/pif/createByfda")
             }
             else{
               setProductData(res.data.message)
-              setShow(res.data.message)
-              console.log("show =>" , res.data.message)
             }
-          
+          })
         } catch (error) {
           console.error("Error fetching data:", error);
         }
@@ -70,63 +68,12 @@ export default function productslist() {
 
     fetchData(); // Call function here
 
-    //call Notification
-
-    const NotificationFile = async () => {
-      let load = {
-        organization_id : localStorage.getItem("orid")
-      }
-      try{
-        const res = await Axios.post(process.env.NEXT_PUBLIC_API_BASE_URL+"/getNoficationFile",load)
-        console.log("notificationFile : ",res.data)
-
-        for (let i = 0; i < res.data.length; i++) {
-          // Iterate through the inner array
-          for (let j = 0; j < res.data[i].length; j++) {
-            // Push each product_id into the noti array
-            noti.push(res.data[i][j].product_id);
-          }
-        }
-        const uniqueNoti = Array.from(new Set(noti));
-
-        // Set the state with the unique product_id values
-        setNoti(uniqueNoti);
-       
-
-      // const notiArray = res.data.map(item => item.product_id);
-      // setNoti(notiArray);
-      //  const notiArray = res.data.map(item => item.product_id);
-      //  setNoti(notiArray);
-        
-
-      } catch(error){
-        console.log(error)
-      }
-      
-
-    }
-    NotificationFile()
-  
-    
   }, []);
 
-  const checkFilePIF = (product_id) => {
-    console.log("product_id =>", product_id)
-    console.log("notiArray naja =>",noti)
-    // for(let i = 0 ; i < noti.length ; i++ ){
-    //   if(product_id === noti[i]){
-    //     return 3
-    //   }
-    //   else if(product_id !== noti[i]) {
-    //     return 4
-    //   }
-    // }
-    return noti.includes(product_id) ? 3 : 4;
-  }
-
   const resultsearch = (e) => {
+    console.log("Type of e:", typeof e);
     if (e.length === 0) {
-      setShow(product_data)
+      setShow(data)
       // setShow([])
       setSearch_input('')
     }
@@ -134,20 +81,23 @@ export default function productslist() {
     else {
       let a = e.toString()
 
+      console.log("a is " + a)
       setSearch_input(a)
-      const results1 = product_data.filter((w) => {
+      const results1 = data.filter((w) => {
+        //console.log(w.fda_license)
         return (
           a &&
           w &&
-          w.cosmetic_name
+          w.cosname
           &&
-          w.product_name
+          w.cosnameC
           &&
-          (w.cosmetic_name.toLowerCase().includes(a) || w.cosmetic_name.toUpperCase().includes(a) || w.product_name.toUpperCase().includes(a)||w.cosmetic_name.toLowerCase().includes(a)||w.product_name.toLowerCase().includes(a)))
+          (w.cosname.toLowerCase().includes(a) || w.cosname.toUpperCase().includes(a) || w.cosnameC.toUpperCase().includes(a)||w.cosname.toLowerCase().includes(a)||w.cosnameC.toLowerCase().includes(a)))
 
       });
 
       setShow(results1)
+      console.log(results1)
     }
   }
 
@@ -175,9 +125,12 @@ export default function productslist() {
   };
 
   const handledelete = (e) => {
+    console.log(e)
     try {
-      Axios.post(process.env.NEXT_PUBLIC_API_BASE_URL+'/pifProductRemoveById?id= ' + e)
+      Axios.post("http://localhost:3001/api/pifProductRemoveById?id=" + e)
       .then((res) => {
+          console.log(res.data)
+          console.log(res.data.status)
 
           if (res.data.status === 'ok') {
             Swal.fire({
@@ -326,46 +279,14 @@ export default function productslist() {
           </thead>
           <tbody>
           {
-             show.map((value , idx)=>(
-              
-
+             product_data.map((value , idx)=>(
                 <tr className="trplc" key={idx}>
                   <td className="plac" >{idx+1}</td>
                   <td className="plac">{value.fda_license}</td>
                   <td className="plac">{value.product_name}</td>
                   <td className="plac">{value.cosmetic_name}</td>
                   <td className="plac">{new Date(value.expire_date).toISOString().split('T')[0]}</td>
-                  {
-  value.pif_status === 0 ? (
-    
-    
-    <td className="plac">
-      <Button variant="contained" endIcon={<ReportIcon />}>
-        ยังไม่ได้มีดำเนินการสร้างไฟล์ PIF
-      </Button>
-    </td>
-  ) : (
-    value.pif_status === 1 && checkFilePIF(value.id) === 3 ? (
-      <td className="plac">
-        <Button variant="contained" color="error" endIcon={<ReportIcon />}>
-          มีไฟล์ใกล้หมดอายุหรือมีไฟล์ที่หมดอายุแล้ว
-        </Button>
-      </td>
-    ) : (
-      value.pif_status === 1 && checkFilePIF(value.id) === 4 ? (
-        <td className="plac">
-          <Button variant="contained" color="success" endIcon={<CheckCircleIcon />}>
-            ปกติ
-          </Button>
-        </td>
-      ) : <td className="plac">
-      <Button variant="contained" endIcon={<ReportIcon />}>
-        ยังไม่ได้มีดำเนินการสร้างไฟล์ PIF
-      </Button>
-    </td>
-    )
-  )
-}
+                  { value.pif_status === 0 ? <td className="plac">ไม่มี</td> : <td className="plac">มี</td> }
                   <td className="plac plaC">
                   {
                     value.pif_status === 0 ? (
