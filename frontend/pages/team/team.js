@@ -45,7 +45,7 @@ const team = () => {
     useEffect(() => {
         const feactData = async () => {
             try {
-                const res = await Axios.get("http://localhost:3001/api/getuserTeam/");
+                const res = await Axios.get(NEXT_PUBLIC_API_BASE_URL+"/getuserTeam/");
                 //const alreadyTeam = await Axios.get("http://localhost:3001/api/getTeam/")
                 console.log(res.data)
                // console.log(alreadyTeam.data)
@@ -109,7 +109,7 @@ const team = () => {
             let load = {
               team : team 
             }
-            const res = await Axios.post("http://localhost:3001/api/getTeam/",load)
+            const res = await Axios.post(NEXT_PUBLIC_API_BASE_URL+"/getTeam/",load)
             if(res.data === "HaveTeam"){
                Swal.fire({
                         icon: "error",
@@ -127,7 +127,7 @@ const team = () => {
                 data : team ,
             }
             try {
-            const res =  await Axios.post("http://localhost:3001/api/updateteam", load);
+            const res =  await Axios.post(NEXT_PUBLIC_API_BASE_URL+"/updateteam", load);
                 Swal.fire({
                     title: "สำเร็จ",
                     text: "เพื่มชื่อทีมหรือชื่อบริษัทสำเร็จ",

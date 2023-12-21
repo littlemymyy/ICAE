@@ -35,7 +35,7 @@ const history = () => {
           gname : gname
       }
       Axios  ({
-          url: "http://localhost:3001/api/getGroupNamebyname",
+          url: NEXT_PUBLIC_API_BASE_URL+"/getGroupNamebyname",
           method: "post",
           data : load,
         }).then ((response) => { 
@@ -65,7 +65,7 @@ const history = () => {
         }
         //console.log(dd)
         Axios({
-          url: "http://localhost:3001/api/searchBybodypartEdit",
+          url: NEXT_PUBLIC_API_BASE_URL+"/searchBybodypartEdit",
           method: "post",
           data: dd ,
         }).then((response) => {
@@ -176,7 +176,7 @@ const history = () => {
         email : localStorage.getItem("uemail")
       }
       Axios({
-        url : "http://localhost:3001/api/savefile",
+        url : NEXT_PUBLIC_API_BASE_URL+"/savefile",
         method : "post" ,
         data : load ,
       }).then((response) => {
