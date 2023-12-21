@@ -26,10 +26,10 @@ const record = () => {
     const fetchdata = async () =>{
       try{
         const gn = await Axios.post(process.env.NEXT_PUBLIC_API_BASE_URL+`/getGroupName`,load);
-        console.log(gn.data)
+        //console.log(gn.data)
         setGname(gn.data)
         setShow(gn.data)
-        console.log(gn.data);
+       // console.log(gn.data);
         // for(let i = 0; i < gn.data.length; i++) {
         //   let load = {
         //     data : gn.data[i].groupname
@@ -69,7 +69,7 @@ const record = () => {
                 (w.groupname.toLowerCase().includes(e) || w.udate.includes(e))
               );
             });
-            console.log(results1)
+          //  console.log(results1)
             setShow(results1)
       }
 

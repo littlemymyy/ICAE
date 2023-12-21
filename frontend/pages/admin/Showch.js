@@ -34,7 +34,7 @@ const Showch = () => {
             method : 'get'
         }).then((response) => {
             setData(response.data)
-            console.log(response.data)
+           // console.log(response.data)
             setShow(response.data.slice((page.current - 1) * 50, page.current * 50))
             setShowr(response.data.slice((page.current - 1) * 50, page.current * 50))
             for(let i=0 ; i < response.data.length; i++){
@@ -77,13 +77,13 @@ const Showch = () => {
         setShowr(results1)
         pager.current = 1 
 
-        console.log(results1)
+        //console.log(results1)
       }
     } 
     const add = (e) => {
       const result = data.find(({ cas }) => cas === e)
       alert(result.cas)
-      console.log(result)
+      //console.log(result)
     }
     const clickEdit = (no)  => {
       router.push({
@@ -139,7 +139,7 @@ const Showch = () => {
             }
           }
         }
-         console.log(numdata)
+         //console.log(numdata)
           router.push({
           pathname : "/admin/Changegroup" ,
           query : {

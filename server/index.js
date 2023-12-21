@@ -27,26 +27,26 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({extended: true , limit : "35mb" , parameterLimit : 50000 }));
 app.use('/uploads', express.static('uploads'));
 
-// create PDF FOR PIF
-// const db = mysql.createConnection({
-//     host: 'localhost',
-//     user: 'root',
-//     database: 'cosmetic'
-// });
-
+//create PDF FOR PIF
 const db = mysql.createConnection({
-    host: 'icae_mysql',
-    user: 'icae_user',
-    password: 'Icae11235813re',
+    host: 'localhost',
+    user: 'root',
     database: 'cosmetic'
 });
+
+// const db = mysql.createConnection({
+//     host: 'icae_mysql',
+//     user: 'icae_user',
+//     password: 'Icae11235813re',
+//     database: 'cosmetic'
+// });
 
 const pdfStorage = multer.diskStorage({
     destination: (req, file, cb) => {
       cb(null, 'uploads/');
     },
     filename:  ( req, file, cb ) => {
-        console.log(file)
+        //console.log(file)
         cb( null, Date.now() + '-' + file.originalname);
     }
 });
@@ -56,7 +56,7 @@ const pdfUpload = multer({ storage: pdfStorage });
 //unused
 app.post('/generate-pdf', pdfUpload.single('file'), (req, res) => {
     const content = req.body.text;
-    console.log(content)
+   // console.log(content)
 
     try {
         pdfMake.fonts = {
@@ -123,7 +123,7 @@ app.post('/generate-pdf', pdfUpload.single('file'), (req, res) => {
 app.post('/api/mergePdf_old', pdfUpload.any(), (req, res) => {
     const merger = new PDFMerger();
     const files = req.files;
-    console.log(files);
+   // console.log(files);
 
     try {
         (async () => {
@@ -145,7 +145,7 @@ app.post('/api/savePdf', pdfUpload.any(), (req, res) => {
 
     //for file
     const files = req.files;
-    console.log(files);
+    //console.log(files);
     let pdfPath = [];
     console.log("\n\n")
 
@@ -165,27 +165,27 @@ app.post('/api/savePdf', pdfUpload.any(), (req, res) => {
 
     for (let i = 0; i < files.length; i++){
         if (files[i].mimetype === 'image/jpeg' || files[i].mimetype === 'image/png') {
-            console.log("photo")
-            console.log(files[i].path.toString())
+            //console.log("photo")
+           // console.log(files[i].path.toString())
             img_path = files[i].path.toString();
         }
     }
 
     let bodyData = JSON.parse(req.body.data);
 
-    console.log("start execute")
+    //console.log("start execute")
     db.execute(
         'SELECT COUNT(*) FROM pif WHERE product_id = ?',
         [bodyData.product_id],
         (err, result) => {
             if(err) {
                 res.status(500).send('Internal Server Error');
-                console.log('err-1' + err);
+                //console.log('err-1' + err);
                 return;
             }
             if(result[0]['COUNT(*)'] === 0) {
-                console.log("RUN ON IT")
-                console.log (bodyData.product_id, bodyData.email,bodyData.file_name, img_path, pdf_path, bodyData.expdate, new Date())
+                //console.log("RUN ON IT")
+               // console.log (bodyData.product_id, bodyData.email,bodyData.file_name, img_path, pdf_path, bodyData.expdate, new Date())
                 db.execute(
                     `INSERT INTO pif (product_id, email, file_name, img_path, pdf_path, expdate, create_when,
                         file1_path, file2_path, file3_path, file4_path, file5_path, file6_path, file7_path, file8_path,
@@ -212,12 +212,12 @@ app.post('/api/savePdf', pdfUpload.any(), (req, res) => {
                                 (err, result) => {
                                     if(err) {
                                         res.status(500).send('Internal Server Error');
-                                        console.log('err-3 ' + err);
-                                        console.log(bodyData.pif_status, bodyData.fda_license, bodyData.product_name, bodyData.cosmetic_name, bodyData.cosmetic_type, bodyData.create_date, bodyData.expire_date, bodyData.cosmetic_reason, bodyData.cosmetic_physical, bodyData.company_name, bodyData.company_eng_name, bodyData.more_info, bodyData.product_id)
+                                        //console.log('err-3 ' + err);
+                                       // console.log(bodyData.pif_status, bodyData.fda_license, bodyData.product_name, bodyData.cosmetic_name, bodyData.cosmetic_type, bodyData.create_date, bodyData.expire_date, bodyData.cosmetic_reason, bodyData.cosmetic_physical, bodyData.company_name, bodyData.company_eng_name, bodyData.more_info, bodyData.product_id)
                                         return;
                                     }
                                     else {
-                                        console.log("THIS NEW LATEST")
+                                        //console.log("THIS NEW LATEST")
                                         res.status(200).send('latest_ok');
                                     }
                                 }
@@ -236,7 +236,7 @@ app.post('/api/savePdf', pdfUpload.any(), (req, res) => {
                             (err, result) => {
                                 if(err) {
                                     res.status(500).send('Internal Server Error');
-                                    console.log('err-4 ' + err);
+                                    //console.log('err-4 ' + err);
                                     return;
                                 }
                             }
@@ -252,7 +252,7 @@ app.post('/api/savePdf', pdfUpload.any(), (req, res) => {
                             (err, result) => {
                                 if(err) {
                                     res.status(500).send('Internal Server Error');
-                                    console.log('err-5 ' + err);
+                                    //console.log('err-5 ' + err);
                                     return;
                                 }
                             }
@@ -267,7 +267,7 @@ app.post('/api/savePdf', pdfUpload.any(), (req, res) => {
                         (err, result) => {
                             if(err) {
                                 res.status(500).send('Internal Server Error');
-                                console.log('err-6 ' + err);
+                                //console.log('err-6 ' + err);
                                 return;
                             }
                             else{
@@ -1138,8 +1138,8 @@ app.post('/api/searchBybodypart', (req,res) => {
     //bodypart LIKE '%skin%'
     //OR bodypart LIKE '%face%' OR bodypart LIKE '%body%' OR bodypart LIKE '%powder%' OR bodypart LIKE '%hand%';
     const dd = req.body
-    console.log("........")
-    console.log(dd)
+    //console.log("........")
+    //console.log(dd)
     let bodypart = ""
     let queryWord = "SELECT * FROM chemical WHERE "
     for(let i = 0 ; i< dd.length; i++) {
@@ -1153,14 +1153,14 @@ app.post('/api/searchBybodypart', (req,res) => {
             queryWord += ";";
         }
     }
-    console.log(queryWord)
+   // console.log(queryWord)
     //
     const sql = queryWord
     db.query(sql, (err , result) => {
-        console.log(result);
+       // console.log(result);
         res.send(result)
     })
-    console.log(queryWord)
+    //console.log(queryWord)
 })
 
 app.get('/api/get_history', jsonParser, (req, res) => {
@@ -1183,13 +1183,14 @@ app.get('/api/get_history', jsonParser, (req, res) => {
 
 // save file from user check
 app.post('/api/savefile' , (req , res) => {
-    console.log("saveFile from data ")
-     console.log(req.body)
+    //console.log("saveFile from data ")
+    console.log(req.body.email)
+    console.log("saveFile.....")
     const uname = req.body.uname
     const gname = req.body.gname
     const dd  = req.body.dd
     const fillterg = req.body.fillterg
-    const email = req.body.email
+     const email = req.body.email
     const date = new Date();
     let day= String(date.getDate()).padStart(2,"0");
     let month = String(date.getMonth()+1).padStart(2,"0");
@@ -1221,13 +1222,14 @@ app.post('/api/savefile' , (req , res) => {
                     console.log (dd[i].cas , dd[i].cname , dd[i].cmname , dd[i].per , dd[i].st , "-" , "-" , dd[i].bodypart , dd[i].color , gname , dd[i].per1 , uname , date , newstr , email)
                     db.execute(
                         `INSERT INTO chemicalgroup (cas , cname , cmname , per , st , img , des, bodypart , color , groupname , per1 , uname , udate , fillterg , email) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`
-                        , [dd[i].cas , dd[i].cname , dd[i].cmname , dd[i].per , dd[i].st , "-" , "-" , dd[i].bodypart , dd[i].color , gname , dd[i].per1 , uname , date , newstr , email],
+                        ,[dd[i].cas , dd[i].cname , dd[i].cmname , dd[i].per , dd[i].st , "-" , "-" , dd[i].bodypart , dd[i].color , gname , dd[i].per1 , uname , udate , newstr , email],
                         (err, result) => {
                             if(err) {
                                 res.json({status:'error',message:err});
                                 return;
                             }
                             else {
+                                console.log("resule +> Add Group" , result)
                                 console.log("inserted : " + dd[i].cas)
                             }
                         }
@@ -1933,19 +1935,70 @@ app.post("/api/pifInfo" , (req , res) => {
 
  })
 
+ app.post('/api/getGroupNamebyname' , (req,res) => {
+    // console.log(req.body)
+    const gname = req.body.gname
+    const sql = 'SELECT * FROM chemicalgroup WHERE groupname = "' + gname + '"';
+    db.query(sql,(err, result) =>{
+        console.log(result);
+        res.send(result)
+    })
 
-app.get('/api/getTeam/', (req, res) => {
+})
+
+app.post('/api/searchBybodypartEdit', (req,res) => {
+    //SELECT * FROM chemical WHERE 
+    //bodypart LIKE '%skin%' 
+    //OR bodypart LIKE '%face%' OR bodypart LIKE '%body%' OR bodypart LIKE '%powder%' OR bodypart LIKE '%hand%';
+    const dd = req.body.fillterg
+    console.log("........")
+    console.log(dd)
+    let bodypart = ""
+    let queryWord = "SELECT * FROM chemical WHERE "
+    for(let i = 0 ; i< dd.length; i++) {
+        bodypart = "bodypart LIKE '%" + dd[i] + "%'"
+        queryWord += bodypart
+        if(i < dd.length - 1) {
+            queryWord += " OR "
+        }
+        else {
+            queryWord += " OR bodypart LIKE 'all%'"
+            queryWord += ";";
+        }
+    }
+    console.log(queryWord)
+    //  
+    const sql = queryWord
+    db.query(sql, (err , result) => {
+        console.log(result);
+        res.send(result)
+    })
+    console.log(queryWord)
+})
+
+
+//get check teamName
+app.post('/api/getTeam/', (req, res) => {
+    const team = req.body.team
+    //console.log("getTeam=>",req.body)
     try{
-        const sql = `SELECT DISTINCT organization_id FROM employee WHERE organization_id != ''`
-        db.query(sql,(err, result) =>{
-            //console.log(result)
-            res.send(result)
+        const sql = `SELECT  organization_id  FROM employee WHERE organization_id = ? `
+        db.query(sql,[team],(err, result) =>{
+            if(result.length === 0 ){
+                res.send("nothave")
+                console.log("nothave")
+            }
+            else{
+                res.send("HaveTeam")
+                console.log(err)
+            }
         })
     }
     catch(err){
         console.log(err)
     }
 })
+
 
 
 //update S and team
@@ -2235,6 +2288,8 @@ app.post('/api/getuserDeleteAdmin', (req, res) => {
 });
 
 app.post('/api/changeNameTeam', jsonParser , (req , res) => {
+    const new_team = req.body.teamName
+    const old_team = req.body.id
     console.log ("team =>" + new_team)
     console.log ("id =>" + old_team)
     db.execute(

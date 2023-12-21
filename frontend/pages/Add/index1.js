@@ -28,7 +28,7 @@ const index1 = () => {
   const actionclick = () =>{
     
   
-    console.log(st + " " + cname +" "+ cas +" " + info + " "+eff +" "+ per  );
+    //console.log(st + " " + cname +" "+ cas +" " + info + " "+eff +" "+ per  );
 
     let load = {
       st : st,

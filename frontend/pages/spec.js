@@ -27,7 +27,7 @@ describe('ICAE TEST', () => {
 
 
     test('Test doc list', async () => {
-        console.log('test doc list');
+        //console.log('test doc list');
         await page.goto(url + '/login/Signln', { waitUntil: 'domcontentloaded' });
 
         

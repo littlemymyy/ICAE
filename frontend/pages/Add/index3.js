@@ -69,16 +69,16 @@ const index3 = () => {
             alldata.push(data2);
             setAlldata([...alldata]);
             if(i === 100) {
-              console.log(data1)
-              console.log(data2)
-              console.log(st);
+              //console.log(data1)
+              //console.log(data2)
+             //console.log(st);
             }
         } 
       }
     }
     const handleFileSubmit = () => {
-      console.log(alldata)
-      console.log(st);
+      //console.log(alldata)
+     // console.log(st);
       for(let i = 0; i < alldata.length; i++) {
         let load = {
           data: alldata[i],
@@ -91,7 +91,7 @@ const index3 = () => {
         })
           .then(function (response) {
             if (response.data) {
-              console.log(response);
+              //console.log(response);
             }
           })
           .catch(function (error) {

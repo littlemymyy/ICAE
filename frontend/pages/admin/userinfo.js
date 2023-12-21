@@ -15,7 +15,7 @@ const userinfo = () => {
             url : process.env.NEXT_PUBLIC_API_BASE_URL+"/getuserAs/" ,
             method: "get",
         }).then((response)=>{
-            console.log(response.data)
+           // console.log(response.data)
             setUser(response.data)
         })
     },[])

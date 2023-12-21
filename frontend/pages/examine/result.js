@@ -35,17 +35,17 @@ const c2A = () => {
       let mail = localStorage.getItem("uemail")
       setEmail(mail)
       let aa = 0
-      console.log("is comming")
-      console.log(parsedArray)
+     // console.log("is comming")
+     // console.log(parsedArray)
       setSum(0)
       for(let i = 0; i < parsedArray.length; i++) {
         if(parsedArray[i].st != 2 && parsedArray[i].per1 <= parsedArray[i].per) {
-          console.log(parsedArray[i].per1)
+         // console.log(parsedArray[i].per1)
           aa += (parsedArray[i].per1 * 1)
         }
       }
       setSum(aa);
-      console.log('Sum = ' + aa)
+     // console.log('Sum = ' + aa)
       if (gname) {
         setGroupName(gname);
       }
@@ -67,15 +67,15 @@ const c2A = () => {
 
             parsedArray.find(e => {
               if (e.st === 2) {
-                console.log(".......")
-                console.log(e);  // Fix the typo here
+               // console.log(".......")
+                //console.log(e);  // Fix the typo here
                 if(checklist(unlist , e) === 1){
                   unlist.push(e)
                   setUnlist([...unlist])
                 }
               }
               else if(e.st !== 2 && e.per1 <= e.per){
-                console.log(e)
+                //console.log(e)
                 if(checklist(list , e) === 1 ){
                   setSum(sum + parseFloat(e.per1))
                   list.push(e)
@@ -83,7 +83,7 @@ const c2A = () => {
                 }
               }
               else if(e.per1 > e.per){
-                console.log(e)
+               // console.log(e)
                 if(checklist(elist , e) === 1 ){
                   elist.push(e)
                   setElist([...elist])
@@ -105,8 +105,8 @@ const c2A = () => {
 
     const percentChange = (idx, e) => {
       let sumb = 0
-      console.log(list[idx])
-      console.log(e)
+      //console.log(list[idx])
+     // console.log(e)
       let l2 = list[idx]
       if( e.length === 0 ) {
         l2["per1"] = '0'
@@ -114,7 +114,7 @@ const c2A = () => {
       else {
         l2["per1"] = e
       }
-      console.log(l2)
+      //console.log(l2)
       if (e > list[idx].per) {
         elist.push(l2)
         setElist([...elist])
@@ -134,7 +134,7 @@ const c2A = () => {
       // console.log(e)
       let l1 = elist[idx]
       l1["per1"] = e
-      console.log(l1)
+      //console.log(l1)
       if(l1.per1 <= l1.per) {
         list.push(l1)
         setList([...list])
@@ -161,7 +161,7 @@ const c2A = () => {
           );
         });
         setShow(results1)
-        console.log(results1)
+        //console.log(results1)
       }
     }
 
@@ -182,14 +182,14 @@ const c2A = () => {
       }
       setShow([])
       setSearch_input("")
-      console.log(result)
+      //console.log(result)
     }
 
 
     const clickDelete = (e) => {
       list.splice(e, 1)
       setList([...list])
-      console.log(list)
+     // console.log(list)
       let sumc = 0;
       for (let i = 0; i < list.length; i++) {
         sumc += parseInt(list[i].per1);
@@ -219,8 +219,8 @@ const c2A = () => {
 
     const preSaveFile = () => {
       const axios = require('axios');
-      console.log('groupname = ' + groupName)
-      console.log('email = ' + localStorage.getItem("uemail"))
+      //console.log('groupname = ' + groupName)
+     // console.log('email = ' + localStorage.getItem("uemail"))
       let config = {
         method: 'get',
         maxBodyLength: Infinity,
@@ -233,8 +233,8 @@ const c2A = () => {
       axios.request(config)
       .then((response) => {
         let data = JSON.parse(JSON.stringify(response.data));
-        console.log(data.message)
-        console.log("HAS DATA")
+       // console.log(data.message)
+       // console.log("HAS DATA")
         if (data.message === 'haveData') {
           Swal.fire({
             icon: "info",
@@ -271,8 +271,8 @@ const c2A = () => {
       }
 
 
-      console.log("is list")
-      console.log(list)
+     // console.log("is list")
+     // console.log(list)
       let load = {
         uname : localStorage.getItem("uname") ,
         gname : groupName ,

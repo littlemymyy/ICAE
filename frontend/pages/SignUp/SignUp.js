@@ -53,7 +53,7 @@ export default function SignUp() {
   const handleChange = async (event) => {
     if (!isValidEmail(event.target.value)) {
       setError('Email is invalid');
-      console.log("email")
+      //console.log("email")
     } else {
       setError(null);
       // console.log("ok")
@@ -64,7 +64,7 @@ export default function SignUp() {
           email : event.target.value,
         }
         const res = await Axios.post(process.env.NEXT_PUBLIC_API_BASE_URL+"/checkMail",load)
-        console.log(res.data)
+        //console.log(res.data)
 
         if(res.data === "Dupicate"){
           Swal.fire({
@@ -127,7 +127,7 @@ export default function SignUp() {
       });
     }
     else {
-      console.log(data1)
+     // console.log(data1)
       Axios({
         url: process.env.NEXT_PUBLIC_API_BASE_URL+"/setsignUp",
         method: "post",

@@ -18,7 +18,7 @@ export default function showpif(){
 
     useEffect(() => {
       var orid = localStorage.getItem("orid");
-      console.log(orid);
+      //console.log(orid);
         Axios.request(
             {
                 method: 'get',
@@ -34,7 +34,7 @@ export default function showpif(){
                 setData('')
             }
 
-            console.log(data)
+           // console.log(data)
         }).catch((error) => {
             console.log(error);
         }

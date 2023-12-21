@@ -21,13 +21,7 @@ const notification = () => {
     const feact = async () => {
       try{
         const res = await Axios.post("process.env.API_BASE_URL/getnotficationPIF",load)
-        console.log(res.data)
-
-
-
-
-
-
+        //console.log(res.data)
       } catch(error){
         console.log(error)
       }

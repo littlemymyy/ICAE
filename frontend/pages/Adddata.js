@@ -35,7 +35,7 @@ const Adddata = () => {
           const worksheetname = workbook.SheetNames[0];
           const worksheet = workbook.Sheets[worksheetname];
           const data = XLSX.utils.sheet_to_json(worksheet);
-          console.log(data);
+         // console.log(data);
           // console.log(data[0])
           let st1 = Object.keys(data[0])[0]
           // console.log(st1)
@@ -282,7 +282,7 @@ const Adddata = () => {
                             dd3.cmname = searchDD.cmname
                         }
                         if(dd3.cmname === '-') {
-                            console.log(searchDD)
+                            //console.log(searchDD)
                         }
                         d3.push(dd3)
                     }
@@ -290,7 +290,7 @@ const Adddata = () => {
                 
             }
         }
-         console.log(d3.length)
+         //console.log(d3.length)
         // for(let i = 0; i < d3.length; i++) {
           let load = {
             data: d3,
@@ -303,7 +303,7 @@ const Adddata = () => {
           })
             .then(function (response) {
               if (response.data) {
-                console.log(response);
+                //console.log(response);
               }
             })
             .catch(function (error) {

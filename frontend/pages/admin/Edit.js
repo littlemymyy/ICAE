@@ -24,7 +24,7 @@ export default function Edit_Admin() {
         const queryString = window.location.search
         const searchParams = new URLSearchParams(queryString)
         const no= searchParams.get("no")
-        console.log(no)
+        //console.log(no)
         setNum1(no)
 
         let load = {
@@ -35,8 +35,8 @@ export default function Edit_Admin() {
             method : 'post',
             data : load,
         }).then((response)=>{
-            console.log("repones.data",response.data)
-            console.log("[0]",response.data[0])
+           // console.log("repones.data",response.data)
+          //  console.log("[0]",response.data[0])
             setData(response.data[0])
             showdata[0] = response.data[0].cmname
             showdata[1] = response.data[0].per

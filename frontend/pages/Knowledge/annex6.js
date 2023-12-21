@@ -34,7 +34,7 @@ export default function Home(){
                 setData([{cas: "", name: "", per: "ไม่พบข้อมูล"}]);
             }
 
-            console.log(data)
+          //  console.log(data)
         }).catch((error) => {
             console.log(error);
         }

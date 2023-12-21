@@ -33,7 +33,7 @@ export default function Home(){
             else {
                 setData([{cas: "", name: "", per: "ไม่พบข้อมูล"}]);
             }
-            console.log(data)
+           // console.log(data)
         }).catch((error) => {
             console.log(error);
         }

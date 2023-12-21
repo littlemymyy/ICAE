@@ -60,7 +60,7 @@ const manage = () => {
     let email = localStorage.getItem("uemail")
     Axios.get(process.env.NEXT_PUBLIC_API_BASE_URL+"/getStatusByEmail?email="+email)
     .then((res) => {
-        console.log(res.data.message[0].status)
+       // console.log(res.data.message[0].status)
         setStatusU(res.data.message[0].status)
         localStorage.setItem("status", res.data.message[0].status)
         setUserID(res.data.message[0].no)
@@ -75,8 +75,8 @@ const manage = () => {
 
     Axios.get(process.env.NEXT_PUBLIC_API_BASE_URL+"/getUserNoTeam")
       .then((res) => {
-        console.log("Data")
-        console.log(res.data.message)
+        //console.log("Data")
+       // console.log(res.data.message)
         setDataUser(res.data.message);
 
       })
@@ -96,8 +96,8 @@ const manage = () => {
           let ida = ""
           Axios.get(process.env.NEXT_PUBLIC_API_BASE_URL+"/getuserTeamMangeByemail?email="+email)
           .then((res) => {
-              console.log("Data")
-              console.log(res.data.message[0].organization_id)
+              //console.log("Data")
+              //console.log(res.data.message[0].organization_id)
               ida = res.data.message[0].organization_id;
               setId(ida)
               if (ida === null) {
@@ -105,12 +105,12 @@ const manage = () => {
                   router.push("/team/team")
               }else{
                   localStorage.setItem("orid", ida)
-                  console.log("ida = ", ida)
+                  //console.log("ida = ", ida)
 
                   Axios.get(process.env.NEXT_PUBLIC_API_BASE_URL+"/getuserTeamManage?id="+ida)
                   .then((res) => {
-                      console.log("Data")
-                      console.log(res.data.message)
+                     // console.log("Data")
+                     // console.log(res.data.message)
                       setData(res.data.message);
                   })
                   .catch((err) => {
@@ -142,7 +142,7 @@ const manage = () => {
 
 
   const resultsearch = (e) => {
-    console.log("Result e=>",e)
+    //console.log("Result e=>",e)
     if (e.length === 0) {
         setShow([]);
         setSearch_input("");
@@ -152,8 +152,8 @@ const manage = () => {
             return (
               e &&
               w &&
-              (w.em_email.toLowerCase().includes(e) ||
-                w.em_email.toUpperCase().includes(e))
+              (w.em_fullname.toLowerCase().includes(e) ||
+                w.em_fullname.toUpperCase().includes(e))
             );
           });
           setShow(results1);
@@ -163,7 +163,7 @@ const manage = () => {
   const add = (e) => {
       no.push(e)
       setNo([...no])
-      console.log("ADDED")
+      //console.log("ADDED")
 
       Axios.post(process.env.NEXT_PUBLIC_API_BASE_URL+"/addUserToTeam",
       {
@@ -200,7 +200,7 @@ const manage = () => {
             window.location.reload();
         });
       });
-      console.log(data);
+     // console.log(data);
   };
 
   const handleChange = (e) => {
@@ -208,12 +208,12 @@ const manage = () => {
 
     Axios.get(process.env.NEXT_PUBLIC_API_BASE_URL+"/getCountOwner?id="+id)
     .then((res) => {
-        console.log(res.data.message[0].num)
+        //console.log(res.data.message[0].num)
         let s_count = res.data.message[0].num
         if (s_count <= 1) {
           Axios.get(process.env.NEXT_PUBLIC_API_BASE_URL+"/getStatusByNo?no="+e.no)
           .then((res) => {
-              console.log(res.data.message[0].status)
+              //console.log(res.data.message[0].status)
               let s_status = res.data.message[0].status
               if (s_status === "S" && e1 !== 1) {
                 Swal.fire({
@@ -265,7 +265,7 @@ const manage = () => {
         }
     }
     console.log( "is load from handlechange")
-        console.log(dataChangeStatus)
+        //console.log(dataChangeStatus)
         Axios.post(process.env.NEXT_PUBLIC_API_BASE_URL+"/updateManageUser", dataChangeStatus)
         .then(response => {
     // Handle the response data here
@@ -278,7 +278,7 @@ const manage = () => {
                   window.location.reload();
               })
         }
-        console.log(response.data);
+       // console.log(response.data);
         })
     .catch(error => {
       // Handle errors here
@@ -289,12 +289,12 @@ const manage = () => {
   const handleDelete = async (e) => {
     Axios.get(process.env.NEXT_PUBLIC_API_BASE_URL+"/getCountOwner?id="+id)
     .then((res) => {
-        console.log(res.data.message[0].num)
+        //console.log(res.data.message[0].num)
         let s_count = res.data.message[0].num
         if (s_count <= 1) {
           Axios.get(process.env.NEXT_PUBLIC_API_BASE_URL+"/getStatusByNo?no="+e.no)
           .then((res) => {
-              console.log(res.data.message[0].status)
+              //console.log(res.data.message[0].status)
               let s_status = res.data.message[0].status
               if (s_status === "S") {
                 Swal.fire({
@@ -341,8 +341,8 @@ const manage = () => {
     let load = {
       data : id
     }
-    console.log("load from delete")
-    console.log(load)
+    //console.log("load from delete")
+    //console.log(load)
     Axios.post(process.env.NEXT_PUBLIC_API_BASE_URL+"/deleteTeam", load)
     .then(response => {
       if (response.data.status === "ok") {
@@ -373,12 +373,12 @@ const manage = () => {
     });
   }
   const deleteMember = (e) => {
-    console.log("deleted no = "+ e.no);
+    //console.log("deleted no = "+ e.no);
     let load = {
       data : e.no
     }
-    console.log("load from delete")
-    console.log(load)
+    //console.log("load from delete")
+    //console.log(load)
     Axios.post(process.env.NEXT_PUBLIC_API_BASE_URL+"/getuserDeleteAdmin", load)
     .then(response => {
       if (response.data.status === "ok") {
@@ -409,9 +409,9 @@ const manage = () => {
   }
 
   const changeName = async () => {
-    console.log("That chamgename big")
-    console.log(id)
-    console.log(teamName);
+    //console.log("That chamgename big")
+   // console.log(id)
+   // console.log(teamName);
     if (teamName === "" || teamName === null || teamName === undefined || teamName === "null" || teamName === "undefined") {
         Swal.fire({
             title: "ชื่อทีมไม่ถูกต้อง!",
@@ -420,15 +420,18 @@ const manage = () => {
         });
         return;
     }
+    else {
+
+    
     let load = {
-        data: teamName,
+        teamName: teamName,
         id: id,
     };
 
     try {
         const res = await Axios.post(process.env.NEXT_PUBLIC_API_BASE_URL+"/changeNameTeam", load);
-        console.log("changeName")
-        console.log(res.data)
+       // console.log("changeName")
+       // console.log(res.data)
         if (res.data.status === "ok") {
             Swal.fire({
                 title: "สำเร็จ!",
@@ -461,10 +464,11 @@ const manage = () => {
           icon: "error",
       });
     }
+  }
   };
 
 const handleChickAdd = () => {
-    console.log("That is handleChickAdd")
+   // console.log("That is handleChickAdd")
     setTap(1)
 }
 
@@ -566,10 +570,10 @@ const handleChickAdd = () => {
                     <thead>
                       <tr>
                         <th className="C2EM_th1">#</th>
-                        <th className="C2EM_th2">Name</th>
-                        <th className="C2EM_th3">Role</th>
-                        <th className="C2EM_th4">Status</th>
-                        <th className="C2EM_th5">Action</th>
+                        <th className="C2EM_th2">ผู้ใช้</th>
+                        <th className="C2EM_th3">ตำแหน่ง</th>
+                        <th className="C2EM_th4">สถานะ</th>
+                        <th className="C2EM_th5">การกระทำ</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -579,12 +583,14 @@ const handleChickAdd = () => {
                           <td className="C2EM_th2">{value.em_fullname}</td>
                           <td className="C2EM_th3">
                           {
-                          value.status === "S" ?
-                          <p>หัวหน้า</p> :
-                          value.status === "U1" ?
-                          <p>ผู้แก้ไข</p> :
-                          <p>ผู้ดู</p>
-                              }
+                        value.status === "S" ?
+                        <p>หัวหน้า</p> :
+                        value.status === "U1" ?
+                        <p>ผู้แก้ไข</p> :
+                        value.status === "U2" ?
+                        <p>ผู้ดู</p> :
+                        <p>ยังไม่ตั้งสถานะ</p> 
+                            }
                             </td>
                           <td className="C2EM_th4">
                             {" "}
@@ -662,8 +668,8 @@ const handleChickAdd = () => {
                   <thead>
                     <tr>
                       <th className="C2EM_th1">#</th>
-                      <th className="C2EM_th2">Name</th>
-                      <th className="C2EM_th3">Role</th>
+                      <th className="C2EM_th2">ผู้ใช้</th>
+                      <th className="C2EM_th3">ตำแหน่ง</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -677,7 +683,9 @@ const handleChickAdd = () => {
                         <p>หัวหน้า</p> :
                         value.status === "U1" ?
                         <p>ผู้แก้ไข</p> :
-                        <p>ผู้ดู</p>
+                        value.status === "U2" ?
+                        <p>ผู้ดู</p> :
+                        <p>ยังไม่ตั้งสถานะ</p> 
                             }
                           </td>
                       </tr>

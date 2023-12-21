@@ -26,7 +26,7 @@ export default function Home() {
   const router = useRouter()
 
   useEffect(()=>{
-    console.log('Test12');
+    //console.log('Test12');
     const Swal = require('sweetalert2')
 
    // console.log(sDate + " " + thisDay)
@@ -34,8 +34,8 @@ export default function Home() {
     //   alert('OK')  // Call send email
     //   localStorage.setItem("emaildate" , thisDay);
     // }
-    console.log(localStorage)
-    console.log("mail111 "+ localStorage.getItem("uemail"))
+   // console.log(localStorage)
+   // console.log("mail111 "+ localStorage.getItem("uemail"))
 
     if(localStorage.getItem("token")){
         Axios.request(
@@ -46,9 +46,9 @@ export default function Home() {
             }
             ).then((response) => {
             if(response.data.status === 'ok'){
-                console.log('ok')
+                //console.log('ok')
             }else{
-                console.log('not ok')
+              //  console.log('not ok')
                 localStorage.clear();
                 window.location.reload();
             }
@@ -57,30 +57,30 @@ export default function Home() {
         });
     }
 
-    if(localStorage.getItem("uemail")){
+    if(localStorage.getItem("uemail").length > 0){
       let email = localStorage.getItem("uemail")
       let id = localStorage.getItem("orid")
-      console.log(email)
+      //console.log(email)
       let load = {
         orid : id
       }
 
         Axios.post(process.env.NEXT_PUBLIC_API_BASE_URL+'/sendNotification',load)
           .then((res)=>{
-            console.log(res.data)
+            //console.log(res.data)
             setData(res.data)
 
             let fdanum = ""
 
           for(let i = 0 ; i < res.data.length ; i++){
-            console.log(res.data[i].fda_license)
+           // console.log(res.data[i].fda_license)
             fdanum += res.data[i].fda_license + "   " + ","
           }
 
           let newfdanum = ""
           newfdanum += fdanum.substring(0 , fdanum.lengt -1)
-          console.log(newfdanum)
-          console.log(res.data)
+          //console.log(newfdanum)
+          //console.log(res.data)
           if(res.data.length > 0 && res.data !== "Notthing"){
             Swal.fire({
               title: 'ใบอนุญาตจดแจ้งใกล้หมดอายุ',

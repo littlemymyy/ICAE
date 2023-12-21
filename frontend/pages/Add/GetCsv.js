@@ -16,8 +16,8 @@ const GetCsv = () => {
         if (!fileObj) {
             return;
         }
-        console.log(fileObj);
-        console.log(fileObj.name);
+        //console.log(fileObj);
+        //console.log(fileObj.name);
         const file = fileObj;
         Papa.parse(file, {
             header: true,

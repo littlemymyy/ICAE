@@ -14,7 +14,7 @@ const Info = () => {
       gn.push(pair[1]);
       break;
     }
-    console.log(gn);
+    //console.log(gn);
     gn = gn[0];
     Axios.get(process.env.NEXT_PUBLIC_API_BASE_URL+`/getWithWord/${gn}`).then((response) => {
         setGname(response.data);

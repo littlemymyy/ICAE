@@ -60,7 +60,7 @@ export default function manage() {
 
   useEffect(() => {
     var userData = sessionStorage.getItem("uemail");
-    console.log("product_id = " + product_id);
+    //console.log("product_id = " + product_id);
       Axios.request(
           {
               method: 'get',
@@ -72,7 +72,7 @@ export default function manage() {
           let data = JSON.stringify(response.data.message)
           if (response.data.status === "ok"){
             setProductData(response.data.message);
-            console.log(response.data.message)
+           // console.log(response.data.message)
             setFirstData(response.data.message[0]);
           }
           else {
@@ -95,7 +95,7 @@ export default function manage() {
     ).then((response) => {
         if (response.data.status === "ok"){
           let resData = JSON.parse(JSON.stringify(response.data.message[0]))
-          console.log(resData)
+        //  console.log(resData)
 
           // setPifData(resData);
           document.getElementById("expdate").value =  convertDate(resData.expdate)
@@ -109,13 +109,13 @@ export default function manage() {
           }
 
           for(let i = 0; i < 14; i++){
-            console.log(resData.file1_path)
+         //   console.log(resData.file1_path)
             if(resData["file"+(i+1)+"_path"] !== null){
               displayOldFile("file"+(i+1), resData["file"+(i+1)+"_path"], resData["file"+(i+1)+"_exp"])
             }
           }
         }else if (response.data.message === "No data found"){
-          console.log("No data pif found")
+       //   console.log("No data pif found")
         }else{
           console.log("error")
           // router.push("/pif/productslist")
@@ -164,7 +164,7 @@ export default function manage() {
   }
 
   const fetchData = async (e) => {
-    console.log("e = " + e);
+   // console.log("e = " + e);
     const res = await Axios({
       url: process.env.NEXT_PUBLIC_API_BASE_URL+"/fetchData",
       method: "get",
@@ -267,7 +267,7 @@ export default function manage() {
 
   const displayOldFile = (inputName, filePath, expDate) => {
     let baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL1
-    console.log(inputName);
+    //console.log(inputName);
 
     document.getElementById(inputName).innerHTML = fullFilePath(filePath)
 
@@ -278,7 +278,7 @@ export default function manage() {
         if (expDate !== null){
           document.getElementById("file1_exp").value = convertDate(expDate)
         }
-        console.log("expDate = " + expDate)
+       // console.log("expDate = " + expDate)
         break;
       case 'file2':
         setPdfFile2(baseUrl+filePath);
@@ -379,7 +379,7 @@ export default function manage() {
 
   const handleFileChange = (inputName, event) => {
     const file = event.target.files[0];
-    console.log(inputName);
+  //  console.log(inputName);
     document.getElementById(inputName).innerHTML = event.target.files[0].name
 
     switch (inputName) {
@@ -554,11 +554,11 @@ export default function manage() {
   }
 
   const saveOnly = async (e) => {
-    console.log("SAVE ONLY")
+   // console.log("SAVE ONLY")
     Axios.get(process.env.NEXT_PUBLIC_API_BASE_URL+'/getStatusByEmail?email=' + localStorage.getItem("uemail"))
     .then((response) => {
       if (response.data.status === "ok"){
-        console.log(response.data.message[0].status)
+       // console.log(response.data.message[0].status)
         if (response.data.message[0].status === "U2" || response.data.message[0].status === "U"){
           Swal.fire({
             icon: 'error',
@@ -678,7 +678,7 @@ export default function manage() {
     photo && formData.append('photo', photo);
     // file3 && formData.append('file3', file3);
 
-    console.log(data)
+   // console.log(data)
 
     try {
       const response = await Axios.post(process.env.NEXT_PUBLIC_API_BASE_URL+'/savePdf', formData, {
@@ -688,7 +688,7 @@ export default function manage() {
         data: data
       })
       .then (res => {
-        console.log(res);
+        //console.log(res);
         if (res.data === "latest_ok") {
           Swal.fire({
             icon: 'success',
@@ -841,7 +841,7 @@ export default function manage() {
     photo && formData.append('photo', photo);
     // file3 && formData.append('file3', file3);
 
-    console.log(data)
+   // console.log(data)
 
     try {
       const response = await Axios.post(process.env.NEXT_PUBLIC_API_BASE_URL+'/savePdf', formData, {
@@ -851,7 +851,7 @@ export default function manage() {
         data: data
       })
       .then (res => {
-        console.log(res);
+        //console.log(res);
         if (res.data === "latest_ok") {
           //create pdf
           Axios.request(process.env.NEXT_PUBLIC_API_BASE_URL+'/mergePdf', {
@@ -862,7 +862,7 @@ export default function manage() {
             }
           }).then((response) => {
             if (response.data === "createdOk"){
-              console.log("create pdf success")
+              //console.log("create pdf success")
               Swal.fire({
                 icon: 'success',
                 title: 'บันทึกและสร้างไฟล์ข้อมูลสำเร็จ',
@@ -870,7 +870,7 @@ export default function manage() {
                 router.push("/pif/showpif")
               })
             }else{
-              console.log("create pdf fail")
+              //console.log("create pdf fail")
               Swal.fire({
                 icon: 'error',
                 title: 'บันทึกข้อมูลไม่สำเร็จ',

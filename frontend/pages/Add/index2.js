@@ -23,14 +23,14 @@ const index2 = () => {
         if (!fileObj) {
             return;
         }
-        console.log(fileObj);
-        console.log(fileObj.name);
+        //console.log(fileObj);
+        //console.log(fileObj.name);
         const file = fileObj;
         Papa.parse(file, {
             header: true,
             complete: (results) => {
                 setData(results.data);
-                console.log(results.data);
+                //console.log(results.data);
             },
         });
     };

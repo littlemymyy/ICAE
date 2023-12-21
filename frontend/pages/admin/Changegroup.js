@@ -29,15 +29,15 @@ const Changegroup = () => {
             method: "post",
             data : mydata ,
         }).then((response) => {
-            console.log(response.data)
+            //console.log(response.data)
             setData(response.data)
         })
 
-        console.log(mydata)
+       // console.log(mydata)
     } ,[] )
 
     const savedata = () => {
-        console.log(num)
+       // console.log(num)
         if(st !== 0) {
             let load = {
                 st : st ,

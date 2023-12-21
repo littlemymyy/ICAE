@@ -24,7 +24,7 @@ const index4 = () => {
             Axios.get(process.env.API_BASE_URL+'/getXML/${xml}`').then((response) => {
                 let res = response.data;
                 setAlldata(response.data);
-                console.log(response.data);
+                //console.log(response.data);
             });
         }
         

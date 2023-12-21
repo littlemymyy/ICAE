@@ -55,7 +55,7 @@ export default function Home(){
                 />
                 <button onClick={(e) => handleClick(e, `annex_search?search=${document.getElementById("searchname").value}`)} style={{width:"55px", height:"42px", borderRadius:"5px", border:"1px solid #C4C4C4", padding:"10px",backgroundColor:"#7e57c2",marginLeft:"5px"}}
                  type="button">
-                    <text style={{color:"white"}}>ค้นหา</text>
+                    <span style={{color:"white"}}>ค้นหา</span>
                  </button>
             </form>
 
