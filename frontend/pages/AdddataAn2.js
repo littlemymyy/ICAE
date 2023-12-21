@@ -33,7 +33,7 @@ const AdddataAn2 = () => {
               const worksheetname = workbook.SheetNames[0];
               const worksheet = workbook.Sheets[worksheetname];
               const data = XLSX.utils.sheet_to_json(worksheet);
-              console.log(data);
+              //console.log(data);
               // console.log(data[0])
               let st1 = Object.keys(data[0])[0]
               // console.log(st1)
@@ -54,10 +54,10 @@ const AdddataAn2 = () => {
               }
               // console.log(data.length);
               const head = Object.values(data[3]);
-              console.log(head);
+              //console.log(head);
               for(let i = 4 ; i<data.length; i++) {
                 let com = Object.values(data[i])
-                console.log(com.length)
+                //console.log(com.length)
                 if(com.length !== 16 ){
                     // console.log(com)
                 }
@@ -73,21 +73,21 @@ const AdddataAn2 = () => {
           }
     
           const handleFileSubmit = () => {
-            console.log(data1)
-            console.log(st1);
+            //console.log(data1)
+            //console.log(st1);
             // for(let i = 0; i < data1.length; i++) {
               let load = {
                 data: data1,
                 st: st1,
               };
               Axios({
-                url: "http://localhost:3001/api/setdata",
+                url: process.env.API_BASE_URL/api/+"setdata",
                 method: "post",
                 data: load,
               })
                 .then(function (response) {
                   if (response.data) {
-                    console.log(response);
+                    //console.log(response);
                   }
                 })
                 .catch(function (error) {

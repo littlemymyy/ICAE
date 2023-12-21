@@ -48,9 +48,9 @@ const UserManage = () => {
         //FetchData From Employee
         const fetchData0 = async () => {
          try {
-        const res0 = await Axios.get("http://localhost:3001/api/AddminManageUser");
+        const res0 = await Axios.get(process.env.NEXT_PUBLIC_API_BASE_URL+"/AddminManageUser");
         // Handle the response data as needed
-        console.log("Response:", res0.data);
+       // console.log("Response:", res0.data);
         setShow(res0.data)
         setData(res0.data)
     } catch (error) {
@@ -89,7 +89,7 @@ fetchData0();
 
 
       const add = (e) => {
-        console.log(e)
+       // console.log(e)
 
         // if (checkG(data, e)) {
         //   alert("กรุณาเลือกคนอื่น");
@@ -117,9 +117,9 @@ fetchData0();
                 no : e.no,
                 team : id
             }
-            console.log( "is load from handlechange")
-            console.log(load)
-            Axios.post("http://localhost:3001/api/updateManageUser", load)
+            //console.log( "is load from handlechange")
+            //console.log(load)
+            Axios.post(process.env.NEXT_PUBLIC_API_BASE_URL+"/updateManageUser", load)
             .then(response => {
         // Handle the response data here
             if(response.data){
@@ -131,7 +131,7 @@ fetchData0();
                     timer: 1500
                   });
             }
-            console.log(response.data);
+           // console.log(response.data);
             })
       .catch(error => {
         // Handle errors here
@@ -144,9 +144,9 @@ fetchData0();
                 no : e.no,
                 team : id
             }
-            console.log( "is load from handlechange")
-            console.log(load)
-            Axios.post("http://localhost:3001/api/updateManageUser", load)
+            //console.log( "is load from handlechange")
+            //console.log(load)
+            Axios.post(process.env.NEXT_PUBLIC_API_BASE_URL+"/updateManageUser", load)
             .then(response => {
         // Handle the response data here
             if(response.data){
@@ -158,7 +158,7 @@ fetchData0();
                     timer: 1500
                   });
             }
-            console.log(response.data);
+           // console.log(response.data);
             })
       .catch(error => {
         // Handle errors here
@@ -171,9 +171,9 @@ fetchData0();
                 no : e.no,
                 team : id
             }
-            console.log( "is load from handlechange")
-            console.log(load)
-            Axios.post("http://localhost:3001/api/updateManageUser", load)
+           // console.log( "is load from handlechange")
+           // console.log(load)
+            Axios.post(process.env.NEXT_PUBLIC_API_BASE_URL+"/updateManageUser", load)
             .then(response => {
         // Handle the response data here
             if(response.data){
@@ -185,7 +185,7 @@ fetchData0();
                     timer: 1500
                   });
             }
-            console.log(response.data);
+            //console.log(response.data);
             })
       .catch(error => {
         // Handle errors here
@@ -199,9 +199,9 @@ fetchData0();
                 no : e.no,
                 team : id
             }
-            console.log( "is load from handlechange")
-            console.log(load)
-            Axios.post("http://localhost:3001/api/updateManageUser", load)
+            //console.log( "is load from handlechange")
+            //console.log(load)
+            Axios.post(process.env.NEXT_PUBLIC_API_BASE_URL+"/updateManageUser", load)
             .then(response => {
         // Handle the response data here
             if(response.data){
@@ -213,7 +213,7 @@ fetchData0();
                     timer: 1500
                   });
             }
-            console.log(response.data);
+            //console.log(response.data);
             })
       .catch(error => {
         // Handle errors here
@@ -227,9 +227,9 @@ fetchData0();
                 no : e.no,
                 team : id
             }
-            console.log( "is load from handlechange")
-            console.log(load)
-            Axios.post("http://localhost:3001/api/updateManageUserAdmin", load)
+            //console.log( "is load from handlechange")
+            //console.log(load)
+            Axios.post(process.env.NEXT_PUBLIC_API_BASE_URL+"/updateManageUserAdmin", load)
             .then(response => {
         // Handle the response data here
             if(response.data){
@@ -241,7 +241,7 @@ fetchData0();
                     timer: 1500
                   });
             }
-            console.log(response.data);
+            //console.log(response.data);
             })
       .catch(error => {
         // Handle errors here

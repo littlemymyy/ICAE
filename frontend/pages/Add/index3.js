@@ -69,29 +69,29 @@ const index3 = () => {
             alldata.push(data2);
             setAlldata([...alldata]);
             if(i === 100) {
-              console.log(data1)
-              console.log(data2)
-              console.log(st);
+              //console.log(data1)
+              //console.log(data2)
+             //console.log(st);
             }
         } 
       }
     }
     const handleFileSubmit = () => {
-      console.log(alldata)
-      console.log(st);
+      //console.log(alldata)
+     // console.log(st);
       for(let i = 0; i < alldata.length; i++) {
         let load = {
           data: alldata[i],
           st: st,
         };
         Axios({
-          url: "http://localhost:3001/api/setdata",
+          url: process.env.NEXT_PUBLIC_API_BASE_URL+"/setdata",
           method: "post",
           data: load,
         })
           .then(function (response) {
             if (response.data) {
-              console.log(response);
+              //console.log(response);
             }
           })
           .catch(function (error) {

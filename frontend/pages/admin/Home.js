@@ -32,31 +32,31 @@ const Home = () => {
       const feechData = async () => {
         try {
           const res1 = await 
-            Axios.get('http://localhost:3001/api/showdataUV');
+            Axios.get(process.env.NEXT_PUBLIC_API_BASE_URL+'/showdataUV');
           setUv(res1.data[0].num);
-          console.log(res1.data[0].num)
+          //console.log(res1.data[0].num)
 
-          const res2 = await Axios.get('http://localhost:3001/api/showdataAn2')
+          const res2 = await Axios.get(process.env.NEXT_PUBLIC_API_BASE_URL+'/showdataAn2')
           setAn2(res2.data[0].num);
-          console.log(res2.data[0].num)
+         // console.log(res2.data[0].num)
 
-          const res3 = await Axios.get('http://localhost:3001/api/showdataST0')
+          const res3 = await Axios.get(process.env.NEXT_PUBLIC_API_BASE_URL+'/showdataST0')
           setSt0(res3.data[0].num);
-          console.log(res3.data[0].num)
+         // console.log(res3.data[0].num)
 
-          const res4 = await Axios.get('http://localhost:3001/api/showdataAn4')
+          const res4 = await Axios.get(process.env.NEXT_PUBLIC_API_BASE_URL+'/showdataAn4')
           setColor(res4.data[0].num);
-          console.log(res4.data[0].num)
+         // console.log(res4.data[0].num)
 
-          const res5 = await Axios.get('http://localhost:3001/api/showdataAn5')
+          const res5 = await Axios.get(process.env.NEXT_PUBLIC_API_BASE_URL+'/showdataAn5')
           setAn5(res5.data[0].num);
-          console.log(res5.data[0].num)
+         // console.log(res5.data[0].num)
 
-          const res6 = await Axios.get('http://localhost:3001/api/showdataAn0')
+          const res6 = await Axios.get(process.env.NEXT_PUBLIC_API_BASE_URL+'/showdataAn0')
           setAllow(res6.data[0].num);
-          console.log(res6.data[0].num)
+        //  console.log(res6.data[0].num)
 
-          // const res7 = await Axios.get('http://localhost:3001/api/showdataAn0_perfume')
+          // const res7 = await Axios.get(process.env.NEXT_PUBLIC_API_BASE_URL+'/showdataAn0_perfume')
           // setPerfume(res7.data[0].num);
           // console.log(res7.data[0].num)
 

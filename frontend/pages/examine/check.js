@@ -9,6 +9,7 @@ import Footer from "@/components/Footer";
 import { json } from "react-router-dom";
 import { BrowserRouter as Router, useHistory } from "react-router-dom";
 import { Box } from "@mui/material";
+// import 'bootstrap/dist/css/bootstrap.min.css'
 
 const check = () => {
   const [op1, setOp1] = useState([
@@ -58,10 +59,10 @@ const check = () => {
         }
       }
     }
-    console.log("is fillterg :");
-    console.log(fillterg);
+    //console.log("is fillterg :");
+   // console.log(fillterg);
     Axios({
-      url: "http://localhost:3001/api/searchBybodypart",
+      url: process.env.NEXT_PUBLIC_API_BASE_URL+"/searchBybodypart",
       method: "post",
       data: fillterg,
     })
@@ -77,7 +78,7 @@ const check = () => {
         //   }
         // }
         setData(res);
-        console.log(res);
+       // console.log(res);
       })
       .catch((error) => {
         console.error(error);
@@ -86,7 +87,7 @@ const check = () => {
   };
 
   useEffect(() => {
-    console.log(data);
+   // console.log(data);
   }, []);
 
   const resultsearch = (e) => {
@@ -108,7 +109,7 @@ const check = () => {
         );
       });
       setShow(results1);
-      console.log(results1);
+      //console.log(results1);
     }
   };
 
@@ -126,13 +127,13 @@ const check = () => {
       alert("กรุณาเลือกสารอื่น");
     } else {
       const result = data.find(({ no }) => no === e);
-      console.log("...........");
-      console.log(result);
+      //console.log("...........");
+     // console.log(result);
       setList([...list, result]);
       setShow([]);
       setSearch_input("");
 
-      console.log(list);
+      //console.log(list);
     }
   };
 
@@ -147,15 +148,15 @@ const check = () => {
   };
 
   const percentChange = (idx, e) => {
-    console.log(list[idx]);
-    console.log(e);
+    //console.log(list[idx]);
+    //console.log(e);
     let l2 = list[idx];
     if (e.length === 0) {
       l2["per1"] = "0";
     } else {
       l2["per1"] = e;
     }
-    console.log(l2);
+    //console.log(l2);
 
     let total = 0;
     for (let i = 0; i < list.length; i++) {
@@ -172,7 +173,7 @@ const check = () => {
   //     dd : list
   //   }
   //   Axios({
-  //     url : "http://localhost:3001/api/savefile",
+  //     url : process.env.NEXT_PUBLIC_API_BASE_URL+"/savefile",
   //     method : "post" ,
   //     data : load ,
   //   }).then((response) => {
@@ -181,7 +182,7 @@ const check = () => {
   //   })
   // }
   const sendData = () => {
-    console.log(JSON.stringify(list));
+    //console.log(JSON.stringify(list));
     router.push({
       pathname: "/examine/result",
 

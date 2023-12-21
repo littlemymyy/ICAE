@@ -68,10 +68,10 @@ const createByfda = () => {
   //Get Data from Fda
   const fetchData = async (e) => {
     setfda_num(e.target.value)
-    console.log( e);
+    //console.log( e);
     let num = e.target.value
     const res = await Axios({
-      url: "http://localhost:3001/api/fetchData",
+      url: process.env.NEXT_PUBLIC_API_BASE_URL+"/fetchData",
       method: "get",
       params: {
         data: e.target.value,
@@ -79,8 +79,8 @@ const createByfda = () => {
     })
       .then((res) => {
 
-        console.log("arr")
-        console.log(num)
+        //console.log("arr")
+        //console.log(num)
 
         let dd = [{status : res.data[0] ,
           locationstatus : res.data[1],
@@ -100,7 +100,7 @@ const createByfda = () => {
 
         // data[0]["cas"] = res.data[1]
         setData(dd)
-        console.log(res.data)
+       // console.log(res.data)
         const updatedLabel = "MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root";
 
         if (res.data[0] == "N/A") {
@@ -134,8 +134,8 @@ const createByfda = () => {
 
           document.getElementById("fentrepreneur-label").className = updatedLabel
           document.getElementById("fentrepreneur").value = res.data[14]
-          console.log(res.data)
-          console.log(res.data[0])
+          //console.log(res.data)
+         // console.log(res.data[0])
         }
 
 
@@ -186,7 +186,7 @@ const createByfda = () => {
       let config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: 'http://localhost:3001/api/insertPifProduct',
+        url: process.env.NEXT_PUBLIC_API_BASE_URL+'/insertPifProduct',
         headers: {
           'Content-Type': 'application/json'
         },
@@ -195,7 +195,7 @@ const createByfda = () => {
 
       Axios.request(config)
       .then((response) => {
-        console.log(JSON.stringify(response.data));
+       // console.log(JSON.stringify(response.data));
         Swal.fire({
           icon: 'success',
           title: 'สำเร็จ',

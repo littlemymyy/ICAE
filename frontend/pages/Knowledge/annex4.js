@@ -21,7 +21,7 @@ export default function Home(){
         Axios.request(
             {
                 method: 'get',
-                url: 'http://localhost:3001/api/annex?st=4',
+                url: process.env.NEXT_PUBLIC_API_BASE_URL+'/annex?st=4',
                 headers: { },
                 data : ''
             }
@@ -34,7 +34,7 @@ export default function Home(){
                 setData([{cas: "", name: "", per: "ไม่พบข้อมูล", color: ""}]);
             }
 
-            console.log(data)
+           // console.log(data)
         }).catch((error) => {
             console.log(error);
         }

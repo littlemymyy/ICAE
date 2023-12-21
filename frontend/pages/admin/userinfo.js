@@ -12,10 +12,10 @@ const userinfo = () => {
    
     useEffect(()=> {
         Axios({
-            url : "http://localhost:3001/api/getuserAs/" ,
+            url : process.env.NEXT_PUBLIC_API_BASE_URL+"/getuserAs/" ,
             method: "get",
         }).then((response)=>{
-            console.log(response.data)
+           // console.log(response.data)
             setUser(response.data)
         })
     },[])
@@ -45,7 +45,7 @@ const userinfo = () => {
             data : value
         }
         Axios({
-            url : "http://localhost:3001/api/deluserAS" ,
+            url : process.env.NEXT_PUBLIC_API_BASE_URL+"/deluserAS" ,
             method : "post" , 
             data : load
         }).then((response) => {

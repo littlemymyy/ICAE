@@ -23,7 +23,7 @@ export default function Home(){
         Axios.request(
             {
                 method: 'get',
-                url: `http://localhost:3001/api/annex/search?name=${name[1]}`,
+                url:process.env.NEXT_PUBLIC_API_BASE_URL+`/annex/search?name=${name[1]}`,
                 headers: { },
                 data : ''
             }
@@ -36,7 +36,7 @@ export default function Home(){
                 setData([{cas: "", name: "", maxt: "ไม่พบข้อมูล"}]);
             }
 
-            console.log(data)
+           // console.log(data)
         }).catch((error) => {
             console.log(error);
         }
@@ -87,7 +87,7 @@ export default function Home(){
                 />
                 <button style={{width:"55px", height:"42px", borderRadius:"5px", border:"1px solid #C4C4C4", padding:"10px",backgroundColor:"#7e57c2",marginLeft:"5px"}}
                  type="submit">
-                    <text style={{color:"white"}}>ค้นหา</text>
+                    <span style={{color:"white"}}>ค้นหา</span>
                  </button>
             </form>
 

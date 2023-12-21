@@ -101,13 +101,13 @@ export default function manage() {
     const fdaNo = searchParams.get("fdaNo");
     const getFda = async () => {
       const res0 = await Axios({
-        url: "http://localhost:3001/api/fetchData",
+        url: process.env.NEXT_PUBLIC_API_BASE_URL+"/fetchData",
         method: "get",
         params: {
           data: fdaNo,
         },
       });
-      console.log(res0.data);
+     // console.log(res0.data);
       showData[0] = res0.data[0];
       showData[1] = res0.data[1]
       showData[2] = res0.data[2]
@@ -128,20 +128,20 @@ export default function manage() {
     getFda();
     var userData = localStorage.getItem("uemail");
     setFda(fdaNo);
-    console.log(userData);
-    console.log(fdaNo);
+    //console.log(userData);
+    //console.log(fdaNo);
 
     const getdata = async () => {
       let load = {
         id: localStorage.getItem("orid"),
         fda: fdaNo,
       };
-      const res = await Axios.post("http://localhost:3001/api/pifData", load);
+      const res = await Axios.post(process.env.NEXT_PUBLIC_API_BASE_URL+"/pifData", load);
 
 
 
-      console.log("First");
-      console.log(res.data);
+      //console.log("First");
+      //console.log(res.data);
       let newDate0 = new Date(res.data[0].fdadoc_date);
       let newDate1 = new Date(res.data[0].letter_authorization_date)
       let newDate2 = new Date(res.data[0].formula_doc_date)
@@ -228,8 +228,8 @@ export default function manage() {
         diff[11] = newDate11 - nowDate0;
         diff[12] = newDate12 - nowDate0;
 
-        console.log("firsaat")
-        console.log(newDate12)
+        //console.log("firsaat")
+        //console.log(newDate12)
         // for(let i = 0 ; i< 13 ;i++){
         //   console.log(diff[i])
         // }
@@ -239,18 +239,18 @@ export default function manage() {
 
 
           if (diff[i] < 0) {
-            console.log("หมดอาย6");
+            //console.log("หมดอาย6");
             showDate[i] = "หมดอายุแล้ว";
             setShowDate([...showDate]);
           } else {
-            console.log("OK");
+            //console.log("OK");
             showDate[i] = "ยังไม่หมดอายุ";
             setShowDate([...showDate]);
           }
       }
       }
 
-      console.log(arr);
+      //console.log(arr);
       setData(res.data);
       setPdfFile1(res.data[0].fdadoc);
       setPdfFile2(res.data[0].letter_authorization);
@@ -274,11 +274,11 @@ export default function manage() {
 
   // data from Thai FDA By Fda number
   const fetchData = async (e) => {
-    console.log(fda);
-    console.log("e = " + e);
+    //console.log(fda);
+    //console.log("e = " + e);
     setFda_num(e.target.value);
     const res = await Axios({
-      url: "http://localhost:3001/api/fetchData",
+      url: process.env.NEXT_PUBLIC_API_BASE_URL+"/fetchData",
       method: "get",
       params: {
         data: e.target.value,
@@ -325,8 +325,8 @@ export default function manage() {
           document.getElementById("fentrepreneur-label").className =
             updatedLabel;
           document.getElementById("fentrepreneur").value = res.data[14];
-          console.log(res.data);
-          console.log(res.data[0]);
+          //console.log(res.data);
+          //console.log(res.data[0]);
           setStatus(res.data[0]);
           setLocationStatus(res.data[1]);
           setTypeRegis(res.data[3]);
@@ -343,8 +343,8 @@ export default function manage() {
           setFentrepreneur(res.data[14]);
         }
 
-        console.log("isFdaCoc");
-        console.log(fdadoc_date);
+        //console.log("isFdaCoc");
+        //console.log(fdadoc_date);
       })
       .catch((error) => {
         console.log(error);
@@ -384,7 +384,7 @@ export default function manage() {
 
   const handleFileChange = (inputName, event) => {
     const file = event.target.files[0];
-    console.log(inputName);
+    //console.log(inputName);
     document.getElementById(inputName).innerHTML = event.target.files[0].name;
 
     switch (inputName) {
@@ -658,7 +658,7 @@ export default function manage() {
       if(e === 1){
         try {
           const response = await Axios.post(
-            "http://localhost:3001/api/submitPifEdit",
+            process.env.NEXT_PUBLIC_API_BASE_URL+"/submitPifEdit",
             formData,
             {
               headers: {
@@ -667,7 +667,7 @@ export default function manage() {
               data: data,
             }
           ).then((res) => {
-            console.log(res);
+            //console.log(res);
             if (res.data.status === "ok") {
               alert("อัพโหลดเอกสารสำเร็จ");
               //redirect to http://localhost:3000/pif/productslist
@@ -703,8 +703,8 @@ export default function manage() {
     setShowData([...showData]);
   };
 
-  console.log("is data");
-  console.log(data);
+  //console.log("is data");
+  //console.log(data);
   return (
     <>
       <Navbar />
@@ -980,7 +980,7 @@ export default function manage() {
                 />
               </Box>
               <hr></hr>
-              //countDown
+              
               <Typography
                 variant="h6"
                 sx={{
@@ -1038,7 +1038,7 @@ export default function manage() {
                 </Box>
               ) : change[0] === 0 ? (
                 <embed
-                  src={`http://localhost:3001/${pdfFile1}`}
+                  src={process.env.NEXT_PUBLIC_API_BASE_URL+`${pdfFile1}`}
                   width="300px"
                   height="450px"
                 />
@@ -1157,7 +1157,7 @@ export default function manage() {
                 </Box>
               ) : change[0] === 0 ? (
                 <embed
-                  src={`http://localhost:3001/${pdfFile2}`}
+                  src={process.env.NEXT_PUBLIC_API_BASE_URL1+`${pdfFile2}`}
                   width="300px"
                   height="450px"
                 />
@@ -1265,7 +1265,7 @@ export default function manage() {
                 </Box>
               ) : change[0] === 0 ? (
                 <embed
-                  src={`http://localhost:3001/${pdfFile3}`}
+                  src={process.env.NEXT_PUBLIC_API_BASE_URL1+`${pdfFile3}`}
                   width="300px"
                   height="450px"
                 />
@@ -1371,7 +1371,7 @@ export default function manage() {
                 </Box>
               ) : change[0] === 0 ? (
                 <embed
-                  src={`http://localhost:3001/${pdfFile4}`}
+                  src={process.env.NEXT_PUBLIC_API_BASE_URL1+`${pdfFile4}`}
                   width="300px"
                   height="450px"
                 />
@@ -1488,7 +1488,7 @@ sx={{
 </Box>
 ) : change[0] === 0 ? (
 <embed
-src={`http://localhost:3001/${pdfFile5}`}
+src={process.env.NEXT_PUBLIC_API_BASE_URL1+`${pdfFile5}`}
 width="300px"
 height="450px"
 />
@@ -1610,7 +1610,7 @@ data[0].manufacture_doc}{" "}
              </Box>
            ) : change[0] === 0 ? (
              <embed
-               src={`http://localhost:3001/${pdfFile6}`}
+               src={process.env.NEXT_PUBLIC_API_BASE_URL1+`${pdfFile6}`}
                width="300px"
                height="450px"
              />
@@ -1724,7 +1724,7 @@ data[0].manufacture_doc}{" "}
             </Box>
           ) : change[0] === 0 ? (
             <embed
-              src={`http://localhost:3001/${pdfFile7}`}
+              src={process.env.NEXT_PUBLIC_API_BASE_URL1+`${pdfFile7}`}
               width="300px"
               height="450px"
             />
@@ -1834,7 +1834,7 @@ sx={{
 </Box>
 ) : change[0] === 0 ? (
 <embed
-src={`http://localhost:3001/${pdfFile8}`}
+src={process.env.NEXT_PUBLIC_API_BASE_URL1+`${pdfFile8}`}
 width="300px"
 height="450px"
 />
@@ -1958,7 +1958,7 @@ sx={{
 </Box>
 ) : change[0] === 0 ? (
 <embed
-src={`http://localhost:3001/${pdfFile9}`}
+src={process.env.NEXT_PUBLIC_API_BASE_URL1+`${pdfFile9}`}
 width="300px"
 height="450px"
 />
@@ -2075,7 +2075,7 @@ sx={{
 </Box>
 ) : change[0] === 0 ? (
 <embed
-src={`http://localhost:3001/${pdfFile10}`}
+src={process.env.NEXT_PUBLIC_API_BASE_URL1+`${pdfFile10}`}
 width="300px"
 height="450px"
 />
@@ -2189,7 +2189,7 @@ data[0].coa_doc}{" "}
               </Box>
             ) : change[0] === 0 ? (
               <embed
-                src={`http://localhost:3001/${pdfFile11}`}
+                src={process.env.NEXT_PUBLIC_API_BASE_URL1+`${pdfFile11}`}
                 width="300px"
                 height="450px"
               />
@@ -2316,7 +2316,7 @@ sx={{
 </Box>
 ) : change[0] === 0 ? (
 <embed
-src={`http://localhost:3001/${pdfFile12}`}
+src={process.env.NEXT_PUBLIC_API_BASE_URL1+`${pdfFile12}`}
 width="300px"
 height="450px"
 />
@@ -2431,7 +2431,7 @@ sx={{
 </Box>
 ) : change[0] === 0 ? (
 <embed
-src={`http://localhost:3001/${pdfFile13}`}
+src={process.env.NEXT_PUBLIC_API_BASE_URL1+`${pdfFile13}`}
 width="300px"
 height="450px"
 />
@@ -2546,7 +2546,7 @@ sx={{
 </Box>
 ) : change[0] === 0 ? (
 <embed
-src={`http://localhost:3001/${pdfFile14}`}
+src={process.env.NEXT_PUBLIC_API_BASE_URL1+`${pdfFile14}`}
 width="300px"
 height="450px"
 />

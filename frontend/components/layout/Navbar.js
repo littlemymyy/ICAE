@@ -30,18 +30,18 @@ function Navbar() {
 
 
     useEffect(() => {
-        console.log(router.pathname)
+        //console.log(router.pathname)
         //check is not login page
         if(router.pathname !== '/login/SignIn' && router.pathname !== '/Knowledge/home' && router.pathname !== '/' && router.pathname !== '/SignUp/SignUp'){
             Axios.request(
                 {
                     method: 'post',
-                    url: 'http://localhost:3001/api/authen',
+                    url: process.env.NEXT_PUBLIC_API_BASE_URL+'  ',
                     headers: { 'Authorization': 'Bearer '+ localStorage.getItem('token') },
                 }
                 ).then((response) => {
                 if(response.data.status === 'ok'){
-                    console.log('ok')
+                   // console.log('ok')
                 }else{
                     router.push('/login/SignIn').then(() => {
                         localStorage.clear();
@@ -50,7 +50,7 @@ function Navbar() {
                             title: 'กรุณาเข้าสู่ระบบก่อน'
                         })
                     })
-                    console.log(response.data)
+                    //console.log(response.data)
                 }
             }).catch((error) => {
                 console.log(error)
@@ -68,7 +68,7 @@ function Navbar() {
     const handleCloseNavMenu = (ev) => {
         setAnchorElNav(null);
         const selectName = ev.nativeEvent.target.outerText.toLowerCase();
-        console.log(selectName)
+       // console.log(selectName)
 
         if(uname === ""){
             if(selectName === pages[0]){
@@ -125,13 +125,19 @@ function Navbar() {
     const handleCloseUserMenu = (ev) => {
         setAnchorElUser(null);
         const selectName = ev.nativeEvent.target.outerText;
-        console.log(selectName);
+      //  console.log(selectName);
         // 0 : Profile, 1 : Account, 2 : Dashboard, 3 : Logout
-        if(selectName === settings[0]) {
+        if(selectName === settings[2]){
+
+        }
+        else if(selectName === settings[1]){
+
+        }
+        else if(selectName === settings[0]) {
             localStorage.removeItem("uemail")
             localStorage.removeItem("uicon")
             localStorage.removeItem("status")
-            console.log('OK');
+         //console.log('OK');
             localStorage.clear();
             setUname("");
             setIcon("");

@@ -24,19 +24,19 @@ export default function Edit_Admin() {
         const queryString = window.location.search
         const searchParams = new URLSearchParams(queryString)
         const no= searchParams.get("no")
-        console.log(no)
+        //console.log(no)
         setNum1(no)
 
         let load = {
             no : no
         }
         Axios({
-            url : "http://localhost:3001/api/getalldataAddminEdit" ,
+            url :process.env.NEXT_PUBLIC_API_BASE_URL+"/getalldataAddminEdit" ,
             method : 'post',
             data : load,
         }).then((response)=>{
-            console.log("repones.data",response.data)
-            console.log("[0]",response.data[0])
+           // console.log("repones.data",response.data)
+          //  console.log("[0]",response.data[0])
             setData(response.data[0])
             showdata[0] = response.data[0].cmname
             showdata[1] = response.data[0].per
@@ -65,7 +65,7 @@ export default function Edit_Admin() {
        }
 
        Axios({
-         url : "http://localhost:3001/api/getalldataAddminUpdateByType",
+         url : process.env.NEXT_PUBLIC_API_BASE_URL+"/getalldataAddminUpdateByType",
          method : 'post' , 
          data : load ,
          

@@ -16,8 +16,8 @@ const GetCsv = () => {
         if (!fileObj) {
             return;
         }
-        console.log(fileObj);
-        console.log(fileObj.name);
+        //console.log(fileObj);
+        //console.log(fileObj.name);
         const file = fileObj;
         Papa.parse(file, {
             header: true,
@@ -32,7 +32,7 @@ const GetCsv = () => {
             dd : data
         }
         Axios({
-            url : 'http://localhost:3001/api/uploadCsv',
+            url : process.env.API_BASE_URL+'/uploadCsv',
             method : 'post' ,
             data : load
         }) 
