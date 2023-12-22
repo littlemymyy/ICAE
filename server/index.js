@@ -1681,7 +1681,7 @@ app.post('/api/getuserDeleteAdmin', (req, res) => {
 });
 
 app.post('/api/changeNameTeam', jsonParser , (req , res) => {
-    const new_team = req.body.teamName
+    const new_team = req.body.data
     const old_team = req.body.id
     console.log ("team =>" + new_team)
     console.log ("id =>" + old_team)
