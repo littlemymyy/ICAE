@@ -34,6 +34,13 @@ import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges';
 
 
 const manage = () => {
+  
+  useEffect(()=>{
+    let st = localStorage.getItem('status');
+    if(st !== "A"){
+        router.push("/")        }
+
+     },[])
   const [data, setData] = useState([]);
   const router = useRouter();
   const [id, setId] = useState("");

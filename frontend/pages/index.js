@@ -18,8 +18,10 @@ import { Pagination } from "swiper/modules";
 import { useEffect } from "react";
 import Axios from "axios";
 import Swal from 'sweetalert2'
+import { useRouter } from 'next/router';
 
 export default function Home() {
+  const router = useRouter()
   const [icon, setIcon] = useState('/news1.jpeg')
   const [data , setData] = useState([])
 

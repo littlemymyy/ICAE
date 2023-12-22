@@ -1,15 +1,36 @@
-import React, { useState } from 'react'
+
 import Axios from "axios";
 import * as XLSX from 'xlsx'
+import Footer from "@/components/Footer"
+import Navbar from "@/components/layout/Navbar"
+import { Fragment } from "react";
+import { Box, Typography, colors } from "@mui/material"
+import FormControl from '@mui/material/FormControl';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Radio from '@mui/material/Radio';
+import React, { useRef, useState } from 'react'
+import Papa from 'papaparse'
+import { AddCircle } from '@mui/icons-material';
+import Button from '@mui/material/Button';
+import { useRouter } from 'next/router';
+import Stack from '@mui/material/Stack';
 
 const Adddata = () => {
     const [excel1 , setExcel1]  = useState(null);
+    const router = useRouter()
     const [excel2 , setExcel2]  = useState(null);
     const [data1,setData1] = useState([])
     const [data2,setData2] = useState([])
     const [st1,setSt1] = useState(0)
     const [st2,setSt2] = useState(0)
 
+    useEffect(()=>{
+      let st = localStorage.getItem('status');
+      if(st !== "A"){
+          router.push("/")        }
+
+       },[])
 
     const handleFile = (e) => {
         let fileTypes = ['application/vnd.ms-excel','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','text/csv'];
@@ -121,6 +142,7 @@ const Adddata = () => {
         // }
 
       }
+
 
       const handleFileSubmit2 = () => {
         // console.log(data2)
@@ -327,15 +349,167 @@ const Adddata = () => {
   return (
     <>
     <div className='App'>
-        <h1>Upload Data 2 3 5 6</h1>
+
+
+    <div className='App'>
+            <Navbar/>
+            <Fragment>
+            <Box sx={{textAlign:"-webkit-center"}}>
+                <Box borderRadius={'5px'}
+                    display={'flex'}
+                    justifyContent={'center'}
+                    alignItems={'center'}
+                    textAlign={'center'}
+                    height={'50px'}
+                    backgroundColor={'green'}
+                    width={'150px'}
+                    padding={'5px'}
+                    marginTop={'30px'}
+
+
+                >
+
+
+
+
+                    <AddCircle sx={{ color: "white"}}></AddCircle>
+                    <Typography variant="h7" sx={{ color: "white"}}>เพิ่มสารเคมี</Typography>
+
+
+                </Box>
+            </Box>
+
+            <Box sx={{
+
+                backgroundColor: {xs:'' , md:'#F8F8F8 '},
+                borderRadius: {xs:'' , md:'25px'},
+                margin: {xs:'' , md:'40px 60px 40px 60px'},
+                padding: {xs:'60px 60px 60px 60px' , md:'40px 40px 40px 40px'},
+
+
+
+
+            }}
+
+            >
+                <Typography
+                    sx={{
+                        textAlign: {xs:'left' , md:'left'},
+                        justifyContent: {xs:'left' , md:'left'},
+                    }}
+                     variant="h7">เพิ่มสารเคมี</Typography>
+                <Box>
+
+                    <FormControl>
+
+                        <RadioGroup sx={{
+
+                        }}
+
+                            row
+                            aria-labelledby="demo-row-radio-buttons-group-label"
+                            name="row-radio-buttons-group"
+                        >
+                            <FormControlLabel value="Annex II" control={<Radio />} label="Annex II" />
+                            <FormControlLabel value="Annex III" control={<Radio />} label="Annex III" />
+                            <FormControlLabel value="Annex IV" control={<Radio />} label="Annex IV" />
+                            <FormControlLabel value="Annex V" control={<Radio />} label="Annex V" />
+
+
+                        </RadioGroup>
+                    </FormControl>
+                    <Box sx={{
+                        display: {xs:'block' , md:'block'},
+                    }}>
+                        {/* <input */}
+                            {/* //ref={inputRef}
+                           // type='file'
+                           // style={{ display: 'none' }}
+                            //onChange={()=>handleFileChange()} */}
+                        {/* /> */}
+                        <img src="/csvfile.png" style={{ maxWidth: 0 + "300px", textAlign:"center", margin:"20px" }}/>
+
+                    </Box>
+                    <Typography sx={{
+                        margin: {xs:'20px 0px 20px 0px' , md:'20px 0px 20px 0px'},
+                    }}>
+                        อัพโหลดไฟล์ csv สำหรับการเพิ่มสารเคมี
+                    </Typography>
+
+                    <h3>Upload & view excel sheet cosing</h3>
+                    {/* <form onSubmit={() => handleFileSubmit()}> */}
+                    <input type='file' required onChange={handleFile}/>
+                    <button type='submit' onClick={() => handleFileSubmit()}>Upload</button>
+                    {/* </form> */}
+
+                    <h3>Upload & view excel sheet EC</h3>
+                    {/* <form onSubmit={() => handleFileSubmit()}> */}
+                    <input type='file' required onChange={handleFile2}/>
+                      <button type='submit' onClick={() => handleFileSubmit2()}>Upload</button>
+                    {/* </form> */}
+
+                </Box>
+
+
+
+            </Box>
+            </Fragment>
+            <Box sx={{
+        textAlign: { xs: "center", md: "center" },
+      }}>
+           <div className='App'>
+        {
+            data1.length && data2.length && st1 !== 4 && st2 !== 4?
+            <button className='Add_insert' onClick={handleFile3}>Insert</button>
+            :
+            <button className='Add_insert' disabled>Insert</button>
+        }
+
+    </div>
+      </Box>
+
+
+
+            {/* {data.length ? (
+                <table>
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>CAS</th>
+                            <th>Name</th>
+                            <th>Per</th>
+                            <th>St</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {data.map((row, index) => (
+                            <tr key={index}>
+                                <td>{index + 1}</td>
+                                <td>{row.cas}</td>
+                                <td>{row.cname}</td>
+                                <td>{row.per}</td>
+                                <td>{row.st}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            ) : null} */}
+
+
+        </div>
+
+
+
+
+        {/* <h1>Upload Data  3 5 6</h1>
 
         <div className='Add_data1'>
             <h3>Upload & view excel sheet</h3>
             {/* <form onSubmit={() => handleFileSubmit()}> */}
-            <input type='file' required onChange={handleFile}/>
-            <button type='submit' onClick={() => handleFileSubmit()}>Upload</button>
+            {/* <input type='file' required onChange={handleFile}/>
+            <button type='submit' onClick={() => handleFileSubmit()}>Upload</button> */}
             {/* </form> */}
-            {
+            {/* {
             st1
             }
             <br/><br/>
@@ -345,39 +519,31 @@ const Adddata = () => {
                         <p key={idx}>{idx} {values.maxT} {values.minT}</p>
                     ))
                 : null
-            }
-            <br/>
-        </div>
+            } */}
+            {/* <br/>  */}
+        {/* </div> */}
 
-        <div className='Add_data2'>
-        <h3>Upload & view excel sheet</h3>
+        {/* <div className='Add_data2'> */}
+        {/* <h3>Upload & view excel sheet</h3> */}
             {/* <form onSubmit={() => handleFileSubmit()}> */}
-            <input type='file' required onChange={handleFile2}/>
-            <button type='submit' onClick={() => handleFileSubmit2()}>Upload</button>
+            {/* <input type='file' required onChange={handleFile2}/> */}
+            {/* <button type='submit' onClick={() => handleFileSubmit2()}>Upload</button> */}
             {/* </form> */}
-            {
+            {/* {
             st1
-            }
-            <br/><br/>
-            {
+            } */}
+            {/* <br/><br/> */}
+            {/* {
                 data1.length ?
                     data1.map((values, idx) => (
                         <p key={idx}>{idx} {values.maxT} {values.minT} </p>
                     ))
                 : null
-            }
-            <br/>
-        </div>
+            } */}
+            {/* <br/> */}
+        {/* </div> */}
     </div>
-    <div className='App'>
-        {
-            data1.length && data2.length && st1 !== 4 && st2 !== 4?
-            <button className='Add_insert' onClick={handleFile3}>Insert</button>
-            :
-            <button className='Add_insert' disabled>Insert</button>
-        }
-
-    </div>
+ 
     </>
   )
 }
