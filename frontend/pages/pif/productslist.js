@@ -34,7 +34,7 @@ export default function productslist() {
   const [age, setAge] = useState('');
   const [noti , setNoti] = useState([])
   const [fdaIdexp , setFdaIdexp] = useState([])
- 
+
   let see = 0 ;
 
   useEffect(() => {
@@ -66,7 +66,7 @@ export default function productslist() {
                 let load = {
                   id: res.data.message[i].id,
                 };
-  
+
                 try {
                   const res = await Axios.post(
                     process.env.NEXT_PUBLIC_API_BASE_URL+`/api/checkFdaDate`,
@@ -75,7 +75,7 @@ export default function productslist() {
                   //console.log("date",res.data)
                   for(let i = 0 ; i< res.data.length;i++){
                     fdaIdexp.push(res.data[i].id)
-                    
+
                   }
                   const uniquefda = Array.from(new Set(fdaIdexp));
                   setFdaIdexp(uniquefda)
@@ -86,7 +86,7 @@ export default function productslist() {
                 }
               }
             };
-  
+
             notificationExpFda();
           }
         } catch (error) {
@@ -118,24 +118,24 @@ export default function productslist() {
 
         // Set the state with the unique product_id values
         setNoti(uniqueNoti);
-       
+
 
       // const notiArray = res.data.map(item => item.product_id);
       // setNoti(notiArray);
       //  const notiArray = res.data.map(item => item.product_id);
       //  setNoti(notiArray);
-        
+
 
       } catch(error){
         console.log(error)
       }
-      
+
 
     }
     NotificationFile()
 
-   
-    
+
+
   }, []);
 
   const checkFdadateA = (product_id) =>{
@@ -389,10 +389,10 @@ export default function productslist() {
             });
             window.location.reload()
           }
-        
+
       }
       feactData()
-    
+
     }
   }
 
@@ -400,13 +400,6 @@ export default function productslist() {
   return (
     <>
       <Navbar />
-      <div className="input-icons">
-          <i className="fa fa-search icon"></i>
-          <input placeholder='ค้นหาผลิตภัณฑ์ของคุณ '
-            className="in"
-            value={search_input}
-            onChange={(e) => resultsearch(e.target.value)}
-          /></div >
       <Box className="pif"
         sx={{
           backgroundColor: { xs: "#F8F8F8", md: "#F8F8F8" },
@@ -418,7 +411,7 @@ export default function productslist() {
         }}
 
       >
-          
+
         <Box className="pif_left"
           sx={{
 
@@ -490,7 +483,7 @@ export default function productslist() {
         </Button>
 
         <FormControl size="medium" sx={{ m: 1, minWidth: 150 }}>
-          <InputLabel id="demo-simple-select-label">การกรอกข้อมูล</InputLabel>
+          <InputLabel id="demo-simple-select-label">การเรียงข้อมูล</InputLabel>
           <Select
             labelId="demo-simple-select-label"
             id="demo-simple-select"
@@ -524,7 +517,7 @@ export default function productslist() {
           <tbody>
           {
              show.map((value , idx)=>(
-              
+
 
                 <tr className="trplc" key={idx}>
                   <td className="plac" >{idx+1}</td>
@@ -536,33 +529,33 @@ export default function productslist() {
                      <td className="plac">{new Date(value.expire_date).toISOString().split('T')[0]} <p onClick={()=>editfdadate(value.id)}>แก้ไขวันที่<RestoreIcon/></p> </td>
                     :<td className="plac">{new Date(value.expire_date).toISOString().split('T')[0]}</td>
                   }
-                 
+
                   {
   value.pif_status === 0 ? (
-    
-    
+
+
     <td className="plac">
-      
+
       <span style={{color: 'blue'}}>ยังไม่ได้มีดำเนินการสร้างไฟล์ PIF</span>
-      
+
     </td>
   ) : (
     value.pif_status === 1 && checkFilePIF(value.id) === 3 ? (
       <td className="plac">
         <span style={{color:'red'}}>มีไฟล์ใกล้หมดอายุหรือมีไฟล์ที่หมดอายุแล้ว </span>
-          
-       
+
+
       </td>
     ) : (
       value.pif_status === 1 && checkFilePIF(value.id) === 4 ? (
         <td className="plac">
           <span style={{color:'green'}}> ปกติ</span>
-           
-          
+
+
         </td>
       ) : <td className="plac">
        <span style={{color: 'blue'}}>ยังไม่ได้มีดำเนินการสร้างไฟล์ PIF</span>
-        
+
     </td>
     )
   )
