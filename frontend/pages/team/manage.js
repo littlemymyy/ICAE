@@ -532,10 +532,10 @@ const handleChickAdd = () => {
                     <thead>
                       <tr>
                         <th className="C2EM_th1">#</th>
-                        <th className="C2EM_th2">Name</th>
-                        <th className="C2EM_th3">Role</th>
-                        <th className="C2EM_th4">Status</th>
-                        <th className="C2EM_th5">Action</th>
+                        <th className="C2EM_th2">ผู้ใช้</th>
+                        <th className="C2EM_th3">ตำแหน่ง</th>
+                        <th className="C2EM_th4">สถานะ</th>
+                        <th className="C2EM_th5">การจัดการ</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -627,8 +627,8 @@ const handleChickAdd = () => {
                   <thead>
                     <tr>
                       <th className="C2EM_th1">#</th>
-                      <th className="C2EM_th2">Name</th>
-                      <th className="C2EM_th3">Role</th>
+                      <th className="C2EM_th2">ชื่อ</th>
+                      <th className="C2EM_th3">ตำแหน่ง</th>
                     </tr>
                   </thead>
                   <tbody>
