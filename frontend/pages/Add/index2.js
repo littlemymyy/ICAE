@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Papa from 'papaparse'
 import Axios from 'axios'
 import Navbar from '@/components/layout/Navbar';
@@ -6,14 +6,29 @@ import { Box, Typography ,Button} from '@mui/material';
 import { AddCircle } from '@mui/icons-material';
 import { Fragment } from 'react';
 import { FormControl, FormControlLabel, Radio, RadioGroup } from '@mui/material';
-
+import { useRouter } from 'next/router';
+import Stack from '@mui/material/Stack';
 
 
 
 const index2 = () => {
+    const router = useRouter()
     const [data, setData] = useState([]);
     const inputRef = useRef(null);
 
+
+
+    useEffect(()=>{
+        let st = localStorage.getItem('status');
+        if(st !== "A"){
+            router.push("/")        }
+
+         },[])
+    const buttonStyle = {
+        backgroundColor: '#897BF1',
+        float: 'left',
+        marginTop: '10px',
+      };
     const handleClick = () => {
         inputRef.current.click();
     };
@@ -52,6 +67,24 @@ const index2 = () => {
         .catch(function (error) {
             console.log(err)
         })
+    }
+    const handleButtonClick = (e) => {
+        if(e===1){
+            router.push("/AdddataAn2")
+        }
+        else if(e===2){
+            router.push("/Adddata")
+        }
+        else if(e===3){
+            router.push("/AdddataAn4")
+        }
+        else if(e===4){
+            router.push("/Adddata")
+        }
+        else if(e===5){
+            router.push("/Adddata")
+        }
+
     }
 
     return (
@@ -114,11 +147,62 @@ const index2 = () => {
                             aria-labelledby="demo-row-radio-buttons-group-label"
                             name="row-radio-buttons-group"
                         >
-                            <FormControlLabel value="Annex II" control={<Radio />} label="Annex II" />
-                            <FormControlLabel value="Annex III" control={<Radio />} label="Annex III" />
-                            <FormControlLabel value="Annex IV" control={<Radio />} label="Annex IV" />
-                            <FormControlLabel value="Annex V" control={<Radio />} label="Annex V" />
+                            <Box display="flex" alignItems="center" justifyContent="center">
+      <Stack direction="row" spacing={2}>
+        <Button
+          variant="contained"
+          size="medium"
+          sx={{ ml: 2 }}
+          style={buttonStyle}
+          onClick={() => handleButtonClick(1)}
+        >
+         Annex 2
+        </Button>
 
+        <Button
+          variant="contained"
+          size="medium"
+          sx={{ ml: 2 }}
+          style={buttonStyle}
+          onClick={() => handleButtonClick(2)}
+        >
+          ANnex3
+        </Button>
+
+        <Button
+          variant="contained"
+          size="medium"
+          sx={{ ml: 2 }}
+          style={buttonStyle}
+          onClick={() => handleButtonClick(3)}
+        >
+          Annex4
+        </Button>
+
+        <Button
+          variant="contained"
+          size="medium"
+          sx={{ ml: 2 }}
+          style={buttonStyle}
+          onClick={() => handleButtonClick(4)}
+        >
+          Annex5
+        </Button>
+
+        <Button
+          variant="contained"
+          size="medium"
+          sx={{ ml: 2 }}
+          style={buttonStyle}
+          onClick={() => handleButtonClick(5)}
+        >
+          Annex6
+        </Button>
+
+     
+      </Stack>
+    </Box>
+                            
 
                         </RadioGroup>
                     </FormControl>
@@ -140,7 +224,7 @@ const index2 = () => {
                         อัพโหลดไฟล์ csv สำหรับการเพิ่มสารเคมี
                     </Typography>
 
-                    <button onClick={handleClick}>Upload</button>
+                    {/* <button onClick={handleClick}>Upload</button> */}
 
                 </Box>
 
@@ -151,7 +235,7 @@ const index2 = () => {
             <Box sx={{
         textAlign: { xs: "center", md: "center" },
       }}>
-        <Button
+        {/* <Button
           type="submit"
           textAlign="center"
           variant="contained"
@@ -160,10 +244,10 @@ const index2 = () => {
           sx={{ mt: 0, mb: 3 }}
         >
           ยืนยัน
-        </Button>
+        </Button> */}
       </Box>
 
-
+{/* 
 
             {data.length ? (
                 <table>
@@ -188,7 +272,7 @@ const index2 = () => {
                         ))}
                     </tbody>
                 </table>
-            ) : null}
+            ) : null} */}
 
 
         </div>
