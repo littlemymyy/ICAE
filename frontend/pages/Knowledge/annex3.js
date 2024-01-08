@@ -90,7 +90,7 @@ export default function Home(){
                 <TableRow>
                     <TableCell sx={{width:100}}align="left">CAS NO</TableCell>
                     <TableCell align="left">ชื่อสารเคมี</TableCell>
-                    <TableCell align="left">ปริมาณที่สามารถใช้ได้ (%)</TableCell>
+                    <TableCell align="left">ปริมาณที่สามารถใช้ได้ในสูตรเครื่องสำอาง (%)</TableCell>
 
                 </TableRow>
                 </TableBody>
@@ -104,7 +104,13 @@ export default function Home(){
                             <TableCell align="left">{item.cname}</TableCell>
                             : <TableCell align="left">{item.cmname}</TableCell>
                         }
-                        <TableCell align="left">{item.per}</TableCell>
+                          <TableCell align="left">
+                            {
+                                item.per === 100 ?
+                                <p>ไม่ใช้สารกำหนดปริมาณ</p>
+                                :<p>{item.per}</p> 
+                            }
+                            </TableCell>
 
                     </TableRow>
                 ))}

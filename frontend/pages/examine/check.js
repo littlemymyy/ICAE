@@ -9,6 +9,7 @@ import Footer from "@/components/Footer";
 import { json } from "react-router-dom";
 import { BrowserRouter as Router, useHistory } from "react-router-dom";
 import { Box } from "@mui/material";
+import Swal from 'sweetalert2'
 
 const check = () => {
   const [op1, setOp1] = useState([
@@ -23,6 +24,7 @@ const check = () => {
   const [per, setPer] = useState([]);
   const [sum, setSum] = useState(0);
   const [fillterg, setFillterg] = useState([]);
+  const Swal = require('sweetalert2')
   const ChemName = [
     ["hair"],
     ["nail"],
@@ -44,8 +46,14 @@ const check = () => {
   ];
 
   const getType = (index, value) => {
+    
     op1[index] = value;
     setOp1([...op1]);
+   
+    checkAndReload()
+  
+    console.log(op1)
+    //checkAndReload();
     // console.log(type)
     let d1 = [];
     for (let i = 0; i < op1.length; i++) {
@@ -84,6 +92,33 @@ const check = () => {
         // return res.status(500).json({ error: "Error sending email" });
       });
   };
+
+  const checkAndReload = () => {
+    // Check if both op1[13] and op1[14] are equal to 1
+  
+      if (op1[13] === 1 ) {
+
+        // Reload the page
+  
+        // Swal.fire({
+        //   icon: "error",
+        //   title: "เกิดข้อผิดพลาด",
+        //   text: "เลือกรูปแบบการใช้ผลิตภัณฑ์ได้ 1 อย่าง!",
+          
+        // });
+        op1[14] = 0
+        setOp1([...op1]);
+        //window.location.reload()
+      }
+      else if(op1[14]===1) {
+        op1[13] = 0
+        setOp1([...op1]);
+      }
+    
+   
+  };
+
+  
 
   useEffect(() => {
     console.log(data);
@@ -198,6 +233,20 @@ const check = () => {
   };
 
   const submitdataToblackEnd = () => {};
+
+  const checkData = () => {
+    let count = 0;
+
+    for (let i = 1; i <= 15; i++) {
+      // Skip indices 13 and 14
+      if (i == 13 && i == 14 && op[i] === 1) {
+        count++;
+      }
+    }
+    if(count > 1){
+      
+    }
+  }
   return (
     <div>
       <Navbar />
@@ -261,12 +310,16 @@ const check = () => {
         justifyContent: "space-around",
 
       }}>
+        <Box>
+        <p>บริเวณที่ใช้ผลิตภัณฑ์  :  </p>
+        </Box>
+       
           <Box sx={{
             display: "grid"
           }} >
 
           <div className="radioSelect">
-
+            
             <Box sx={{
               display: "flex"
             }}>
@@ -542,50 +595,7 @@ const check = () => {
             <label>ผลิตภัณฑ์เกี่ยวกับจุดซ่อนเร้น</label>
             </Box>
 
-            <Box>
-            {op1[13] === 0 ? (
-              <input
-                type="checkbox"
-                className="form-check-input"
-                value="option1"
-                onChange={() => getType(13, 1)}
-              />
-            ) : (
-              <input
-                type="checkbox"
-                className="form-check-input"
-                value="option1"
-                onChange={() => getType(13, 0)}
-                checked
-              />
-            )}
-            <label>ผลิตภัณฑ์เกี่ยวกับล้างออก</label>
-            </Box>
-
-            <Box>
-
-            {op1[14] === 0 ? (
-              <input
-                type="checkbox"
-                className="form-check-input"
-                id="radio1"
-                name="optradio1"
-                value="option1"
-                onChange={() => getType(14, 1)}
-              />
-            ) : (
-              <input
-                type="checkbox"
-                className="form-check-input"
-                id="radio1"
-                name="optradio1"
-                value="option1"
-                onChange={() => getType(14, 0)}
-                checked
-              />
-            )}
-            <label>ผลิตภัณฑ์เกี่ยวกับไม่ล้างออก</label>
-            </Box>
+           
 
             <Box>
 
@@ -634,7 +644,35 @@ const check = () => {
             <label>ผลิตภัณฑ์เกี่ยวกับช่องปาก</label>
             </Box>
           </div>
+          
           </Box>
+          <Box>
+      <p>รูปแบบการใช้ผลิตภัณฑ์</p>
+
+      <Box>
+  <input
+    type="checkbox"
+    className="form-check-input"
+    id="checkbox1"
+    value="option1"
+    onChange={() => getType(13, op1[13] === 1 ? 0 : 1)} // Toggle the value
+    checked={op1[13] === 1}
+  />
+  <label>ผลิตภัณฑ์เกี่ยวกับล้างออก</label>
+</Box>
+
+<Box>
+  <input
+    type="checkbox"
+    className="form-check-input"
+    id="checkbox2"
+    value="option2"
+    onChange={() => getType(14, op1[14] === 1 ? 0 : 1)} // Toggle the value
+    checked={op1[14] === 1}
+  />
+  <label>ผลิตภัณฑ์เกี่ยวกับไม่ล้างออก</label>
+</Box>
+    </Box>
           </Box>
 
         </details>

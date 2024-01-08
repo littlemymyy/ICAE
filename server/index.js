@@ -766,6 +766,26 @@ app.get('/api/getAllChemical', jsonParser, (req, res) => {
         })
 })
 
+
+app.get('/api/getAllChemical1', jsonParser, (req, res) => {
+    db.execute(
+        'SELECT * FROM chemical',
+        (err, result) => {
+            if(err) {
+                res.json({status:'error',message:err});
+                return;
+            }
+            if(result.length > 0) {
+                res.send(result)
+            }
+            else {
+                res.json({status:'error',message:'No data found'});
+            }
+        })
+})
+
+
+
 app.get('/api/getChemicalByCas', jsonParser, (req, res) => {
     db.execute(
         'SELECT * FROM chemical WHERE cas = ?',
@@ -1417,7 +1437,7 @@ const sendEmail = (message) => {
 }
 ///sendEmailNotificationsFile()
 //sendEmailNotifications()
- cron.schedule(' 20 9 * * *' , () => {
+ cron.schedule(' 20 11 * * *' , () => {
     try {
          sendEmailNotifications()
          sendEmailNotificationsFile()

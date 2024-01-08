@@ -4,11 +4,61 @@ import { Box, Card, CardContent } from "@mui/material"
 
 import { Typography } from "@mui/material"
 import { Button } from "@mui/material"
+import Axios from "axios";
 import { useRouter } from "next/router";
+import React, { useEffect, useState, useRef } from "react";
 
 
 export default function Home(){
     const router = useRouter();
+    const [show, setShow] = useState([]);
+    const [data, setData] = useState([]);
+    const [search_input, setSearch_input] = useState("");
+
+    useEffect(() => {
+        const fetchData = async () => {
+          try {
+            const response = await Axios.get(process.env.NEXT_PUBLIC_API_BASE_URL + "/api/getAllChemical1");
+            if (response.data) {
+              console.log(response.data);
+              setData(response.data);
+            }
+          } catch (error) {
+            console.error("Error fetching data:", error);
+          }
+        };
+    
+        fetchData();
+      }, []);
+    
+
+    const resultsearch = (e) => {
+        console.log(e)
+        if (e.length === 0) {
+          setShow([]);
+          setSearch_input("");
+        } else {
+          setSearch_input(e);
+          const results1 = data.filter((w) => {
+            return (
+              e &&
+              w &&
+              w.cas &&
+              w.cname &&
+              w.cmname &&
+              (w.cname.toLowerCase().includes(e) ||
+                w.cas.includes(e) ||
+                w.cmname.toLowerCase().includes(e))
+            );
+          });
+          setShow(results1);
+          console.log(results1);
+        }
+      };
+
+      const add = (searchTerm) => {
+        router.push(`/Knowledge/annex_search?search=${searchTerm}`);
+      };
     
     const handleClick = (e, path) => {
         e.preventDefault();
@@ -51,12 +101,34 @@ export default function Home(){
         <Box marginTop={"20px"} marginBottom={"30px"}>
             <form style={{textAlign:"center"}}>
                 <input id="searchname" style={{width:"400px", height:"42px", borderRadius:"5px", border:"1px solid #C4C4C4", padding:"10px"}}
-                    type="text" placeholder="ค้นหาโดยชื่อสารเคมี, CAS NO  etc" name="search"
+                    type="text" placeholder="ค้นหาโดยชื่อสารเคมี, CAS NO  etc" name="search"  value={search_input}
+                    onChange={(e) => resultsearch(e.target.value)}
                 />
-                <button onClick={(e) => handleClick(e, `annex_search?search=${document.getElementById("searchname").value}`)} style={{width:"55px", height:"42px", borderRadius:"5px", border:"1px solid #C4C4C4", padding:"10px",backgroundColor:"#7e57c2",marginLeft:"5px"}}
+                   <button onClick={(e) => handleClick(e, `annex_search?search=${document.getElementById("searchname").value}`)} style={{width:"55px", height:"42px", borderRadius:"5px", border:"1px solid #C4C4C4", padding:"10px",backgroundColor:"#7e57c2",marginLeft:"5px"}}
                  type="button">
                     <text style={{color:"white"}}>ค้นหา</text>
                  </button>
+
+<div className="show">
+        {search_input.length
+          ? show.map((value, idx) =>
+              value.cmname === "-" ? (
+                <p onClick={() => add(value.cname)} key={value.idx}>
+                  {" "}
+                  {value.cname}
+                </p>
+              ) : (
+                <p onClick={() => add(value.cmname)} key={value.idx}>
+                  {" "}
+                  {value.cmname}
+                </p>
+              )
+            )
+          : null}
+      </div>
+
+
+             
             </form>
 
         </Box>
