@@ -1808,6 +1808,28 @@ app.get('/api/getPifProductByID', jsonParser, (req, res) => {
         })
 });
 
+// app.get('/api/getdataExpFile', jsonParser, (req, res) => {
+//     db.execute(
+
+        
+
+//         'SELECT file1_exp,file2_exp,file3_exp,file4_exp,file5_exp,file6_exp,file7_exp,file8_exp,file9_exp,file10_exp,file11_exp,file12_exp,file13_exp,file14_exp FROM pif WHERE WHERE expire_date <= CURDATE() + INTERVAL 1 MONTH AND product_id = ?' ,
+//         [req.query.product_id],
+//         (err, result) => {
+//             if(err) {
+//                 res.json({status:'error',message:err});
+//                 return;
+//             }
+//             if(result.length > 0) {
+//                 res.json({status:'ok',message:result})
+//             }
+//             else {
+//                 res.json({status:'error',message:'No data found'});
+//             }
+//         })
+// });
+
+
 app.post('/api/pifProductRemoveById', jsonParser, (req, res) => {
     db.execute(
         'DELETE FROM pif_product WHERE id = ?',

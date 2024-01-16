@@ -110,8 +110,22 @@ export default function Home(){
                     <TableRow key={index} style={index % 2 === 0 ? evenRowStyle : null} >
                         <TableCell align="left">{item.cas}</TableCell>
                         <TableCell align="left">{item.cname}</TableCell>
-                        <TableCell align="left">{item.per}</TableCell>
 
+                        {
+    item.st === 2 ?
+    <TableCell align="left">สารต้องห้าม</TableCell>
+    : item.st === 3 ?
+    <TableCell align="left">สารกำหนดปริมาณ ปริมาณที่สามารถใช้ได้ {item.per}</TableCell> 
+    : item.st === 4 ? 
+    <TableCell align="left">สารสี ปริมาณที่สามารถใช้ได้ {item.per}</TableCell>
+    : item.st === 5 ?
+    <TableCell align="left">สารกันเสีย ปริมาณที่สามารถใช้ได้ {item.per}</TableCell> 
+    : item.st === 6 ?
+    <TableCell align="left">สาร UV ปริมาณที่สามารถใช้ได้ {item.per}</TableCell>
+    :
+    <TableCell align="left">สารทั่วไป </TableCell>
+}
+ 
                     </TableRow>
                 ))}
                 </TableBody>
