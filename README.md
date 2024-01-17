@@ -2,8 +2,8 @@
 
 ## Installation Guide
 #### Require software
-1.XAMPP (for run MariaDB and PhpMyAdmin)
-2.NodeJS (version 20.11)  
+1. XAMPP (for run MariaDB and PhpMyAdmin)
+2. NodeJS (version 20.11)  
 
 #### How to install
 1. Download XAMPP from offical website [https://www.apachefriends.org/download.html]
