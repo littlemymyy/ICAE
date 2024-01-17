@@ -18,7 +18,7 @@
 3. Create new database with name [cosmetic]
 4. Go to database cosmetic and import database from file **ICAE/sql/cosmetic.sql**
 5. Go to ICAE folder
-6. Open terminal in ICAE/frontend and ICAE/server
+6. Open terminal in **ICAE/frontend** and **ICAE/server**
    
    2.1. for ICAE/fontend run with this command
    ```
@@ -28,9 +28,14 @@
    2.2. for ICAE/server run with this command
    ```
    npm install
+   ```
+   - After you type npm install, it will have folder node_module in ICAE/server
+   - Copy file [vfs_fonts.js] from **ICAE/server** and pase in **ICAE/server/node_modules/pdfmake/build/**  
+   and then back to **ICAE/server** and run this command
+   ```
    npm start
    ```
-7. Now is running go to [http://localhost:3000] for using ICAE Web application !!
+8. Now is running go to [http://localhost:3000] for using ICAE Web application !!
 
 ## Directory Tree
 ```
@@ -195,5 +200,5 @@
 └── sql
     └── cosmetic.sql
 
-21 directories, 140 files
+21 directories, 139 files
 ```
