@@ -35,8 +35,10 @@
    ```
    npm start
    ```
-8. Now is running go to [http://localhost:3000] for using ICAE Web application !!
+7. Now is running go to [http://localhost:3000] for using ICAE Web application !!   
 
+**NOTE: Please make sure the folder ICAE/server/uploads have permission to write file.**
+   
 ## Directory Tree
 ```
 .
