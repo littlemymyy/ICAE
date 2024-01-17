@@ -193,8 +193,7 @@
 │   ├── uploads
 │   └── vfs_fonts.js
 ├── sql
-│   └── cosmetic.sql
-└── tree.txt
+    └── cosmetic.sql
 
 21 directories, 140 files
 ```
